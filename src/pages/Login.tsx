@@ -39,27 +39,48 @@ const Login: React.FC<{ onLogin: (role: "ADMIN" | "USER") => void }> = ({
       id: "auth",
     });
     try {
-      const response: any = await apiService.auth.login(data);
+      // Backend only accepts email/password; strip rememberMe before sending
+      const response: any = await apiService.auth.login({
+        email: data.email,
+        password: data.password,
+      });
       console.debug("[Login] login response:", response);
-      // Extract token from all common keys
-      let token = null;
-      let tokenKey = null;
-      if (response.access_token) { token = response.access_token; tokenKey = "access_token"; }
-      else if (response.accessToken) { token = response.accessToken; tokenKey = "accessToken"; }
-      else if (response.token) { token = response.token; tokenKey = "token"; }
-      else if (response.data?.access_token) { token = response.data.access_token; tokenKey = "data.access_token"; }
-      else if (response.data?.token) { token = response.data.token; tokenKey = "data.token"; }
-      const role = response.role || response.user?.role || response.data?.role || response.data?.user?.role;
+      // Extract token from primary envelope (data.access_token) with fallbacks
+      let token: string | null = null;
+      let tokenKey: string | null = null;
+      if (response?.data?.access_token) { token = response.data.access_token; tokenKey = "data.access_token"; }
+      else if (response?.access_token) { token = response.access_token; tokenKey = "access_token"; }
+      else if (response?.accessToken) { token = response.accessToken; tokenKey = "accessToken"; }
+      else if (response?.data?.token) { token = response.data.token; tokenKey = "data.token"; }
+      else if (response?.token) { token = response.token; tokenKey = "token"; }
+      const roleFromResponse =
+        response?.data?.user?.role ||
+        response?.user?.role ||
+        response?.data?.role ||
+        response?.role;
       if (!token) {
         toast.error("No token returned from backend", { id: "auth" });
         return;
       }
+      // Always keep session token; optionally persist to localStorage if rememberMe
+      sessionStorage.setItem("mami_token", token);
       if (data.rememberMe) {
         localStorage.setItem("mami_token", token);
       } else {
-        sessionStorage.setItem("mami_token", token);
+        localStorage.removeItem("mami_token");
+      }
+      // Optional: extract role from response or JWT claims
+      let role = roleFromResponse;
+      if (!role) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1] || ""));
+          role = payload.role || payload.user_role || payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"];
+        } catch {
+          role = undefined;
+        }
       }
       if (role) localStorage.setItem("mami_role", role);
+      else localStorage.removeItem("mami_role");
       if ((import.meta as any).env?.DEV) {
         // Dev-only: log which key, token length, and segment count
         console.debug(
