@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router';
 import { Search, ArrowLeft, Filter, X, Check } from 'lucide-react';
 import ProductCard from '@/components/store/ProductCard';
-import { EmptyState } from '@/components/ui/Feedback';
+import EmptyState from '@/components/shared/EmptyState';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
 
@@ -75,7 +75,7 @@ const SearchResults: React.FC = () => {
         <div className="py-20">
           <EmptyState 
             title="No matches found" 
-            message={`We couldn't find any products matching "${query}". Try searching for categories like "Produce" or "Bakery".`} 
+            description={`We couldn't find any products matching "${query}". Try searching for categories like "Produce" or "Bakery".`} 
           />
         </div>
       )}

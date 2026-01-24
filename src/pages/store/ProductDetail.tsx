@@ -13,7 +13,7 @@ import {
 import ProductGallery from "@/components/store/ProductGallery";
 import ProductInfo from "@/components/store/ProductInfo";
 import ProductTabs from "@/components/store/ProductTabs";
-import { LoadingSpinner } from "@/components/ui/Feedback";
+import LoadingState from "@/components/shared/LoadingState";
 import { apiService } from "@/services/api";
 import { Product } from "@/types/domain";
 
@@ -91,7 +91,7 @@ const ProductDetail: React.FC = () => {
   if (loading)
     return (
       <div className="py-40">
-        <LoadingSpinner label="Gathering product details..." />
+        <LoadingState label="Gathering product details..." />
       </div>
     );
 
