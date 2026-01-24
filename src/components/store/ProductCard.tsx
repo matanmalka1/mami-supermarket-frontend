@@ -7,17 +7,19 @@ import { toast } from 'react-hot-toast';
 import { Link } from 'react-router';
 import { currencyILS } from '../../utils/format';
 
+type CardProduct = {
+  id: string;
+  name: string;
+  category?: string;
+  price: number;
+  tag?: string;
+  image?: string;
+  oldPrice?: number;
+  unit?: string;
+};
+
 interface ProductCardProps {
-  item: {
-    id: number | string;
-    name: string;
-    category: string;
-    price: number;
-    tag: string;
-    image: string;
-    oldPrice?: number;
-    unit?: string;
-  };
+  item: CardProduct;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
@@ -40,7 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
     <Link to={`/store/product/${item.id}`} className="group cursor-pointer block">
       <div className="relative rounded-2xl overflow-hidden aspect-square mb-4 bg-gray-100">
         <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={item.name} />
-        <span className="absolute top-4 left-4 bg-[#008A45] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">{item.tag}</span>
+        {item.tag && <span className="absolute top-4 left-4 bg-[#008A45] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">{item.tag}</span>}
         <button 
           onClick={toggleWishlist}
           className={`absolute top-4 right-4 w-10 h-10 backdrop-blur rounded-full flex items-center justify-center transition-all shadow-md z-10 ${

@@ -3,8 +3,8 @@ import { Timer, Zap } from 'lucide-react';
 import ProductCard from './ProductCard';
 
 const DEAL_ITEMS = [
-  { id: 5, name: 'Imported Hass Avocados (2pk)', category: 'Produce', price: 9.90, oldPrice: 15.00, tag: '50% OFF', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=400&q=80' },
-  { id: 6, name: 'Cold Pressed Orange Juice', category: 'Drinks', price: 12.50, oldPrice: 18.90, tag: 'Deal', image: 'https://images.unsplash.com/photo-1624517535389-c967a6114251?auto=format&fit=crop&w=400&q=80' }
+  { id: 'deal-avocado', name: 'Imported Hass Avocados (2pk)', category: 'Produce', price: 9.90, oldPrice: 15.00, tag: '50% OFF', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=400&q=80' },
+  { id: 'deal-oj', name: 'Cold Pressed Orange Juice', category: 'Drinks', price: 12.50, oldPrice: 18.90, tag: 'Deal', image: 'https://images.unsplash.com/photo-1624517535389-c967a6114251?auto=format&fit=crop&w=400&q=80' }
 ];
 
 const FlashDeals: React.FC = () => {
