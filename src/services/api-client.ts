@@ -8,10 +8,10 @@ import { AppError } from "../types/error";
 // Single source of truth for baseURL
 const getBaseUrl = () => {
   const envUrl = (import.meta as any).env?.VITE_API_BASE_URL;
-  if (envUrl && envUrl.trim() !== "") {
-    return envUrl;
-  }
-  // Use /api/v1 for default
+  if (envUrl && envUrl.trim() !== "") return envUrl.trim();
+  // In dev, point directly to backend if no env override is set
+  if ((import.meta as any).env?.DEV) return "http://localhost:5000/api/v1";
+  // Default relative base (prod)
   return "/api/v1";
 };
 const BASE_URL = getBaseUrl();
