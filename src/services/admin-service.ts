@@ -9,6 +9,7 @@ const ADMIN_ENDPOINTS = {
   adminBulkStockRequests: "/stock-requests/admin/bulk-review",
   settings: "/admin/settings",
   analyticsRevenue: "/admin/analytics/revenue",
+  fleetStatus: "/admin/fleet/status",
 };
 
 export type AdminSettings = {
@@ -88,5 +89,6 @@ export const adminService = {
   updateSettings: (data: Partial<AdminSettings>) =>
     apiClient.put<Partial<AdminSettings>, AdminSettings>(ADMIN_ENDPOINTS.settings, data),
   getRevenueAnalytics: () =>
-    apiClient.get<void, void>(ADMIN_ENDPOINTS.analyticsRevenue),
+    apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
+  getFleetStatus: () => apiClient.get<any, any>(ADMIN_ENDPOINTS.fleetStatus),
 };
