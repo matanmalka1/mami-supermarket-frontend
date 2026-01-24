@@ -5,7 +5,8 @@ const ADMIN_ENDPOINTS = {
   inventory: "/admin/inventory",
   productsSearch: "/catalog/products/search",
   adminProducts: "/admin/products",
-  stockRequests: "/ops/stock-requests",
+  adminStockRequests: "/stock-requests/admin",
+  adminBulkStockRequests: "/stock-requests/admin/bulk-review",
   settings: "/admin/settings",
   analyticsRevenue: "/admin/analytics/revenue",
 };
@@ -15,6 +16,8 @@ export type AdminSettings = {
   delivery_fee: number;
   slots: string;
 };
+
+export type StockRequestStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 // Interfaces for admin-service
 export interface CreateCategoryRequest {
@@ -64,12 +67,22 @@ export const adminService = {
     ),
   createProduct: (data: CreateProductRequest) =>
     apiClient.post<CreateProductRequest, void>(ADMIN_ENDPOINTS.adminProducts, data),
-  getStockRequests: () =>
-    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.stockRequests),
-  resolveStockRequest: (id: string, status: "APPROVED" | "REJECTED") =>
-    apiClient.patch<{ status: string }, void>(
-      `${ADMIN_ENDPOINTS.stockRequests}/${id}/resolve`,
-      { status },
+  getStockRequests: (params?: Record<string, any>) =>
+    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.adminStockRequests, { params }),
+  resolveStockRequest: (
+    id: string,
+    data: { status: StockRequestStatus; approvedQuantity?: number; rejectionReason?: string },
+  ) =>
+    apiClient.patch<typeof data, void>(
+      `${ADMIN_ENDPOINTS.adminStockRequests}/${id}/resolve`,
+      data,
+    ),
+  bulkResolveStockRequests: (
+    items: { request_id: string; status: StockRequestStatus; approved_quantity?: number; rejection_reason?: string }[],
+  ) =>
+    apiClient.patch<{ items: any[] }, void>(
+      ADMIN_ENDPOINTS.adminBulkStockRequests,
+      { items },
     ),
   getSettings: () => apiClient.get<AdminSettings, AdminSettings>(ADMIN_ENDPOINTS.settings),
   updateSettings: (data: Partial<AdminSettings>) =>
