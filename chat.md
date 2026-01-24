@@ -49,13 +49,21 @@
   - Global Settings: `GET/PUT /admin/settings` sending only `delivery_min,delivery_fee,slots`.  
   - Analytics: `GET /admin/analytics/revenue`.  
   - Storefront: categories/featured products fetched from `/catalog/categories` and `/catalog/products/featured`; product detail `/catalog/products/:id`; category view/search via `/catalog/products/search`.  
-  - Checkout: currently UI only; preview/confirm endpoints not yet wired.  
+  - Checkout: wired to `POST /checkout/preview` and `POST /checkout/confirm` with `Idempotency-Key` header per backend contract.  
   - Account: orders list `GET /orders`; addresses CRUD `/me/addresses`; profile settings largely UI-only.  
   - Cart: cart drawer uses `apiService.cart` for cart CRUD endpoints.
 
 # NO FAKE DATA
 - Removed/rewired: storefront featured/categories now from catalog APIs; logistics uses real fleet status; recently viewed mock removed (empty state if none); delivery slots manager uses `/admin/delivery-slots`; admin catalog uses real search/create/edit/toggle endpoints; inventory table uses initials fallback (no picsum); avatars replaced with initials badge; admin fleet map no simulated pins (list-only when no coords); staff performance shows “not available yet” instead of random metrics; weight scale no randomness—manual entry flagged “Simulated scale”; stock requests/admin inventory/admin settings payloads aligned to backend contracts.
-- Remaining simulations: weight scale hardware (manual entry with `isSimulated` flag); router still seeds mock token on login/register callbacks though pages set real tokens—treat live token from API as source of truth. Checkout preview/confirm not yet implemented on UI.
+- Remaining simulations: weight scale hardware (manual entry with `isSimulated` flag); router still seeds mock token on login/register callbacks though pages set real tokens—treat live token from API as source of truth.
+
+# CHECKOUT VERIFICATION
+- Login as customer, ensure `mami_token` set.
+- Add items to cart and open `/store/checkout`.
+- Verify preview calls `POST /api/v1/checkout/preview` and totals/fees match response.
+- Click confirm (single and double-click) and see `POST /api/v1/checkout/confirm` with `Idempotency-Key` header.
+- On success, cart clears and navigate to `/store/order-success/:orderId`.
+- Orders history (`/store/account/orders`) shows the new order.
 
 # VERIFICATION CHECKLIST
 - Commands:  
@@ -71,5 +79,9 @@
   - Stock requests: ops create, admin list + resolve/bulk-review.  
   - Delivery slots list.  
   - Fleet status list renders (map only if coords present).  
-  - Storefront browse/search/category/product detail; cart add/update/remove; checkout preview/confirm still to be wired.  
-  - Addresses CRUD under account; orders history loads.
+  - Storefront browse/search/category/product detail; cart add/update/remove; checkout preview/confirm wired with idempotency.  
+  - Addresses CRUD under account; orders history loads.  
+- Manual smoke (auth + customer flow):  
+  - Login → storefront → add items to cart → open checkout (preview runs).  
+  - Confirm once; immediately double-click/refresh to confirm idempotent behavior.  
+  - Land on order success page and see order in account history.
