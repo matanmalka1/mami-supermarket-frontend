@@ -18,7 +18,7 @@ const PickingInterface: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { order, items, loading, progress, updateItemStatus } = usePicking(id);
-  const { weighingItem, setWeighingItem, currentWeight, isStabilizing, startWeighing, resetScale } = useWeightScale();
+  const { weighingItem, setWeighingItem, currentWeight, setManualWeight, resetScale, isSimulated } = useWeightScale();
   
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [missingItemId, setMissingItemId] = useState<string | null>(null);
@@ -90,23 +90,44 @@ const PickingInterface: React.FC = () => {
       <Modal isOpen={!!weighingItem} onClose={resetScale} title="Produce Weight Check">
         <div className="py-10 space-y-8 text-center">
           <div className="relative inline-block">
-            <div className={`w-56 h-56 rounded-full border-8 transition-all flex flex-col items-center justify-center bg-gray-50 ${isStabilizing ? 'border-orange-500 animate-pulse' : 'border-emerald-500'}`}>
-               <Scale size={48} className={isStabilizing ? 'text-orange-500' : 'text-emerald-500'} />
+            <div className="w-56 h-56 rounded-full border-8 transition-all flex flex-col items-center justify-center bg-gray-50 border-emerald-500">
+               <Scale size={48} className="text-emerald-500" />
                <span className="text-5xl font-black italic tracking-tighter mt-2">{currentWeight} <span className="text-lg not-italic opacity-50">KG</span></span>
             </div>
           </div>
           <div className="space-y-2">
             <h4 className="text-xl font-black">{weighingItem?.product?.name}</h4>
-            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Expected: {(weighingItem?.quantity * 0.5).toFixed(2)} KG (approx)</p>
+            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+              Expected: {(weighingItem?.quantity * 0.5).toFixed(2)} KG (approx)
+            </p>
+            {isSimulated && (
+              <p className="text-[11px] text-amber-600 font-black uppercase tracking-widest">
+                Simulated scale • enter weight manually
+              </p>
+            )}
           </div>
-          {!isStabilizing && currentWeight === 0 ? (
-            <Button fullWidth size="lg" className="rounded-2xl" onClick={startWeighing}>Place on Scale</Button>
-          ) : (
-            <div className="flex gap-4">
-              <Button variant="ghost" className="flex-1" onClick={startWeighing} disabled={isStabilizing}>Re-weigh</Button>
-              <Button variant="emerald" className="flex-1 rounded-2xl" disabled={isStabilizing || currentWeight === 0} onClick={() => handleUpdateStatus(weighingItem.id, 'PICKED')}>Confirm Weight</Button>
-            </div>
-          )}
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            className="w-full bg-gray-50 border rounded-2xl p-4 font-black text-center"
+            value={currentWeight || ""}
+            onChange={(e) => setManualWeight(parseFloat(e.target.value))}
+            placeholder="Enter measured weight (KG)"
+          />
+          <div className="flex gap-4">
+            <Button variant="ghost" className="flex-1" onClick={() => setManualWeight(0)}>
+              Clear
+            </Button>
+            <Button
+              variant="emerald"
+              className="flex-1 rounded-2xl"
+              disabled={currentWeight <= 0}
+              onClick={() => handleUpdateStatus(weighingItem.id, 'PICKED')}
+            >
+              Confirm Weight
+            </Button>
+          </div>
         </div>
       </Modal>
 
