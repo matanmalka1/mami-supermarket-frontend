@@ -1,0 +1,7 @@
+{
+  "name": "FreshMarket & OpsPortal Suite",
+  "description": "Premium supermarket ecosystem with deterministic fulfillment logic and high-fidelity operational dashboards.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
