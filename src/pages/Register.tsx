@@ -34,7 +34,13 @@ const Register: React.FC<{ onRegister: () => void }> = ({ onRegister }) => {
     toast.loading("Creating account...", { id: "reg" });
     try {
       const data = form.getValues();
-      const regRes = await apiService.auth.register(data);
+      const fullName = `${data.firstName} ${data.lastName}`.trim();
+      // Backend only accepts email, password, full_name (+optional role)
+      const regRes = await apiService.auth.register({
+        email: data.email,
+        password: data.password,
+        full_name: fullName,
+      });
       console.debug("[Register] register response:", regRes);
       const loginRes: any = await apiService.auth.login({
         email: data.email,
