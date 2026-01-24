@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import StatCard from '@/components/ui/StatCard';
 import Grid from '@/components/ui/Grid';
 import Button from '@/components/ui/Button';
-import { LoadingSpinner } from '@/components/ui/Feedback';
+import LoadingState from '@/components/shared/LoadingState';
 import { Layers, Play } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import OrderTable from '@/features/ops/components/OrderTable';
@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
     }, 1200);
   };
 
-  if (loading) return <LoadingSpinner label="Syncing orders..." />;
+  if (loading) return <LoadingState label="Syncing orders..." />;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

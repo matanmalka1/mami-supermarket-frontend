@@ -7,6 +7,8 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import Grid from "@/components/ui/Grid";
 import { Truck, MapPin, Navigation, Activity } from "lucide-react";
 import { apiService } from "@/services/api";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const Logistics: React.FC = () => {
   const [filter, setFilter] = useState<"ALL" | "ON ROUTE" | "LOADING" | "RETURNING">("ALL");
@@ -66,11 +68,9 @@ const Logistics: React.FC = () => {
         </div>
         <div className="divide-y">
           {loading ? (
-            <div className="p-12 text-center text-gray-400 font-bold">Loading fleet status...</div>
+            <LoadingState label="Loading fleet status..." />
           ) : filteredVehicles.length === 0 ? (
-            <div className="p-20 text-center text-gray-400 font-black uppercase tracking-widest italic">
-              No vehicles in this state.
-            </div>
+            <EmptyState title="No vehicles in this state." />
           ) : (
             filteredVehicles.map((v) => (
               <div

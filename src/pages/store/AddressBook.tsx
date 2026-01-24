@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { MapPin, Plus, Trash2, Navigation, Info } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import { LoadingSpinner } from '@/components/ui/Feedback';
 import { useAddresses } from '@/hooks/useAddresses';
+import LoadingState from '@/components/shared/LoadingState';
+import EmptyState from '@/components/shared/EmptyState';
 
 const AddressBook: React.FC = () => {
   const { addresses, loading, addAddress, deleteAddress, tagCurrentLocation, setDefault } = useAddresses();
@@ -22,7 +23,7 @@ const AddressBook: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <div className="py-40"><LoadingSpinner label="Syncing address book..." /></div>;
+  if (loading) return <div className="py-40"><LoadingState label="Syncing address book..." /></div>;
 
   return (
     <div className="space-y-10">
@@ -40,7 +41,12 @@ const AddressBook: React.FC = () => {
           <span className="text-xl">Tag My Current Location</span>
         </button>
 
-        {addresses.map(addr => (
+        {addresses.length === 0 ? (
+          <div className="col-span-full">
+            <EmptyState title="No addresses saved" description="Add your first delivery address to speed up checkout." />
+          </div>
+        ) : (
+        addresses.map(addr => (
           <div key={addr.id} className={`p-8 bg-white border-2 rounded-[2.5rem] shadow-sm space-y-6 relative overflow-hidden transition-all ${addr.is_default ? 'border-emerald-500 ring-4 ring-emerald-50' : 'border-gray-100 hover:border-gray-200'}`}>
             {addr.is_default && <div className="absolute top-0 right-0 bg-emerald-500 text-white px-6 py-2 rounded-bl-[2rem] font-black text-[10px] uppercase tracking-widest">Default</div>}
             <div className="flex gap-5 items-start">
@@ -52,7 +58,7 @@ const AddressBook: React.FC = () => {
               <button onClick={() => deleteAddress(addr.id)} className="ml-auto w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-all"><Trash2 size={18} /></button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Delivery Node">
