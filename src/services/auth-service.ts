@@ -77,4 +77,7 @@ export const authService = {
     apiClient.patch<any, User>("/me", data),
   getAddresses: () => apiClient.get<any[], any[]>("/me/addresses"),
   addAddress: (data: any) => apiClient.post("/me/addresses", data),
+  deleteAddress: (id: string) => apiClient.delete(`/me/addresses/${id}`),
+  setDefaultAddress: (id: string) =>
+    apiClient.patch(`/me/addresses/${id}/default`, {}),
 };

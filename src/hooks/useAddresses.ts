@@ -22,7 +22,17 @@ export const useAddresses = () => {
     fetchAddresses();
   }, [fetchAddresses]);
 
-  const addAddress = async (address: any) => {
+  const addAddress = async (address: {
+    address_line: string;
+    city: string;
+    postal_code: string;
+    country: string;
+    is_default: boolean;
+  }) => {
+    if (!address.address_line || !address.city || !address.postal_code || !address.country) {
+      toast.error("All address fields are required");
+      return;
+    }
     try {
       const saved = await apiService.profile.addAddress(address);
       setAddresses((prev) => [
@@ -36,8 +46,13 @@ export const useAddresses = () => {
   };
 
   const deleteAddress = async (id: string) => {
-    setAddresses((prev) => prev.filter((a) => a.id !== id));
-    toast.success("Address removed");
+    try {
+      await apiService.profile.deleteAddress(id);
+      setAddresses((prev) => prev.filter((a) => a.id !== id));
+      toast.success("Address removed");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to remove address");
+    }
   };
 
   const tagCurrentLocation = () => {
@@ -48,9 +63,20 @@ export const useAddresses = () => {
     );
   };
 
-  const setDefault = (id: string) => {
-    setAddresses((prev) => prev.map((a) => ({ ...a, isDefault: a.id === id })));
-    toast.success("Default updated");
+  const setDefault = async (id: string) => {
+    try {
+      await apiService.profile.setDefaultAddress(id);
+      setAddresses((prev) =>
+        prev.map((a) => ({
+          ...a,
+          is_default: a.id === id,
+          isDefault: a.id === id,
+        })),
+      );
+      toast.success("Default updated");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update default");
+    }
   };
 
   return {
