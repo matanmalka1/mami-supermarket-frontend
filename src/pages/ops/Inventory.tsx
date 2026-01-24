@@ -4,6 +4,8 @@ import { Plus } from "lucide-react";
 import { useInventory } from "@/hooks/useInventory";
 import InventoryTable from "@/pages/inventory/InventoryTable";
 import NewSkuModal from "@/pages/inventory/NewSkuModal";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const Inventory: React.FC = () => {
   const { inventory, loading, updateStock } = useInventory();
@@ -38,16 +40,11 @@ const Inventory: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-gray-400 animate-pulse font-bold tracking-widest">
-          Loading global inventory...
-        </div>
+        <LoadingState label="Loading global inventory..." />
+      ) : rows.length === 0 ? (
+        <EmptyState title="No inventory found." description="All branches are currently empty." />
       ) : (
-        <InventoryTable
-          rows={rows}
-          activeMenuId={activeMenuId}
-          onMenuToggle={setActiveMenuId}
-          onUpdateStock={updateStock}
-        />
+        <InventoryTable rows={rows} activeMenuId={activeMenuId} onMenuToggle={setActiveMenuId} onUpdateStock={updateStock} />
       )}
 
       <NewSkuModal isOpen={isNewModalOpen} onClose={() => setIsNewModalOpen(false)} />

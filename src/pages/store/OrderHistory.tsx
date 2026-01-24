@@ -17,7 +17,8 @@ import { toast } from "react-hot-toast";
 import { currencyILS } from "@/utils/format";
 import { sleep } from "@/utils/async";
 import { apiService } from "@/services/api";
-import { LoadingSpinner } from "@/components/ui/Feedback";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
 
 const OrderHistory: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
@@ -59,7 +60,7 @@ const OrderHistory: React.FC = () => {
   if (loading)
     return (
       <div className="py-40">
-        <LoadingSpinner label="Loading order history..." />
+        <LoadingState label="Loading order history..." />
       </div>
     );
 
@@ -76,12 +77,10 @@ const OrderHistory: React.FC = () => {
 
       <div className="space-y-6">
         {orders.length === 0 ? (
-          <div className="py-20 text-center bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-100">
-            <Package size={48} className="mx-auto text-gray-200 mb-4" />
-            <p className="font-black italic text-gray-400 uppercase tracking-widest">
-              No orders found in your history
-            </p>
-          </div>
+          <EmptyState
+            title="No orders found in your history"
+            description="Complete your first checkout to see it here."
+          />
         ) : (
           orders.map((order) => (
             <div
