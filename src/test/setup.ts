@@ -25,6 +25,25 @@ const ensureStorage = (name: "localStorage" | "sessionStorage") => {
   globalThis[name]?.clear();
 };
 
+const nodeProcess = globalThis.process;
+const originalEmitWarning = nodeProcess?.emitWarning;
+if (originalEmitWarning) {
+  nodeProcess.emitWarning = (warning, ...args) => {
+    if (
+      typeof warning === "string" &&
+      warning.includes("--localstorage-file")
+    ) {
+      return;
+    }
+    const emit = originalEmitWarning as unknown as (
+      w: any,
+      type?: any,
+      code?: any,
+    ) => void;
+    return emit.call(nodeProcess, warning as any, args[0], args[1]);
+  };
+}
+
 beforeEach(() => {
   ensureStorage("sessionStorage");
   ensureStorage("localStorage");

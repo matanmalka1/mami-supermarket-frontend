@@ -10,7 +10,7 @@ const getReject = () => {
 };
 
 describe("api-client 401 handling", () => {
-  it("clears tokens and redirects to login on 401", async () => {
+  it("clears tokens and redirects to login on 401 with normalized error", async () => {
     localStorage.setItem("mami_token", "a.b.c");
     localStorage.setItem("mami_role", "ADMIN");
     sessionStorage.setItem("mami_token", "a.b.c");
@@ -27,6 +27,10 @@ describe("api-client 401 handling", () => {
     };
 
     await expect(reject(error)).rejects.toBeInstanceOf(AppError);
+    await reject(error).catch((err: AppError) => {
+      expect(err.code).toBe("UNAUTHORIZED");
+      expect(err.message).toBe("expired");
+    });
     expect(localStorage.getItem("mami_token")).toBeNull();
     expect(localStorage.getItem("mami_role")).toBeNull();
     expect(sessionStorage.getItem("mami_token")).toBeNull();
