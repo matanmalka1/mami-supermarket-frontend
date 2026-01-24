@@ -40,11 +40,14 @@ export interface CreateDeliverySlotRequest {
 
 export const adminService = {
   getInventory: () => apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.inventory),
-  updateStock: (id: string, data: { availableQuantity: number }) =>
-    apiClient.patch<{ availableQuantity: number }, void>(
-      `${ADMIN_ENDPOINTS.inventory}/${id}`,
-      data,
-    ),
+  updateStock: (id: string, data: { availableQuantity: number; reservedQuantity: number }) =>
+    apiClient.patch<
+      { availableQuantity: number; reservedQuantity: number },
+      void
+    >(`${ADMIN_ENDPOINTS.inventory}/${id}`, {
+      available_quantity: data.availableQuantity,
+      reserved_quantity: data.reservedQuantity,
+    }),
   getProducts: (params?: Record<string, any>) =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.products, { params }),
   updateProduct: (id: string, data: UpdateProductRequest) =>
