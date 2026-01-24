@@ -34,7 +34,7 @@ describe("Login", () => {
 
   it("stores token and navigates after successful login", async () => {
     mockLogin.mockResolvedValue({
-      data: { access_token: "jwt-token", user: { role: "USER" } },
+      data: { access_token: "a.b.c", user: { role: "USER" } },
     });
     const onLogin = vi.fn();
     renderWithRouter({
@@ -47,7 +47,7 @@ describe("Login", () => {
     await userEvent.type(screen.getByPlaceholderText("••••••••"), "password123");
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    await waitFor(() => expect(sessionStorage.getItem("mami_token")).toBe("jwt-token"));
+    await waitFor(() => expect(sessionStorage.getItem("mami_token")).toBe("a.b.c"));
     expect(onLogin).toHaveBeenCalledWith("USER");
     expect(mockNavigate).toHaveBeenCalledWith("/store");
   });

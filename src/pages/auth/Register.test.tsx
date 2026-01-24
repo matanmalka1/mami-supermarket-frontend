@@ -37,7 +37,7 @@ describe("Register", () => {
 
   it("submits full_name to register and stores token from login", async () => {
     mockRegister.mockResolvedValue({ ok: true });
-    mockLogin.mockResolvedValue({ data: { access_token: "jwt-reg", user: { role: "USER" } } });
+    mockLogin.mockResolvedValue({ data: { access_token: "a.b.c", user: { role: "USER" } } });
     const onRegister = vi.fn();
 
     renderWithRouter({
@@ -61,7 +61,7 @@ describe("Register", () => {
     await userEvent.type(screen.getAllByRole("textbox")[3], "4");
     await userEvent.click(screen.getByRole("button", { name: /complete setup/i }));
 
-    await waitFor(() => expect(sessionStorage.getItem("mami_token")).toBe("jwt-reg"));
+    await waitFor(() => expect(sessionStorage.getItem("mami_token")).toBe("a.b.c"));
     expect(mockRegister).toHaveBeenCalledWith({
       email: "jane@example.com",
       password: "StrongPass1",
