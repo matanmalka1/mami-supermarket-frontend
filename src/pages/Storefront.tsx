@@ -1,22 +1,41 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link, useNavigate } from 'react-router';
-import { TrendingUp, Clock, Leaf, Sparkles, MapPin, ChevronRight } from 'lucide-react';
-import ProductCard from '../components/store/ProductCard';
-import FlashDeals from '../components/store/FlashDeals';
-import RecentlyViewed from '../components/store/RecentlyViewed';
-import Section from '../components/ui/Section';
-import Grid from '../components/ui/Grid';
-import Button from '../components/ui/Button';
-import Modal from '../components/ui/Modal';
-import { CATEGORIES, FEATURED_ITEMS } from '../constants';
-import { HeroSection, BenefitCard } from '../components/store/StorefrontComponents';
+import { Link, useNavigate } from "react-router";
+import { TrendingUp, Clock, Leaf, Sparkles, MapPin, ChevronRight } from "lucide-react";
+import ProductCard from "../components/store/ProductCard";
+import FlashDeals from "../components/store/FlashDeals";
+import RecentlyViewed from "../components/store/RecentlyViewed";
+import Section from "../components/ui/Section";
+import Grid from "../components/ui/Grid";
+import Button from "../components/ui/Button";
+import Modal from "../components/ui/Modal";
+import { apiService } from "../services/api";
+import { HeroSection, BenefitCard } from "../components/store/StorefrontComponents";
 
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
   const categoryRef = useRef<HTMLDivElement>(null);
   const [isFarmModalOpen, setIsFarmModalOpen] = useState<boolean>(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [featured, setFeatured] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [cats, feats] = await Promise.all([
+          apiService.catalog.getCategories(),
+          apiService.catalog.getFeatured(),
+        ]);
+        setCategories(Array.isArray(cats?.items) ? cats.items : Array.isArray(cats) ? cats : []);
+        setFeatured(Array.isArray(feats?.items) ? feats.items : Array.isArray(feats) ? feats : []);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   const scrollToCategories = () => categoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -25,20 +44,40 @@ const Storefront: React.FC = () => {
       <HeroSection onStart={scrollToCategories} onExplore={() => setIsFarmModalOpen(true)} />
 
       <div ref={categoryRef} className="scroll-mt-32">
-        <Grid cols={6} gap={6}>
-          {CATEGORIES.map(cat => (
-            <Link key={cat.id} to={`/store/category/${cat.id}`} className="group flex flex-col items-center p-8 rounded-[2.5rem] bg-gray-50 border border-gray-100 hover:bg-white hover:border-[#008A45] hover:shadow-xl hover:shadow-emerald-900/5 transition-all text-center space-y-4">
-              <span className="text-4xl group-hover:scale-125 transition-transform">{cat.icon}</span>
-              <span className="text-xs font-black uppercase tracking-widest text-gray-500 group-hover:text-[#008A45]">{cat.name}</span>
-            </Link>
-          ))}
-        </Grid>
+        {loading ? (
+          <div className="text-center text-gray-400 font-bold py-8">Loading categories...</div>
+        ) : categories.length === 0 ? (
+          <div className="text-center text-gray-400 font-bold py-8">No categories available</div>
+        ) : (
+          <Grid cols={6} gap={6}>
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                to={`/store/category/${cat.id}`}
+                className="group flex flex-col items-center p-8 rounded-[2.5rem] bg-gray-50 border border-gray-100 hover:bg-white hover:border-[#008A45] hover:shadow-xl hover:shadow-emerald-900/5 transition-all text-center space-y-4"
+              >
+                <span className="text-4xl group-hover:scale-125 transition-transform">
+                  {cat.icon_slug || cat.icon || "🛒"}
+                </span>
+                <span className="text-xs font-black uppercase tracking-widest text-gray-500 group-hover:text-[#008A45]">
+                  {cat.name}
+                </span>
+              </Link>
+            ))}
+          </Grid>
+        )}
       </div>
 
       <FlashDeals />
 
       <Section title="Today's Selection" subtitle={<><TrendingUp size={16} className="text-[#008A45]" /> Trending in your area</>} linkTo="/store/search">
-        <Grid>{FEATURED_ITEMS.map((item: any) => <ProductCard key={item.id} item={item} />)}</Grid>
+        {loading ? (
+          <div className="text-center text-gray-400 font-bold py-8">Loading featured products...</div>
+        ) : featured.length === 0 ? (
+          <div className="text-center text-gray-400 font-bold py-8">No featured products</div>
+        ) : (
+          <Grid>{featured.map((item: any) => <ProductCard key={item.id} item={item} />)}</Grid>
+        )}
       </Section>
 
       <RecentlyViewed />
