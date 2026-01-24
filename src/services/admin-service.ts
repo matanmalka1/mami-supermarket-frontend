@@ -3,7 +3,8 @@ import { apiClient } from "./api-client";
 // Endpoint map for easy backend contract swaps (do not guess endpoints)
 const ADMIN_ENDPOINTS = {
   inventory: "/admin/inventory",
-  products: "/catalog/products/search",
+  productsSearch: "/catalog/products/search",
+  adminProducts: "/admin/products",
   stockRequests: "/ops/stock-requests",
   settings: "/admin/settings",
   analyticsRevenue: "/admin/analytics/revenue",
@@ -55,14 +56,14 @@ export const adminService = {
       reserved_quantity: data.reservedQuantity,
     }),
   getProducts: (params?: Record<string, any>) =>
-    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.products, { params }),
+    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.productsSearch, { params }),
   updateProduct: (id: string, data: UpdateProductRequest) =>
     apiClient.patch<UpdateProductRequest, void>(
-      `${ADMIN_ENDPOINTS.products}/${id}`,
+      `${ADMIN_ENDPOINTS.adminProducts}/${id}`,
       data,
     ),
   createProduct: (data: CreateProductRequest) =>
-    apiClient.post<CreateProductRequest, void>(ADMIN_ENDPOINTS.products, data),
+    apiClient.post<CreateProductRequest, void>(ADMIN_ENDPOINTS.adminProducts, data),
   getStockRequests: () =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.stockRequests),
   resolveStockRequest: (id: string, status: "APPROVED" | "REJECTED") =>

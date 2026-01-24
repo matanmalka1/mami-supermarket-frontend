@@ -14,7 +14,8 @@ export const useCatalogManager = () => {
     setLoading(true);
     try {
       const data = await apiService.admin.getProducts();
-      setProducts(data || []);
+      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+      setProducts(rows);
     } catch {
       toast.error("Failed to sync catalog");
     } finally {
@@ -36,10 +37,16 @@ export const useCatalogManager = () => {
   };
 
   const filteredProducts = products.filter((p) => {
+    const name = (p.name || "").toLowerCase();
+    const sku = (p.sku || "").toLowerCase();
+    const category = (p.category || p.categoryName || "").toLowerCase();
     const matchesSearch =
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.sku.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === "All" || p.category === activeFilter;
+      name.includes(searchTerm.toLowerCase()) ||
+      sku.includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      activeFilter === "All" ||
+      category === activeFilter.toLowerCase() ||
+      p.category === activeFilter;
     return matchesSearch && matchesFilter;
   });
 

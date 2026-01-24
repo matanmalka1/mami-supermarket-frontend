@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
-import Button from '../../components/ui/Button';
-import Badge from '../../components/ui/Badge';
-import Modal from '../../components/ui/Modal';
-import ConfirmDialog from '../../components/ui/ConfirmDialog';
-import { Plus, Search, Edit3, Trash2, UploadCloud, Image as ImageIcon } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { currencyILS } from '../../utils/format';
-import { useCatalogManager } from '../../hooks/useCatalogManager';
+import React, { useState } from "react";
+import Button from "../../components/ui/Button";
+import Badge from "../../components/ui/Badge";
+import Modal from "../../components/ui/Modal";
+import ConfirmDialog from "../../components/ui/ConfirmDialog";
+import { Plus, Search, Edit3, Trash2, UploadCloud } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { currencyILS } from "../../utils/format";
+import { useCatalogManager } from "../../hooks/useCatalogManager";
 
 const CatalogManager: React.FC = () => {
-  const { 
-    products, totalCount, loading, searchTerm, setSearchTerm, 
-    activeFilter, setActiveFilter, editingProduct, setEditingProduct, 
-    deletingProduct, setDeletingProduct, deleteProduct 
+  const {
+    products,
+    totalCount,
+    loading,
+    searchTerm,
+    setSearchTerm,
+    activeFilter,
+    setActiveFilter,
+    editingProduct,
+    setEditingProduct,
+    deletingProduct,
+    setDeletingProduct,
+    deleteProduct,
   } = useCatalogManager();
 
   const [isBulkOpen, setIsBulkOpen] = useState(false);
