@@ -91,7 +91,11 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     }
   }
   if (config.data) config.data = toSnake(config.data);
-  if (config.params) config.params = toSnake(config.params);
+  if ((import.meta as any).env?.DEV && config.params) {
+    console.debug("[apiClient] params forwarded without snake_case", {
+      keys: Object.keys(config.params || {}),
+    });
+  }
   return config;
 });
 
