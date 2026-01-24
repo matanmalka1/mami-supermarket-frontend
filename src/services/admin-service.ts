@@ -9,6 +9,12 @@ const ADMIN_ENDPOINTS = {
   analyticsRevenue: "/admin/analytics/revenue",
 };
 
+export type AdminSettings = {
+  delivery_min: number;
+  delivery_fee: number;
+  slots: string;
+};
+
 // Interfaces for admin-service
 export interface CreateCategoryRequest {
   name: string;
@@ -64,9 +70,9 @@ export const adminService = {
       `${ADMIN_ENDPOINTS.stockRequests}/${id}/resolve`,
       { status },
     ),
-  getSettings: () => apiClient.get<void, void>(ADMIN_ENDPOINTS.settings),
-  updateSettings: (data: Record<string, any>) =>
-    apiClient.put<Record<string, any>, void>(ADMIN_ENDPOINTS.settings, data),
+  getSettings: () => apiClient.get<AdminSettings, AdminSettings>(ADMIN_ENDPOINTS.settings),
+  updateSettings: (data: Partial<AdminSettings>) =>
+    apiClient.put<Partial<AdminSettings>, AdminSettings>(ADMIN_ENDPOINTS.settings, data),
   getRevenueAnalytics: () =>
     apiClient.get<void, void>(ADMIN_ENDPOINTS.analyticsRevenue),
 };

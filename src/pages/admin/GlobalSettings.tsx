@@ -6,8 +6,9 @@ import { toast } from "react-hot-toast";
 import { apiService } from "../../services/api";
 import SettingsField from "./SettingsField";
 import DangerZone from "./DangerZone";
+import { AdminSettings } from "../../services/admin-service";
 
-type SettingsPayload = { delivery_min?: number; delivery_fee?: number; slots?: string };
+type SettingsPayload = Partial<AdminSettings>;
 
 const GlobalSettings: React.FC = () => {
   const [loading, setLoading] = useState(false);
