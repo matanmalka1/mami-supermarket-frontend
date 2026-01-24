@@ -5,6 +5,9 @@ import Modal from "@/components/ui/Modal";
 import { Clock, ShieldAlert, Save, ChevronRight, Lock, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
+import ErrorState from "../../components/shared/ErrorState";
 
 const DeliverySlotManager: React.FC = () => {
   const [slots, setSlots] = useState<any[]>([]);
@@ -70,11 +73,11 @@ const DeliverySlotManager: React.FC = () => {
         <div className="col-span-12 lg:col-span-8 space-y-8">
           <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm divide-y">
             {loading ? (
-              <div className="p-8 text-center text-gray-400 font-bold">Loading slots...</div>
+              <LoadingState label="Loading slots..." />
             ) : error ? (
-              <div className="p-8 text-center text-red-500 font-bold">{error}</div>
+              <ErrorState message={error} />
             ) : slots.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 font-bold">No delivery slots available.</div>
+              <EmptyState title="No delivery slots available." />
             ) : (
               slots.map((slot) => (
                 <div
