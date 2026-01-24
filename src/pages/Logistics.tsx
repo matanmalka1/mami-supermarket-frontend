@@ -1,20 +1,32 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link } from 'react-router';
-import StatCard from '../components/ui/StatCard';
-import StatusBadge from '../components/ui/StatusBadge';
-import Grid from '../components/ui/Grid';
-import { Truck, MapPin, Navigation, Activity } from 'lucide-react';
-import { MOCK_VEHICLES } from '../constants';
+import { Link } from "react-router";
+import StatCard from "../components/ui/StatCard";
+import StatusBadge from "../components/ui/StatusBadge";
+import Grid from "../components/ui/Grid";
+import { Truck, MapPin, Navigation, Activity } from "lucide-react";
+import { apiService } from "../services/api";
 
 const Logistics: React.FC = () => {
-  const [filter, setFilter] = useState<'ALL' | 'ON ROUTE' | 'LOADING' | 'RETURNING'>('ALL');
+  const [filter, setFilter] = useState<"ALL" | "ON ROUTE" | "LOADING" | "RETURNING">("ALL");
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredVehicles = MOCK_VEHICLES.filter(v => {
-    if (filter === 'ALL') return true;
-    return v.status === filter;
-  });
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data: any = await apiService.admin.getFleetStatus();
+        const rows = Array.isArray(data?.drivers) ? data.drivers : Array.isArray(data) ? data : [];
+        setVehicles(rows);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const filteredVehicles = vehicles.filter((v) => (filter === "ALL" ? true : v.status === filter));
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -53,34 +65,46 @@ const Logistics: React.FC = () => {
           </div>
         </div>
         <div className="divide-y">
-          {filteredVehicles.map((v) => (
-            <div key={v.id} className="p-8 flex items-center justify-between hover:bg-gray-50 transition-colors group animate-in slide-in-from-bottom-2 duration-300">
-              <div className="flex items-center gap-8">
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border-2 transition-transform group-hover:scale-105 ${
-                  v.status === 'ON ROUTE' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
-                  v.status === 'LOADING' ? 'bg-orange-50 text-orange-600 border-orange-100' : 'bg-gray-50 text-gray-400 border-gray-100'
-                }`}>
-                  <Truck size={28} />
-                </div>
-                <div className="space-y-1">
-                  <h4 className="font-black text-2xl italic text-gray-900">{v.driver}</h4>
-                  <p className="text-xs text-gray-400 font-bold tracking-widest uppercase flex items-center gap-2">
-                    <MapPin size={14} /> {v.id} • {v.load} capacity
-                  </p>
-                </div>
-              </div>
-              <div className="text-right space-y-3">
-                <StatusBadge status={v.status} />
-                <p className="text-[10px] font-black text-gray-400 uppercase flex items-center justify-end gap-2">
-                  <Navigation size={12} className="text-[#006666]" /> ETA: <span className="text-gray-900">{v.eta}</span>
-                </p>
-              </div>
-            </div>
-          ))}
-          {filteredVehicles.length === 0 && (
+          {loading ? (
+            <div className="p-12 text-center text-gray-400 font-bold">Loading fleet status...</div>
+          ) : filteredVehicles.length === 0 ? (
             <div className="p-20 text-center text-gray-400 font-black uppercase tracking-widest italic">
               No vehicles in this state.
             </div>
+          ) : (
+            filteredVehicles.map((v) => (
+              <div
+                key={v.id || v.driver}
+                className="p-8 flex items-center justify-between hover:bg-gray-50 transition-colors group animate-in slide-in-from-bottom-2 duration-300"
+              >
+                <div className="flex items-center gap-8">
+                  <div
+                    className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border-2 transition-transform group-hover:scale-105 ${
+                      v.status === "ON ROUTE"
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                        : v.status === "LOADING"
+                          ? "bg-orange-50 text-orange-600 border-orange-100"
+                          : "bg-gray-50 text-gray-400 border-gray-100"
+                    }`}
+                  >
+                    <Truck size={28} />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="font-black text-2xl italic text-gray-900">{v.driver || v.name}</h4>
+                    <p className="text-xs text-gray-400 font-bold tracking-widest uppercase flex items-center gap-2">
+                      <MapPin size={14} /> {v.id || v.code || "ID"} • {v.load || v.capacity || "N/A"} capacity
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right space-y-3">
+                  <StatusBadge status={v.status || "UNKNOWN"} />
+                  <p className="text-[10px] font-black text-gray-400 uppercase flex items-center justify-end gap-2">
+                    <Navigation size={12} className="text-[#006666]" /> ETA:{" "}
+                    <span className="text-gray-900">{v.eta || "Pending"}</span>
+                  </p>
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>
