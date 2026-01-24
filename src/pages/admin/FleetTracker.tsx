@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { MapPin, Truck, Navigation, Activity, Layers, ArrowLeft, Info } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Truck, Activity, ArrowLeft, Info } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import Badge from "../../components/ui/Badge";
 import Button from "../../components/ui/Button";
@@ -18,7 +18,6 @@ const FleetTracker: React.FC = () => {
   const navigate = useNavigate();
   const [drivers, setDrivers] = useState<FleetDriver[]>([]);
   const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"standard" | "satellite">("standard");
 
   useEffect(() => {
     const load = async () => {
@@ -33,14 +32,10 @@ const FleetTracker: React.FC = () => {
     load();
   }, []);
 
-  const toggleLayer = () => {
-    setViewMode(viewMode === "standard" ? "satellite" : "standard");
-    toast(`Switched to ${viewMode === "standard" ? "Satellite" : "Standard"} map view`, { icon: "🛰️" });
-  };
-
-  const centerMap = () => {
-    toast.success("Recentering map on Central Hub Cluster", { icon: "🎯" });
-  };
+  const driversWithCoords = useMemo(
+    () => drivers.filter((d: any) => typeof (d as any).lat === "number" && typeof (d as any).lng === "number"),
+    [drivers],
+  );
 
   return (
     <div className="space-y-10 animate-in fade-in duration-1000 pb-20">
@@ -64,38 +59,40 @@ const FleetTracker: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-12 gap-8">
-        <div className={`col-span-12 lg:col-span-9 border-8 border-white rounded-[4rem] shadow-2xl relative min-h-[700px] overflow-hidden transition-colors duration-500 ${viewMode === "satellite" ? "bg-emerald-950" : "bg-gray-50"}`}>
-          <svg viewBox="0 0 800 600" className={`w-full h-full transition-opacity ${viewMode === "satellite" ? "opacity-30" : "opacity-60"}`}>
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className={viewMode === "satellite" ? "text-emerald-800" : "text-gray-200"} />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-            <path d="M 0 300 Q 400 250 800 300" fill="none" stroke={viewMode === "satellite" ? "#064e3b" : "#E2E8F0"} strokeWidth="20" strokeLinecap="round" />
-            <path d="M 400 0 L 400 600" fill="none" stroke={viewMode === "satellite" ? "#064e3b" : "#E2E8F0"} strokeWidth="15" strokeLinecap="round" />
-            {drivers.map((d) => (
-              <g key={d.id} onClick={() => setSelectedDriver(d.id)} className="cursor-pointer transition-all duration-1000">
-                <circle cx={200 + Math.random() * 400} cy={150 + Math.random() * 300} r="16" className={`${selectedDriver === d.id ? "fill-emerald-500 scale-125" : "fill-white"} stroke-emerald-500 stroke-4 transition-all`} />
-                <Truck x={(200 + Math.random() * 400) - 8} y={(150 + Math.random() * 300) - 8} size={16} className={`${selectedDriver === d.id ? "text-white" : "text-emerald-500"}`} />
-                <text x={200 + Math.random() * 400} y={(150 + Math.random() * 300) + 35} textAnchor="middle" className={`${viewMode === "satellite" ? "fill-emerald-200" : "fill-gray-400"} text-[10px] font-black uppercase tracking-widest`}>{d.name}</text>
-              </g>
-            ))}
-          </svg>
-          <div className="absolute top-8 left-8 flex flex-col gap-3">
-            <button
-              onClick={toggleLayer}
-              className={`w-12 h-12 rounded-xl shadow-lg flex items-center justify-center transition-all border shadow-sm ${viewMode === "satellite" ? "bg-emerald-600 text-white border-emerald-500" : "bg-white text-gray-400 hover:text-emerald-600 border-gray-100"}`}
-            >
-              <Layers size={20} />
-            </button>
-            <button
-              onClick={centerMap}
-              className="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-gray-400 hover:text-emerald-600 transition-colors border border-gray-100 shadow-sm active:scale-90"
-            >
-              <Navigation size={20} />
-            </button>
-          </div>
+        <div className="col-span-12 lg:col-span-9 border-8 border-white rounded-[4rem] shadow-2xl min-h-[420px] bg-gray-50 flex items-center justify-center relative">
+          {driversWithCoords.length === 0 ? (
+            <div className="text-center space-y-3 px-10 py-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-xs font-black uppercase tracking-[0.2em]">
+                <Info size={14} /> Map requires coordinates
+              </div>
+              <p className="text-sm font-bold text-gray-500 max-w-xl">
+                Fleet status is available, but coordinate data is missing. The map view is disabled to avoid simulated pins. Showing list view only.
+              </p>
+              <Button variant="ghost" onClick={() => toast("Waiting for live GPS data...", { icon: "🛰️" })}>
+                Refresh when GPS available
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full h-full p-8">
+              <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm space-y-3">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Live GPS Pins</p>
+                {driversWithCoords.map((d: any) => (
+                  <div key={d.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                    <div className="flex items-center gap-3">
+                      <Truck size={18} className="text-emerald-500" />
+                      <div>
+                        <p className="font-black">{d.name}</p>
+                        <p className="text-xs text-gray-400 font-bold">
+                          {d.lat}, {d.lng} {d.status ? `• ${d.status}` : ""}
+                        </p>
+                      </div>
+                    </div>
+                    <Badge color="gray">{d.status || "Active"}</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="col-span-12 lg:col-span-3 space-y-4">
