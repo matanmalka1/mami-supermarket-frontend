@@ -10,6 +10,7 @@ const ADMIN_ENDPOINTS = {
   settings: "/admin/settings",
   analyticsRevenue: "/admin/analytics/revenue",
   fleetStatus: "/admin/fleet/status",
+  deliverySlots: "/admin/delivery-slots",
 };
 
 export type AdminSettings = {
@@ -91,4 +92,5 @@ export const adminService = {
   getRevenueAnalytics: () =>
     apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
   getFleetStatus: () => apiClient.get<any, any>(ADMIN_ENDPOINTS.fleetStatus),
+  getDeliverySlots: () => apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
 };
