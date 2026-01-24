@@ -45,11 +45,17 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
             <TR key={inv.id || inv.product?.sku || inv.product_id}>
               <TD>
                 <div className="flex items-center gap-4">
-                  <img
-                    src={inv.product?.imageUrl || "https://picsum.photos/seed/product/80/80"}
-                    alt={inv.product?.name}
-                    className="w-14 h-14 rounded-xl object-cover border shadow-sm"
-                  />
+                  {inv.product?.imageUrl || inv.product?.image_url ? (
+                    <img
+                      src={inv.product?.imageUrl || inv.product?.image_url}
+                      alt={inv.product?.name}
+                      className="w-14 h-14 rounded-xl object-cover border shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded-xl bg-gray-100 border flex items-center justify-center text-gray-400 font-black">
+                      {(inv.product?.name || "?").slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   <div>
                     <h4 className="text-lg leading-tight italic">{inv.product?.name}</h4>
                     <p className="text-[10px] text-gray-400 uppercase tracking-widest">
