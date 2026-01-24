@@ -30,9 +30,10 @@ const OrderTable: React.FC<OrderTableProps> = ({
         </TR>
       </THead>
       <TBody>
-        {orders.map((order, index) => (
-          <TR
-            key={order.id ?? order.orderNumber ?? `${order.createdAt}-${index}`}
+        {Array.isArray(orders) &&
+          orders.map((order, index) => (
+            <TR
+              key={order.id ?? order.orderNumber ?? `${order.createdAt}-${index}`}
             className={selectedIds.includes(order.id) ? "bg-emerald-50/30" : ""}
           >
             <TD>
@@ -76,7 +77,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
               </Link>
             </TD>
           </TR>
-        ))}
+          ))}
       </TBody>
     </Table>
   );
