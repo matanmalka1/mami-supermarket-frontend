@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { ArrowLeft, Scale, Package } from 'lucide-react';
-import Badge from '../components/ui/Badge';
-import Button from '../components/ui/Button';
-import Modal from '../components/ui/Modal';
-import PickingHeader from '../components/ops/PickingHeader';
-import PickingFooter from '../components/ops/PickingFooter';
-import PickingItemRow from '../components/ops/PickingItemRow';
-import MissingItemModal from '../components/ops/MissingItemModal';
-import { usePicking } from '../hooks/usePicking';
-import { useWeightScale } from '../hooks/useWeightScale';
+import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
+import PickingHeader from '@/components/ops/PickingHeader';
+import PickingFooter from '@/components/ops/PickingFooter';
+import PickingItemRow from '@/components/ops/PickingItemRow';
+import MissingItemModal from '@/components/ops/MissingItemModal';
+import { usePicking } from '@/hooks/usePicking';
+import { useWeightScale } from '@/hooks/useWeightScale';
 
 const PickingInterface: React.FC = () => {
   const { id } = useParams();
@@ -71,7 +71,7 @@ const PickingInterface: React.FC = () => {
       <div className="bg-white rounded-[3rem] border border-gray-100 shadow-xl overflow-hidden">
         <table className="w-full text-left border-collapse">
           <tbody className="divide-y divide-gray-50">
-            {items.map(item => (
+            {items.map((item: any) => (
               <PickingItemRow 
                 key={item.id} 
                 item={item} 

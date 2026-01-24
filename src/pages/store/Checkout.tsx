@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import { apiService } from "../services/api";
-import { useCart } from "../context/CartContext";
-import CheckoutStepper, { CheckoutStep } from "../components/checkout/CheckoutStepper";
-import FulfillmentStep from "../components/checkout/FulfillmentStep";
-import ScheduleStep from "../components/checkout/ScheduleStep";
-import PaymentStep from "../components/checkout/PaymentStep";
+import { apiService } from "@/services/api";
+import { useCart } from "@/context/CartContext";
+import CheckoutStepper, { CheckoutStep } from "@/components/checkout/CheckoutStepper";
+import FulfillmentStep from "@/components/checkout/FulfillmentStep";
+import ScheduleStep from "@/components/checkout/ScheduleStep";
+import PaymentStep from "@/components/checkout/PaymentStep";
 
 const SLOTS = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00"];
 
 const Checkout: React.FC = () => {
-  const { items, total, clearCart, refresh } = useCart();
+  const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
   const [method, setMethod] = useState<"DELIVERY" | "PICKUP">("DELIVERY");
@@ -60,7 +60,6 @@ const Checkout: React.FC = () => {
         idempotencyKey,
       );
       clearCart();
-      refresh?.();
       const orderId = data?.order_id || data?.orderId || data?.id || "order";
       navigate(`/store/order-success/${orderId}`);
     } catch (err: any) {

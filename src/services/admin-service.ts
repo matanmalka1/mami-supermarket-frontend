@@ -38,6 +38,7 @@ export interface UpdateProductRequest {
   sku?: string;
   price?: number;
   category_id?: string;
+  description?: string;
 }
 export interface CreateBranchRequest {
   name: string;

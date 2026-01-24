@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Button from "../../components/ui/Button";
-import Badge from "../../components/ui/Badge";
-import Modal from "../../components/ui/Modal";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import Modal from "@/components/ui/Modal";
 import { Clock, ShieldAlert, Save, ChevronRight, Lock, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { apiService } from "../../services/api";
+import { apiService } from "@/services/api";
 
 const DeliverySlotManager: React.FC = () => {
   const [slots, setSlots] = useState<any[]>([]);

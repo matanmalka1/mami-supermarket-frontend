@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Save, Coins } from "lucide-react";
-import Button from "../../components/ui/Button";
-import ConfirmDialog from "../../components/ui/ConfirmDialog";
+import Button from "@/components/ui/Button";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "react-hot-toast";
-import { apiService } from "../../services/api";
+import { apiService } from "@/services/api";
 import SettingsField from "./SettingsField";
 import DangerZone from "./DangerZone";
-import { AdminSettings } from "../../services/admin-service";
+import { AdminSettings } from "@/services/admin-service";
 
 type SettingsPayload = Partial<AdminSettings>;
 
@@ -38,7 +38,7 @@ const GlobalSettings: React.FC = () => {
   }, []);
 
   const handleChange = (key: keyof SettingsPayload, value: string) => {
-    setForm((prev) => ({
+    setForm((prev: Required<SettingsPayload>) => ({
       ...prev,
       [key]: key === "slots" ? value : Math.max(0, Number(value) || 0),
     }));

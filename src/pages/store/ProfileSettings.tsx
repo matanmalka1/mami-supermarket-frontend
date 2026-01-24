@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { User, Mail, Bell, ShieldCheck } from 'lucide-react';
-import Button from '../components/ui/Button';
+import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
-import { sleep } from '../utils/async';
+import { sleep } from '@/utils/async';
 
 const ProfileSettings: React.FC = () => {
   const { register, handleSubmit, formState: { isSubmitting } } = useForm({

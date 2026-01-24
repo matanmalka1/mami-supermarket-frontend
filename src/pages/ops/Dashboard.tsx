@@ -2,14 +2,14 @@
 import React from 'react';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useNavigate } from 'react-router';
-import StatCard from '../components/ui/StatCard';
-import Grid from '../components/ui/Grid';
-import Button from '../components/ui/Button';
-import { LoadingSpinner } from '../components/ui/Feedback';
+import StatCard from '@/components/ui/StatCard';
+import Grid from '@/components/ui/Grid';
+import Button from '@/components/ui/Button';
+import { LoadingSpinner } from '@/components/ui/Feedback';
 import { Layers, Play } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import OrderTable from '../features/ops/components/OrderTable';
-import { useOrders } from '../hooks/useOrders';
+import OrderTable from '@/features/ops/components/OrderTable';
+import { useOrders } from '@/hooks/useOrders';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();

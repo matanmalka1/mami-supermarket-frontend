@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Button from "../components/ui/Button";
-import StockRequestForm from "../features/ops/StockRequestForm";
-import StockRequestHistory from "../features/ops/StockRequestHistory";
+import Button from "@/components/ui/Button";
+import StockRequestForm from "@/features/ops/StockRequestForm";
+import StockRequestHistory from "@/features/ops/StockRequestHistory";
 
 type Step = "FORM" | "HISTORY";
 

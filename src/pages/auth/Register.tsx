@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingBag } from "lucide-react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link, useNavigate } from "react-router";
-import RegistrationBenefits from "../components/auth/RegistrationBenefits";
-import RegistrationForm from "../features/auth/components/RegistrationForm";
+import RegistrationBenefits from "@/components/auth/RegistrationBenefits";
+import RegistrationForm from "@/features/auth/components/RegistrationForm";
 import { toast } from "react-hot-toast";
-import { apiService } from "../services/api";
-import { registerSchema, RegisterInput } from "../validation/auth";
+import { apiService } from "@/services/api";
+import { registerSchema, RegisterInput } from "@/validation/auth";
 
 const Register: React.FC<{ onRegister: () => void }> = ({ onRegister }) => {
   const navigate = useNavigate();

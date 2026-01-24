@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
-import Button from "../../components/ui/Button";
-import { apiService } from "../../services/api";
-import { StockRequestStatus } from "../../services/admin-service";
+import Button from "@/components/ui/Button";
+import { apiService } from "@/services/api";
+import { StockRequestStatus } from "@/services/admin-service";
 import StockRequestRow, { StockRequest } from "./StockRequestRow";
 
 const StockRequestManager: React.FC = () => {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Badge from '../components/ui/Badge';
+import Badge from '@/components/ui/Badge';
 import { History, Shield, UserCheck, AlertTriangle, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { INITIAL_AUDIT_LOGS } from '../constants';
-import { sleep } from '../utils/async';
+import { INITIAL_AUDIT_LOGS } from '@/constants';
+import { sleep } from '@/utils/async';
 
 const AuditLogs: React.FC = () => {
   const [logs, setLogs] = useState(INITIAL_AUDIT_LOGS);
@@ -41,7 +41,7 @@ const AuditLogs: React.FC = () => {
           </div>
         </div>
         <div className="divide-y divide-gray-50">
-          {logs.map((log) => (
+          {logs.map((log: any) => (
             <div key={log.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-all group">
               <div className="flex items-center gap-6">
                 <div className={`p-3 rounded-xl transition-all group-hover:scale-110 ${log.severity === 'high' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'}`}>

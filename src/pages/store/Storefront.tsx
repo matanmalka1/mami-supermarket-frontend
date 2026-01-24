@@ -3,15 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link, useNavigate } from "react-router";
 import { TrendingUp, Clock, Leaf, Sparkles, MapPin, ChevronRight } from "lucide-react";
-import ProductCard from "../components/store/ProductCard";
-import FlashDeals from "../components/store/FlashDeals";
-import RecentlyViewed from "../components/store/RecentlyViewed";
-import Section from "../components/ui/Section";
-import Grid from "../components/ui/Grid";
-import Button from "../components/ui/Button";
-import Modal from "../components/ui/Modal";
-import { apiService } from "../services/api";
-import { HeroSection, BenefitCard } from "../components/store/StorefrontComponents";
+import ProductCard from "@/components/store/ProductCard";
+import FlashDeals from "@/components/store/FlashDeals";
+import RecentlyViewed from "@/components/store/RecentlyViewed";
+import Section from "@/components/ui/Section";
+import Grid from "@/components/ui/Grid";
+import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
+import { apiService } from "@/services/api";
+import { HeroSection, BenefitCard } from "@/components/store/StorefrontComponents";
 
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
@@ -28,8 +28,10 @@ const Storefront: React.FC = () => {
           apiService.catalog.getCategories(),
           apiService.catalog.getFeatured(),
         ]);
-        setCategories(Array.isArray(cats?.items) ? cats.items : Array.isArray(cats) ? cats : []);
-        setFeatured(Array.isArray(feats?.items) ? feats.items : Array.isArray(feats) ? feats : []);
+        const catData: any = cats as any;
+        const featData: any = feats as any;
+        setCategories(Array.isArray(catData?.items) ? catData.items : Array.isArray(catData) ? catData : []);
+        setFeatured(Array.isArray(featData?.items) ? featData.items : Array.isArray(featData) ? featData : []);
       } finally {
         setLoading(false);
       }

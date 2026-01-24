@@ -1,6 +1,6 @@
 import React from "react";
-import Badge from "../../components/ui/Badge";
-import { currencyILS } from "../../utils/format";
+import Badge from "@/components/ui/Badge";
+import { currencyILS } from "@/utils/format";
 import { Edit3, Trash2 } from "lucide-react";
 
 type Props = {

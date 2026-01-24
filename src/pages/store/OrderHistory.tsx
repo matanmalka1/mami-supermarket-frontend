@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Badge from "../components/ui/Badge";
-import Button from "../components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 import {
   Package,
   Truck,
@@ -14,10 +14,10 @@ import {
   FileText,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { currencyILS } from "../utils/format";
-import { sleep } from "../utils/async";
-import { apiService } from "../services/api";
-import { LoadingSpinner } from "../components/ui/Feedback";
+import { currencyILS } from "@/utils/format";
+import { sleep } from "@/utils/async";
+import { apiService } from "@/services/api";
+import { LoadingSpinner } from "@/components/ui/Feedback";
 
 const OrderHistory: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
@@ -42,7 +42,7 @@ const OrderHistory: React.FC = () => {
     fetchOrders();
   }, []);
 
-  const handleDownloadInvoice = async (e: React.MouseEvent, id: string) => {
+  const handleDownloadInvoice = async (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();
     setDownloadingId(id);
     toast.loading(`Generating PDF invoice for #${id}...`, { id: "invoice" });

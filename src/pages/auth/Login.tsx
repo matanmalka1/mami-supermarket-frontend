@@ -12,8 +12,8 @@ import {
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import { apiService } from "../services/api";
-import { loginSchema, LoginInput } from "../validation/auth";
+import { apiService } from "@/services/api";
+import { loginSchema, LoginInput } from "@/validation/auth";
 
 const Login: React.FC<{ onLogin: (role: "ADMIN" | "USER") => void }> = ({
   onLogin,

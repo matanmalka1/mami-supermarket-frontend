@@ -3,7 +3,7 @@ import React from 'react';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useParams, Link } from 'react-router';
 import { CheckCircle2, Package, Truck, Home } from 'lucide-react';
-import Button from '../components/ui/Button';
+import Button from '@/components/ui/Button';
 
 const OrderSuccess: React.FC = () => {
   const { id } = useParams();

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { Package, MapPin, User, LogOut, ChevronRight, Star } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import AvatarBadge from '../components/ui/AvatarBadge';
+import AvatarBadge from '@/components/ui/AvatarBadge';
 
 interface AccountLayoutProps {
   onLogout: () => void;

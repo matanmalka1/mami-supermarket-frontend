@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, Navigation, Info, Search, Move, Layers, LocateFixed, Package } from 'lucide-react';
-import Badge from '../components/ui/Badge';
-import Button from '../components/ui/Button';
+import Badge from '@/components/ui/Badge';
+import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
 
 const WarehouseMap: React.FC = () => {

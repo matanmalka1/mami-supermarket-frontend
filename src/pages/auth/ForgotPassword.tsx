@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from 'react-router';
 import { Mail, ArrowLeft, CheckCircle2 } from 'lucide-react';
-import Button from '../components/ui/Button';
+import Button from '@/components/ui/Button';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');

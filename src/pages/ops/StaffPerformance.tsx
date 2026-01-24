@@ -1,6 +1,6 @@
 import React from 'react';
 import { Info } from 'lucide-react';
-import Button from '../components/ui/Button';
+import Button from '@/components/ui/Button';
 
 const StaffPerformance: React.FC = () => {
   return (

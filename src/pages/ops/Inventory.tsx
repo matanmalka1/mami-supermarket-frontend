@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
-import Button from "../components/ui/Button";
+import Button from "@/components/ui/Button";
 import { Plus } from "lucide-react";
-import { useInventory } from "../hooks/useInventory";
-import InventoryTable from "./inventory/InventoryTable";
-import NewSkuModal from "./inventory/NewSkuModal";
+import { useInventory } from "@/hooks/useInventory";
+import InventoryTable from "@/pages/inventory/InventoryTable";
+import NewSkuModal from "@/pages/inventory/NewSkuModal";
 
 const Inventory: React.FC = () => {
   const { inventory, loading, updateStock } = useInventory();

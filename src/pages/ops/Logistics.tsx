@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from "react-router";
-import StatCard from "../components/ui/StatCard";
-import StatusBadge from "../components/ui/StatusBadge";
-import Grid from "../components/ui/Grid";
+import StatCard from "@/components/ui/StatCard";
+import StatusBadge from "@/components/ui/StatusBadge";
+import Grid from "@/components/ui/Grid";
 import { Truck, MapPin, Navigation, Activity } from "lucide-react";
-import { apiService } from "../services/api";
+import { apiService } from "@/services/api";
 
 const Logistics: React.FC = () => {
   const [filter, setFilter] = useState<"ALL" | "ON ROUTE" | "LOADING" | "RETURNING">("ALL");

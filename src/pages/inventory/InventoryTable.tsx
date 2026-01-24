@@ -1,6 +1,6 @@
 import React from "react";
-import { Table, THead, TBody, TR, TH, TD } from "../../components/ui/Table";
-import StatusBadge from "../../components/ui/StatusBadge";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/Table";
+import StatusBadge from "@/components/ui/StatusBadge";
 import { MoreVertical, Move, Archive, BarChart2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 

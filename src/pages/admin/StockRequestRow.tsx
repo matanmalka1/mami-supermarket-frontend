@@ -1,7 +1,7 @@
 import React from "react";
 import { CheckCircle2, Clock, Package, XCircle } from "lucide-react";
-import Button from "../../components/ui/Button";
-import Badge from "../../components/ui/Badge";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 
 export type StockRequest = {
   id: string;

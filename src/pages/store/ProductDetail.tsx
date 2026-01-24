@@ -10,12 +10,12 @@ import {
   Leaf,
   Clock,
 } from "lucide-react";
-import ProductGallery from "../components/store/ProductGallery";
-import ProductInfo from "../components/store/ProductInfo";
-import ProductTabs from "../components/store/ProductTabs";
-import { LoadingSpinner } from "../components/ui/Feedback";
-import { apiService } from "../services/api";
-import { Product } from "../types/domain";
+import ProductGallery from "@/components/store/ProductGallery";
+import ProductInfo from "@/components/store/ProductInfo";
+import ProductTabs from "@/components/store/ProductTabs";
+import { LoadingSpinner } from "@/components/ui/Feedback";
+import { apiService } from "@/services/api";
+import { Product } from "@/types/domain";
 
 const SIMILAR_ITEMS = [
   {

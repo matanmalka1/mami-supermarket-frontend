@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useSearchParams, Link } from 'react-router';
 import { Search, ArrowLeft, Filter, X, Check } from 'lucide-react';
-import ProductCard from '../components/store/ProductCard';
-import { EmptyState } from '../components/ui/Feedback';
-import Button from '../components/ui/Button';
+import ProductCard from '@/components/store/ProductCard';
+import { EmptyState } from '@/components/ui/Feedback';
+import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
 
 const SearchResults: React.FC = () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { ShieldAlert, Trash2 } from "lucide-react";
-import Button from "../../components/ui/Button";
+import Button from "@/components/ui/Button";
 
 type Props = {
   onSuspend: () => void;

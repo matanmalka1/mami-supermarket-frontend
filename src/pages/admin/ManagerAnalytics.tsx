@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import PageHeader from "../../components/ui/PageHeader";
-import Grid from "../../components/ui/Grid";
-import Card from "../../components/ui/Card";
-import StatCard from "../../components/ops/StatCard";
+import PageHeader from "@/components/ui/PageHeader";
+import Grid from "@/components/ui/Grid";
+import Card from "@/components/ui/Card";
+import StatCard from "@/components/ops/StatCard";
 import { BarChart3, TrendingUp, DollarSign, Users, ShieldCheck } from "lucide-react";
-import { apiService } from "../../services/api";
+import { apiService } from "@/services/api";
 import { toast } from "react-hot-toast";
 
 type RevenueData = { labels: string[]; values: number[] };

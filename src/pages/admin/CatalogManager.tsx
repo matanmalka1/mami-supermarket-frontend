@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Plus, Search, Trash2 } from "lucide-react";
-import Button from "../../components/ui/Button";
-import ConfirmDialog from "../../components/ui/ConfirmDialog";
+import Button from "@/components/ui/Button";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "react-hot-toast";
-import { useCatalogManager } from "../../hooks/useCatalogManager";
-import { apiService } from "../../services/api";
+import { useCatalogManager } from "@/hooks/useCatalogManager";
+import { apiService } from "@/services/api";
 import CatalogProductTable from "./CatalogProductTable";
 import { CatalogProductForm } from "./CatalogProductForm";
 const CatalogManager: React.FC = () => {
@@ -140,8 +140,7 @@ const CatalogManager: React.FC = () => {
         variant="danger"
         title="Deactivate SKU"
         message={`Confirm deactivation of ${targetProduct?.name}?`}
-        confirmIcon={<Trash2 size={16} />}
-        confirmText="Deactivate"
+        confirmLabel="Deactivate"
       />
     </div>
   );

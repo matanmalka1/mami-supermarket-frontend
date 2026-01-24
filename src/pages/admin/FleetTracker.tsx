@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Truck, Activity, ArrowLeft, Info } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import Badge from "../../components/ui/Badge";
-import Button from "../../components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
-import { apiService } from "../../services/api";
+import { apiService } from "@/services/api";
 
 type FleetDriver = {
   id: string;
