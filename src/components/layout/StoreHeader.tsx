@@ -10,6 +10,7 @@ import { CATEGORIES, STORE_NOTIFICATIONS } from '../../constants';
 import NotifDropdown from './store-header/NotifDropdown';
 import AccountDropdown from './store-header/AccountDropdown';
 import DeptMegaMenu from './store-header/DeptMegaMenu';
+import AvatarBadge from '../ui/AvatarBadge';
 
 const StoreHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -119,9 +120,9 @@ const StoreHeader: React.FC = () => {
             <div className="relative ml-2">
               <div 
                 onClick={() => setActiveMenu(activeMenu === 'account' ? null : 'account')}
-                className={`w-10 h-10 rounded-xl bg-gray-50 border-2 overflow-hidden cursor-pointer transition-all shadow-sm ${activeMenu === 'account' ? 'border-[#008A45] ring-4 ring-emerald-50' : 'border-transparent hover:border-emerald-100'}`}
+                className={`w-10 h-10 rounded-xl bg-gray-50 border-2 overflow-hidden cursor-pointer transition-all shadow-sm flex items-center justify-center ${activeMenu === 'account' ? 'border-[#008A45] ring-4 ring-emerald-50' : 'border-transparent hover:border-emerald-100'}`}
               >
-                <img src={`https://picsum.photos/seed/${isActuallyAdmin ? 'sarah' : 'user'}/40/40`} alt="Avatar" />
+                <AvatarBadge name={isActuallyAdmin ? 'Admin User' : 'Customer'} size={36} className="border-0" />
               </div>
               {activeMenu === 'account' && <AccountDropdown onClose={() => setActiveMenu(null)} userRole={userRole} onLogout={logout} />}
             </div>

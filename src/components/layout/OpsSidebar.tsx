@@ -18,6 +18,7 @@ import {
   CalendarClock,
   Settings2
 } from 'lucide-react';
+import AvatarBadge from '../ui/AvatarBadge';
 
 const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
@@ -96,7 +97,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
       <div className="p-6 border-t bg-gray-50/50">
         <div className="flex items-center gap-3 mb-6">
           <div className="relative">
-            <img src="https://picsum.photos/seed/sarah/40/40" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" alt="Profile" />
+            <AvatarBadge name="Sarah Jenkins" size={40} className="shadow-sm border-2 border-white" />
             <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></div>
           </div>
           <div className="min-w-0">

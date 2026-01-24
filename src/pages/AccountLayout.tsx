@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { Package, MapPin, User, LogOut, ChevronRight, Star } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import AvatarBadge from '../components/ui/AvatarBadge';
 
 interface AccountLayoutProps {
   onLogout: () => void;
@@ -33,7 +34,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
         <div className="bg-gray-50/50 rounded-[2.5rem] p-8 space-y-6 border border-gray-100">
           <div className="flex items-center gap-4">
             <div className="relative">
-               <img src="https://picsum.photos/seed/user123/64/64" className="w-16 h-16 rounded-2xl object-cover border-4 border-white shadow-md" alt="Avatar" />
+               <AvatarBadge name="John Doe" size={64} className="rounded-2xl border-4 border-white shadow-md" />
                {isPremium && (
                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#008A45] rounded-full flex items-center justify-center text-white border-2 border-white shadow-sm">
                    <Star size={12} fill="currentColor" />

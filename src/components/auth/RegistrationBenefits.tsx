@@ -1,5 +1,6 @@
 import React from 'react';
 import { Truck, Heart, Zap } from 'lucide-react';
+import AvatarBadge from '../ui/AvatarBadge';
 
 const RegistrationBenefits: React.FC = () => {
   return (
@@ -36,10 +37,12 @@ const RegistrationBenefits: React.FC = () => {
 
       <div className="pt-10 border-t border-gray-50 flex items-center gap-6 px-2">
         <div className="flex -space-x-4">
-          {[1, 2, 3].map(i => (
-            <img key={i} src={`https://picsum.photos/seed/${i + 50}/60/60`} className="w-14 h-14 rounded-full border-4 border-white shadow-lg object-cover" alt="" />
+          {["Alma R.", "Nora K.", "Liam T."].map((name) => (
+            <AvatarBadge key={name} name={name} size={56} className="border-4 border-white shadow-lg bg-emerald-50 text-emerald-700" />
           ))}
-          <div className="w-14 h-14 bg-emerald-50 rounded-full border-4 border-white flex items-center justify-center text-[10px] font-black text-emerald-700 shadow-lg">5k+</div>
+          <div className="w-14 h-14 bg-emerald-50 rounded-full border-4 border-white flex items-center justify-center text-[10px] font-black text-emerald-700 shadow-lg">
+            5k+
+          </div>
         </div>
         <div>
           <p className="text-[10px] font-black text-gray-300 leading-tight uppercase tracking-widest">Global Reach</p>
