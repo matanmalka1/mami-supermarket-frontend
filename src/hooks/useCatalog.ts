@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiService } from "../services/api";
-import { Product, Category } from "../types/domain";
+import { Product } from "../types/domain";
 import { toast } from "react-hot-toast";
 
 export const useCatalog = (categoryId?: string, query?: string) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchCatalog = useCallback(async () => {

@@ -13,7 +13,7 @@ export const useInventory = () => {
       const data: any = await apiService.admin.getInventory();
       const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
       setInventory(rows);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load global inventory");
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ export const useInventory = () => {
         ),
       );
       toast.success("Stock level synchronized");
-    } catch (err) {
+    } catch {
       toast.error("Sync failed");
     }
   };

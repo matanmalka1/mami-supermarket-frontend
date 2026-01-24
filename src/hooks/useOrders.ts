@@ -13,7 +13,7 @@ export const useOrders = () => {
     try {
       const data = await apiService.ops.getOrders();
       setOrders(Array.isArray(data) ? data : []);
-    } catch (err) {
+    } catch {
       toast.error("Orders sync failed. Reconnecting...");
     } finally {
       setLoading(false);

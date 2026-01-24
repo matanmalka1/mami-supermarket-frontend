@@ -21,7 +21,7 @@ const ProfileSettings: React.FC = () => {
     toast.success("Preference updated", { style: { borderRadius: '1rem', fontWeight: 'bold' } });
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async () => {
     await sleep(1000);
     toast.success("Profile updated successfully!");
   };

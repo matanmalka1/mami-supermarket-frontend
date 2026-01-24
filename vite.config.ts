@@ -20,7 +20,7 @@ const getProxyTarget = () => {
     // Basic validation to ensure it's a valid URL string for Vite's proxy
     new URL(envProxy.trim());
     return envProxy.trim();
-  } catch (e) {
+  } catch {
     console.warn(
       `[Vite] Warning: Invalid VITE_DEV_API_PROXY ("${envProxy}"). Using fallback: ${fallback}`,
     );

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Truck, Activity, ArrowLeft, Info } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
@@ -15,9 +15,7 @@ type FleetDriver = {
 };
 
 const FleetTracker: React.FC = () => {
-  const navigate = useNavigate();
   const [drivers, setDrivers] = useState<FleetDriver[]>([]);
-  const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -104,7 +102,7 @@ const FleetTracker: React.FC = () => {
             drivers.map((d) => (
               <div
                 key={d.id}
-                className={`p-4 bg-white border rounded-2xl flex items-center justify-between ${selectedDriver === d.id ? "border-emerald-300" : ""}`}
+                className="p-4 bg-white border rounded-2xl flex items-center justify-between"
               >
                 <div>
                   <p className="font-black italic">{d.name}</p>

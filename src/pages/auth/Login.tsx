@@ -35,7 +35,7 @@ const Login: React.FC<{ onLogin: (role: "ADMIN" | "USER") => void }> = ({
   });
 
   const onSubmit = async (data: LoginInput) => {
-    const loadingToast = toast.loading("Authenticating secure session...", {
+    toast.loading("Authenticating secure session...", {
       id: "auth",
     });
     try {

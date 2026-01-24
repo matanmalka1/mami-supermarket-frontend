@@ -8,14 +8,7 @@ const DEAL_ITEMS = [
 ];
 
 const FlashDeals: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState('02:45:12');
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      // Mock countdown logic
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const [timeLeft] = useState('02:45:12');
 
   return (
     <section className="bg-orange-50 rounded-[3rem] p-12 space-y-10 border border-orange-100">
