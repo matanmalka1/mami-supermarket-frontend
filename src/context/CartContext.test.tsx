@@ -65,4 +65,27 @@ describe("CartContext", () => {
       0,
     );
   });
+
+  it("rehydrates from localStorage on mount", async () => {
+    const snapshot = [{ id: "p2", name: "Banana", price: 2, image: "", quantity: 4 }];
+    localStorage.setItem("mami_cart", JSON.stringify(snapshot));
+
+    const { unmount } = render(
+      <CartProvider>
+        <CartHarness />
+      </CartProvider>,
+    );
+
+    expect(screen.getByTestId("count").textContent).toBe("4");
+    expect(screen.getByTestId("total").textContent).toBe("8");
+
+    unmount();
+    render(
+      <CartProvider>
+        <CartHarness />
+      </CartProvider>,
+    );
+    expect(screen.getByTestId("count").textContent).toBe("4");
+    expect(screen.getByTestId("total").textContent).toBe("8");
+  });
 });

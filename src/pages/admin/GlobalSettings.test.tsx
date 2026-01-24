@@ -83,6 +83,7 @@ describe("GlobalSettings", () => {
 
     await userEvent.click(screen.getByText(/publish global changes/i));
 
+    expect(mockUpdateSettings).toHaveBeenCalledTimes(1);
     expect(mockUpdateSettings).toHaveBeenCalledWith({
       delivery_min: 180,
       delivery_fee: 25,
