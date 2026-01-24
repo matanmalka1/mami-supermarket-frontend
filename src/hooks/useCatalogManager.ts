@@ -8,7 +8,6 @@ export const useCatalogManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [deletingProduct, setDeletingProduct] = useState<any>(null);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -27,12 +26,13 @@ export const useCatalogManager = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  const deleteProduct = async (id: string) => {
+  const deactivateProduct = async (id: string) => {
     try {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      toast.success("Product removed from index");
+      await apiService.admin.toggleProduct(id, false);
+      toast.success("Product deactivated");
+      fetchProducts();
     } catch {
-      toast.error("Deletion failed");
+      toast.error("Update failed");
     }
   };
 
@@ -60,9 +60,7 @@ export const useCatalogManager = () => {
     setActiveFilter,
     editingProduct,
     setEditingProduct,
-    deletingProduct,
-    setDeletingProduct,
-    deleteProduct,
+    deactivateProduct,
     refresh: fetchProducts,
   };
 };

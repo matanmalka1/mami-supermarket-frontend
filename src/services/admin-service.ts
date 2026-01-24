@@ -67,6 +67,12 @@ export const adminService = {
       `${ADMIN_ENDPOINTS.adminProducts}/${id}`,
       data,
     ),
+  toggleProduct: (id: string, active: boolean) =>
+    apiClient.patch<void, void>(
+      `${ADMIN_ENDPOINTS.adminProducts}/${id}/toggle`,
+      null,
+      { params: { active } },
+    ),
   createProduct: (data: CreateProductRequest) =>
     apiClient.post<CreateProductRequest, void>(ADMIN_ENDPOINTS.adminProducts, data),
   getStockRequests: (params?: Record<string, any>) =>
