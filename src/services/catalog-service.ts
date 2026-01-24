@@ -3,7 +3,8 @@ import { Category, Product } from "../types/domain";
 
 // Interfaces for catalog-service
 export interface ProductSearchParams {
-  category_id?: string;
+  categoryId?: string;
+  branchId?: string;
   q?: string;
   limit?: number;
   offset?: number;

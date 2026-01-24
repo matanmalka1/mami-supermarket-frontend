@@ -46,8 +46,12 @@ const MissingItemModal: React.FC<MissingItemModalProps> = ({
     if (!searchQuery.trim()) return;
     setLoading(true);
     try {
-      const data = await apiService.catalog.getProducts({ q: searchQuery });
-      const items = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+      const data: any = await apiService.catalog.getProducts({ q: searchQuery });
+      const items = Array.isArray(data?.items)
+        ? data.items
+        : Array.isArray(data)
+          ? data
+          : [];
       setSearchResults(items);
     } finally {
       setLoading(false);

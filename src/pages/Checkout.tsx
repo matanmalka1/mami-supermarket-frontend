@@ -20,7 +20,10 @@ const Checkout: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<any>(null);
 
-  const cartId = useMemo(() => items?.[0]?.cartId || items?.[0]?.cart_id, [items]);
+  const cartId = useMemo(() => {
+    const first = (items as any)?.[0] || {};
+    return first.cart_id || first.cartId || first.id;
+  }, [items]);
   const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const Checkout: React.FC = () => {
     }
     setLoading(true);
     try {
-      const data = await apiService.checkout.confirm(
+      const data: any = await apiService.checkout.confirm(
         {
           cart_id: cartId,
           payment_token_id: crypto.randomUUID(),
@@ -56,7 +59,7 @@ const Checkout: React.FC = () => {
         idempotencyKey,
       );
       clearCart();
-      const orderId = data?.order_id || data?.orderId || "order";
+      const orderId = data?.order_id || data?.orderId || data?.id || "order";
       navigate(`/store/order-success/${orderId}`);
     } catch (err: any) {
       toast.error(err.message || "Checkout failed");

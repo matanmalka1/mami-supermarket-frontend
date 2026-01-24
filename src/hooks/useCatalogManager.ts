@@ -13,7 +13,7 @@ export const useCatalogManager = () => {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await apiService.admin.getProducts();
+      const data: any = await apiService.admin.getProducts();
       const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
       setProducts(rows);
     } catch {

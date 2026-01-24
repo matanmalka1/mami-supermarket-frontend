@@ -10,9 +10,8 @@ export const useInventory = () => {
   const fetchInventory = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await apiService.admin.getInventory();
-      const rows =
-        Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+      const data: any = await apiService.admin.getInventory();
+      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
       setInventory(rows);
     } catch (err) {
       toast.error("Failed to load global inventory");

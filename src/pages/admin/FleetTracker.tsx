@@ -115,7 +115,7 @@ const FleetTracker: React.FC = () => {
                     {d.status} • {d.items} items {d.eta ? `• ETA ${d.eta}` : ""}
                   </p>
                 </div>
-                <Badge status={d.status} />
+                <Badge color="gray">{d.status}</Badge>
               </div>
             ))
           )}

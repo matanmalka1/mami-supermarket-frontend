@@ -34,13 +34,11 @@ export const usePicking = (orderId?: string) => {
   ) => {
     if (!orderId) return;
     try {
-      const updated = await apiService.ops.updateItemStatus(
-        orderId,
-        itemId,
-        status,
+      const updated = await apiService.ops.updateItemStatus(orderId, itemId, {
+        picked_status: status,
         reason,
-        replacementId,
-      );
+        replacement_product_id: replacementId,
+      });
       setItems((prev) =>
         prev.map((i) =>
           i.id === itemId

@@ -14,7 +14,7 @@ const StockRequestManager: React.FC = () => {
   const fetchRequests = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await apiService.admin.getStockRequests({ status: "PENDING" });
+      const data: any = await apiService.admin.getStockRequests({ status: "PENDING" });
       const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
       setRequests(rows);
     } catch (err: any) {

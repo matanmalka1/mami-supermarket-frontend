@@ -16,7 +16,7 @@ import { HeroSection, BenefitCard } from '../components/store/StorefrontComponen
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
   const categoryRef = useRef<HTMLDivElement>(null);
-  const [isFarmModalOpen, setIsFarmModalOpen] = useState(false);
+  const [isFarmModalOpen, setIsFarmModalOpen] = useState<boolean>(false);
 
   const scrollToCategories = () => categoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -49,7 +49,7 @@ const Storefront: React.FC = () => {
         <BenefitCard icon={<Sparkles />} title="Certified Organic" desc="100% pesticide-free produce from local farms." bg="bg-orange-50" color="text-orange-500" />
       </Grid>
 
-      <Modal isOpen={isFarmModalOpen} onClose={() => setIsFarmModalOpen(null)} title="Verified Local Producers" subtitle="Direct from Israeli soil">
+      <Modal isOpen={isFarmModalOpen} onClose={() => setIsFarmModalOpen(false)} title="Verified Local Producers" subtitle="Direct from Israeli soil">
         <div className="py-6 space-y-4">
           {[
             { name: "Kfar Azar Orchards", location: "Central", specialty: "Citrus" },
