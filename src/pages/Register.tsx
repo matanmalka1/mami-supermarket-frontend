@@ -47,8 +47,40 @@ const Register: React.FC<{ onRegister: () => void }> = ({ onRegister }) => {
         password: data.password,
       });
       console.debug("[Register] login response:", loginRes);
-      localStorage.setItem("mami_token", loginRes.token);
-      localStorage.setItem("mami_role", loginRes.role);
+      // Mirror login token extraction/storage (prefer data.access_token)
+      let token: string | null = null;
+      let tokenKey: string | null = null;
+      if (loginRes?.data?.access_token) { token = loginRes.data.access_token; tokenKey = "data.access_token"; }
+      else if (loginRes?.access_token) { token = loginRes.access_token; tokenKey = "access_token"; }
+      else if (loginRes?.accessToken) { token = loginRes.accessToken; tokenKey = "accessToken"; }
+      else if (loginRes?.data?.token) { token = loginRes.data.token; tokenKey = "data.token"; }
+      else if (loginRes?.token) { token = loginRes.token; tokenKey = "token"; }
+      if (!token) {
+        toast.error("No token returned from backend", { id: "reg" });
+        return;
+      }
+      sessionStorage.setItem("mami_token", token);
+      localStorage.removeItem("mami_token");
+      let role =
+        loginRes?.data?.user?.role ||
+        loginRes?.user?.role ||
+        loginRes?.data?.role ||
+        loginRes?.role;
+      if (!role) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1] || ""));
+          role = payload.role || payload.user_role || payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"];
+        } catch {
+          role = undefined;
+        }
+      }
+      if (role) localStorage.setItem("mami_role", role);
+      else localStorage.removeItem("mami_role");
+      if ((import.meta as any).env?.DEV) {
+        console.debug(
+          `[Register] token key: ${tokenKey}, length: ${token.length}, segments: ${token.split(".").length}`
+        );
+      }
       toast.success("Welcome aboard!", { id: "reg" });
       onRegister();
       navigate("/store");
