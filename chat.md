@@ -85,3 +85,25 @@
   - Login → storefront → add items to cart → open checkout (preview runs).  
   - Confirm once; immediately double-click/refresh to confirm idempotent behavior.  
   - Land on order success page and see order in account history.
+
+## BASELINE (Step 0)
+- Frontend `npm run build`: ✅ (chunk-size warning from Vite; `/index.css` missing at build time – unchanged runtime resolution).
+- Frontend `npm run lint`: ❌ fails loading `eslint.config.ts` (`TypeError: Cannot read properties of undefined (reading 'recommended')`). Needs config fix before linting can run.
+
+## FINDINGS (Step 1 – reuse/dedupe scan)
+- Unused / mock leftovers: `src/core/constants.ts` still exports `MOCK_ORDERS`, `MOCK_PRODUCTS`, `MOCK_VEHICLES`, `MOCK_DELIVERY_SLOTS` (largely superseded by live endpoints); check any remaining imports before removal.  
+- Duplicate patterns:  
+  - Many pages implement ad-hoc empty/loading messages (Inventory, Storefront categories/featured, AddressBook, OrderHistory, AuditLogs).  
+  - Confirm dialogs vary; `ConfirmDialog` exists but some pages roll custom button/confirm patterns.  
+  - Array-unwrapping logic repeated across pages/services (`items` vs array; featured/categories/analytics).  
+- Reuse candidates (top impact):  
+  1) Shared `EmptyState` + `LoadingState` components (`src/components/ui/EmptyState.tsx` etc.) to replace repeated “No data/Loading...” blocks across Storefront, Inventory, AuditLogs, OrderHistory.  
+  2) Helper `asArray(data)` in `src/utils/normalize.ts` to unify `Array.isArray(data?.items)?...` checks (used in catalog, inventory, fleet).  
+  3) Consolidate confirm dialog usage to `ConfirmDialog` (CatalogManager, GlobalSettings, Inventory actions).  
+  4) Shared table shell (header/body/row) for ops/admin tables (OrderTable, InventoryTable, StockRequest tables).  
+  5) Shared “fetch + loading + error” hook wrapper for simple GET lists (Storefront categories/featured, Fleet status, AuditLogs fetch-more).  
+  6) Address form mapping helper to avoid repeated DTO shaping between Account AddressBook and any admin address usage.  
+  7) Stock request payload builder shared between ops create and admin resolve flows.  
+  8) Shared badge variants (status/color) for inventory/stock requests/orders to reduce repeated `Badge` color conditionals.  
+  9) Shared price formatter already exists (`currencyILS`); ensure all price displays use it (InventoryTable etc.).  
+  10) Shared avatar/initials badge already in `AvatarBadge`; replace remaining inline avatar circles.
