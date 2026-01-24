@@ -11,13 +11,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      // Adjusted to resolve from project root to match current structure
-      '@': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   test: {
     environment: 'jsdom',
-    setupFiles: './vitest.setup.ts',
+    setupFiles: ['./src/test/setup.ts'],
     globals: true,
     coverage: {
       provider: 'v8',
