@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { Lock } from "lucide-react";
 import { Category } from "@/types/domain";
+import PageWrapper from "../shared/PageWrapper";
 
 type StoreFooterProps = {
   categories: Category[];
@@ -10,8 +11,8 @@ type StoreFooterProps = {
 
 const StoreFooter: React.FC<StoreFooterProps> = ({ categories, loading, onStaticLink }) => (
   <footer className="bg-gray-50 border-t py-20">
-    <div className="max-w-7xl mx-auto px-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+    <PageWrapper className="space-y-10">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
         <div className="space-y-6">
           <h4 className="font-black text-sm uppercase tracking-widest">
             Departments
@@ -95,7 +96,7 @@ const StoreFooter: React.FC<StoreFooterProps> = ({ categories, loading, onStatic
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   </footer>
 );
 

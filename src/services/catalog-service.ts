@@ -27,8 +27,15 @@ export const catalogService = {
       params: { limit },
     }),
     
-  getAutocomplete: (q: string) =>
+  getAutocomplete: (
+    q: string,
+    options: { branchId?: string; limit?: number } = {},
+  ) =>
     apiClient.get<Product[], Product[]>("/catalog/products/autocomplete", {
-      params: { q, limit: 10 },
+      params: {
+        q,
+        limit: options.limit ?? 10,
+        branchId: options.branchId,
+      },
     }),
 };

@@ -1,7 +1,13 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { ShoppingBag, ChevronDown, Grid as GridIcon, ShieldCheck, LayoutDashboard } from "lucide-react";
+import {
+  ShoppingBag,
+  ChevronDown,
+  Grid as GridIcon,
+  ShieldCheck,
+  LayoutDashboard,
+} from "lucide-react";
 import SearchTypeahead from "./store-header/SearchTypeahead";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../hooks/useAuth";
@@ -9,6 +15,7 @@ import DeptMegaMenu from "./store-header/DeptMegaMenu";
 import { useCatalogCategories } from "@/hooks/useCatalogCategories";
 import HeaderActions from "./store-header/HeaderActions";
 import BranchSelector from "./store-header/BranchSelector";
+import PageWrapper from "../shared/PageWrapper";
 
 const StoreHeader: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<"notif" | "account" | "dept" | null>(null);
@@ -42,28 +49,43 @@ const StoreHeader: React.FC = () => {
       )}
 
       <header className="border-b bg-white/95 backdrop-blur-md shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+        <PageWrapper className="h-20 flex items-center justify-between gap-6 w-full max-w-full px-4 sm:px-6">
           <div className="flex items-center gap-8">
-            <Link to="/store" className="flex items-center gap-2 text-[#008A45] font-black text-2xl tracking-tighter italic shrink-0" onClick={() => setActiveMenu(null)}>
+            <Link
+              to="/store"
+              className="flex items-center gap-2 text-[#008A45] font-black text-2xl tracking-tighter italic shrink-0"
+              onClick={() => setActiveMenu(null)}
+            >
               <div className="w-10 h-10 bg-[#008A45] rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-900/20">
                 <ShoppingBag size={24} />
               </div>
               FRESHMARKET
             </Link>
-            
+
             <nav className="hidden lg:flex items-center gap-1">
-              <button 
-                onClick={() => setActiveMenu(activeMenu === 'dept' ? null : 'dept')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeMenu === 'dept' ? 'bg-emerald-50 text-[#008A45]' : 'text-gray-400 hover:text-[#008A45]'}`}
+              <button
+                type="button"
+                onClick={() => setActiveMenu(activeMenu === "dept" ? null : "dept")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                  activeMenu === "dept"
+                    ? "bg-emerald-50 text-[#008A45]"
+                    : "text-gray-400 hover:text-[#008A45]"
+                }`}
               >
-                <GridIcon size={16} /> Departments <ChevronDown size={14} className={`transition-transform duration-300 ${activeMenu === 'dept' ? 'rotate-180' : ''}`} />
+                <GridIcon size={16} /> Departments{" "}
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-300 ${
+                    activeMenu === "dept" ? "rotate-180" : ""
+                  }`}
+                />
               </button>
               <div className="h-4 w-px bg-gray-100 mx-2" />
               <BranchSelector />
             </nav>
           </div>
 
-          <div className="flex-1 max-w-md mx-8 hidden md:block">
+          <div className="flex-1 max-w-md hidden md:block">
             <SearchTypeahead onNavigate={() => setActiveMenu(null)} />
           </div>
 
@@ -79,7 +101,7 @@ const StoreHeader: React.FC = () => {
               logout={logout}
             />
           </div>
-        </div>
+        </PageWrapper>
 
         {activeMenu === "dept" && (
           <DeptMegaMenu

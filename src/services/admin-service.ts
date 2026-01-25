@@ -1,6 +1,9 @@
 import { apiClient } from "./api-client";
+import type { Product } from "@/types/domain";
 import {
   AdminSettings,
+  InventoryCreateRequest,
+  InventoryResponse,
   StockRequestStatus,
   CreateProductRequest,
   UpdateProductRequest,
@@ -47,8 +50,13 @@ export const adminService = {
       { params: { active } },
     ),
   createProduct: (data: CreateProductRequest) =>
-    apiClient.post<CreateProductRequest, void>(
+    apiClient.post<CreateProductRequest, Product>(
       ADMIN_ENDPOINTS.adminProducts,
+      data,
+    ),
+  createInventory: (data: InventoryCreateRequest) =>
+    apiClient.post<InventoryCreateRequest, InventoryResponse>(
+      ADMIN_ENDPOINTS.inventory,
       data,
     ),
   getStockRequests: (params?: Record<string, any>) =>

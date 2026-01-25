@@ -20,3 +20,7 @@ export const useBranchSelection = (): BranchContextValue => {
   }
   return context;
 };
+
+export const useOptionalBranchSelection = (): BranchContextValue | null => {
+  return useContext(BranchContext) ?? null;
+};

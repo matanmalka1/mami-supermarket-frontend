@@ -25,6 +25,24 @@ export interface UpdateProductRequest {
   category_id?: string;
   description?: string;
 }
+export interface InventoryCreateRequest {
+  product_id: string;
+  branch_id: string;
+  available_quantity: number;
+  reserved_quantity?: number;
+}
+export interface InventoryResponse {
+  id: string;
+  branch_id: string;
+  branch_name: string;
+  product_id: string;
+  product_name: string;
+  available_quantity: number;
+  reserved_quantity: number;
+  total: number;
+  limit: number;
+  offset: number;
+}
 export interface CreateBranchRequest {
   name: string;
   address: string;

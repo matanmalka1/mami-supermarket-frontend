@@ -9,7 +9,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 
 const Inventory: React.FC = () => {
-  const { inventory, loading, updateStock } = useInventory();
+  const { inventory, loading, updateStock, refresh } = useInventory();
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
@@ -44,7 +44,14 @@ const Inventory: React.FC = () => {
         <InventoryTable rows={rows} activeMenuId={activeMenuId} onMenuToggle={setActiveMenuId} onUpdateStock={updateStock} />
       )}
 
-      <NewSkuModal isOpen={isNewModalOpen} onClose={() => setIsNewModalOpen(false)} />
+      <NewSkuModal
+        isOpen={isNewModalOpen}
+        onClose={() => setIsNewModalOpen(false)}
+        onSuccess={() => {
+          setIsNewModalOpen(false);
+          refresh();
+        }}
+      />
 
       {activeMenuId && <div className="fixed inset-0 z-[60]" onClick={() => setActiveMenuId(null)} />}
     </div>

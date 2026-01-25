@@ -30,6 +30,17 @@ export const opsService = {
       `/ops/orders/${oId}/status`,
       data,
     ),
+  getOrder: (id: string) =>
+    apiClient.get<Order, Order>(`/ops/orders/${id}`),
+  updateItemStatus: (
+    orderId: string,
+    itemId: string,
+    data: UpdateItemStatusRequest,
+  ) =>
+    apiClient.patch<UpdateItemStatusRequest, OrderItem>(
+      `/ops/orders/${orderId}/items/${itemId}/picked-status`,
+      data,
+    ),
   getPerformance: () => apiClient.get<any, any>("/ops/performance"),
   getAlerts: () => apiClient.get<OpsAlert[], OpsAlert[]>("/ops/alerts"),
 

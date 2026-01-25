@@ -56,8 +56,6 @@ export const usePicking = (orderId?: string) => {
     try {
       const updated = await apiService.ops.updateItemStatus(orderId, itemId, {
         picked_status: status,
-        reason,
-        replacement_product_id: replacementId,
       });
       setItems((prev) =>
         prev.map((i) =>
