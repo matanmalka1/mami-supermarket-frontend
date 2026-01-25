@@ -20,7 +20,7 @@ const Checkout: React.FC = () => {
     method,
     setMethod,
     serverCartId,
-    defaultBranch,
+    selectedBranch,
     deliverySlots,
     slotId,
     setSlotId,
@@ -38,7 +38,7 @@ const Checkout: React.FC = () => {
       toast.error("Cart is syncing, please wait");
       return;
     }
-    if (method === "PICKUP" && !defaultBranch) {
+    if (method === "PICKUP" && !selectedBranch) {
       toast.error("Pickup branch is loading, please wait");
       return;
     }
@@ -49,7 +49,7 @@ const Checkout: React.FC = () => {
           cart_id: serverCartId,
           payment_token_id: crypto.randomUUID(),
           fulfillment_type: method,
-          branch_id: method === "PICKUP" ? defaultBranch?.id : undefined,
+          branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
           delivery_slot_id: slotId || undefined,
         },
         idempotencyKey,
@@ -87,7 +87,7 @@ const Checkout: React.FC = () => {
           </Button>
         </div>
       )}
-      {method === "PICKUP" && !defaultBranch && (
+      {method === "PICKUP" && !selectedBranch && (
         <div className="bg-blue-50 border border-blue-100 rounded-3xl p-5 text-sm font-bold uppercase tracking-[0.3em] text-blue-600">
           Loading pickup branch information...
         </div>

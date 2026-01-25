@@ -9,6 +9,7 @@ import EmptyState from "@/components/shared/EmptyState";
 import { apiService } from "@/services/api";
 import { Product } from "@/types/domain";
 import SimilarProducts from "@/components/store/SimilarProducts";
+import { addRecentlyViewedItem } from "@/features/store/recently-viewed/utils/recentlyViewed";
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
@@ -24,6 +25,15 @@ const ProductDetail: React.FC = () => {
       try {
         const data = await apiService.catalog.getProduct(id);
         setProduct(data);
+        addRecentlyViewedItem({
+          id: data.id,
+          name: data.name,
+          category: data.category,
+          price: data.price,
+          image: data.imageUrl,
+          oldPrice: data.oldPrice,
+          unit: data.unit,
+        });
       } catch (err: any) {
         setError(err.message || "Failed to load product");
         setProduct(null);

@@ -2,17 +2,19 @@
 import React, { useState, useEffect } from 'react';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useSearchParams, Link } from 'react-router';
-import { Search, ArrowLeft, Filter, X, Check } from 'lucide-react';
-import ProductCard from '@/components/store/ProductCard';
+import { Search, ArrowLeft, Filter } from 'lucide-react';
 import EmptyState from '@/components/shared/EmptyState';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
 import { apiService } from '@/services/api';
+import ProductGrid from '@/components/store/ProductGrid';
+import SearchFiltersDrawer from '@/features/store/search/components/SearchFiltersDrawer';
+import { Product } from '@/types/domain';
 
 const SearchResults: React.FC = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeSort, setActiveSort] = useState('Relevance');
@@ -24,16 +26,18 @@ const SearchResults: React.FC = () => {
       setLoading(true);
       try {
         const response = await apiService.catalog.getProducts({ q: query, limit: 24, offset: 0 });
-        const items = Array.isArray((response as any)?.items)
-          ? (response as any).items
+        const payload = response as { items?: Product[] };
+        const items = Array.isArray(payload?.items)
+          ? payload.items
           : Array.isArray(response)
-            ? response
+            ? (response as Product[])
             : [];
         if (active) setResults(items);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (active) {
           setResults([]);
-          toast.error(err.message || "Search failed");
+          const message = err instanceof Error ? err.message : "Search failed";
+          toast.error(message);
         }
       } finally {
         if (active) setLoading(false);
@@ -80,14 +84,13 @@ const SearchResults: React.FC = () => {
         </button>
       </div>
 
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-          {[1, 2, 3, 4].map(i => <div key={i} className="aspect-square bg-gray-50 rounded-[2rem] animate-pulse" />)}
-        </div>
-      ) : results.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 animate-in fade-in duration-700">
-          {results.map(item => <ProductCard key={item.id} item={item} />)}
-        </div>
+      {(loading || results.length > 0) ? (
+        <ProductGrid
+          loading={loading}
+          products={results}
+          gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"
+          className="animate-in fade-in duration-700"
+        />
       ) : (
         <div className="py-20">
           <EmptyState 
@@ -97,57 +100,18 @@ const SearchResults: React.FC = () => {
         </div>
       )}
 
-      {/* Filter Drawer */}
-      {isFilterOpen && (
-        <div className="fixed inset-0 z-[100] flex justify-end animate-in fade-in duration-300">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsFilterOpen(false)} />
-          <aside className="relative w-full max-w-sm bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-500">
-            <div className="p-8 border-b flex items-center justify-between">
-              <h2 className="text-2xl font-black italic">Refine Search</h2>
-              <button onClick={() => setIsFilterOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><X size={24} /></button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-8 space-y-10">
-              <FilterGroup title="Sort By">
-                {['Relevance', 'Price: Low to High', 'Price: High to Low', 'Newest Arrivals'].map(s => (
-                  <button 
-                    key={s} 
-                    onClick={() => setActiveSort(s)}
-                    className={`w-full text-left py-2 text-sm font-bold transition-colors flex items-center justify-between ${activeSort === s ? 'text-emerald-600' : 'text-gray-500 hover:text-emerald-600'}`}
-                  >
-                    {s} {activeSort === s && <Check size={14} />}
-                  </button>
-                ))}
-              </FilterGroup>
-              <FilterGroup title="Dietary & Preferences">
-                {['Organic Only', 'Gluten Free', 'Vegan friendly', 'On Flash Sale'].map(p => (
-                  <label key={p} className="flex items-center gap-3 cursor-pointer group">
-                    <div 
-                      onClick={() => togglePref(p)}
-                      className={`w-6 h-6 rounded-lg border-2 transition-all flex items-center justify-center ${activePrefs.includes(p) ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 group-hover:border-emerald-500'}`}
-                    >
-                      <div className={`w-2 h-2 rounded-sm bg-emerald-500 transition-transform ${activePrefs.includes(p) ? 'scale-100' : 'scale-0'}`} />
-                    </div>
-                    <span className={`text-sm font-bold ${activePrefs.includes(p) ? 'text-gray-900' : 'text-gray-600'}`}>{p}</span>
-                  </label>
-                ))}
-              </FilterGroup>
-            </div>
-            <div className="p-8 bg-gray-50 border-t flex gap-4">
-              <Button variant="ghost" className="flex-1" onClick={handleClear}>Clear All</Button>
-              <Button variant="emerald" className="flex-[2] rounded-2xl font-black italic" onClick={handleApply}>Apply Filters</Button>
-            </div>
-          </aside>
-        </div>
-      )}
+      <SearchFiltersDrawer
+        isOpen={isFilterOpen}
+        activeSort={activeSort}
+        activePrefs={activePrefs}
+        onClose={() => setIsFilterOpen(false)}
+        onApply={handleApply}
+        onClear={handleClear}
+        onSetSort={(value) => setActiveSort(value)}
+        onTogglePref={togglePref}
+      />
     </div>
   );
 };
-
-const FilterGroup: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="space-y-4">
-    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">{title}</h4>
-    <div className="space-y-3">{children}</div>
-  </div>
-);
 
 export default SearchResults;

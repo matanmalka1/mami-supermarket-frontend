@@ -2,15 +2,36 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { useAuth } from "@/hooks/useAuth";
-import { BranchResponse, DeliverySlotOption } from "@/types/branch";
+import { useBranchSelection } from "@/context/branch-context-core";
+import { DeliverySlotOption, DeliverySlotResponse } from "@/types/branch";
+
+const formatSlotLabel = (slot: DeliverySlotResponse): string | null => {
+  if (!slot.startTime || !slot.endTime) return null;
+  const start = slot.startTime.substring(0, 5);
+  const end = slot.endTime.substring(0, 5);
+  const label = `${start} - ${end}`.trim();
+  return label || null;
+};
+
+const buildUniqueSlotOptions = (slots: DeliverySlotResponse[]): DeliverySlotOption[] => {
+  const seen = new Set<string>();
+  const options: DeliverySlotOption[] = [];
+  slots.forEach((slot) => {
+    const label = formatSlotLabel(slot);
+    if (!label || seen.has(label)) return;
+    seen.add(label);
+    options.push({ id: slot.id, label });
+  });
+  return options.sort((a, b) => a.label.localeCompare(b.label));
+};
 
 type Method = "DELIVERY" | "PICKUP";
 
 export const useCheckoutFlow = () => {
   const { isAuthenticated } = useAuth();
+  const { selectedBranch } = useBranchSelection();
   const [method, setMethod] = useState<Method>("DELIVERY");
   const [serverCartId, setServerCartId] = useState<string | null>(null);
-  const [defaultBranch, setDefaultBranch] = useState<BranchResponse | null>(null);
   const [deliverySlots, setDeliverySlots] = useState<DeliverySlotOption[]>([]);
   const [slotId, setSlotId] = useState<string | null>(null);
   const [preview, setPreview] = useState<any>(null);
@@ -40,41 +61,19 @@ export const useCheckoutFlow = () => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    let active = true;
-    const loadBranch = async () => {
-      try {
-        const branches = await apiService.branches.list({ limit: 1 });
-        if (active && branches?.length) {
-          setDefaultBranch(branches[0]);
-        }
-      } catch {
-        toast.error("Failed to load pickup branch");
-      }
-    };
-    loadBranch();
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (method !== "DELIVERY" || !defaultBranch?.id) {
+    if (method !== "DELIVERY" || !selectedBranch?.id) {
       setDeliverySlots([]);
       setSlotId(null);
       return;
     }
+    setSlotId(null);
 
     let active = true;
     const loadSlots = async () => {
       try {
-        const data = await apiService.branches.listSlots({ branchId: defaultBranch.id });
+        const data = await apiService.branches.listSlots({ branchId: selectedBranch.id });
         if (!active) return;
-        setDeliverySlots(
-          data.map((slot) => ({
-            id: slot.id,
-            label: `${slot.startTime.substring(0, 5)} - ${slot.endTime.substring(0, 5)}`,
-          })),
-        );
+        setDeliverySlots(buildUniqueSlotOptions(data));
       } catch {
         toast.error("Failed to load delivery slots");
       }
@@ -84,14 +83,14 @@ export const useCheckoutFlow = () => {
     return () => {
       active = false;
     };
-  }, [defaultBranch, method]);
+  }, [method, selectedBranch?.id]);
 
   useEffect(() => {
     if (!serverCartId) {
       setPreview(null);
       return;
     }
-    if (method === "PICKUP" && !defaultBranch) {
+    if (method === "PICKUP" && !selectedBranch) {
       setPreview(null);
       return;
     }
@@ -101,7 +100,7 @@ export const useCheckoutFlow = () => {
         const data = await apiService.checkout.preview({
           cart_id: serverCartId,
           fulfillment_type: method,
-          branch_id: method === "PICKUP" ? defaultBranch?.id : undefined,
+          branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
           delivery_slot_id: slotId || undefined,
         });
         setPreview(data);
@@ -111,17 +110,17 @@ export const useCheckoutFlow = () => {
     };
 
     loadPreview();
-  }, [serverCartId, method, slotId, defaultBranch]);
+  }, [serverCartId, method, slotId, selectedBranch]);
 
   return {
     isAuthenticated,
     method,
     setMethod,
     serverCartId,
-    defaultBranch,
     deliverySlots,
     slotId,
     setSlotId,
     preview,
+    selectedBranch,
   };
 };

@@ -3,20 +3,57 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { SlidersHorizontal, ChevronRight, LayoutGrid, List, Check, Box } from 'lucide-react';
 import ProductCard from '@/components/store/ProductCard';
-import { ProductCardSkeleton } from '@/components/ui/Skeleton';
+import ProductGrid from '@/components/store/ProductGrid';
 import { useCatalog } from '@/hooks/useCatalog';
 import { toast } from 'react-hot-toast';
+import { useCatalogCategories } from '@/hooks/useCatalogCategories';
+import FilterSection from '@/features/store/category/components/FilterSection';
+import { Product } from '@/types/domain';
 
 const CategoryView: React.FC = () => {
   const { id } = useParams();
   const { products, loading } = useCatalog(id);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<string[]>([]);
+  const { categories } = useCatalogCategories();
+  const matchedCategory = categories.find((cat) => cat.id === id);
+  const categoryLabel = matchedCategory?.name || id;
 
   const togglePreference = (p: string) => {
     setPreferences(prev => prev.includes(p) ? prev.filter(item => item !== p) : [...prev, p]);
     toast.success(`Filter: ${p} updated`, { style: { borderRadius: '1rem', fontWeight: 'bold' } });
   };
+
+  const priceMatches = (product: Product) => {
+    if (!selectedPrice) return true;
+    const price = Number(product.price);
+    if (Number.isNaN(price)) return true;
+    if (selectedPrice === 'Under ₪20') return price < 20;
+    if (selectedPrice === '₪20 - ₪50') return price >= 20 && price <= 50;
+    if (selectedPrice === 'Over ₪50') return price > 50;
+    return true;
+  };
+
+  const preferenceMatches = (product: Product) => {
+    if (preferences.length === 0) return true;
+    return preferences.every((pref) => {
+      const normalized = pref.toLowerCase();
+      if (normalized === 'organic') {
+        return product.category?.toLowerCase().includes('organic') || product.description?.toLowerCase().includes('organic');
+      }
+      if (normalized === 'on sale') {
+        return !!(product.oldPrice && product.price && Number(product.oldPrice) > Number(product.price));
+      }
+      if (normalized === 'gluten free') {
+        return product.description?.toLowerCase().includes('gluten-free') || product.description?.toLowerCase().includes('gluten free');
+      }
+      return true;
+    });
+  };
+
+  const filteredProducts = products.filter(
+    (item: Product) => priceMatches(item) && preferenceMatches(item),
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -25,7 +62,7 @@ const CategoryView: React.FC = () => {
         <ChevronRight size={12} />
         <span className="text-[#008A45]">Categories</span>
         <ChevronRight size={12} />
-        <span className="text-gray-900 capitalize">{id}</span>
+        <span className="text-gray-900 capitalize">{categoryLabel}</span>
       </div>
 
       <div className="grid grid-cols-12 gap-12">
@@ -74,7 +111,7 @@ const CategoryView: React.FC = () => {
         <main className="col-span-12 lg:col-span-9 space-y-8">
           <div className="flex items-center justify-between border-b pb-6">
             <div className="flex items-baseline gap-4">
-              <h1 className="text-4xl font-black italic text-gray-900 capitalize">{id}</h1>
+              <h1 className="text-4xl font-black italic text-gray-900 capitalize">{categoryLabel}</h1>
               {!loading && <span className="text-xs font-black text-gray-300 uppercase tracking-widest">{products.length} Items Found</span>}
             </div>
             <div className="flex items-center gap-2">
@@ -83,15 +120,15 @@ const CategoryView: React.FC = () => {
             </div>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-              {[1, 2, 3, 4, 5, 6].map(i => <ProductCardSkeleton key={i} />)}
-            </div>
-          ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in duration-700">
-              {products.map((item: any) => <ProductCard key={item.id} item={{...item, tag: item.status, image: item.imageUrl}} />)}
-            </div>
-          ) : (
+          <ProductGrid
+            loading={loading}
+            products={filteredProducts}
+            gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in duration-700"
+            renderItem={(item: Product) => (
+              <ProductCard item={{ ...item, tag: item.status, image: item.imageUrl }} />
+            )}
+          />
+          {!loading && filteredProducts.length === 0 && (
             <div className="py-20 text-center space-y-4">
               <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mx-auto"><Box size={32} /></div>
               <p className="font-black italic text-gray-300 uppercase tracking-widest">Aisle Empty in this Department</p>
@@ -102,12 +139,5 @@ const CategoryView: React.FC = () => {
     </div>
   );
 };
-
-const FilterSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="bg-gray-50/50 p-6 rounded-3xl border border-gray-100 space-y-4">
-    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">{title}</h4>
-    {children}
-  </div>
-);
 
 export default CategoryView;

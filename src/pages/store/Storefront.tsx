@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router";
 import { TrendingUp, Clock, Leaf, Sparkles, MapPin, ChevronRight } from "lucide-react";
 import ProductCard from "@/components/store/ProductCard";
 import FlashDeals from "@/components/store/FlashDeals";
-import RecentlyViewed from "@/components/store/RecentlyViewed";
+import RecentlyViewed from "@/features/store/recently-viewed/components/RecentlyViewed";
 import Section from "@/components/ui/Section";
 import Grid from "@/components/ui/Grid";
 import Button from "@/components/ui/Button";
