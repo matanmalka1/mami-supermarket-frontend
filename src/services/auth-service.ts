@@ -72,6 +72,8 @@ export const authService = {
       "/auth/change-password",
       data,
     ),
+  resetPassword: (data: AuthResetPasswordRequest) =>
+    apiClient.post<AuthResetPasswordRequest, void>("/auth/reset-password", data),
   getProfile: () => apiClient.get<any, User>("/me"),
   updateProfile: (data: Partial<User>) =>
     apiClient.patch<any, User>("/me", data),

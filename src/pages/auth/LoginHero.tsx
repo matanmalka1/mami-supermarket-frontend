@@ -21,20 +21,6 @@ const LoginHero: React.FC = () => (
         <br />
         delivered to your doorstep.
       </h1>
-      <div className="bg-white/10 p-6 rounded-2xl border border-white/20 backdrop-blur-md max-w-xs">
-        <p className="text-xs font-black uppercase tracking-widest text-emerald-300 mb-2">
-          Internal Access Nodes
-        </p>
-        <p className="text-sm font-medium">
-          Admin:{" "}
-          <span className="font-black italic text-teal-300">
-            admin@mami.com
-          </span>
-        </p>
-        <p className="text-sm font-medium">
-          Customer: <span className="font-black italic">user@mami.com</span>
-        </p>
-      </div>
     </div>
   </div>
 );
