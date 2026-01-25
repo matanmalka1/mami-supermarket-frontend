@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { History, ArrowRight } from "lucide-react";
-import ProductCard from "./ProductCard";
+import ProductCard from "@/components/store/ProductCard";
 import { toast } from "react-hot-toast";
+import { loadRecentlyViewedItems, RECENTLY_VIEWED_KEY } from "@/features/store/recently-viewed/utils/recentlyViewed";
 
 const RecentlyViewed: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("mami_recent_items");
-    setItems(saved ? JSON.parse(saved) : []);
+    setItems(loadRecentlyViewedItems());
   }, []);
 
   const handleClear = () => {
     setItems([]);
-    localStorage.removeItem("mami_recent_items");
+    localStorage.removeItem(RECENTLY_VIEWED_KEY);
     toast.success("History cleared", { style: { borderRadius: "1rem", fontWeight: "bold" } });
   };
 

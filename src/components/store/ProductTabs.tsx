@@ -51,12 +51,6 @@ const ProductTabs: React.FC<{ product?: Product | null }> = ({ product }) => {
             )}
           </div>
         );
-      case "Reviews":
-        return (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <p className="text-sm text-gray-500 font-bold">Product reviews are not available yet.</p>
-          </div>
-        );
       case "Shipping & Returns":
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -78,7 +72,7 @@ const ProductTabs: React.FC<{ product?: Product | null }> = ({ product }) => {
   return (
     <div className="border-t border-gray-100 pt-12">
       <div className="flex gap-12 border-b border-gray-50 mb-12 overflow-x-auto no-scrollbar whitespace-nowrap">
-        {["Specifications", "Details & Care", "Reviews", "Shipping & Returns"].map(tab => (
+      {["Specifications", "Details & Care", "Shipping & Returns"].map(tab => (
           <button 
             key={tab} 
             onClick={() => setActiveTab(tab)}

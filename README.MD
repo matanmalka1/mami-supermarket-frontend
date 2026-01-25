@@ -1,6 +1,6 @@
 # Mami Supermarket — Frontend
 
-A modern, full-featured supermarket e-commerce platform built with React 19, Vite, and Tailwind CSS. This frontend application provides a complete shopping experience for customers, staff operations tools, and comprehensive admin management capabilities.
+A modern, full-featured supermarket e-commerce platform built with React 19, Vite, and Tailwind CSS. This frontend provides a complete shopping experience for customers, staff operations tools, and admin management capabilities. It is tightly integrated with the backend API and supports multi-role workflows.
 
 ---
 
@@ -14,15 +14,18 @@ Mami Supermarket is a multi-role platform that handles:
 - **Admin & Manager Tools:** Product catalog, inventory control, branch management, analytics
 - **Logistics & Marketing:** Delivery slots, promotions, loyalty programs, supplier management
 
-**Current Status:** Customer storefront (catalog/search/product), auth/profile, cart, checkout, orders, and ops dashboards are built; admin is limited to stock-requests for now. Analytics, full admin catalog/branches, and marketing/support suites remain pending.
+**Current Status:**
+
+- Customer storefront (catalog/search/product), authentication/profile, cart, checkout, orders, and staff dashboards are live.
+- Admin is limited to stock-requests for now. Analytics, full admin catalog/branches, and marketing/support suites are pending.
 
 **Status Snapshot:**
 
-- Customer journey: browsing → cart → checkout → order history live
-- Profile: account dashboard, settings, addresses, security live
-- Ops: orders board, order details, staff performance, stock requests live
+- Customer journey: browsing → cart → checkout → order history is live
+- Profile: dashboard, settings, addresses, security are live
+- Staff: orders board, order details, performance, stock requests are live
 - Admin: stock-requests review only (catalog/inventory/analytics not yet)
-- Testing: Vitest + React Testing Library configured; coverage focused on cart, ops, admin screens; manual QA checklist still required
+- Testing: Vitest + React Testing Library configured; coverage focused on cart, ops, admin screens; manual QA checklist required
 
 ---
 
@@ -37,10 +40,10 @@ Mami Supermarket is a multi-role platform that handles:
 - **Axios** — HTTP client with interceptors
 - **React Hook Form + Zod** — Form management and validation
 - **react-hot-toast** — Toast notifications
-- **Radix UI Select** — Accessible dropdown components
+- **Radix UI** — Accessible UI primitives (Select, Dialog, etc.)
 - **Vitest + React Testing Library** — Unit/component tests
 
-### Backend (external API expectations)
+### Backend (API expectations)
 
 - REST API with `/api/v1` base (configurable via `VITE_API_BASE_URL`)
 - JWT auth; endpoints defined in `src/api/endpoints.js`
@@ -77,7 +80,7 @@ npm run dev
 Create `.env` or `.env.local` (defaults to `/api/v1` if unset):
 
 ```
-VITE_API_BASE_URL=http://localhost:3000/api/v1
+VITE_API_BASE_URL=http://localhost:5000/api/v1
 ```
 
 ### Production Build
@@ -138,7 +141,43 @@ Database (PostgreSQL) + Cache (Redis)
 
 ---
 
-## 📱 Feature Scope (38 Screens)
+## 🗺️ User & Admin Feature Flows (Visualized)
+
+### 🛒 User (Customer) Flow
+
+```mermaid
+flowchart TD
+   A[Browse Products / Search] --> B[View Product Details]
+   B --> C[Add to Cart]
+   C --> D[View/Edit Cart]
+   D --> E[Checkout]
+   E --> F{Choose Fulfillment}
+   F -->|Delivery| G[Enter Address]
+   F -->|Pickup| H[Select Branch]
+   G --> I[Order Preview]
+   H --> I
+   I --> J[Select Payment Method]
+   J --> K[Confirm Order]
+   K --> L[Order Success]
+   L --> M[Track Orders / Order History]
+   M --> N[Account Management]
+```
+
+### 🛠️ Admin Flow
+
+```mermaid
+flowchart TD
+   A[Admin Login] --> B[Admin Dashboard]
+   B --> C[Review Stock Requests]
+   C --> D{Approve or Reject}
+   D -->|Approve| E[Update Inventory]
+   D -->|Reject| F[Notify Staff]
+   B --> G[Planned: Catalog Management]
+   B --> H[Planned: Analytics]
+   B --> I[Planned: Branch Management]
+```
+
+---
 
 ### 1) Customer Storefront (Shopping Journey)
 
@@ -299,11 +338,11 @@ npm run test:coverage
 ```
 src/
 ├── api/                    # Centralized HTTP layer
-│   ├── http.js             # Axios instance + interceptors
-│   ├── endpoints.js        # API path constants
-│   └── *.api.js            # Domain API modules
+│   ├── api.ts              # Axios instance + interceptors
+│   ├── endpoints.ts        # API path constants
+│   └── *.api.ts            # Domain API modules
 ├── app/
-│   ├── router.jsx          # React Router configuration
+│   ├── router.tsx          # React Router configuration
 │   ├── guards/             # ProtectedRoute (role-based)
 │   ├── layouts/            # AuthLayout, MainLayout
 │   └── providers/          # AuthProvider, CartProvider
@@ -316,8 +355,15 @@ src/
 │   ├── ops/                # Staff operations
 │   └── admin/              # Manager/Admin features
 ├── components/             # Shared UI components
+├── context/                # React context providers
+├── core/                   # Core app logic/utilities
+├── hooks/                  # Custom React hooks
+├── pages/                  # Page-level components
+├── services/               # Service modules
+├── test/                   # Test utilities/mocks
+├── types/                  # Shared types (TypeScript)
 ├── utils/                  # Shared helpers (debounce, pagination)
-├── types/                  # Shared types (errors.js)
+├── validation/             # Zod schemas and validation logic
 └── styles/                 # Global CSS (globals.css)
 ```
 
@@ -378,4 +424,4 @@ A feature is **DONE** only if:
 
 ---
 
-**Last Updated:** January 21, 2026
+**Last Updated:** January 25, 2026
