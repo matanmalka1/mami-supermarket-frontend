@@ -7,24 +7,35 @@ export const usePicking = (orderId?: string) => {
   const [order, setOrder] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchPickList = useCallback(async () => {
     if (!orderId) return;
     setLoading(true);
+    setError(null);
     try {
       const data = await apiService.ops.getOrder(orderId);
       setOrder(data);
       setItems(data.items || []);
-    } catch {
-      toast.error("Failed to load pick list");
+    } catch (err: any) {
+      const message = err?.message || "Failed to load pick list";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   }, [orderId]);
 
   useEffect(() => {
+    if (!orderId) {
+      setOrder(null);
+      setItems([]);
+      setError(null);
+      setLoading(false);
+      return;
+    }
     fetchPickList();
-  }, [fetchPickList]);
+  }, [fetchPickList, orderId]);
 
   const updateItemStatus = async (
     itemId: string,
@@ -70,6 +81,7 @@ export const usePicking = (orderId?: string) => {
     order,
     items,
     loading,
+    error,
     progress,
     updateItemStatus,
     refresh: fetchPickList,

@@ -70,14 +70,8 @@ export const AppRouter: React.FC<RouterProps> = ({
     <Routes>
       {!isAuthenticated ? (
         <>
-          <Route
-            path="/login"
-            element={<Login onLogin={login} />}
-          />
-          <Route
-            path="/register"
-            element={<Register onRegister={login} />}
-          />
+          <Route path="/login" element={<Login onLogin={login} />} />
+          <Route path="/register" element={<Register onRegister={login} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/login" replace />} />

@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckCircle2 } from "lucide-react";
 
 export type CheckoutStep = "FULFILLMENT" | "SCHEDULE" | "PAYMENT";
@@ -17,8 +16,8 @@ export const CheckoutStepper: React.FC<{ step: CheckoutStep }> = ({ step }) => {
               step === s
                 ? "border-[#008A45] bg-[#008A45] text-white scale-110 shadow-lg"
                 : i < currentIndex
-                ? "border-[#008A45] bg-white text-[#008A45]"
-                : "border-gray-100 bg-white text-gray-300"
+                  ? "border-[#008A45] bg-white text-[#008A45]"
+                  : "border-gray-100 bg-white text-gray-300"
             }`}
           >
             {i < currentIndex ? <CheckCircle2 size={24} /> : i + 1}

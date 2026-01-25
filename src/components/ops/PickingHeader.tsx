@@ -1,4 +1,3 @@
-import React from 'react';
 import { User, Clock, Printer } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
@@ -12,6 +11,29 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
   const handlePrint = () => {
     window.print();
   };
+
+  if (!order) {
+    return (
+      <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 flex flex-col gap-10 shadow-sm relative overflow-hidden group print:hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#006666] opacity-[0.02] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-1000"></div>
+        <div className="relative z-10 flex flex-col gap-6">
+          <div className="h-14 w-56 bg-gray-200 rounded-md animate-pulse"></div>
+          <div className="flex flex-wrap gap-4">
+            <span className="h-6 w-32 bg-gray-200 rounded-full animate-pulse"></span>
+            <span className="h-6 w-32 bg-gray-200 rounded-full animate-pulse"></span>
+            <span className="h-6 w-20 bg-gray-200 rounded-full animate-pulse"></span>
+          </div>
+        </div>
+        <Button
+          variant="outline"
+          className="h-14 px-8 rounded-2xl border-gray-200 opacity-60"
+          disabled
+        >
+          <Printer size={18} /> Loading order...
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 flex items-center justify-between shadow-sm relative overflow-hidden group print:hidden">

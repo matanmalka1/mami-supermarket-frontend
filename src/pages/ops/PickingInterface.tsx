@@ -17,7 +17,15 @@ import { useWeightScale } from '@/hooks/useWeightScale';
 const PickingInterface: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { order, items, loading, progress, updateItemStatus } = usePicking(id);
+  const {
+    order,
+    items,
+    loading,
+    error,
+    progress,
+    updateItemStatus,
+    refresh,
+  } = usePicking(id);
   const { weighingItem, setWeighingItem, currentWeight, setManualWeight, resetScale, isSimulated } = useWeightScale();
   
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -42,7 +50,26 @@ const PickingInterface: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-20 text-center animate-pulse font-black text-gray-300 italic uppercase tracking-[0.3em]">Loading picking data...</div>;
+  if (loading) {
+    return (
+      <div className="p-20 text-center animate-pulse font-black text-gray-300 italic uppercase tracking-[0.3em]">
+        Loading picking data...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-20 text-center space-y-4">
+        <p className="text-red-600 font-black uppercase tracking-[0.3em]">
+          {error}
+        </p>
+        <Button variant="emerald" onClick={refresh}>
+          Retry
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-32">

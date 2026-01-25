@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Navigate, Route, Routes } from "react-router";
-import { vi } from "vitest";
 import RequireAuth from "./RequireAuth";
 import { UserRole } from "@/types/auth";
 

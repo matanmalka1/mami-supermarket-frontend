@@ -55,7 +55,10 @@ export const opsService = {
     });
   },
 
-  getOrder: (id: string) => apiClient.get<Order, Order>(`/ops/orders/${id}`),
+  getOrder: (id: string) => {
+    if (!id) throw new Error("Order ID is required to fetch picking data");
+    return apiClient.get<Order, Order>(`/ops/orders/${id}`);
+  },
 
   createBatch: (ids: string[]) =>
     apiClient.post<{ orderIds: string[] }, void>("/ops/batches", {

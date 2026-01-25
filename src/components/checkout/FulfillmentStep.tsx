@@ -1,4 +1,3 @@
-import React from "react";
 import { Truck, Store, ChevronRight } from "lucide-react";
 import Button from "../ui/Button";
 import { CheckoutStep } from "./CheckoutStepper";
