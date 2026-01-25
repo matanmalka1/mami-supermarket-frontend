@@ -42,6 +42,7 @@ export interface InventoryResponse {
   total: number;
   limit: number;
   offset: number;
+  productSku: string;
 }
 export interface CreateBranchRequest {
   name: string;

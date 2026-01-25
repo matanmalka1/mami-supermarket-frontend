@@ -49,7 +49,7 @@ const StoreHeader: React.FC = () => {
       )}
 
       <header className="border-b bg-white/95 backdrop-blur-md shadow-sm">
-        <PageWrapper className="h-20 flex items-center justify-between gap-6 w-full max-w-full px-4 sm:px-6">
+        <PageWrapper className="h-20 flex items-center justify-between gap-6 px-4 sm:px-6">
           <div className="flex items-center gap-8">
             <Link
               to="/store"

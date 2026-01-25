@@ -14,6 +14,8 @@ type InventoryTableProps = {
   activeMenuId: string | null;
   onMenuToggle: (id: string | null) => void;
   onUpdateStock: (id: string, qty: number) => void;
+  onViewAnalytics: (row: InventoryRow) => void;
+  onViewRelocation: (row: InventoryRow) => void;
 };
 
 const InventoryTable: React.FC<InventoryTableProps> = ({
@@ -21,6 +23,8 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   activeMenuId,
   onMenuToggle,
   onUpdateStock,
+  onViewAnalytics,
+  onViewRelocation,
 }) => {
   const handleAction = (action: string, name: string) => {
     toast.success(`${action} initiated for ${name}`);
@@ -110,21 +114,27 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                   </button>
                   {activeMenuId === inv.id && (
                     <div className="absolute right-8 top-16 w-56 bg-white border border-gray-100 rounded-[1.5rem] shadow-2xl z-[70] p-2 animate-in zoom-in-95">
-                      <button
-                        onClick={() => handleAction("Relocation", inv.product?.name)}
-                        className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
-                      >
-                        <Move size={14} className="text-[#006666]" /> Relocate SKU
-                      </button>
-                      <button
-                        onClick={() => handleAction("Analytics View", inv.product?.name)}
-                        className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
-                      >
-                        <BarChart2 size={14} className="text-blue-500" /> Item Analytics
-                      </button>
+            <button
+            onClick={() => {
+              handleAction("Relocation", inv.product?.name ?? "SKU");
+              onViewRelocation(inv);
+            }}
+            className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
+          >
+            <Move size={14} className="text-[#006666]" /> Relocate SKU
+          </button>
+            <button
+              onClick={() => {
+                handleAction("Analytics View", inv.product?.name ?? "SKU");
+                onViewAnalytics(inv);
+              }}
+            className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
+          >
+            <BarChart2 size={14} className="text-blue-500" /> Item Analytics
+          </button>
                       <div className="h-px bg-gray-50 my-1" />
                       <button
-                        onClick={() => handleAction("Archival", inv.product?.name)}
+                        onClick={() => handleAction("Archival", inv.product?.name ?? "SKU")}
                         className="w-full text-left p-3 rounded-xl hover:bg-red-50 hover:text-red-500 flex items-center gap-3 transition-colors text-xs"
                       >
                         <Archive size={14} className="text-red-400" /> Archive SKU

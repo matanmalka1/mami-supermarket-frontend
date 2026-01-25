@@ -3,8 +3,24 @@ import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
 import { useAsyncResource } from "./useAsyncResource";
 import { InventoryRow } from "@/types/inventory";
+import type { InventoryResponse } from "@/types/admin-service";
 
 export const useInventory = () => {
+const toInventoryRow = (payload: InventoryResponse): InventoryRow => ({
+  id: payload.id,
+  availableQuantity: payload.available_quantity,
+  reservedQuantity: payload.reserved_quantity,
+  branch: {
+    id: payload.branch_id,
+    name: payload.branch_name,
+  },
+  product: {
+    id: payload.product_id,
+    name: payload.product_name,
+    sku: payload.productSku,
+  },
+});
+
   const fetchInventory = useCallback(async () => {
     const data = await apiService.admin.getInventory();
     const rows = Array.isArray(data?.items)
@@ -12,7 +28,7 @@ export const useInventory = () => {
       : Array.isArray(data)
         ? data
         : [];
-    return rows as InventoryRow[];
+    return rows.map(toInventoryRow);
   }, []);
 
   const { data: inventory, setData: setInventory, loading, refresh } =

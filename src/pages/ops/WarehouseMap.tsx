@@ -4,25 +4,44 @@ import EmptyState from "@/components/shared/EmptyState";
 import LoadingState from "@/components/shared/LoadingState";
 import { apiService } from "@/services/api";
 
-type MapResponse = {
-  map?: { branches?: any[]; warehouse?: any };
+type MapBranch = {
+  id: string;
+  name?: string;
+  lat?: number;
+  lng?: number;
 };
+
+type MapResponse = {
+  map?: { branches?: MapBranch[]; warehouse?: any };
+};
+
+const FALLBACK_BRANCHES: MapBranch[] = [
+  { id: "branch-guest-1", name: "Main Branch (offline)", lat: 32.1, lng: 34.8 },
+  { id: "branch-guest-2", name: "North Branch (offline)", lat: 32.2, lng: 34.9 },
+];
+
+const FALLBACK_MAP: MapResponse = { map: { branches: FALLBACK_BRANCHES } };
 
 const WarehouseMap: React.FC = () => {
   const [data, setData] = useState<MapResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [usedFallback, setUsedFallback] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+      setUsedFallback(false);
       try {
         const res = await apiService.ops.getWarehouseMap();
         setData(res as MapResponse);
+        setUsedFallback(false);
       } catch (err: any) {
-        setError(err.message || "Map endpoint unavailable");
-        setData(null);
+        const fallbackMessage = err?.message || "Map endpoint unavailable";
+        setError(fallbackMessage);
+        setData(FALLBACK_MAP);
+        setUsedFallback(true);
       } finally {
         setLoading(false);
       }
@@ -30,7 +49,7 @@ const WarehouseMap: React.FC = () => {
     fetchData();
   }, []);
 
-  const branches = data?.map?.branches || [];
+  const branches: MapBranch[] = data?.map?.branches || [];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
@@ -46,12 +65,13 @@ const WarehouseMap: React.FC = () => {
       <div className="bg-white border border-gray-100 rounded-[2.5rem] p-10 shadow-sm space-y-6">
         {loading ? (
           <LoadingState label="Requesting warehouse map data..." />
-        ) : error ? (
-          <EmptyState title="Map unavailable" description={error} />
         ) : branches.length === 0 ? (
           <EmptyState
             title="No geospatial data"
-            description="Backend returns placeholder map data. Map rendering is disabled until real coordinates are stored."
+            description={
+              error ||
+              "Backend returns placeholder map data. Map rendering is disabled until real coordinates are stored."
+            }
           />
         ) : (
           <>
@@ -61,9 +81,17 @@ const WarehouseMap: React.FC = () => {
             <p className="text-sm text-gray-500 font-bold">
               Showing branch list only to avoid simulated pins. Replace with real coordinates and bin layout to enable the map.
             </p>
+            {usedFallback && (
+              <div className="text-xs font-bold uppercase tracking-widest text-amber-700">
+                Live map unavailable ({error || "unknown error"}). Displaying fallback branch list.
+              </div>
+            )}
             <div className="space-y-3">
-              {branches.map((b: any) => (
-                <div key={b.id} className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+              {branches.map((b) => (
+                <div
+                  key={b.id}
+                  className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 border border-gray-100"
+                >
                   <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
                     <MapPin size={18} />
                   </div>
