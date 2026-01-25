@@ -26,6 +26,15 @@ export interface GetOrdersParams {
   offset?: number;
 }
 
+export interface OpsAlert {
+  id: string;
+  text: string;
+  type?: string;
+  severity?: string;
+  time?: string;
+  createdAt?: string;
+}
+
 export const opsService = {
   getOrders: (params?: GetOrdersParams) => {
     const {
@@ -65,6 +74,7 @@ export const opsService = {
       data,
     ),
   getPerformance: () => apiClient.get<any, any>("/ops/performance"),
+  getAlerts: () => apiClient.get<OpsAlert[], OpsAlert[]>("/ops/alerts"),
 
   getStockRequests: () =>
     apiClient.get<StockRequest[], StockRequest[]>("/ops/stock-requests"),

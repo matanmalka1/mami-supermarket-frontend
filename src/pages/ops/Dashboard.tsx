@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useNavigate } from "react-router";
 import StatCard from "@/components/ui/StatCard";
@@ -12,11 +12,20 @@ import OrderTable from "@/features/ops/components/OrderTable";
 import { useOrders } from "@/hooks/useOrders";
 import { apiService } from "@/services/api";
 
+type PerformanceMetrics = {
+  batchEfficiency?: string | number;
+  livePickers?: string | number;
+  [key: string]: any;
+};
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { orders, loading, selectedIds, toggleSelect } = useOrders();
   const pendingCount = orders.filter((o) => o.status === "PENDING").length;
   const expressDue = orders.filter((o) => o.urgency === "CRITICAL").length;
+  const [performance, setPerformance] = useState<PerformanceMetrics | null>(null);
+  const [perfLoading, setPerfLoading] = useState(true);
+  const [perfError, setPerfError] = useState<string | null>(null);
 
   const startBatch = async () => {
     if (selectedIds.length < 2) return toast.error("Select at least 2 orders for a batch");
@@ -29,6 +38,34 @@ const Dashboard: React.FC = () => {
       toast.error(err.message || "Failed to create batch", { id: "batch" });
     }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchPerformance = async () => {
+      setPerfLoading(true);
+      setPerfError(null);
+      try {
+        const data = await apiService.ops.getPerformance();
+        if (!isMounted) return;
+        setPerformance(data || null);
+      } catch (err: any) {
+        if (!isMounted) return;
+        setPerfError(err.message || "Performance metrics unavailable");
+      } finally {
+        if (isMounted) setPerfLoading(false);
+      }
+    };
+    fetchPerformance();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const formatMetricValue = (value?: string | number) =>
+    value !== undefined && value !== null ? value : "N/A";
+  const metricSubtitle = perfLoading
+    ? "Syncing metrics..."
+    : "Live performance overview";
 
   if (loading) return <LoadingState label="Syncing orders..." />;
 
@@ -56,9 +93,24 @@ const Dashboard: React.FC = () => {
       <Grid cols={4} gap={6}>
         <StatCard label="Total Pending" value={pendingCount} />
         <StatCard label="Express Due" value={expressDue} sub="Urgency: CRITICAL" />
-        <StatCard label="Batch Efficiency" value="N/A" sub="Metric not implemented" />
-        <StatCard label="Live Pickers" value="N/A" sub="Metric not implemented" />
+        <StatCard
+          label="Batch Efficiency"
+          value={formatMetricValue(performance?.batchEfficiency)}
+          sub={metricSubtitle}
+          loading={perfLoading}
+        />
+        <StatCard
+          label="Live Pickers"
+          value={formatMetricValue(performance?.livePickers)}
+          sub={metricSubtitle}
+          loading={perfLoading}
+        />
       </Grid>
+      {perfError && !perfLoading && (
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-red-600">
+          {perfError}
+        </p>
+      )}
 
       <OrderTable orders={orders} selectedIds={selectedIds} onToggleSelect={toggleSelect} />
     </div>

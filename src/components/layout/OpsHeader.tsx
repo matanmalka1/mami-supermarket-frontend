@@ -1,19 +1,36 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bell, Plus, Settings2, AlertTriangle, Info } from 'lucide-react';
 import SearchInput from '../ui/SearchInput';
 import Button from '../ui/Button';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from 'react-router';
 import { toast } from 'react-hot-toast';
+import { apiService } from '@/services/api';
 
-const OPS_NOTIFS = [
-  { id: 1, text: "SKU: 8821 Stock Critical", type: "alert", time: "5m ago" },
-  { id: 2, text: "Delivery Fleet A Optimized", type: "info", time: "14m ago" },
-];
+type OpsAlert = {
+  id: string | number;
+  text: string;
+  type?: string;
+  severity?: string;
+  time?: string;
+  createdAt?: string;
+};
 
 const OpsHeader: React.FC = () => {
   const [showNotifs, setShowNotifs] = useState(false);
+  const [alerts, setAlerts] = useState<OpsAlert[]>([]);
+  const [alertsLoading, setAlertsLoading] = useState(true);
+  const [alertsError, setAlertsError] = useState<string | null>(null);
+
+  const hasAlerts = alerts.length > 0;
+  const formatAlertTime = (alert: OpsAlert) =>
+    alert.time ||
+    (alert.createdAt
+      ? new Date(alert.createdAt).toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "Just now");
 
   const handleNewOrder = () => {
     toast("Manual order creation not connected yet.", {
@@ -21,6 +38,30 @@ const OpsHeader: React.FC = () => {
       style: { borderRadius: '1rem', fontWeight: 'bold' }
     });
   };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchAlerts = async () => {
+      setAlertsLoading(true);
+      setAlertsError(null);
+      try {
+        const data = await apiService.ops.getAlerts();
+        if (!isMounted) return;
+        setAlerts(Array.isArray(data) ? data : []);
+      } catch (err: any) {
+        if (!isMounted) return;
+        setAlertsError(err.message || "Unable to load alerts");
+      } finally {
+        if (isMounted) setAlertsLoading(false);
+      }
+    };
+
+    fetchAlerts();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b flex items-center justify-between px-8 sticky top-0 z-40">
@@ -38,22 +79,36 @@ const OpsHeader: React.FC = () => {
             className={`relative p-2 rounded-xl transition-all group ${showNotifs ? 'text-[#006666] bg-emerald-50' : 'text-gray-400 hover:text-[#006666] hover:bg-emerald-50'}`}
           >
             <Bell size={22} />
-            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white group-hover:animate-ping"></span>
+            {hasAlerts && (
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white group-hover:animate-ping"></span>
+            )}
           </button>
 
           {showNotifs && (
             <div className="absolute top-full right-0 mt-4 w-72 bg-white border border-gray-100 rounded-[2rem] shadow-2xl p-5 z-[60] animate-in slide-in-from-top-2">
               <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-1">Operational Alerts</h4>
               <div className="space-y-3">
-                {OPS_NOTIFS.map(n => (
-                  <div key={n.id} className="p-3 rounded-2xl bg-gray-50 border border-transparent hover:border-teal-100 flex items-start gap-3 transition-all cursor-default">
-                    {n.type === 'alert' ? <AlertTriangle size={14} className="text-red-500 mt-0.5" /> : <Info size={14} className="text-blue-500 mt-0.5" />}
-                    <div className="space-y-0.5">
-                      <p className="text-xs font-bold text-gray-900 leading-tight">{n.text}</p>
-                      <p className="text-[9px] font-black text-gray-400 uppercase tracking-tight">{n.time}</p>
+                {alertsLoading ? (
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-tight">Loading alerts...</p>
+                ) : alertsError ? (
+                  <p className="text-xs font-bold text-red-500 uppercase tracking-tight">{alertsError}</p>
+                ) : alerts.length === 0 ? (
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-tight">No alerts available.</p>
+                ) : (
+                  alerts.map((alert) => (
+                    <div key={alert.id} className="p-3 rounded-2xl bg-gray-50 border border-transparent hover:border-teal-100 flex items-start gap-3 transition-all cursor-default">
+                      {alert.type === 'alert' ? (
+                        <AlertTriangle size={14} className="text-red-500 mt-0.5" />
+                      ) : (
+                        <Info size={14} className="text-blue-500 mt-0.5" />
+                      )}
+                      <div className="space-y-0.5">
+                        <p className="text-xs font-bold text-gray-900 leading-tight">{alert.text}</p>
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-tight">{formatAlertTime(alert)}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           )}
