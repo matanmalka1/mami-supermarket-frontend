@@ -16,7 +16,8 @@ import {
   Tag,
   CheckSquare,
   CalendarClock,
-  Settings2
+  Settings2,
+  BarChart3,
 } from 'lucide-react';
 import AvatarBadge from '../ui/AvatarBadge';
 
@@ -33,6 +34,8 @@ const adminItems = [
   { label: 'Approve Stock', icon: CheckSquare, path: '/admin/requests' },
   { label: 'Delivery Slots', icon: CalendarClock, path: '/admin/delivery' },
   { label: 'Logistics Command', icon: Truck, path: '/logistics' },
+  { label: 'Fleet Tracker', icon: Truck, path: '/fleet' },
+  { label: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
   { label: 'Global Settings', icon: Settings2, path: '/admin/settings' },
   { label: 'Audit Logs', icon: ClipboardList, path: '/audit' },
 ];
