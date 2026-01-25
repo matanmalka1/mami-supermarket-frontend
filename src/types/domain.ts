@@ -64,6 +64,8 @@ export interface Order {
     fullName: string;
     phone: string;
   };
+  customerName?: string;
+  itemsSummary?: string;
   status: OrderStatus;
   urgency: Urgency;
   total: MoneyILS;

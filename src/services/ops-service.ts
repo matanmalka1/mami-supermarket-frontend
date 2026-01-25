@@ -53,5 +53,8 @@ export const opsService = {
       data,
     ),
 
-  getWarehouseMap: () => apiClient.get<any, any>("/ops/map"),
+  createBatch: (orderIds: string[]) =>
+    apiClient.post<string[], { id: string }[]>("/ops/batches", {
+      orderIds,
+    }),
 };

@@ -50,7 +50,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
             </TD>
             <TD>
               <div className="text-gray-900">
-                {order.customer?.fullName || "Anonymous"}
+                {order.customerName || order.customer?.fullName || "Anonymous"}
               </div>
               <div className="text-[10px] uppercase text-gray-400 tracking-widest">
                 {order.urgency}
@@ -61,10 +61,10 @@ const OrderTable: React.FC<OrderTableProps> = ({
                 ? `${order.deliverySlot.startTime} - ${order.deliverySlot.endTime}`
                 : "ASAP"}
             </TD>
-            <TD className="text-center">
-              <span className="bg-gray-100 px-3 py-1 rounded-lg text-xs">
-                {order.itemsCount}
-              </span>
+            <TD className="text-left">
+              <div className="text-xs text-gray-500 italic leading-tight">
+                {order.itemsSummary || "Items not available"}
+              </div>
             </TD>
             <TD>
               <StatusBadge status={order.status} />

@@ -25,7 +25,6 @@ import ProfileSettings from "../pages/store/ProfileSettings";
 import Wishlist from "../features/store/wishlist/pages/WishlistPage";
 import StaffPerformance from "../pages/ops/StaffPerformance";
 import StockRequests from "../pages/ops/StockRequests";
-import WarehouseMap from "../pages/ops/WarehouseMap";
 import CatalogManager from "../pages/admin/CatalogManager";
 import StockRequestManager from "../pages/admin/StockRequestManager";
 import DeliverySlotManager from "../pages/admin/DeliverySlotManager";
@@ -97,7 +96,6 @@ export const AppRouter: React.FC<RouterProps> = ({
             <Route path="/audit" element={<AuditLogs />} />
             <Route path="/performance" element={<StaffPerformance />} />
             <Route path="/stock-requests" element={<StockRequests />} />
-            <Route path="/map" element={<WarehouseMap />} />
             <Route path="/admin/analytics" element={<ManagerAnalytics />} />
             <Route path="/admin/catalog" element={<CatalogManager />} />
             <Route path="/admin/requests" element={<StockRequestManager />} />

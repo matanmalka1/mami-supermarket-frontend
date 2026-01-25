@@ -1,17 +1,11 @@
 import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
-import PickingHeader from '@/components/ops/PickingHeader';
-import PickingFooter from '@/components/ops/PickingFooter';
-import MissingItemModal from '@/components/ops/MissingItemModal';
 import { usePicking } from '@/hooks/usePicking';
 import { useWeightScale } from '@/hooks/useWeightScale';
-import PickingGuidanceCard from '@/pages/ops/components/PickingGuidanceCard';
-import PickingItemsTable from '@/pages/ops/components/PickingItemsTable';
-import PickingScaleModal from '@/pages/ops/components/PickingScaleModal';
 import { useParams, useNavigate } from 'react-router';
+import Button from '@/components/ui/Button';
+import PickingFinalizedNotice from '@/pages/ops/components/PickingFinalizedNotice';
+import PickingWorkflowLayout from '@/pages/ops/components/PickingWorkflowLayout';
 const PickingInterface: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,10 +17,10 @@ const PickingInterface: React.FC = () => {
     progress,
     updateItemStatus,
     refresh,
+    isFinalized,
   } = usePicking(id);
   const { weighingItem, setWeighingItem, currentWeight, setManualWeight, resetScale, isSimulated } =
     useWeightScale();
-
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [missingItemId, setMissingItemId] = useState<string | null>(null);
 
@@ -50,7 +44,6 @@ const PickingInterface: React.FC = () => {
           return;
         }
       }
-
       await updateItemStatus(itemId, status, reason, replacement?.id);
       setMissingItemId(null);
       resetScale();
@@ -59,7 +52,6 @@ const PickingInterface: React.FC = () => {
       // Error handled in hook
     }
   };
-
   const handleReportDamage = async (itemId: string) => {
     try {
       await updateItemStatus(itemId, 'MISSING', 'Damage reported');
@@ -68,7 +60,6 @@ const PickingInterface: React.FC = () => {
       toast.error('Failed to report damage');
     }
   };
-
   const handleWeightConfirm = () => {
     if (weighingItem) {
       handleUpdateStatus(weighingItem.id, 'PICKED');
@@ -81,7 +72,6 @@ const PickingInterface: React.FC = () => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="p-20 text-center space-y-4">
@@ -95,55 +85,41 @@ const PickingInterface: React.FC = () => {
     );
   }
 
-  return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-32">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-xs font-black text-gray-400 hover:text-gray-900 uppercase tracking-widest group"
-        >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Deck
-        </button>
-        <Badge color="blue">Standard Picking Sequence</Badge>
+  if (order && isFinalized) {
+    return (
+      <div className="bg-slate-50 min-h-screen py-16">
+        <div className="max-w-6xl mx-auto">
+          <PickingFinalizedNotice
+            orderNumber={order.orderNumber}
+            status={order.status}
+            onBack={() => navigate("/")}
+          />
+        </div>
       </div>
-
-      <PickingHeader order={order} itemsCount={items.length} />
-
-      <PickingGuidanceCard />
-
-      <PickingItemsTable
-        items={items}
-        expandedId={expandedId}
-        onToggle={handleToggleRow}
-        onUpdateStatus={handleUpdateStatus}
-        onReportMissing={(id) => setMissingItemId(id)}
-        onReportDamage={handleReportDamage}
-      />
-
-      <PickingFooter
-        items={items}
-        progress={progress}
-        onComplete={() => navigate('/')}
-        onSync={refresh}
-      />
-
-      <PickingScaleModal
-        isOpen={!!weighingItem}
-        weighingItem={weighingItem}
-        currentWeight={currentWeight}
-        isSimulated={isSimulated}
-        onClose={resetScale}
-        setManualWeight={setManualWeight}
-        onConfirm={handleWeightConfirm}
-      />
-
-      <MissingItemModal
-        itemId={missingItemId}
-        itemName={items.find((i) => i.id === missingItemId)?.product?.name}
-        onClose={() => setMissingItemId(null)}
-        onUpdateStatus={handleUpdateStatus}
-      />
-    </div>
+    );
+  }
+  return (
+    <PickingWorkflowLayout
+      order={order}
+      items={items}
+      expandedId={expandedId}
+      missingItemId={missingItemId}
+      onToggleRow={handleToggleRow}
+      onUpdateStatus={handleUpdateStatus}
+      onReportMissing={(id) => setMissingItemId(id)}
+      onReportDamage={handleReportDamage}
+      onBack={() => navigate('/')}
+      onWeightConfirm={handleWeightConfirm}
+      weighingItem={weighingItem}
+      resetScale={resetScale}
+      setManualWeight={setManualWeight}
+      currentWeight={currentWeight}
+      isSimulated={isSimulated}
+      progress={progress}
+      onSync={refresh}
+      onComplete={() => navigate('/')}
+      setMissingItemId={setMissingItemId}
+    />
   );
 };
 

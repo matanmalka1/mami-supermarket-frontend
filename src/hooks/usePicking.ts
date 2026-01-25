@@ -1,7 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiService } from "../services/api";
-import { Order, OrderItem } from "../types/domain";
+import { Order, OrderItem, OrderStatus } from "../types/domain";
 import { toast } from "react-hot-toast";
+
+const FINALIZED_STATUSES = new Set<OrderStatus>([
+  OrderStatus.DELIVERED,
+  OrderStatus.OUT_FOR_DELIVERY,
+  OrderStatus.CANCELED,
+]);
 
 export const usePicking = (orderId?: string) => {
   const [order, setOrder] = useState<Order | null>(null);
@@ -84,6 +90,8 @@ export const usePicking = (orderId?: string) => {
         )
       : 0;
 
+  const isFinalized = Boolean(order && FINALIZED_STATUSES.has(order.status));
+
   return {
     order,
     items,
@@ -92,5 +100,6 @@ export const usePicking = (orderId?: string) => {
     progress,
     updateItemStatus,
     refresh: fetchPickList,
+    isFinalized,
   };
 };
