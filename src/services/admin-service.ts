@@ -1,4 +1,10 @@
 import { apiClient } from "./api-client";
+import {
+  AdminSettings,
+  StockRequestStatus,
+  CreateProductRequest,
+  UpdateProductRequest,
+} from "../types/admin-service";
 
 // Endpoint map for easy backend contract swaps (do not guess endpoints)
 const ADMIN_ENDPOINTS = {
@@ -14,47 +20,12 @@ const ADMIN_ENDPOINTS = {
   audit: "/admin/audit",
 };
 
-export type AdminSettings = {
-  delivery_min: number;
-  delivery_fee: number;
-  slots: string;
-};
-
-export type StockRequestStatus = "PENDING" | "APPROVED" | "REJECTED";
-
-// Interfaces for admin-service
-export interface CreateCategoryRequest {
-  name: string;
-  description?: string;
-}
-export interface CreateProductRequest {
-  name: string;
-  sku: string;
-  price: number;
-  category_id: string;
-  description?: string;
-}
-export interface UpdateProductRequest {
-  name?: string;
-  sku?: string;
-  price?: number;
-  category_id?: string;
-  description?: string;
-}
-export interface CreateBranchRequest {
-  name: string;
-  address: string;
-}
-export interface CreateDeliverySlotRequest {
-  branch_id: string;
-  day_of_week: number;
-  start_time: string;
-  end_time: string;
-}
-
 export const adminService = {
   getInventory: () => apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.inventory),
-  updateStock: (id: string, data: { availableQuantity: number; reservedQuantity: number }) =>
+  updateStock: (
+    id: string,
+    data: { availableQuantity: number; reservedQuantity: number },
+  ) =>
     apiClient.patch<
       { availableQuantity: number; reservedQuantity: number },
       void
@@ -76,31 +47,48 @@ export const adminService = {
       { params: { active } },
     ),
   createProduct: (data: CreateProductRequest) =>
-    apiClient.post<CreateProductRequest, void>(ADMIN_ENDPOINTS.adminProducts, data),
+    apiClient.post<CreateProductRequest, void>(
+      ADMIN_ENDPOINTS.adminProducts,
+      data,
+    ),
   getStockRequests: (params?: Record<string, any>) =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.adminStockRequests, { params }),
   resolveStockRequest: (
     id: string,
-    data: { status: StockRequestStatus; approvedQuantity?: number; rejectionReason?: string },
+    data: {
+      status: StockRequestStatus;
+      approvedQuantity?: number;
+      rejectionReason?: string;
+    },
   ) =>
     apiClient.patch<typeof data, void>(
       `${ADMIN_ENDPOINTS.adminStockRequests}/${id}/resolve`,
       data,
     ),
   bulkResolveStockRequests: (
-    items: { request_id: string; status: StockRequestStatus; approved_quantity?: number; rejection_reason?: string }[],
+    items: {
+      request_id: string;
+      status: StockRequestStatus;
+      approved_quantity?: number;
+      rejection_reason?: string;
+    }[],
   ) =>
     apiClient.patch<{ items: any[] }, void>(
       ADMIN_ENDPOINTS.adminBulkStockRequests,
       { items },
     ),
-  getSettings: () => apiClient.get<AdminSettings, AdminSettings>(ADMIN_ENDPOINTS.settings),
+  getSettings: () =>
+    apiClient.get<AdminSettings, AdminSettings>(ADMIN_ENDPOINTS.settings),
   updateSettings: (data: Partial<AdminSettings>) =>
-    apiClient.put<Partial<AdminSettings>, AdminSettings>(ADMIN_ENDPOINTS.settings, data),
+    apiClient.put<Partial<AdminSettings>, AdminSettings>(
+      ADMIN_ENDPOINTS.settings,
+      data,
+    ),
   getRevenueAnalytics: () =>
     apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
   getFleetStatus: () => apiClient.get<any, any>(ADMIN_ENDPOINTS.fleetStatus),
-  getDeliverySlots: () => apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
+  getDeliverySlots: () =>
+    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
   getAuditLogs: (params?: Record<string, any>) =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.audit, { params }),
 };

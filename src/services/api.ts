@@ -4,6 +4,7 @@ import { adminService } from "./admin-service";
 import { catalogService } from "./catalog-service";
 import { checkoutService } from "./checkout-service";
 import { cartService } from "./cart-service";
+import { branchService } from "./branch-service";
 import { apiClient } from "./api-client";
 import { Order } from "../types/domain";
 
@@ -14,6 +15,7 @@ export const apiService = {
   catalog: catalogService,
   checkout: checkoutService,
   cart: cartService,
+  branches: branchService,
   profile: {
     get: authService.getProfile,
     update: authService.updateProfile,
