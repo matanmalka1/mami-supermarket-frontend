@@ -97,6 +97,22 @@ export const adminService = {
   getFleetStatus: () => apiClient.get<any, any>(ADMIN_ENDPOINTS.fleetStatus),
   getDeliverySlots: () =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
+  updateDeliverySlot: (id: string, data: {
+    day_of_week?: number;
+    start_time?: string;
+    end_time?: string;
+    branch_id?: string;
+  }) =>
+    apiClient.patch<typeof data, void>(
+      `${ADMIN_ENDPOINTS.deliverySlots}/${id}`,
+      data,
+    ),
+  toggleDeliverySlot: (id: string, active: boolean) =>
+    apiClient.patch<void, void>(
+      `${ADMIN_ENDPOINTS.deliverySlots}/${id}/toggle`,
+      null,
+      { params: { active } },
+    ),
   getAuditLogs: (params?: Record<string, any>) =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.audit, { params }),
 };

@@ -31,7 +31,7 @@ const BranchSelector: FC = () => {
       >
         <MapPin size={16} className="text-[#008A45]" />
         <div className="text-left leading-tight">
-          <span className="text-[8px] font-black tracking-[0.5em] text-gray-400 block">
+          <span className="text-[8px] font-black tracking-[0.5em] text-gray block">
             Deliver from
           </span>
           <span className="text-[11px] font-bold text-gray-900">{label}</span>

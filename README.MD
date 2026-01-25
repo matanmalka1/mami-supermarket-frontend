@@ -1,6 +1,6 @@
-# Mami Supermarket — Frontend
+# mami-supermarket-frontend
 
-A modern, full-featured supermarket e-commerce platform built with React 19, Vite, and Tailwind CSS. This frontend provides a complete shopping experience for customers, staff operations tools, and admin management capabilities. It is tightly integrated with the backend API and supports multi-role workflows.
+A modern, full-featured supermarket e-commerce frontend built with React 19, Vite, and Tailwind CSS. Provides a complete shopping experience for customers, staff operations tools, and admin management capabilities. Tightly integrated with the backend API and supports multi-role workflows.
 
 ---
 
@@ -46,7 +46,7 @@ Mami Supermarket is a multi-role platform that handles:
 ### Backend (API expectations)
 
 - REST API with `/api/v1` base (configurable via `VITE_API_BASE_URL`)
-- JWT auth; endpoints defined in `src/api/endpoints.js`
+- JWT auth; endpoints defined in `src/api/endpoints.ts`
 - Success envelope `{ data: ... }`, error envelope `{ error: { code, message, details } }`
 
 ---
@@ -145,37 +145,32 @@ Database (PostgreSQL) + Cache (Redis)
 
 ### 🛒 User (Customer) Flow
 
-```mermaid
-flowchart TD
-   A[Browse Products / Search] --> B[View Product Details]
-   B --> C[Add to Cart]
-   C --> D[View/Edit Cart]
-   D --> E[Checkout]
-   E --> F{Choose Fulfillment}
-   F -->|Delivery| G[Enter Address]
-   F -->|Pickup| H[Select Branch]
-   G --> I[Order Preview]
-   H --> I
-   I --> J[Select Payment Method]
-   J --> K[Confirm Order]
-   K --> L[Order Success]
-   L --> M[Track Orders / Order History]
-   M --> N[Account Management]
-```
+1. Browse Products / Search
+2. View Product Details
+3. Add to Cart
+4. View/Edit Cart
+5. Checkout
+6. Choose Fulfillment:
+   - Delivery: Enter Address
+   - Pickup: Select Branch
+7. Order Preview
+8. Select Payment Method
+9. Confirm Order
+10. Order Success
+11. Track Orders / Order History
+12. Account Management
 
 ### 🛠️ Admin Flow
 
-```mermaid
-flowchart TD
-   A[Admin Login] --> B[Admin Dashboard]
-   B --> C[Review Stock Requests]
-   C --> D{Approve or Reject}
-   D -->|Approve| E[Update Inventory]
-   D -->|Reject| F[Notify Staff]
-   B --> G[Planned: Catalog Management]
-   B --> H[Planned: Analytics]
-   B --> I[Planned: Branch Management]
-```
+1. Admin Login
+2. Admin Dashboard
+3. Review Stock Requests
+4. Approve or Reject:
+   - Approve: Update Inventory
+   - Reject: Notify Staff
+5. (Planned) Catalog Management
+6. (Planned) Analytics
+7. (Planned) Branch Management
 
 ---
 

@@ -4,6 +4,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { AppError } from "../types/error";
+import { apiErrorSchema } from "@/validation/apiError";
 
 // Single source of truth for baseURL
 const getBaseUrl = () => {
@@ -123,10 +124,21 @@ apiClient.interceptors.response.use(
       sessionStorage.removeItem("mami_token");
       window.location.hash = "#/login";
     }
-    const apiError = error.response?.data?.error || {
+    let apiError = error.response?.data?.error || {
       code: "INTERNAL_ERROR",
       message: error.message || "Unknown network error",
     };
+    // Validate error shape with Zod
+    const parsed = apiErrorSchema.safeParse(apiError);
+    if (!parsed.success) {
+      apiError = {
+        code: "INTERNAL_ERROR",
+        message: "Malformed error response from server",
+        details: { original: apiError, issues: parsed.error.issues },
+      };
+    } else {
+      apiError = parsed.data;
+    }
     return Promise.reject(new AppError(apiError));
   },
 );

@@ -5,7 +5,7 @@ import { useAsyncResource } from "./useAsyncResource";
 
 export const useCatalogManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("all");
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
   const fetchProducts = useCallback(async () => {
@@ -31,14 +31,13 @@ export const useCatalogManager = () => {
   const filteredProducts = products.filter((p) => {
     const name = (p.name || "").toLowerCase();
     const sku = (p.sku || "").toLowerCase();
-    const category = (p.category || p.categoryName || "").toLowerCase();
     const matchesSearch =
       name.includes(searchTerm.toLowerCase()) ||
       sku.includes(searchTerm.toLowerCase());
     const matchesFilter =
-      activeFilter === "All" ||
-      category === activeFilter.toLowerCase() ||
-      p.category === activeFilter;
+      activeFilter === "all" ||
+      p.category_id === activeFilter ||
+      p.categoryId === activeFilter;
     return matchesSearch && matchesFilter;
   });
 

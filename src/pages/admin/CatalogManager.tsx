@@ -104,9 +104,9 @@ const CatalogManager: React.FC = () => {
             {categoryFilters.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setActiveFilter(cat.name || "All")}
+                onClick={() => setActiveFilter(cat.id)}
                 className={`transition-all whitespace-nowrap ${
-                  activeFilter === (cat.name || "All") ? "text-[#006666]" : "hover:text-[#006666]"
+                  activeFilter === cat.id ? "text-[#006666]" : "hover:text-[#006666]"
                 }`}
               >
                 {cat.name || "All"}

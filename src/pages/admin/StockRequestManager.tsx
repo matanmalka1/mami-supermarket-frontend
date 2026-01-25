@@ -1,68 +1,19 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { toast } from "react-hot-toast";
+import React from "react";
 import Button from "@/components/ui/Button";
-import { apiService } from "@/services/api";
 import { StockRequestStatus } from "@/services/admin-service";
-import StockRequestRow, { StockRequest } from "./StockRequestRow";
+import StockRequestRow from "./StockRequestRow";
+import { useStockRequestQueue } from "@/features/admin/hooks/useStockRequestQueue";
 
 const StockRequestManager: React.FC = () => {
-  const [requests, setRequests] = useState<StockRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [actionLoading, setActionLoading] = useState(false);
-
-  const fetchRequests = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data: any = await apiService.admin.getStockRequests({ status: "PENDING" });
-      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-      setRequests(rows);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to load request queue");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchRequests();
-  }, [fetchRequests]);
-
-  const toggleSelect = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
-  };
-
-  const resolveSingle = async (id: string, status: StockRequestStatus) => {
-    setActionLoading(true);
-    try {
-      await apiService.admin.resolveStockRequest(id, { status });
-      toast.success(`Request ${status.toLowerCase()}`);
-      fetchRequests();
-    } catch (err: any) {
-      toast.error(err.message || "Update failed");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const resolveSelected = async (status: StockRequestStatus) => {
-    if (selectedIds.length === 0) return;
-    setActionLoading(true);
-    try {
-      await apiService.admin.bulkResolveStockRequests(
-        selectedIds.map((id) => ({ request_id: id, status })),
-      );
-      toast.success(`Bulk ${status.toLowerCase()} complete`);
-      setSelectedIds([]);
-      fetchRequests();
-    } catch (err: any) {
-      toast.error(err.message || "Bulk update failed");
-    } finally {
-      setActionLoading(false);
-    }
-  };
+  const {
+    requests,
+    loading,
+    selectedIds,
+    actionLoading,
+    toggleSelect,
+    resolveSingle,
+    resolveSelected,
+  } = useStockRequestQueue();
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -108,8 +59,8 @@ const StockRequestManager: React.FC = () => {
               selected={selectedIds.includes(req.id)}
               disabled={actionLoading}
               onSelect={() => toggleSelect(req.id)}
-              onApprove={() => resolveSingle(req.id, "APPROVED")}
-              onReject={() => resolveSingle(req.id, "REJECTED")}
+              onApprove={() => resolveSingle(req, "APPROVED")}
+              onReject={() => resolveSingle(req, "REJECTED")}
             />
           ))
         )}

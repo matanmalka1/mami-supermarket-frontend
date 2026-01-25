@@ -66,11 +66,7 @@ const StoreHeader: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveMenu(activeMenu === "dept" ? null : "dept")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                  activeMenu === "dept"
-                    ? "bg-emerald-50 text-[#008A45]"
-                    : "text-gray-400 hover:text-[#008A45]"
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all `}
               >
                 <GridIcon size={16} /> Departments{" "}
                 <ChevronDown
