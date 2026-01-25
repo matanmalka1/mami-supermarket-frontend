@@ -3,11 +3,29 @@ import { Timer, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { apiService } from "@/services/api";
 
+function formatSeconds(totalSeconds: number) {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const hh = String(Math.floor(s / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return `${hh}:${mm}:${ss}`;
+}
+
 const FlashDeals: React.FC = () => {
-  const [timeLeft] = useState("02:45:12");
+  // התחל מ-2:45:12 (בשניות)
+  const [secondsLeft, setSecondsLeft] = useState(2 * 3600 + 45 * 60 + 12);
+
   const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => window.clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -30,6 +48,8 @@ const FlashDeals: React.FC = () => {
     load();
   }, []);
 
+  const timeLeft = formatSeconds(secondsLeft);
+
   return (
     <section className="bg-orange-50 rounded-[3rem] p-12 space-y-10 border border-orange-100">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -47,6 +67,7 @@ const FlashDeals: React.FC = () => {
           </div>
         </div>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         {loading ? (
           <p className="col-span-4 text-center text-orange-700 font-bold">Loading flash deals...</p>
