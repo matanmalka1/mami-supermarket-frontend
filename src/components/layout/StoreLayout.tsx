@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { Link, Outlet } from "react-router";
 import StoreHeader from "./StoreHeader";
 import Breadcrumbs from "../ui/Breadcrumbs";
-import Modal from "../ui/Modal";
-import { Lock } from "lucide-react";
 import { useCatalogCategories } from "@/hooks/useCatalogCategories";
+import { BranchProvider } from "@/context/BranchContext";
+import StoreFooter from "./StoreFooter";
+import StoreInfoModal from "./StoreInfoModal";
 
 const StoreLayout: React.FC = () => {
-  const [infoModal, setInfoModal] = useState<{ isOpen: boolean; title: string } | null>(null);
+  const [infoModal, setInfoModal] = useState<{
+    isOpen: boolean;
+    title: string;
+  } | null>(null);
   const { categories, loading } = useCatalogCategories();
 
   const handleStaticLink = (label: string) => {
@@ -15,69 +19,32 @@ const StoreLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <StoreHeader />
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
-        <Breadcrumbs />
-        <Outlet />
-      </main>
-      <footer className="bg-gray-50 border-t py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
-            <div className="space-y-6">
-              <h4 className="font-black text-sm uppercase tracking-widest">Departments</h4>
-              {loading ? (
-                <p className="text-sm text-gray-400 font-bold">Loading departments...</p>
-              ) : categories.length === 0 ? (
-                <p className="text-sm text-gray-400 font-bold">
-                  Departments unavailable (backend feed missing)
-                </p>
-              ) : (
-                <ul className="text-sm text-gray-500 space-y-3 font-medium">
-                  {categories.slice(0, 4).map((cat) => (
-                    <li key={cat.id}>
-                      <Link to={`/store/category/${cat.id}`} className="hover:text-[#008A45] transition-colors">
-                        {cat.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="space-y-6">
-              <h4 className="font-black text-sm uppercase tracking-widest">About FreshMarket</h4>
-              <ul className="text-sm text-gray-500 space-y-3 font-medium">
-                <li onClick={() => handleStaticLink('Our Mission')} className="hover:text-[#008A45] cursor-pointer transition-colors">Our Mission</li>
-                <li onClick={() => handleStaticLink('Verified Farmers')} className="hover:text-[#008A45] cursor-pointer transition-colors">Verified Farmers</li>
-              </ul>
-            </div>
-            <div className="space-y-6">
-              <h4 className="font-black text-sm uppercase tracking-widest">Client Care</h4>
-              <ul className="text-sm text-gray-500 space-y-3 font-medium">
-                <li><Link to="/store/account/settings" className="hover:text-[#008A45] transition-colors">Help Center</Link></li>
-                <li><Link to="/store/account/orders" className="hover:text-[#008A45] transition-colors">Track Delivery</Link></li>
-              </ul>
-            </div>
-            <div className="space-y-10">
-              <div className="space-y-4">
-                <h4 className="font-black text-sm uppercase tracking-widest">Internal Access</h4>
-                <Link to="/" className="inline-flex items-center gap-2 bg-[#008A45]/5 text-[#008A45] px-4 py-2.5 rounded-xl text-xs font-black hover:bg-[#008A45]/10 transition-all italic border border-emerald-100">
-                  <Lock size={14} /> OPS PORTAL
-                </Link>
-              </div>
-            </div>
+    <BranchProvider>
+      <div className="min-h-screen bg-white flex flex-col">
+        <StoreHeader />
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
+          <Breadcrumbs />
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-[15px] uppercase tracking-[0.4em] text-gray-400">
+              Heart an item and we will keep it ready for later
+            </p>
+            <Link
+              to="/store/wishlist"
+              className="text-xs font-black uppercase tracking-[0.3em] text-[#008A45] border-b border-[#008A45]/0 hover:border-b hover:border-[#008A45] transition-all"
+            >
+              View wishlist
+            </Link>
           </div>
-        </div>
-      </footer>
-
-      <Modal isOpen={!!infoModal} onClose={() => setInfoModal(null)} title={infoModal?.title || 'Information'}>
-        <div className="py-6 space-y-4">
-          <p className="text-gray-500 text-sm leading-relaxed">
-            Detailed documentation regarding {infoModal?.title.toLowerCase()} is available in our portal.
-          </p>
-        </div>
-      </Modal>
-    </div>
+          <Outlet />
+        </main>
+        <StoreFooter
+          categories={categories}
+          loading={loading}
+          onStaticLink={handleStaticLink}
+        />
+      </div>
+      <StoreInfoModal infoModal={infoModal} onClose={() => setInfoModal(null)} />
+    </BranchProvider>
   );
 };
 

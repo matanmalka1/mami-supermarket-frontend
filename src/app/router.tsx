@@ -22,6 +22,7 @@ import AccountLayout from "../pages/store/AccountLayout";
 import OrderHistory from "../pages/store/OrderHistory";
 import AddressBook from "../pages/store/AddressBook";
 import ProfileSettings from "../pages/store/ProfileSettings";
+import Wishlist from "../features/store/wishlist/pages/WishlistPage";
 import StaffPerformance from "../pages/ops/StaffPerformance";
 import StockRequests from "../pages/ops/StockRequests";
 import WarehouseMap from "../pages/ops/WarehouseMap";
@@ -112,6 +113,7 @@ export const AppRouter: React.FC<RouterProps> = ({
             <Route path="/store/product/:id" element={<ProductDetail />} />
             <Route path="/store/checkout" element={<Checkout />} />
             <Route path="/store/order-success/:id" element={<OrderSuccess />} />
+            <Route path="/store/wishlist" element={<Wishlist />} />
 
             <Route
               path="/store/account"

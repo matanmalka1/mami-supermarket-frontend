@@ -1,43 +1,21 @@
 
 import React, { useState } from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link, useNavigate } from "react-router";
-import {
-  ShoppingCart,
-  Bell,
-  ShoppingBag,
-  ChevronDown,
-  MapPin,
-  Grid as GridIcon,
-  Lock,
-  ShieldCheck,
-  LayoutDashboard,
-} from "lucide-react";
-import SearchInput from "../ui/SearchInput";
+import { Link } from "react-router";
+import { ShoppingBag, ChevronDown, Grid as GridIcon, ShieldCheck, LayoutDashboard } from "lucide-react";
+import SearchTypeahead from "./store-header/SearchTypeahead";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../hooks/useAuth";
-import NotifDropdown from "./store-header/NotifDropdown";
-import AccountDropdown from "./store-header/AccountDropdown";
 import DeptMegaMenu from "./store-header/DeptMegaMenu";
-import AvatarBadge from "../ui/AvatarBadge";
 import { useCatalogCategories } from "@/hooks/useCatalogCategories";
+import HeaderActions from "./store-header/HeaderActions";
+import BranchSelector from "./store-header/BranchSelector";
 
 const StoreHeader: React.FC = () => {
-  const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState('');
-  const [activeMenu, setActiveMenu] = useState<'notif' | 'account' | 'dept' | null>(null);
+  const [activeMenu, setActiveMenu] = useState<"notif" | "account" | "dept" | null>(null);
   const { setIsOpen, items } = useCart();
   const { userRole, logout } = useAuth();
   const { categories, loading: categoriesLoading } = useCatalogCategories();
   const notifications: any[] = [];
-  
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchValue.trim()) {
-      navigate(`/store/search?q=${encodeURIComponent(searchValue.trim())}`);
-      setActiveMenu(null);
-    }
-  };
 
   const isActuallyAdmin = userRole === 'ADMIN';
 
@@ -81,67 +59,25 @@ const StoreHeader: React.FC = () => {
                 <GridIcon size={16} /> Departments <ChevronDown size={14} className={`transition-transform duration-300 ${activeMenu === 'dept' ? 'rotate-180' : ''}`} />
               </button>
               <div className="h-4 w-px bg-gray-100 mx-2" />
-              <div className="flex items-center gap-2 px-4 py-2 text-gray-400 cursor-pointer group">
-                <MapPin size={16} className="text-[#008A45]" />
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-black uppercase tracking-tighter leading-none opacity-50">Deliver to</span>
-                  <span className="text-[11px] font-bold text-gray-900 group-hover:text-[#008A45] transition-colors leading-tight">Tel Aviv, IL</span>
-                </div>
-              </div>
+              <BranchSelector />
             </nav>
           </div>
 
           <div className="flex-1 max-w-md mx-8 hidden md:block">
-            <form onSubmit={handleSearch}>
-              <SearchInput 
-                variant="store" 
-                placeholder="Search items..." 
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-            </form>
+            <SearchTypeahead onNavigate={() => setActiveMenu(null)} />
           </div>
 
           <div className="flex items-center gap-3">
-            {isActuallyAdmin && (
-              <Link to="/" onClick={() => sessionStorage.removeItem('mami_manual_store_visit')} className="hidden md:flex items-center gap-2 bg-[#006666] text-white px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-teal-900/20 hover:bg-[#005555] transition-all italic border border-teal-400/20">
-                <Lock size={14} /> OPS PORTAL
-              </Link>
-            )}
-
-            <div className="relative">
-              <button 
-                onClick={() => setActiveMenu(activeMenu === 'notif' ? null : 'notif')}
-                className={`p-2.5 transition-all rounded-xl hover:bg-gray-50 ${activeMenu === 'notif' ? 'text-[#008A45] bg-emerald-50' : 'text-gray-400'}`}
-              >
-                <Bell size={22} />
-                {notifications.length > 0 && (
-                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                )}
-              </button>
-              {activeMenu === "notif" && (
-                <NotifDropdown items={notifications} onClose={() => setActiveMenu(null)} />
-              )}
-            </div>
-
-            <button onClick={() => { setIsOpen(true); setActiveMenu(null); }} className="p-2.5 text-gray-400 hover:text-[#008A45] hover:bg-gray-50 rounded-xl relative transition-all">
-              <ShoppingCart size={22} />
-              {items.length > 0 && (
-                <span className="absolute top-1.5 right-1.5 bg-[#008A45] text-white text-[9px] font-black w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-md">
-                  {items.reduce((sum, i) => sum + i.quantity, 0)}
-                </span>
-              )}
-            </button>
-
-            <div className="relative ml-2">
-              <div 
-                onClick={() => setActiveMenu(activeMenu === 'account' ? null : 'account')}
-                className={`w-10 h-10 rounded-xl bg-gray-50 border-2 overflow-hidden cursor-pointer transition-all shadow-sm flex items-center justify-center ${activeMenu === 'account' ? 'border-[#008A45] ring-4 ring-emerald-50' : 'border-transparent hover:border-emerald-100'}`}
-              >
-                <AvatarBadge name={isActuallyAdmin ? 'Admin User' : 'Customer'} size={36} className="border-0" />
-              </div>
-              {activeMenu === 'account' && <AccountDropdown onClose={() => setActiveMenu(null)} userRole={userRole} onLogout={logout} />}
-            </div>
+            <HeaderActions
+              isActuallyAdmin={isActuallyAdmin}
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              itemsCount={items.reduce((sum, i) => sum + i.quantity, 0)}
+              setIsOpen={setIsOpen}
+              notifications={notifications}
+              userRole={userRole}
+              logout={logout}
+            />
           </div>
         </div>
 
