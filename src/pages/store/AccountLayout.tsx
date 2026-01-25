@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { Package, MapPin, User, LogOut, ChevronRight, Star } from 'lucide-react';
 import { toast } from 'react-hot-toast';

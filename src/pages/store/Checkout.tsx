@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
@@ -8,68 +8,26 @@ import FulfillmentStep from "@/components/checkout/FulfillmentStep";
 import ScheduleStep from "@/components/checkout/ScheduleStep";
 import PaymentStep from "@/components/checkout/PaymentStep";
 import Button from "@/components/ui/Button";
-import { useAuth } from "@/hooks/useAuth";
-
-const SLOTS = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00"];
+import { useCheckoutFlow } from "@/hooks/useCheckoutFlow";
 
 const Checkout: React.FC = () => {
   const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
-  const [method, setMethod] = useState<"DELIVERY" | "PICKUP">("DELIVERY");
-  const [slot, setSlot] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState<any>(null);
-  const { isAuthenticated } = useAuth();
-  const [serverCartId, setServerCartId] = useState<string | null>(null);
+  const {
+    isAuthenticated,
+    method,
+    setMethod,
+    serverCartId,
+    defaultBranch,
+    deliverySlots,
+    slotId,
+    setSlotId,
+    preview,
+  } = useCheckoutFlow();
 
   const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setServerCartId(null);
-      return;
-    }
-
-    let active = true;
-    const loadCart = async () => {
-      try {
-        const data = await apiService.cart.get();
-        if (active) {
-          setServerCartId(data?.id || null);
-        }
-      } catch {
-        toast.error("Failed to sync cart with server");
-      }
-    };
-
-    loadCart();
-    return () => {
-      active = false;
-    };
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (!serverCartId) {
-      setPreview(null);
-      return;
-    }
-
-    const loadPreview = async () => {
-      try {
-        const data = await apiService.checkout.preview({
-          cart_id: serverCartId,
-          fulfillment_type: method,
-          delivery_slot_id: slot || undefined,
-        });
-        setPreview(data);
-      } catch (err: any) {
-        toast.error(err.message || "Failed to load checkout preview");
-      }
-    };
-
-    loadPreview();
-  }, [serverCartId, method, slot]);
 
   const handleConfirm = async () => {
     if (!isAuthenticated) {
@@ -80,6 +38,10 @@ const Checkout: React.FC = () => {
       toast.error("Cart is syncing, please wait");
       return;
     }
+    if (method === "PICKUP" && !defaultBranch) {
+      toast.error("Pickup branch is loading, please wait");
+      return;
+    }
     setLoading(true);
     try {
       const data: any = await apiService.checkout.confirm(
@@ -87,7 +49,8 @@ const Checkout: React.FC = () => {
           cart_id: serverCartId,
           payment_token_id: crypto.randomUUID(),
           fulfillment_type: method,
-          delivery_slot_id: slot || undefined,
+          branch_id: method === "PICKUP" ? defaultBranch?.id : undefined,
+          delivery_slot_id: slotId || undefined,
         },
         idempotencyKey,
       );
@@ -124,6 +87,11 @@ const Checkout: React.FC = () => {
           </Button>
         </div>
       )}
+      {method === "PICKUP" && !defaultBranch && (
+        <div className="bg-blue-50 border border-blue-100 rounded-3xl p-5 text-sm font-bold uppercase tracking-[0.3em] text-blue-600">
+          Loading pickup branch information...
+        </div>
+      )}
 
       <div className="bg-white border rounded-[3rem] p-12 shadow-xl space-y-10 min-h-[500px]">
         {step === "FULFILLMENT" && (
@@ -131,7 +99,13 @@ const Checkout: React.FC = () => {
         )}
 
         {step === "SCHEDULE" && (
-          <ScheduleStep slots={SLOTS} selected={slot} onSelect={setSlot} onBack={() => setStep("FULFILLMENT")} onNext={setStep} />
+          <ScheduleStep
+            slots={deliverySlots}
+            selected={slotId}
+            onSelect={setSlotId}
+            onBack={() => setStep("FULFILLMENT")}
+            onNext={setStep}
+          />
         )}
 
         {step === "PAYMENT" && (

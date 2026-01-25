@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useParams, Link } from 'react-router';
 import { SlidersHorizontal, ChevronRight, LayoutGrid, List, Check, Box } from 'lucide-react';
 import ProductCard from '@/components/store/ProductCard';
