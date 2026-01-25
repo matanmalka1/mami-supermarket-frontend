@@ -2,16 +2,21 @@ import { useCallback } from "react";
 import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
 import { useAsyncResource } from "./useAsyncResource";
+import { InventoryRow } from "@/types/inventory";
 
 export const useInventory = () => {
   const fetchInventory = useCallback(async () => {
-    const data: any = await apiService.admin.getInventory();
-    const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-    return rows;
+    const data = await apiService.admin.getInventory();
+    const rows = Array.isArray(data?.items)
+      ? data.items
+      : Array.isArray(data)
+        ? data
+        : [];
+    return rows as InventoryRow[];
   }, []);
 
   const { data: inventory, setData: setInventory, loading, refresh } =
-    useAsyncResource<any[]>(fetchInventory, {
+    useAsyncResource<InventoryRow[]>(fetchInventory, {
       initialData: [],
       errorMessage: "Failed to load global inventory",
     });

@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import { useInventory } from "@/hooks/useInventory";
 import InventoryTable from "@/pages/inventory/InventoryTable";
+import InventoryHighlights from "@/pages/inventory/InventoryHighlights";
 import NewSkuModal from "@/pages/inventory/NewSkuModal";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
@@ -12,13 +13,7 @@ const Inventory: React.FC = () => {
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
-  const rows = useMemo(() => {
-    if (Array.isArray(inventory)) return inventory;
-    if (inventory && typeof inventory === "object" && Array.isArray((inventory as any).items)) {
-      return (inventory as any).items;
-    }
-    return [];
-  }, [inventory]);
+  const rows = inventory;
 
   return (
     <div className="space-y-8 pb-12 animate-in fade-in duration-500 relative">
@@ -38,6 +33,8 @@ const Inventory: React.FC = () => {
           New SKU
         </Button>
       </div>
+
+      <InventoryHighlights rows={rows} />
 
       {loading ? (
         <LoadingState label="Loading global inventory..." />

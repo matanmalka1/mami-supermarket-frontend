@@ -1,5 +1,4 @@
 import React from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { BrowserRouter as Router } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "./context/CartContext";
