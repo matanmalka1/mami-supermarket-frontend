@@ -1,14 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Timer, Zap } from 'lucide-react';
-import ProductCard from './ProductCard';
-
-const DEAL_ITEMS = [
-  { id: 'deal-avocado', name: 'Imported Hass Avocados (2pk)', category: 'Produce', price: 9.90, oldPrice: 15.00, tag: '50% OFF', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=400&q=80' },
-  { id: 'deal-oj', name: 'Cold Pressed Orange Juice', category: 'Drinks', price: 12.50, oldPrice: 18.90, tag: 'Deal', image: 'https://images.unsplash.com/photo-1624517535389-c967a6114251?auto=format&fit=crop&w=400&q=80' }
-];
+import React, { useState, useEffect } from "react";
+import { Timer, Zap } from "lucide-react";
+import ProductCard from "./ProductCard";
+import { apiService } from "@/services/api";
 
 const FlashDeals: React.FC = () => {
-  const [timeLeft] = useState('02:45:12');
+  const [timeLeft] = useState("02:45:12");
+  const [deals, setDeals] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await apiService.catalog.getFeatured(4);
+        const items = Array.isArray((data as any)?.items)
+          ? (data as any).items
+          : Array.isArray(data)
+            ? data
+            : [];
+        setDeals(items);
+      } catch (err: any) {
+        setError(err.message || "Unable to load flash deals");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   return (
     <section className="bg-orange-50 rounded-[3rem] p-12 space-y-10 border border-orange-100">
@@ -28,11 +48,15 @@ const FlashDeals: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-        {DEAL_ITEMS.map(item => <ProductCard key={item.id} item={item} />)}
-        <div className="hidden lg:flex bg-white/50 backdrop-blur rounded-[2rem] border border-orange-200/50 flex-col items-center justify-center p-8 text-center space-y-4">
-          <h4 className="font-black text-xl text-orange-800">More Deals<br/>Coming Up!</h4>
-          <p className="text-xs font-bold text-orange-600/60 uppercase">Check back in 3 hours</p>
-        </div>
+        {loading ? (
+          <p className="col-span-4 text-center text-orange-700 font-bold">Loading flash deals...</p>
+        ) : error ? (
+          <p className="col-span-4 text-center text-orange-700 font-bold">{error}</p>
+        ) : deals.length === 0 ? (
+          <p className="col-span-4 text-center text-orange-700 font-bold">No deals available right now.</p>
+        ) : (
+          deals.map((item) => <ProductCard key={item.id} item={item} />)
+        )}
       </div>
     </section>
   );

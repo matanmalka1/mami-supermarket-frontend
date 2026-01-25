@@ -1,16 +1,26 @@
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link, useNavigate } from 'react-router';
-import { ShoppingCart, Bell, ShoppingBag, ChevronDown, MapPin, Grid as GridIcon, Lock, ShieldCheck, LayoutDashboard } from 'lucide-react';
-import SearchInput from '../ui/SearchInput';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../hooks/useAuth';
-import { CATEGORIES, STORE_NOTIFICATIONS } from '../../constants';
-import NotifDropdown from './store-header/NotifDropdown';
-import AccountDropdown from './store-header/AccountDropdown';
-import DeptMegaMenu from './store-header/DeptMegaMenu';
-import AvatarBadge from '../ui/AvatarBadge';
+import { Link, useNavigate } from "react-router";
+import {
+  ShoppingCart,
+  Bell,
+  ShoppingBag,
+  ChevronDown,
+  MapPin,
+  Grid as GridIcon,
+  Lock,
+  ShieldCheck,
+  LayoutDashboard,
+} from "lucide-react";
+import SearchInput from "../ui/SearchInput";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../hooks/useAuth";
+import NotifDropdown from "./store-header/NotifDropdown";
+import AccountDropdown from "./store-header/AccountDropdown";
+import DeptMegaMenu from "./store-header/DeptMegaMenu";
+import AvatarBadge from "../ui/AvatarBadge";
+import { useCatalogCategories } from "@/hooks/useCatalogCategories";
 
 const StoreHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +28,8 @@ const StoreHeader: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<'notif' | 'account' | 'dept' | null>(null);
   const { setIsOpen, items } = useCart();
   const { userRole, logout } = useAuth();
+  const { categories, loading: categoriesLoading } = useCatalogCategories();
+  const notifications: any[] = [];
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,9 +115,13 @@ const StoreHeader: React.FC = () => {
                 className={`p-2.5 transition-all rounded-xl hover:bg-gray-50 ${activeMenu === 'notif' ? 'text-[#008A45] bg-emerald-50' : 'text-gray-400'}`}
               >
                 <Bell size={22} />
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                {notifications.length > 0 && (
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                )}
               </button>
-              {activeMenu === 'notif' && <NotifDropdown items={STORE_NOTIFICATIONS} onClose={() => setActiveMenu(null)} />}
+              {activeMenu === "notif" && (
+                <NotifDropdown items={notifications} onClose={() => setActiveMenu(null)} />
+              )}
             </div>
 
             <button onClick={() => { setIsOpen(true); setActiveMenu(null); }} className="p-2.5 text-gray-400 hover:text-[#008A45] hover:bg-gray-50 rounded-xl relative transition-all">
@@ -129,7 +145,13 @@ const StoreHeader: React.FC = () => {
           </div>
         </div>
 
-        {activeMenu === 'dept' && <DeptMegaMenu items={CATEGORIES} onClose={() => setActiveMenu(null)} />}
+        {activeMenu === "dept" && (
+          <DeptMegaMenu
+            items={categories}
+            loading={categoriesLoading}
+            onClose={() => setActiveMenu(null)}
+          />
+        )}
       </header>
     </div>
   );

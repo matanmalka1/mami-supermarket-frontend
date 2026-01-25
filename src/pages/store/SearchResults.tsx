@@ -7,6 +7,7 @@ import ProductCard from '@/components/store/ProductCard';
 import EmptyState from '@/components/shared/EmptyState';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
+import { apiService } from '@/services/api';
 
 const SearchResults: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -18,14 +19,30 @@ const SearchResults: React.FC = () => {
   const [activePrefs, setActivePrefs] = useState<string[]>([]);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setResults([
-        { id: 20, name: 'Sourdough Toasting Loaf', category: 'Bakery', price: 18.00, tag: 'Matches', image: 'https://images.unsplash.com/photo-1585478259715-876acc5be8eb?auto=format&fit=crop&w=400&q=80' },
-        { id: 21, name: 'Whole Wheat Sourdough', category: 'Bakery', price: 21.00, tag: 'Matches', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80' }
-      ].filter(item => item.name.toLowerCase().includes(query.toLowerCase())));
-      setLoading(false);
-    }, 600);
+    let active = true;
+    const fetchResults = async () => {
+      setLoading(true);
+      try {
+        const response = await apiService.catalog.getProducts({ q: query, limit: 24, offset: 0 });
+        const items = Array.isArray((response as any)?.items)
+          ? (response as any).items
+          : Array.isArray(response)
+            ? response
+            : [];
+        if (active) setResults(items);
+      } catch (err: any) {
+        if (active) {
+          setResults([]);
+          toast.error(err.message || "Search failed");
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    fetchResults();
+    return () => {
+      active = false;
+    };
   }, [query, activeSort, activePrefs]);
 
   const handleApply = () => {

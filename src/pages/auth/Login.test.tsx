@@ -47,8 +47,13 @@ describe("Login", () => {
     await userEvent.type(screen.getByPlaceholderText("••••••••"), "password123");
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    await waitFor(() => expect(sessionStorage.getItem("mami_token")).toBe("a.b.c"));
-    expect(onLogin).toHaveBeenCalledWith("USER");
+    await waitFor(() =>
+      expect(onLogin).toHaveBeenCalledWith({
+        token: "a.b.c",
+        role: "USER",
+        remember: true,
+      }),
+    );
     expect(mockNavigate).toHaveBeenCalledWith("/store");
   });
 });

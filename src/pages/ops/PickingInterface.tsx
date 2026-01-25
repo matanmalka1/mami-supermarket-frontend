@@ -42,7 +42,7 @@ const PickingInterface: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-20 text-center animate-pulse font-black text-gray-300 italic uppercase tracking-[0.3em]">Syncing Ops Cluster...</div>;
+  if (loading) return <div className="p-20 text-center animate-pulse font-black text-gray-300 italic uppercase tracking-[0.3em]">Loading picking data...</div>;
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-32">

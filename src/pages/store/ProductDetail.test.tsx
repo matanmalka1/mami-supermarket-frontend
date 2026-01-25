@@ -4,14 +4,16 @@ import { vi } from "vitest";
 import ProductDetail from "./ProductDetail";
 import renderWithRouter from "@/test/render";
 
-const { mockGetProduct } = vi.hoisted(() => ({
+const { mockGetProduct, mockGetProducts } = vi.hoisted(() => ({
   mockGetProduct: vi.fn(),
+  mockGetProducts: vi.fn(),
 }));
 
 vi.mock("@/services/api", () => ({
   apiService: {
     catalog: {
       getProduct: mockGetProduct,
+      getProducts: mockGetProducts,
     },
   },
 }));
@@ -33,10 +35,12 @@ vi.mock("@/components/store/ProductTabs", () => ({
 describe("ProductDetail", () => {
   beforeEach(() => {
     mockGetProduct.mockReset();
+    mockGetProducts.mockReset();
   });
 
   it("loads product by id param and renders name", async () => {
     mockGetProduct.mockResolvedValue({ id: "uuid-123", name: "Test Product" });
+    mockGetProducts.mockResolvedValue([]);
 
     renderWithRouter({
       route: "/store/product/uuid-123",

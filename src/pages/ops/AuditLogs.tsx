@@ -1,29 +1,59 @@
-import React, { useState } from 'react';
-import Badge from '@/components/ui/Badge';
-import { History, Shield, UserCheck, AlertTriangle } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { INITIAL_AUDIT_LOGS } from '@/constants';
-import { sleep } from '@/utils/async';
-import LoadingState from '@/components/shared/LoadingState';
-import EmptyState from '@/components/shared/EmptyState';
+import React, { useEffect, useState } from "react";
+import Badge from "@/components/ui/Badge";
+import { History, Shield, UserCheck, AlertTriangle } from "lucide-react";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
+import { apiService } from "@/services/api";
+
+type AuditLog = {
+  id: string;
+  entityType: string;
+  action: string;
+  actorEmail?: string | null;
+  actorUserId?: string | null;
+  createdAt?: string;
+  context?: Record<string, unknown>;
+};
+
+const formatTime = (value?: string) => {
+  if (!value) return "Unknown time";
+  const dt = new Date(value);
+  return Number.isNaN(dt.getTime()) ? value : dt.toLocaleString();
+};
 
 const AuditLogs: React.FC = () => {
-  const [logs, setLogs] = useState(INITIAL_AUDIT_LOGS);
-  const [loading, setLoading] = useState(false);
+  const [logs, setLogs] = useState<AuditLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
 
-  const loadMore = async () => {
+  const fetchLogs = async (append = false) => {
     setLoading(true);
-    await sleep(1000);
-    
-    const olderLogs = [
-      { id: Date.now() + 1, type: 'LOGISTICS', event: 'Route Optimized: Fleet A', user: 'System Scheduler', time: '5 hours ago', severity: 'low' },
-      { id: Date.now() + 2, type: 'ADMIN', event: 'Catalog Sync Completed', user: 'Sarah Jenkins', time: '8 hours ago', severity: 'low' },
-    ];
-    
-    setLogs([...logs, ...olderLogs]);
-    setLoading(false);
-    toast.success("Fetched 2 older entries from archive");
+    setError(null);
+    try {
+      const data = await apiService.admin.getAuditLogs({
+        limit: 20,
+        offset: append ? logs.length : 0,
+      });
+      const items = Array.isArray((data as any)?.items)
+        ? (data as any).items
+        : Array.isArray(data)
+          ? data
+          : [];
+      setLogs((prev) => (append ? [...prev, ...items] : items));
+      setHasMore(items.length === 20);
+    } catch (err: any) {
+      setError(err.message || "Failed to load audit logs");
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchLogs(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -39,40 +69,42 @@ const AuditLogs: React.FC = () => {
           <div className="p-3 bg-white rounded-xl shadow-sm"><History size={20} className="text-[#006666]" /></div>
           <div>
             <h3 className="font-black text-sm uppercase tracking-widest text-gray-900">Activity Timeline</h3>
-            <p className="text-[10px] text-gray-400 font-bold">Displaying last {logs.length} cluster logs</p>
+            <p className="text-[10px] text-gray-400 font-bold">Displaying last {logs.length} audit logs</p>
           </div>
         </div>
-        {loading ? (
-          <LoadingState label="Synchronizing archive..." />
+        {loading && logs.length === 0 ? (
+          <LoadingState label="Synchronizing audit logs..." />
+        ) : error ? (
+          <EmptyState title="Audit log unavailable" description={error} />
         ) : logs.length === 0 ? (
           <EmptyState title="No audit records" description="System audit log is empty." />
         ) : (
           <>
             <div className="divide-y divide-gray-50">
-              {logs.map((log: any) => (
+              {logs.map((log) => (
                 <div key={log.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-all group">
                   <div className="flex items-center gap-6">
-                    <div className={`p-3 rounded-xl transition-all group-hover:scale-110 ${log.severity === 'high' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'}`}>
-                      {log.type === 'SECURITY' ? <Shield size={20} /> : log.severity === 'high' ? <AlertTriangle size={20} /> : <UserCheck size={20} />}
+                    <div className="p-3 rounded-xl transition-all group-hover:scale-110 bg-blue-50 text-blue-500">
+                      {log.action?.toLowerCase().includes("login") ? <Shield size={20} /> : <UserCheck size={20} />}
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900">{log.event}</h4>
-                      <p className="text-xs text-gray-400 font-medium">{log.user} • {log.time}</p>
+                      <h4 className="font-bold text-gray-900">{log.action}</h4>
+                      <p className="text-xs text-gray-400 font-medium">
+                        {log.entityType} • {log.actorEmail || log.actorUserId || "Unknown actor"} • {formatTime(log.createdAt)}
+                      </p>
                     </div>
                   </div>
-                  <Badge variant={log.severity === 'high' ? 'red' : log.severity === 'mid' ? 'orange' : 'gray'}>
-                    {log.type}
-                  </Badge>
+                  <Badge variant="gray">{log.entityType}</Badge>
                 </div>
               ))}
             </div>
             <div className="p-6 bg-gray-50 text-center">
               <button 
-                onClick={loadMore}
-                disabled={loading}
+                onClick={() => fetchLogs(true)}
+                disabled={loading || !hasMore}
                 className="inline-flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest hover:text-[#006666] transition-colors disabled:opacity-50"
               >
-                Load older entries
+                {hasMore ? "Load older entries" : "No more entries"}
               </button>
             </div>
           </>

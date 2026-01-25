@@ -1,27 +1,33 @@
 
-import React from 'react';
+import React from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { useNavigate } from 'react-router';
-import StatCard from '@/components/ui/StatCard';
-import Grid from '@/components/ui/Grid';
-import Button from '@/components/ui/Button';
-import LoadingState from '@/components/shared/LoadingState';
-import { Layers, Play } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import OrderTable from '@/features/ops/components/OrderTable';
-import { useOrders } from '@/hooks/useOrders';
+import { useNavigate } from "react-router";
+import StatCard from "@/components/ui/StatCard";
+import Grid from "@/components/ui/Grid";
+import Button from "@/components/ui/Button";
+import LoadingState from "@/components/shared/LoadingState";
+import { Layers, Play } from "lucide-react";
+import { toast } from "react-hot-toast";
+import OrderTable from "@/features/ops/components/OrderTable";
+import { useOrders } from "@/hooks/useOrders";
+import { apiService } from "@/services/api";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { orders, loading, selectedIds, toggleSelect } = useOrders();
+  const pendingCount = orders.filter((o) => o.status === "PENDING").length;
+  const expressDue = orders.filter((o) => o.urgency === "CRITICAL").length;
 
   const startBatch = async () => {
     if (selectedIds.length < 2) return toast.error("Select at least 2 orders for a batch");
-    toast.loading("Calculating fulfillment sequence...");
-    setTimeout(() => {
-      navigate(`/picking/batch-${selectedIds.join('-')}`);
-      toast.dismiss();
-    }, 1200);
+    toast.loading("Submitting batch for picking...", { id: "batch" });
+    try {
+      await apiService.ops.createBatch(selectedIds);
+      toast.success("Batch created", { id: "batch" });
+      navigate(`/picking/batch-${selectedIds.join("-")}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create batch", { id: "batch" });
+    }
   };
 
   if (loading) return <LoadingState label="Syncing orders..." />;
@@ -32,7 +38,7 @@ const Dashboard: React.FC = () => {
         <div>
           <h1 className="text-4xl font-black italic tracking-tight">Orders Management</h1>
           <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> {orders.length} ACTIVE CLUSTERS
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> {orders.length} ACTIVE ORDERS
           </p>
         </div>
         {selectedIds.length > 0 && (
@@ -48,10 +54,10 @@ const Dashboard: React.FC = () => {
       </div>
 
       <Grid cols={4} gap={6}>
-        <StatCard label="Total Pending" value={orders.filter(o => o.status === 'PENDING').length} trend="-5%" />
-        <StatCard label="Express Due" value="4" sub="Priority 1 Required" />
-        <StatCard label="Batch Efficiency" value="+18%" trend="Optimal" />
-        <StatCard label="Live Pickers" value="12" sub="Full Capacity" />
+        <StatCard label="Total Pending" value={pendingCount} />
+        <StatCard label="Express Due" value={expressDue} sub="Urgency: CRITICAL" />
+        <StatCard label="Batch Efficiency" value="N/A" sub="Metric not implemented" />
+        <StatCard label="Live Pickers" value="N/A" sub="Metric not implemented" />
       </Grid>
 
       <OrderTable orders={orders} selectedIds={selectedIds} onToggleSelect={toggleSelect} />

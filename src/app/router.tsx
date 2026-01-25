@@ -1,12 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import {
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-  useNavigate,
-} from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import StoreLayout from "../components/layout/StoreLayout";
 import OpsLayout from "../components/layout/OpsLayout";
 import RequireAuth from "./guards/RequireAuth";
@@ -42,7 +36,11 @@ import { UserRole } from "../types/auth";
 interface RouterProps {
   isAuthenticated: boolean;
   userRole: UserRole | null;
-  login: (role: UserRole, token: string, remember: boolean) => void;
+  login: (payload: {
+    token: string;
+    role?: UserRole | null;
+    remember?: boolean;
+  }) => void;
   logout: () => void;
 }
 
@@ -74,13 +72,11 @@ export const AppRouter: React.FC<RouterProps> = ({
         <>
           <Route
             path="/login"
-            element={<Login onLogin={(role) => login(role, "mock", true)} />}
+            element={<Login onLogin={login} />}
           />
           <Route
             path="/register"
-            element={
-              <Register onRegister={() => login("USER", "mock", true)} />
-            }
+            element={<Register onRegister={login} />}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="*" element={<Navigate to="/login" replace />} />

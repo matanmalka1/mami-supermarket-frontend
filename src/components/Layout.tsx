@@ -1,14 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link } from 'react-router';
-import OpsSidebar from './layout/OpsSidebar';
-import OpsHeader from './layout/OpsHeader';
-import StoreHeader from './layout/StoreHeader';
-import Breadcrumbs from './ui/Breadcrumbs';
-import Modal from './ui/Modal';
-import { Lock, Instagram, Twitter, Facebook, Info } from 'lucide-react';
-import { CATEGORIES } from '../constants';
+import { Link } from "react-router";
+import OpsSidebar from "./layout/OpsSidebar";
+import OpsHeader from "./layout/OpsHeader";
+import StoreHeader from "./layout/StoreHeader";
+import Breadcrumbs from "./ui/Breadcrumbs";
+import Modal from "./ui/Modal";
+import { Lock, Instagram, Twitter, Facebook, Info } from "lucide-react";
+import { useCatalogCategories } from "@/hooks/useCatalogCategories";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,6 +18,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, mode, userRole }) => {
   const [infoModal, setInfoModal] = useState<{ isOpen: boolean; title: string } | null>(null);
+  const { categories, loading } = useCatalogCategories();
 
   const handleStaticLink = (label: string) => {
     setInfoModal({ isOpen: true, title: label });
@@ -37,15 +38,21 @@ const Layout: React.FC<LayoutProps> = ({ children, mode, userRole }) => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
               <div className="space-y-6">
                 <h4 className="font-black text-sm uppercase tracking-widest">Departments</h4>
-                <ul className="text-sm text-gray-500 space-y-3 font-medium">
-                  {CATEGORIES.slice(0, 4).map(cat => (
-                    <li key={cat.id}>
-                      <Link to={`/store/category/${cat.id}`} className="hover:text-[#008A45] transition-colors">
-                        {cat.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                {loading ? (
+                  <p className="text-sm text-gray-400 font-bold">Loading departments...</p>
+                ) : categories.length === 0 ? (
+                  <p className="text-sm text-gray-400 font-bold">Departments unavailable (backend feed missing)</p>
+                ) : (
+                  <ul className="text-sm text-gray-500 space-y-3 font-medium">
+                    {categories.slice(0, 4).map((cat) => (
+                      <li key={cat.id}>
+                        <Link to={`/store/category/${cat.id}`} className="hover:text-[#008A45] transition-colors">
+                          {cat.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <div className="space-y-6">
                 <h4 className="font-black text-sm uppercase tracking-widest">About FreshMarket</h4>

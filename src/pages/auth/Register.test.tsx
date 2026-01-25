@@ -61,13 +61,18 @@ describe("Register", () => {
     await userEvent.type(screen.getAllByRole("textbox")[3], "4");
     await userEvent.click(screen.getByRole("button", { name: /complete setup/i }));
 
-    await waitFor(() => expect(sessionStorage.getItem("mami_token")).toBe("a.b.c"));
     expect(mockRegister).toHaveBeenCalledWith({
       email: "jane@example.com",
       password: "StrongPass1",
       full_name: "Jane Smith",
     });
-    expect(onRegister).toHaveBeenCalled();
+    await waitFor(() =>
+      expect(onRegister).toHaveBeenCalledWith({
+        token: "a.b.c",
+        role: "USER",
+        remember: false,
+      }),
+    );
     expect(mockNavigate).toHaveBeenCalledWith("/store");
   });
 });

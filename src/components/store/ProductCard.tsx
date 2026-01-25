@@ -24,24 +24,34 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
   const { addItem } = useCart();
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked] = useState(false);
+  const initials = (text?: string) =>
+    (text || "?")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase())
+      .join("") || "?";
 
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLiked(!isLiked);
-    if (!isLiked) {
-      toast.success(`${item.name} saved to wishlist`, {
-        icon: '❤️',
-        style: { borderRadius: '1rem', fontWeight: 'bold' }
-      });
-    }
+    toast("Wishlist not connected yet", {
+      icon: 'ℹ️',
+      style: { borderRadius: '1rem', fontWeight: 'bold' }
+    });
   };
 
   return (
     <Link to={`/store/product/${item.id}`} className="group cursor-pointer block">
       <div className="relative rounded-2xl overflow-hidden aspect-square mb-4 bg-gray-100">
-        <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={item.name} />
+        {item.image ? (
+          <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={item.name} />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-3xl font-black text-gray-300">
+            {initials(item.name)}
+          </div>
+        )}
         {item.tag && <span className="absolute top-4 left-4 bg-[#008A45] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">{item.tag}</span>}
         <button 
           onClick={toggleWishlist}

@@ -26,7 +26,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   });
 
   const onSubmit = async (data: StockRequestInput) => {
-    toast.loading("Broadcasting request to logistics cluster...", {
+    toast.loading("Submitting stock request...", {
       id: "stock-req",
     });
     try {
@@ -36,13 +36,13 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
         request_type: data.requestType,
         quantity: data.quantity,
       });
-      toast.success("Shortage reported. Manager node notified.", {
+      toast.success("Stock request submitted.", {
         id: "stock-req",
       });
       reset();
       onSubmitted();
     } catch (err: any) {
-      toast.error(err.message || "Cluster sync failed", { id: "stock-req" });
+      toast.error(err.message || "Failed to submit stock request", { id: "stock-req" });
     }
   };
 

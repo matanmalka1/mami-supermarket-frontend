@@ -16,7 +16,7 @@ const PickingItemDetail: React.FC<PickingItemDetailProps> = ({ item, onToggle })
     setLoading(true);
     try {
       await sleep(1000);
-      toast.error(`Damage reported for ${item.product?.name}. Logistics team notified.`, {
+      toast(`Damage noted for ${item.product?.name}. Notifications not connected yet.`, {
         style: { borderRadius: '1rem', fontWeight: 'bold' }
       });
       onToggle();

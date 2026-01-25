@@ -19,7 +19,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({ onClose, userRole, on
         <p className="text-sm font-black italic">{isActuallyAdmin ? 'Administrator' : 'Customer Account'}</p>
         <div className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 mt-0.5 ${isActuallyAdmin ? 'text-teal-600' : 'text-emerald-600'}`}>
           <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isActuallyAdmin ? 'bg-teal-500' : 'bg-emerald-500'}`} /> 
-          {isActuallyAdmin ? 'ACTIVE CLUSTER SESSION' : 'Active Session Node'}
+          {isActuallyAdmin ? 'Active Admin Session' : 'Active Session'}
         </div>
       </div>
       

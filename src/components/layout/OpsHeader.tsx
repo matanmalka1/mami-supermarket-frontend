@@ -16,7 +16,7 @@ const OpsHeader: React.FC = () => {
   const [showNotifs, setShowNotifs] = useState(false);
 
   const handleNewOrder = () => {
-    toast.success("Initializing manual order node...", {
+    toast("Manual order creation not connected yet.", {
       icon: '📝',
       style: { borderRadius: '1rem', fontWeight: 'bold' }
     });

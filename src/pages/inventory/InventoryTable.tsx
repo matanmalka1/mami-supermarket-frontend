@@ -27,7 +27,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       <THead>
         <TR isHoverable={false}>
           <TH>Product Details</TH>
-          <TH>Branch Cluster</TH>
+          <TH>Branch</TH>
           <TH className="text-center">Stock Level</TH>
           <TH>Reserved</TH>
           <TH className="text-right">Actions</TH>

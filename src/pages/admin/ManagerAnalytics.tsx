@@ -112,7 +112,7 @@ const ManagerAnalytics: React.FC = () => {
             <Users className="text-blue-600 mb-4" size={32} />
             <h4 className="font-black text-xl italic text-blue-900">Demographic Shift</h4>
             <p className="text-sm font-bold text-blue-800/60 leading-relaxed mt-2 italic">
-              Younger clusters (24-34) are showing 25% higher engagement with Organic categories.
+              Younger shoppers (24-34) are showing 25% higher engagement with Organic categories.
             </p>
           </Card>
         </div>

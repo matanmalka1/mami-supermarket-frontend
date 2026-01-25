@@ -60,7 +60,7 @@ const PickingFooter: React.FC<PickingFooterProps> = ({ items, progress, onComple
       <div className="flex gap-4">
         {/* Sync Action */}
         <button 
-          onClick={() => toast.success('Syncing with warehouse cluster...')} 
+          onClick={() => toast("Sync not connected yet", { icon: 'ℹ️' })} 
           className="w-14 h-16 flex items-center justify-center rounded-2xl border border-gray-100 bg-gray-50/50 text-gray-400 hover:text-[#006666] hover:bg-white hover:border-teal-100 transition-all shadow-sm"
           title="Manual Sync"
         >

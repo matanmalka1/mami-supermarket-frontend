@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
-import { Heart, Maximize2 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import React, { useState } from "react";
+import { Heart, Maximize2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface ProductGalleryProps {
   images?: string[];
+  name?: string;
 }
 
-const ProductGallery: React.FC<ProductGalleryProps> = ({ images }) => {
-  const displayImages = images && images.length > 0 ? images : [
-    "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?auto=format&fit=crop&w=1200&q=80"
-  ];
-  
+const initials = (text?: string) => {
+  if (!text) return "?";
+  return text
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase())
+    .join("") || "?";
+};
+
+const ProductGallery: React.FC<ProductGalleryProps> = ({ images, name }) => {
+  const displayImages = images?.filter(Boolean) ?? [];
+  const hasImages = displayImages.length > 0;
   const [activeIdx, setActiveIdx] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
   const [isZooming, setIsZooming] = useState(false);
 
   const toggleWishlist = () => {
-    setIsLiked(!isLiked);
-    if (!isLiked) {
-      toast.success("Added to your wishlist", { icon: '❤️' });
-    }
+    toast("Wishlist not connected yet", { icon: 'ℹ️' });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -41,15 +44,21 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images }) => {
         onMouseLeave={() => setIsZooming(false)}
         onMouseMove={handleMouseMove}
       >
-        <img 
-          src={displayImages[activeIdx]} 
-          className="w-full h-full object-contain p-12 transition-transform duration-200 ease-out pointer-events-none" 
-          alt="Product Detail" 
-          style={{
-            transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-            transform: isZooming ? 'scale(2.5)' : 'scale(1)'
-          }}
-        />
+        {hasImages ? (
+          <img 
+            src={displayImages[activeIdx]} 
+            className="w-full h-full object-contain p-12 transition-transform duration-200 ease-out pointer-events-none" 
+            alt="Product Detail" 
+            style={{
+              transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+              transform: isZooming ? 'scale(2.5)' : 'scale(1)'
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-5xl font-black text-gray-300">
+            {initials(name)}
+          </div>
+        )}
         
         {/* Overlay Controls */}
         <div className="absolute top-6 right-6 flex flex-col gap-3 z-10">
@@ -67,30 +76,32 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images }) => {
         </div>
 
         {/* Zoom Hint */}
-        {!isZooming && (
+        {!isZooming && hasImages && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-900/10 backdrop-blur-sm px-4 py-2 rounded-full pointer-events-none">
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-600">Hover to Zoom</p>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
-        {displayImages.map((img, i) => (
-          <button 
-            key={i} 
-            onClick={() => setActiveIdx(i)}
-            className={`aspect-square rounded-2xl bg-[#F9F9F9] overflow-hidden border-2 transition-all group ${
-              activeIdx === i ? 'border-emerald-500 shadow-lg scale-[0.98]' : 'border-transparent hover:border-gray-200'
-            } p-1`}
-          >
-             <img 
-               src={img} 
-               className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-110" 
-               alt={`Thumbnail ${i + 1}`} 
-             />
-          </button>
-        ))}
-      </div>
+      {hasImages && (
+        <div className="grid grid-cols-4 gap-4">
+          {displayImages.map((img, i) => (
+            <button 
+              key={i} 
+              onClick={() => setActiveIdx(i)}
+              className={`aspect-square rounded-2xl bg-[#F9F9F9] overflow-hidden border-2 transition-all group ${
+                activeIdx === i ? 'border-emerald-500 shadow-lg scale-[0.98]' : 'border-transparent hover:border-gray-200'
+              } p-1`}
+            >
+               <img 
+                 src={img} 
+                 className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-110" 
+                 alt={`Thumbnail ${i + 1}`} 
+               />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

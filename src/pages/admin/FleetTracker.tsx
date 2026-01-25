@@ -43,7 +43,7 @@ const FleetTracker: React.FC = () => {
             <ArrowLeft size={14} /> Back to Command
           </Link>
           <h1 className="text-5xl font-black italic tracking-tighter">Fleet Live</h1>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Real-time Tel Aviv Cluster Monitoring</p>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Real-time Tel Aviv Fleet Monitoring</p>
         </div>
         <div className="flex gap-4">
           <div className="bg-emerald-50 text-emerald-600 px-6 py-4 rounded-2xl flex items-center gap-3 border border-emerald-100">

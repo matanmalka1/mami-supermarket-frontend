@@ -16,7 +16,7 @@ export const useCatalogManager = () => {
       const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
       setProducts(rows);
     } catch {
-      toast.error("Failed to sync catalog");
+      toast.error("Failed to load catalog");
     } finally {
       setLoading(false);
     }

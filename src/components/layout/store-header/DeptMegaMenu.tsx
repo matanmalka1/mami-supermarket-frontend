@@ -4,12 +4,9 @@ import React from 'react';
 import { Link } from 'react-router';
 import { ChevronDown } from 'lucide-react';
 
-interface DeptMegaMenuProps {
-  items: any[];
-  onClose: () => void;
-}
+type DeptMegaMenuProps = { items: any[]; loading?: boolean; onClose: () => void };
 
-const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, onClose }) => (
+const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, loading, onClose }) => (
   <div className="absolute top-full left-0 right-0 bg-white border-b shadow-2xl animate-in slide-in-from-top-4 duration-300">
     <div className="max-w-7xl mx-auto p-12 grid grid-cols-4 gap-12">
       <div className="col-span-1 space-y-6">
@@ -20,15 +17,36 @@ const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, onClose }) => (
         </Link>
       </div>
       <div className="col-span-3 grid grid-cols-3 gap-6">
-        {items.map(cat => (
-          <Link key={cat.id} to={`/store/category/${cat.id}`} onClick={onClose} className="flex items-center gap-4 p-6 rounded-3xl bg-gray-50 hover:bg-emerald-50 border border-transparent hover:border-emerald-100 transition-all group">
-            <span className="text-3xl group-hover:scale-110 transition-transform">{cat.icon}</span>
-            <div>
-              <p className="font-black text-sm text-gray-900 group-hover:text-[#008A45]">{cat.name}</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Shop items</p>
-            </div>
-          </Link>
-        ))}
+        {loading ? (
+          <p className="text-sm text-gray-400 font-bold col-span-3">
+            Loading departments...
+          </p>
+        ) : items.length === 0 ? (
+          <p className="text-sm text-gray-400 font-bold col-span-3">
+            Departments unavailable (backend feed missing)
+          </p>
+        ) : (
+          items.map((cat) => (
+            <Link
+              key={cat.id}
+              to={`/store/category/${cat.id}`}
+              onClick={onClose}
+              className="flex items-center gap-4 p-6 rounded-3xl bg-gray-50 hover:bg-emerald-50 border border-transparent hover:border-emerald-100 transition-all group"
+            >
+              <span className="text-3xl group-hover:scale-110 transition-transform">
+                {cat.icon || "🛒"}
+              </span>
+              <div>
+                <p className="font-black text-sm text-gray-900 group-hover:text-[#008A45]">
+                  {cat.name}
+                </p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                  Shop items
+                </p>
+              </div>
+            </Link>
+          ))
+        )}
       </div>
     </div>
     <div className="bg-emerald-900 py-3 text-center">

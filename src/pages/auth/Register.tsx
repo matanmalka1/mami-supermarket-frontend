@@ -9,8 +9,17 @@ import RegistrationForm from "@/features/auth/components/RegistrationForm";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { registerSchema, RegisterInput } from "@/validation/auth";
+import { UserRole } from "@/types/auth";
 
-const Register: React.FC<{ onRegister: () => void }> = ({ onRegister }) => {
+type RegisterPayload = {
+  token: string;
+  role?: UserRole | null;
+  remember?: boolean;
+};
+
+const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = ({
+  onRegister,
+}) => {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [step, setStep] = useState<"INFO" | "OTP">("INFO");
@@ -47,42 +56,20 @@ const Register: React.FC<{ onRegister: () => void }> = ({ onRegister }) => {
         password: data.password,
       });
       console.debug("[Register] login response:", loginRes);
-      // Mirror login token extraction/storage (prefer data.access_token)
-      let token: string | null = null;
-      let tokenKey: string | null = null;
-      if (loginRes?.data?.access_token) { token = loginRes.data.access_token; tokenKey = "data.access_token"; }
-      else if (loginRes?.access_token) { token = loginRes.access_token; tokenKey = "access_token"; }
-      else if (loginRes?.accessToken) { token = loginRes.accessToken; tokenKey = "accessToken"; }
-      else if (loginRes?.data?.token) { token = loginRes.data.token; tokenKey = "data.token"; }
-      else if (loginRes?.token) { token = loginRes.token; tokenKey = "token"; }
-      if (!token) {
-        toast.error("No token returned from backend", { id: "reg" });
-        return;
-      }
-      sessionStorage.setItem("mami_token", token);
-      localStorage.removeItem("mami_token");
-      let role =
+      const token =
+        loginRes?.data?.access_token ||
+        loginRes?.access_token ||
+        loginRes?.accessToken ||
+        loginRes?.data?.token ||
+        loginRes?.token;
+      const role =
         loginRes?.data?.user?.role ||
         loginRes?.user?.role ||
         loginRes?.data?.role ||
         loginRes?.role;
-      if (!role) {
-        try {
-          const payload = JSON.parse(atob(token.split(".")[1] || ""));
-          role = payload.role || payload.user_role || payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"];
-        } catch {
-          role = undefined;
-        }
-      }
-      if (role) localStorage.setItem("mami_role", role);
-      else localStorage.removeItem("mami_role");
-      if ((import.meta as any).env?.DEV) {
-        console.debug(
-          `[Register] token key: ${tokenKey}, length: ${token.length}, segments: ${token.split(".").length}`
-        );
-      }
+      if (!token) return toast.error("No token returned from backend", { id: "reg" });
       toast.success("Welcome aboard!", { id: "reg" });
-      onRegister();
+      onRegister({ token, role: role as UserRole | undefined, remember: false });
       navigate("/store");
     } catch (err: any) {
       toast.error(err.message || "Registration failed", { id: "reg" });

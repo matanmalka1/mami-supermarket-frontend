@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
-import { Star, Minus, Plus, ShoppingCart, Share2, Truck, ShieldCheck } from 'lucide-react';
-import Button from '../ui/Button';
-import { toast } from 'react-hot-toast';
-import { useCart } from '../../context/CartContext';
-import { Product } from '../../types/domain';
+import React, { useState } from "react";
+import { Minus, Plus, ShoppingCart, Share2, Truck, ShieldCheck } from "lucide-react";
+import Button from "../ui/Button";
+import { toast } from "react-hot-toast";
+import { useCart } from "../../context/CartContext";
+import { Product } from "../../types/domain";
 
 interface ProductInfoProps {
   product?: Product | null;
@@ -14,31 +14,26 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
 
-  /* Fix: Corrected fallback object type and fields to match Product interface, resolving oldPrice property access errors */
-  const productData: Product = product || {
-    id: 'nordic-chair-1',
-    name: 'Nordic Minimalist Lounge Chair',
-    price: 1299,
-    oldPrice: undefined,
-    imageUrl: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=80",
-    category: 'Scandinavian Series',
-    description: 'Experience the pinnacle of comfort and Scandinavian design. This lounge chair features a solid oak frame and premium textured wool upholstery.',
-    sku: 'ND-CH-01',
-    availableQuantity: 10,
-    reservedQuantity: 0,
-    status: 'Steady'
-  } as Product;
+  if (!product) {
+    return (
+      <div className="flex flex-col">
+        <p className="text-sm text-gray-500 font-bold">
+          Product details are unavailable for this item.
+        </p>
+      </div>
+    );
+  }
 
   const handleAddToCart = () => {
     for (let i = 0; i < qty; i++) {
-      addItem(productData);
+      addItem(product);
     }
   };
 
   const handleShare = async () => {
     const shareData = {
-      title: productData.name,
-      text: `Check out this amazing ${productData.name} I found at FreshMarket!`,
+      title: product.name,
+      text: `Check out this ${product.name} I found at FreshMarket!`,
       url: window.location.href,
     };
 
@@ -59,37 +54,27 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
       <div className="space-y-6 flex-1">
         <div>
           <span className="text-[10px] font-black tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-md uppercase mb-4 inline-block">
-            {productData.category}
+            {product.category}
           </span>
           <h1 className="text-5xl font-bold text-gray-900 tracking-tight leading-tight italic">
-            {productData.name}
+            {product.name}
           </h1>
         </div>
 
-        <div className="flex items-center gap-4 text-sm font-medium">
-          <div className="flex items-center gap-1 text-emerald-500">
-            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
-          </div>
-          <span className="text-gray-900">4.8</span>
-          <span className="text-gray-300">|</span>
-          <span className="text-gray-400">124 Reviews</span>
-        </div>
-
         <div className="flex items-center gap-4">
-          <span className="text-4xl font-bold text-gray-900 font-mono">₪ {productData.price}</span>
-          {productData.oldPrice && (
-            <span className="text-lg text-gray-300 line-through">₪ {productData.oldPrice}</span>
+          <span className="text-4xl font-bold text-gray-900 font-mono">₪ {product.price}</span>
+          {product.oldPrice && (
+            <span className="text-lg text-gray-300 line-through">₪ {product.oldPrice}</span>
           )}
-          <span className="bg-red-50 text-red-500 text-[10px] font-bold px-2 py-0.5 rounded">-20%</span>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 uppercase tracking-widest">
           <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-          In Stock - Ready to ship
+          {product.availableQuantity > 0 ? "In Stock" : "Out of Stock"}
         </div>
 
         <p className="text-gray-500 leading-relaxed text-sm font-medium">
-          {productData.description}
+          {product.description || "No description provided."}
         </p>
 
         <div className="pt-8 space-y-6 border-t border-gray-100">
@@ -139,7 +124,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
               </div>
               <div>
                 <p className="font-bold text-gray-900 uppercase text-[9px] tracking-widest">Warranty</p>
-                <p className="font-medium">2 Year Full Cover</p>
+                <p className="font-medium">Coverage info not provided</p>
               </div>
             </div>
           </div>

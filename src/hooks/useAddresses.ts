@@ -56,10 +56,10 @@ export const useAddresses = () => {
   };
 
   const tagCurrentLocation = () => {
-    toast.loading("Accessing GPS...", { id: "gps" });
+    toast.loading("Accessing device location...", { id: "gps" });
     navigator.geolocation.getCurrentPosition(
-      () => toast.success("Location tagged!", { id: "gps" }),
-      () => toast.error("GPS access denied", { id: "gps" }),
+      () => toast("Location captured locally (not saved yet).", { id: "gps" }),
+      () => toast.error("Location unavailable", { id: "gps" }),
     );
   };
 

@@ -22,7 +22,7 @@ export const useCatalog = (categoryId?: string, query?: string) => {
         setProducts(data);
       }
     } catch {
-      toast.error("Cluster sync failed");
+      toast.error("Failed to load catalog");
     } finally {
       setLoading(false);
     }
