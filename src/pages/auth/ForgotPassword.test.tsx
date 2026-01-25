@@ -25,8 +25,8 @@ describe("ForgotPassword", () => {
     mockReset.mockReset();
   });
 
-  it("requests reset token then submits new password", async () => {
-    mockForgot.mockResolvedValue({ reset_token: "dev-token" });
+  it("lets user enter token manually when none returned", async () => {
+    mockForgot.mockResolvedValue({});
     mockReset.mockResolvedValue({});
 
     renderWithRouter({ route: "/forgot-password", path: "/forgot-password", element: <ForgotPassword /> });
@@ -35,15 +35,16 @@ describe("ForgotPassword", () => {
     await userEvent.click(screen.getByRole("button", { name: /send reset link/i }));
 
     await waitFor(() => expect(mockForgot).toHaveBeenCalledWith("user@example.com"));
-    expect(screen.getByDisplayValue("dev-token")).toBeInTheDocument();
+    const tokenInput = await screen.findByPlaceholderText(/Paste token/i);
 
+    await userEvent.type(tokenInput, "manual-token");
     await userEvent.type(screen.getByPlaceholderText(/strong password/), "Newpass123!");
     await userEvent.click(screen.getByRole("button", { name: /update password/i }));
 
     await waitFor(() =>
       expect(mockReset).toHaveBeenCalledWith({
         email: "user@example.com",
-        token: "dev-token",
+        token: "manual-token",
         new_password: "Newpass123!",
       }),
     );

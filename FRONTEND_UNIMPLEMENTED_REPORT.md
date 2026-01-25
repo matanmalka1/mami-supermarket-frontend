@@ -1,4 +1,5 @@
 ## Executive Summary
+- Completed: Password reset email delivery wired to Brevo; reset page available.
 - Auth: 1 gap (register OTP not verified server-side).
 - Storefront: 5 gaps (wishlist, notifications feed, product reviews/shipping/returns, address GPS tagging, premium toggle).
 - Ops: 7 gaps (manual order CTA, ops alerts dropdown, manual sync, damage report notify, dashboard metrics, warehouse map, staff performance) + inventory table actions.
@@ -50,3 +51,4 @@ Category legend: 1) UI-only; 2) Backend-missing; 3) Partial; 4) Missing-UI.
 
 ## Worklog
 - feat(auth): forgot password flow — wired frontend to forgot/reset endpoints, backend returns reset token in dev/test, added tests.
+- feat(auth): Brevo reset email + reset page — send password reset emails via Brevo with reset URL, added dedicated reset page/tests.

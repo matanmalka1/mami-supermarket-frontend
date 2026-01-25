@@ -42,7 +42,7 @@ const ForgotPassword: React.FC = () => {
         email,
         token,
         new_password: newPassword,
-      } as any);
+      });
       toast.success("Password updated", { icon: <ShieldCheck size={16} /> });
       setStage("DONE");
     } catch (err: any) {

@@ -1,5 +1,4 @@
 import React from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Routes, Route, Navigate } from "react-router";
 import StoreLayout from "../components/layout/StoreLayout";
 import OpsLayout from "../components/layout/OpsLayout";
@@ -13,6 +12,7 @@ import AuditLogs from "../pages/ops/AuditLogs";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
 import CategoryView from "../pages/store/CategoryView";
 import SearchResults from "../pages/store/SearchResults";
 import ProductDetail from "../pages/store/ProductDetail";
@@ -79,6 +79,7 @@ export const AppRouter: React.FC<RouterProps> = ({
             element={<Register onRegister={login} />}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </>
       ) : (
