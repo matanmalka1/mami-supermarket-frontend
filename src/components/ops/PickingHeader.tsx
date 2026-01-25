@@ -1,9 +1,11 @@
 import { User, Clock, Printer } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
+import { Order } from '@/types/domain';
+import { formatOrderLabel } from '@/utils/orderLabel';
 
 interface PickingHeaderProps {
-  order: any;
+  order: Order | null;
   itemsCount: number;
 }
 
@@ -42,7 +44,7 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <h1 className="text-5xl font-black text-gray-900 tracking-tighter">
-              #{order.orderNumber || order.id?.slice(0, 8)}
+              {formatOrderLabel(order)}
             </h1>
             <Badge color="emerald">{order.status}</Badge>
           </div>

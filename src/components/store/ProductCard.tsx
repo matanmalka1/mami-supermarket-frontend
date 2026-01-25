@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useCart } from '../../context/CartContext';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from 'react-router';
 import { currencyILS } from '../../utils/format';
+import { useWishlist } from '@/hooks/useWishlist';
 
 type CardProduct = {
   id: string;
@@ -24,7 +25,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
   const { addItem } = useCart();
-  const [isLiked] = useState(false);
+  const { toggleWishlist, isWishlisted } = useWishlist();
   const initials = (text?: string) =>
     (text || "?")
       .split(/\s+/)
@@ -33,13 +34,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
       .map((p) => p[0]?.toUpperCase())
       .join("") || "?";
 
-  const toggleWishlist = (e: React.MouseEvent) => {
+  const isLiked = isWishlisted(item.id);
+  const toggleWishlistHandler = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast("Wishlist not connected yet", {
-      icon: 'ℹ️',
-      style: { borderRadius: '1rem', fontWeight: 'bold' }
-    });
+    toggleWishlist(item.id);
+    toast(
+      isLiked
+        ? "Removed from wishlist"
+        : "Added to wishlist",
+      {
+        icon: isLiked ? '🟣' : '🧡',
+        style: { borderRadius: '1rem', fontWeight: 'bold' },
+      },
+    );
   };
 
   return (
@@ -54,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
         )}
         {item.tag && <span className="absolute top-4 left-4 bg-[#008A45] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">{item.tag}</span>}
         <button 
-          onClick={toggleWishlist}
+          onClick={toggleWishlistHandler}
           className={`absolute top-4 right-4 w-10 h-10 backdrop-blur rounded-full flex items-center justify-center transition-all shadow-md z-10 ${
             isLiked ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-400 hover:text-red-500'
           }`}

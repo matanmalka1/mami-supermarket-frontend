@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Heart, Maximize2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useWishlist } from "@/hooks/useWishlist";
 
 interface ProductGalleryProps {
   images?: string[];
   name?: string;
+  productId?: string;
 }
 
 const initials = (text?: string) => {
@@ -17,16 +19,31 @@ const initials = (text?: string) => {
     .join("") || "?";
 };
 
-const ProductGallery: React.FC<ProductGalleryProps> = ({ images, name }) => {
+const ProductGallery: React.FC<ProductGalleryProps> = ({ images, name, productId }) => {
   const displayImages = images?.filter(Boolean) ?? [];
   const hasImages = displayImages.length > 0;
   const [activeIdx, setActiveIdx] = useState(0);
-  const [isLiked] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
   const [isZooming, setIsZooming] = useState(false);
+  const { toggleWishlist, isWishlisted } = useWishlist();
+  const isLiked = Boolean(productId && isWishlisted(productId));
 
-  const toggleWishlist = () => {
-    toast("Wishlist not connected yet", { icon: 'ℹ️' });
+  const handleWishlistToggle = () => {
+    if (!productId) {
+      toast("Wishlist is not available for this product", {
+        icon: '⚠️',
+        style: { borderRadius: '1rem', fontWeight: 'bold' },
+      });
+      return;
+    }
+    toggleWishlist(productId);
+    toast(
+      isLiked ? "Removed from wishlist" : "Added to wishlist",
+      {
+        icon: isLiked ? '🟣' : '🧡',
+        style: { borderRadius: '1rem', fontWeight: 'bold' },
+      },
+    );
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -63,7 +80,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, name }) => {
         {/* Overlay Controls */}
         <div className="absolute top-6 right-6 flex flex-col gap-3 z-10">
           <button 
-            onClick={toggleWishlist}
+            onClick={handleWishlistToggle}
             className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md transition-all ${
               isLiked ? 'bg-red-500 text-white' : 'bg-white/90 text-gray-400 hover:text-red-500'
             }`}

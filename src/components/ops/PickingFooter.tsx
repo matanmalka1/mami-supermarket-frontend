@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Clock, CheckCircle2, XCircle, RotateCcw, Timer } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 // Fix: Correct import path from common to ui
@@ -9,14 +9,33 @@ interface PickingFooterProps {
   items: any[];
   progress: number;
   onComplete: () => void;
+  onSync: () => Promise<void>;
 }
 
-const PickingFooter: React.FC<PickingFooterProps> = ({ items, progress, onComplete }) => {
+const PickingFooter: React.FC<PickingFooterProps> = ({
+  items,
+  progress,
+  onComplete,
+  onSync,
+}) => {
   const pickedCount = items.filter(i => i.pickedStatus === 'PICKED').length;
   const pendingCount = items.length - pickedCount;
   
   // Simple estimation logic: 1.5 minutes per pending item
   const estMinutes = Math.max(1, pendingCount * 1.5);
+  const [syncing, setSyncing] = useState(false);
+  const handleSync = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    try {
+      await onSync();
+      toast.success("Picking data synced");
+    } catch (err: any) {
+      toast.error(err?.message || "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   return (
     <div className="fixed bottom-0 left-64 right-0 h-28 bg-white/90 backdrop-blur-2xl border-t border-gray-100 flex items-center justify-between px-12 z-50 shadow-[0_-10px_50px_rgba(0,0,0,0.08)]">
@@ -60,9 +79,10 @@ const PickingFooter: React.FC<PickingFooterProps> = ({ items, progress, onComple
       <div className="flex gap-4">
         {/* Sync Action */}
         <button 
-          onClick={() => toast("Sync not connected yet", { icon: 'ℹ️' })} 
+          onClick={handleSync}
           className="w-14 h-16 flex items-center justify-center rounded-2xl border border-gray-100 bg-gray-50/50 text-gray-400 hover:text-[#006666] hover:bg-white hover:border-teal-100 transition-all shadow-sm"
           title="Manual Sync"
+          disabled={syncing}
         >
           <RotateCcw size={22} />
         </button>

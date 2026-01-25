@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import StatusBadge from "../../../components/ui/StatusBadge";
 import { Table, THead, TBody, TR, TH, TD } from "../../../components/ui/Table";
 import { Order } from "../../../types/domain";
+import { formatOrderLabel } from "@/utils/orderLabel";
 
 interface OrderTableProps {
   orders: Order[];
@@ -45,7 +46,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
               />
             </TD>
             <TD className="font-black italic text-[#006666]">
-              #{order.orderNumber || order.id.slice(0, 8)}
+              {formatOrderLabel(order)}
             </TD>
             <TD>
               <div className="text-gray-900">

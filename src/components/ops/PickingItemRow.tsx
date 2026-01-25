@@ -12,6 +12,7 @@ interface PickingItemRowProps {
   onToggle: () => void;
   onUpdateStatus: (itemId: string, status: string) => void;
   onReportMissing: (itemId: string) => void;
+  onReportDamage: (itemId: string) => Promise<void> | void;
 }
 
 const PickingItemRow: React.FC<PickingItemRowProps> = ({ 
@@ -19,7 +20,8 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
   isExpanded, 
   onToggle, 
   onUpdateStatus, 
-  onReportMissing 
+  onReportMissing,
+  onReportDamage,
 }) => {
   const isPicked = item.pickedStatus === 'PICKED';
   const isMissing = item.pickedStatus === 'MISSING';
@@ -35,8 +37,8 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
             {item.product?.binLocation || 'A-12'}
           </div>
         </td>
-        <td className="px-6 py-8">
-          <div className="flex items-center gap-6">
+            <td className="px-6 py-8">
+              <div className="flex items-center gap-6">
             <div className="relative">
               <img 
                 src={item.product?.imageUrl} 
@@ -81,7 +83,11 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
       {isExpanded && (
         <tr className="bg-emerald-50/10">
           <td colSpan={3} className="px-10 pb-10 pt-0">
-            <PickingItemDetail item={item} onToggle={onToggle} />
+            <PickingItemDetail
+              item={item}
+              onToggle={onToggle}
+              onReportDamage={() => onReportDamage(item.id)}
+            />
           </td>
         </tr>
       )}

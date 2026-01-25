@@ -58,6 +58,7 @@ const ProductDetail: React.FC = () => {
           <ProductGallery
             images={product.imageUrl ? [product.imageUrl] : undefined}
             name={product.name}
+            productId={product.id}
           />
           <ProductInfo product={product} />
         </div>

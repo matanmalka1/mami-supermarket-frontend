@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Badge from "@/components/ui/Badge";
-import { History, Shield, UserCheck, AlertTriangle } from "lucide-react";
+import { History, Shield, UserCheck } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import { apiService } from "@/services/api";

@@ -1,36 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
+import { useAsyncResource } from "./useAsyncResource";
 
 export const useCatalogManager = () => {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
   const fetchProducts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data: any = await apiService.admin.getProducts();
-      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-      setProducts(rows);
-    } catch {
-      toast.error("Failed to load catalog");
-    } finally {
-      setLoading(false);
-    }
+    const data: any = await apiService.admin.getProducts();
+    return Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
   }, []);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  const { data: products, loading, refresh } = useAsyncResource<any[]>(fetchProducts, {
+    initialData: [],
+    errorMessage: "Failed to load catalog",
+  });
 
   const deactivateProduct = async (id: string) => {
     try {
       await apiService.admin.toggleProduct(id, false);
       toast.success("Product deactivated");
-      fetchProducts();
+      refresh();
     } catch {
       toast.error("Update failed");
     }
@@ -61,6 +53,6 @@ export const useCatalogManager = () => {
     editingProduct,
     setEditingProduct,
     deactivateProduct,
-    refresh: fetchProducts,
+    refresh,
   };
 };

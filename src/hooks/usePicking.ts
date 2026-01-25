@@ -9,8 +9,9 @@ export const usePicking = (orderId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const isBatchMode = Boolean(orderId?.startsWith("batch-"));
   const fetchPickList = useCallback(async () => {
-    if (!orderId) return;
+    if (!orderId || isBatchMode) return;
     setLoading(true);
     setError(null);
     try {
@@ -24,7 +25,7 @@ export const usePicking = (orderId?: string) => {
     } finally {
       setLoading(false);
     }
-  }, [orderId]);
+  }, [orderId, isBatchMode]);
 
   useEffect(() => {
     if (!orderId) {
@@ -34,8 +35,16 @@ export const usePicking = (orderId?: string) => {
       setLoading(false);
       return;
     }
+    if (isBatchMode) {
+      const message = "Batch picking is not supported yet";
+      setError(message);
+      setOrder(null);
+      setItems([]);
+      setLoading(false);
+      return;
+    }
     fetchPickList();
-  }, [fetchPickList, orderId]);
+  }, [fetchPickList, orderId, isBatchMode]);
 
   const updateItemStatus = async (
     itemId: string,

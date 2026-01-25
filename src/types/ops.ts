@@ -1,5 +1,3 @@
-import { OrderStatus } from './domain';
-
 export interface Vehicle {
   id: string;
   driver: string;

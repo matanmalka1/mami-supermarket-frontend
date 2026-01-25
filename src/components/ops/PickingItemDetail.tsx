@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
 import { Info, ClipboardList, AlertCircle, Package, ChevronDown } from 'lucide-react';
 import Button from '../ui/Button';
-import { toast } from 'react-hot-toast';
-import { sleep } from '../../utils/async';
 
 interface PickingItemDetailProps {
   item: any;
   onToggle: () => void;
+  onReportDamage: () => Promise<void> | void;
 }
 
-const PickingItemDetail: React.FC<PickingItemDetailProps> = ({ item, onToggle }) => {
+const PickingItemDetail: React.FC<PickingItemDetailProps> = ({ item, onToggle, onReportDamage }) => {
   const [loading, setLoading] = useState(false);
 
   const handleReportDamage = async () => {
     setLoading(true);
     try {
-      await sleep(1000);
-      toast(`Damage noted for ${item.product?.name}. Notifications not connected yet.`, {
-        style: { borderRadius: '1rem', fontWeight: 'bold' }
-      });
+      await onReportDamage();
       onToggle();
     } finally {
       setLoading(false);

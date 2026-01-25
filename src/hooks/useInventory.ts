@@ -1,28 +1,20 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { apiService } from "../services/api";
-import { Product } from "../types/domain";
 import { toast } from "react-hot-toast";
+import { useAsyncResource } from "./useAsyncResource";
 
 export const useInventory = () => {
-  const [inventory, setInventory] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const fetchInventory = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data: any = await apiService.admin.getInventory();
-      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-      setInventory(rows);
-    } catch {
-      toast.error("Failed to load global inventory");
-    } finally {
-      setLoading(false);
-    }
+    const data: any = await apiService.admin.getInventory();
+    const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+    return rows;
   }, []);
 
-  useEffect(() => {
-    fetchInventory();
-  }, [fetchInventory]);
+  const { data: inventory, setData: setInventory, loading, refresh } =
+    useAsyncResource<any[]>(fetchInventory, {
+      initialData: [],
+      errorMessage: "Failed to load global inventory",
+    });
 
   const updateStock = async (id: string, newQty: number) => {
     if (Number.isNaN(newQty) || newQty < 0) {
@@ -48,5 +40,5 @@ export const useInventory = () => {
     }
   };
 
-  return { inventory, loading, updateStock, refresh: fetchInventory };
+  return { inventory, loading, updateStock, refresh };
 };

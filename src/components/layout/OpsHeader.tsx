@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Bell, Plus, Settings2, AlertTriangle, Info } from 'lucide-react';
 import SearchInput from '../ui/SearchInput';
 import Button from '../ui/Button';
-import { Link } from 'react-router';
-import { toast } from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router';
 import { apiService } from '@/services/api';
 
 type OpsAlert = {
@@ -21,6 +20,7 @@ const OpsHeader: React.FC = () => {
   const [alerts, setAlerts] = useState<OpsAlert[]>([]);
   const [alertsLoading, setAlertsLoading] = useState(true);
   const [alertsError, setAlertsError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const hasAlerts = alerts.length > 0;
   const formatAlertTime = (alert: OpsAlert) =>
@@ -33,10 +33,7 @@ const OpsHeader: React.FC = () => {
       : "Just now");
 
   const handleNewOrder = () => {
-    toast("Manual order creation not connected yet.", {
-      icon: '📝',
-      style: { borderRadius: '1rem', fontWeight: 'bold' }
-    });
+    navigate("/store/checkout");
   };
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useNavigate } from "react-router";
 import StatCard from "@/components/ui/StatCard";
 import Grid from "@/components/ui/Grid";

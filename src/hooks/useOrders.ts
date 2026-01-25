@@ -1,39 +1,34 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { apiService } from "../services/api";
 import { Order } from "../types/domain";
-import { toast } from "react-hot-toast";
+import { useAsyncResource } from "./useAsyncResource";
 
 type RawOrder = Order & { orderId?: string };
 
 export const useOrders = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const normalizeOrders = (orders: RawOrder[]) =>
-    orders
-      .map((order) => {
-        const resolvedId = order.id || order.orderId;
-        return resolvedId ? { ...order, id: resolvedId } : null;
-      })
-      .filter((order): order is Order => Boolean(order));
+  const normalizeOrders = useCallback(
+    (orders: RawOrder[]) =>
+      orders
+        .map((order) => {
+          const resolvedId = order.id || order.orderId;
+          return resolvedId ? { ...order, id: resolvedId } : null;
+        })
+        .filter((order): order is Order => Boolean(order)),
+    [],
+  );
 
   const fetchOrders = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await apiService.ops.getOrders();
-      const incoming = Array.isArray(data) ? data : [];
-      setOrders(normalizeOrders(incoming));
-    } catch {
-      toast.error("Orders sync failed. Reconnecting...");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    const data = await apiService.ops.getOrders();
+    const incoming = Array.isArray(data) ? data : [];
+    return normalizeOrders(incoming);
+  }, [normalizeOrders]);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+  const { data: orders, loading, refresh } = useAsyncResource<Order[]>(fetchOrders, {
+    initialData: [],
+    errorMessage: "Orders sync failed. Reconnecting...",
+  });
 
   const toggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) =>
@@ -41,5 +36,5 @@ export const useOrders = () => {
     );
   }, []);
 
-  return { orders, loading, selectedIds, toggleSelect, refresh: fetchOrders };
+  return { orders, loading, selectedIds, toggleSelect, refresh };
 };

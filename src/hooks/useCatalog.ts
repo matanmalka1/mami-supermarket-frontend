@@ -1,36 +1,26 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { apiService } from "../services/api";
 import { Product } from "../types/domain";
-import { toast } from "react-hot-toast";
+import { useAsyncResource } from "./useAsyncResource";
 
 export const useCatalog = (categoryId?: string, query?: string) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const fetchCatalog = useCallback(async () => {
-    setLoading(true);
-    try {
-      if (categoryId) {
-        // Fix: Use getProducts with categoryId parameter because getCategoryProducts is not defined in the catalog service
-        const data = await apiService.catalog.getProducts({ categoryId });
-        setProducts(data);
-      } else if (query) {
-        const data = await apiService.catalog.getProducts({ q: query });
-        setProducts(data);
-      } else {
-        const data = await apiService.catalog.getProducts({});
-        setProducts(data);
-      }
-    } catch {
-      toast.error("Failed to load catalog");
-    } finally {
-      setLoading(false);
+    if (categoryId) {
+      // Fix: Use getProducts with categoryId parameter because getCategoryProducts is not defined in the catalog service
+      return apiService.catalog.getProducts({ categoryId });
     }
+
+    if (query) {
+      return apiService.catalog.getProducts({ q: query });
+    }
+
+    return apiService.catalog.getProducts({});
   }, [categoryId, query]);
 
-  useEffect(() => {
-    fetchCatalog();
-  }, [fetchCatalog]);
+  const { data: products, loading, refresh } = useAsyncResource<Product[]>(fetchCatalog, {
+    initialData: [],
+    errorMessage: "Failed to load catalog",
+  });
 
-  return { products, loading, refresh: fetchCatalog };
+  return { products, loading, refresh };
 };

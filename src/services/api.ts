@@ -3,6 +3,7 @@ import { opsService } from "./ops-service";
 import { adminService } from "./admin-service";
 import { catalogService } from "./catalog-service";
 import { checkoutService } from "./checkout-service";
+import { cartService } from "./cart-service";
 import { apiClient } from "./api-client";
 import { Order } from "../types/domain";
 
@@ -12,6 +13,7 @@ export const apiService = {
   admin: adminService,
   catalog: catalogService,
   checkout: checkoutService,
+  cart: cartService,
   profile: {
     get: authService.getProfile,
     update: authService.updateProfile,
