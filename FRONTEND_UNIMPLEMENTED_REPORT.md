@@ -3,6 +3,7 @@
 - Auth: 1 gap (register OTP not verified server-side).
 - Storefront: 5 gaps (wishlist, notifications feed, product reviews/shipping/returns, address GPS tagging, premium toggle).
 - Ops: 7 gaps (manual order CTA, ops alerts dropdown, manual sync, damage report notify, dashboard metrics, warehouse map, staff performance) + inventory table actions.
+- Completed: Admin revenue analytics page now renders backend data.
 - Admin: 2 gaps (fleet map coordinates, delivery slot update endpoint).
 
 ## Findings
@@ -24,6 +25,7 @@
 | Ops | Inventory actions – `src/pages/inventory/InventoryTable.tsx` | Action menu (move/archive buttons) | Toast `${action} initiated` only | 1 (UI-only) | PATCH `/inventory/:id` or workflow endpoints | Payload for move/archive/status | `inventory`, `branches` | Wire buttons to real inventory update; refresh data | DevTools call; table reflects change after reload | Need endpoint definitions |
 | Admin | Fleet map coordinates – `src/pages/admin/FleetTracker.tsx` | Map view | Notice coordinates missing; map disabled | 2 (Backend-missing) | GET `/admin/fleet/status` incl. lat/lng | `{ vehicles:[{id,status,lat,lng,...}] }` | `vehicles`, `telemetry` | Add coords to response; render map when present | DevTools call; pins show; refresh persists | Telemetry data needed |
 | Admin | Delivery slot updates – `src/pages/admin/DeliverySlotManager.tsx` | Slot edit/toggle controls | Toast “Endpoint not implemented for updates” | 2 (Backend-missing) | PATCH `/admin/delivery-slots/:id` | `{ status?, capacity?, blackout_dates? }` | `delivery_slots` | Add service method; wire buttons; handle loading/error | DevTools call; slot updates persist after reload | Backend endpoint missing |
+| Admin | /admin/analytics – `src/pages/admin/ManagerAnalytics.tsx` | Page load | Static “placeholder” stats, “N/A” copy, and hardcoded card text (no API usage) | 1 (UI-only) | GET `/admin/analytics/revenue` | `{ labels: string[], values: number[] }` | `analytics` | Fetch revenue data, surface loading/error/empty states, drive stats + chart + insights | DevTools shows GET `/admin/analytics/revenue`; chart, stats, hero text update with real values | Implemented |
 
 Category legend: 1) UI-only; 2) Backend-missing; 3) Partial; 4) Missing-UI.
 
@@ -52,3 +54,4 @@ Category legend: 1) UI-only; 2) Backend-missing; 3) Partial; 4) Missing-UI.
 ## Worklog
 - feat(auth): forgot password flow — wired frontend to forgot/reset endpoints, backend returns reset token in dev/test, added tests.
 - feat(auth): Brevo reset email + reset page — send password reset emails via Brevo with reset URL, added dedicated reset page/tests.
+- feat(admin): wire revenue analytics — replaced placeholders with real backend data, added loading/error states, and new tests.
