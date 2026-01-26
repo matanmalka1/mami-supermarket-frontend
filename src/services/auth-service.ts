@@ -7,6 +7,9 @@ import {
   AuthLoginResponse,
   AuthChangePasswordRequest,
   AuthResetPasswordRequest,
+  AuthRegisterOtpRequest,
+  AuthRegisterVerifyOtpRequest,
+  AuthRegisterOtpResponse,
 } from "../types/auth-service";
 
 export const authService = {
@@ -42,6 +45,11 @@ export const authService = {
   },
   forgotPassword: (email: string) =>
     apiClient.post<{ email: string }, void>("/auth/forgot-password", { email }),
+  sendRegisterOtp: (email: string) =>
+    apiClient.post<AuthRegisterOtpRequest, AuthRegisterOtpResponse>(
+      "/auth/register/send-otp",
+      { email },
+    ),
   changePassword: (data: AuthChangePasswordRequest) =>
     apiClient.post<AuthChangePasswordRequest, void>(
       "/auth/change-password",
@@ -49,6 +57,11 @@ export const authService = {
     ),
   resetPassword: (data: AuthResetPasswordRequest) =>
     apiClient.post<AuthResetPasswordRequest, void>("/auth/reset-password", data),
+  verifyRegisterOtp: (data: AuthRegisterVerifyOtpRequest) =>
+    apiClient.post<AuthRegisterVerifyOtpRequest, { message: string }>(
+      "/auth/register/verify-otp",
+      data,
+    ),
   getProfile: () => apiClient.get<any, User>("/me"),
   updateProfile: (data: Partial<User>) =>
     apiClient.patch<any, User>("/me", data),

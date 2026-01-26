@@ -24,6 +24,7 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
   const [showPass, setShowPass] = useState(false);
   const [step, setStep] = useState<"INFO" | "OTP">("INFO");
   const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -37,12 +38,29 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
     },
   });
 
+  const handleSendOtp = async (data: RegisterInput) => {
+    const { email } = data;
+    toast.loading("Sending OTP code...", { id: "reg" });
+    setLoading(true);
+    try {
+      await apiService.auth.sendRegisterOtp(email);
+      toast.success("OTP sent to your inbox", { id: "reg" });
+      setStep("OTP");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send OTP", { id: "reg" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length !== 4) return toast.error("Enter a valid 4-digit code");
     toast.loading("Creating account...", { id: "reg" });
+    setLoading(true);
     try {
       const data = form.getValues();
+      await apiService.auth.verifyRegisterOtp({ email: data.email, code: otp });
       const fullName = `${data.firstName} ${data.lastName}`.trim();
       // Backend only accepts email, password, full_name (+optional role)
       const regRes = await apiService.auth.register({
@@ -73,6 +91,8 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
       navigate("/store");
     } catch (err: any) {
       toast.error(err.message || "Registration failed", { id: "reg" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,14 +122,14 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
             <p className="text-gray-400 text-xl font-medium tracking-tight">
               {step === "INFO"
                 ? "Enter your details to start shopping."
-                : "Enter the code sent to " + form.getValues("phone")}
+                : "Enter the code sent to " + form.getValues("email")}
             </p>
           </div>
 
           {step === "INFO" ? (
             <RegistrationForm
               form={form}
-              onSubmit={() => setStep("OTP")}
+              onSubmit={handleSendOtp}
               showPass={showPass}
               setShowPass={setShowPass}
             />
@@ -127,7 +147,10 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
                   />
                 ))}
               </div>
-              <button className="w-full bg-[#16A34A] text-white h-20 rounded-[1.5rem] font-black text-2xl shadow-xl active:scale-95">
+              <button
+                className="w-full bg-[#16A34A] text-white h-20 rounded-[1.5rem] font-black text-2xl shadow-xl active:scale-95"
+                disabled={loading}
+              >
                 Complete Setup
               </button>
               <button

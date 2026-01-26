@@ -31,3 +31,17 @@ export interface AuthResetPasswordRequest {
   token: string;
   new_password: string;
 }
+
+export interface AuthRegisterOtpRequest {
+  email: string;
+}
+
+export interface AuthRegisterVerifyOtpRequest {
+  email: string;
+  code: string;
+}
+
+export interface AuthRegisterOtpResponse {
+  message: string;
+  code?: string;
+}

@@ -2,6 +2,8 @@ import { vi } from "vitest";
 
 export const mockLogin = vi.fn();
 export const mockRegister = vi.fn();
+export const mockSendRegisterOtp = vi.fn();
+export const mockVerifyRegisterOtp = vi.fn();
 export const mockNavigate = vi.fn();
 
 vi.mock("@/services/api", () => ({
@@ -9,6 +11,8 @@ vi.mock("@/services/api", () => ({
     auth: {
       login: mockLogin,
       register: mockRegister,
+      sendRegisterOtp: mockSendRegisterOtp,
+      verifyRegisterOtp: mockVerifyRegisterOtp,
     },
   },
 }));
