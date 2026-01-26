@@ -59,23 +59,6 @@ Owned Concerns
 
 ⸻
 
-3. Logistics Agent (OpsPortal — Last-Mile)
-
-Context: Fleet visibility, route execution, delivery status
-Goal: Efficient last-mile delivery + real-time observability
-Traits: Data-dense dashboards, map-first views, status telemetry
-Primary Routes:
-	•	/logistics
-	•	/fleet
-	•	/deliveries/*
-
-Owned Concerns
-	•	Driver assignment, route overview, delivery status timelines
-	•	Map views (clustered, performant)
-	•	Delay exceptions + escalation signals
-
-⸻
-
 4. Admin Agent (System Governor)
 
 Context: Catalog CRUD, inventory control, global settings, audit

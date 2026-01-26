@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, Navigate, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import RequireAuth from "./RequireAuth";
-import { UserRole } from "@/types/auth";
+import RoleGuard from "./RoleGuard";
 
 describe("RequireAuth + RoleGuard", () => {
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe("RequireAuth + RoleGuard", () => {
 
   it("redirects to store when role mismatch on admin route", async () => {
     localStorage.setItem("mami_token", "a.b.c");
-    localStorage.setItem("mami_role", "USER");
+    localStorage.setItem("mami_role", "CUSTOMER");
 
     render(
       <MemoryRouter initialEntries={["/admin"]}>
@@ -25,9 +25,9 @@ describe("RequireAuth + RoleGuard", () => {
           <Route
             path="/admin"
             element={
-              <RoleGuardHarness allowedRoles={["ADMIN"]} userRole="USER">
+              <RoleGuard allowedRoles={["ADMIN"]} userRole="CUSTOMER">
                 <div>Admin Only</div>
-              </RoleGuardHarness>
+              </RoleGuard>
             }
           />
           <Route path="/store" element={<div>Storefront Page</div>} />
@@ -57,16 +57,3 @@ const renderNoTokenGuard = () =>
       </Routes>
     </MemoryRouter>,
   );
-
-const RoleGuardHarness: React.FC<{
-  allowedRoles: UserRole[];
-  userRole: UserRole | null;
-  children: React.ReactNode;
-}> = ({ allowedRoles, userRole, children }) => {
-  const effectiveRole =
-    userRole || (localStorage.getItem("mami_role") as UserRole);
-  if (!effectiveRole) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(effectiveRole))
-    return <Navigate to="/store" replace />;
-  return <>{children}</>;
-};

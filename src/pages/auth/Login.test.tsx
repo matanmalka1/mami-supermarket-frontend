@@ -1,30 +1,9 @@
-import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import Login from "./Login";
 import renderWithRouter from "@/test/render";
-
-const { mockLogin, mockNavigate } = vi.hoisted(() => ({
-  mockLogin: vi.fn(),
-  mockNavigate: vi.fn(),
-}));
-
-vi.mock("@/services/api", () => ({
-  apiService: {
-    auth: {
-      login: mockLogin,
-    },
-  },
-}));
-
-vi.mock("react-router", async (importActual) => {
-  const actual = await importActual<any>();
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
+import { mockLogin, mockNavigate } from "./testUtils";
 
 describe("Login", () => {
   beforeEach(() => {
@@ -34,7 +13,7 @@ describe("Login", () => {
 
   it("stores token and navigates after successful login", async () => {
     mockLogin.mockResolvedValue({
-      data: { access_token: "a.b.c", user: { role: "USER" } },
+      data: { access_token: "a.b.c", user: { role: "CUSTOMER" } },
     });
     const onLogin = vi.fn();
     renderWithRouter({
@@ -50,7 +29,7 @@ describe("Login", () => {
     await waitFor(() =>
       expect(onLogin).toHaveBeenCalledWith({
         token: "a.b.c",
-        role: "USER",
+        role: "CUSTOMER",
         remember: true,
       }),
     );

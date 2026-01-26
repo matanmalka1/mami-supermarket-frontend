@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { Minus, Plus, ShoppingCart, Share2, Truck, ShieldCheck } from "lucide-react";
 import Button from "../ui/Button";
 import { toast } from "react-hot-toast";

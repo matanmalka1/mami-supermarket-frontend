@@ -15,6 +15,16 @@ export interface StaffPerformance {
   shiftRank: number;
 }
 
+export interface OpsPerformanceMetrics {
+  batchEfficiency: number;
+  livePickers: number;
+  activeOrders: number;
+  totalOrders: number;
+  pickedItems: number;
+  totalItems: number;
+  pickerWindowMinutes: number;
+}
+
 export interface StockRequest {
   id: string;
   productName: string;
@@ -25,3 +35,12 @@ export interface StockRequest {
   status: 'PENDING' | 'RESOLVED' | 'CANCELLED';
   createdAt: string;
 }
+
+export type OpsAlert = {
+  id: string | number;
+  text: string;
+  type?: string;
+  severity?: string;
+  time?: string;
+  createdAt?: string;
+};

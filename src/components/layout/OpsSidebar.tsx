@@ -1,31 +1,13 @@
-
-import React from 'react';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link, useLocation, useNavigate } from 'react-router';
-import { 
-  LayoutDashboard, 
-  Box, 
-  Truck, 
-  ClipboardList, 
-  Settings,
-  Store,
-  GripVertical,
-  Activity,
-  PackagePlus,
-  Map as MapIcon,
-  Tag,
-  CheckSquare,
-  CalendarClock,
-  Settings2,
-  BarChart3,
-} from 'lucide-react';
+import { LayoutDashboard,Box,ClipboardList,Settings,Store,GripVertical,Activity,PackagePlus,Tag,CheckSquare,CalendarClock,Settings2,BarChart3} from 'lucide-react';
 import AvatarBadge from '../ui/AvatarBadge';
+import { UserRole } from '@/types/auth';
+import { normalizeRole, isOpsRole } from '@/utils/roles';
 
 const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
   { label: 'Inventory', icon: Box, path: '/inventory' },
   { label: 'Stock Reports', icon: PackagePlus, path: '/stock-requests' },
-  { label: 'Floor Map', icon: MapIcon, path: '/map' },
   { label: 'Performance', icon: Activity, path: '/performance' },
 ];
 
@@ -33,23 +15,24 @@ const adminItems = [
   { label: 'Catalog Manager', icon: Tag, path: '/admin/catalog' },
   { label: 'Approve Stock', icon: CheckSquare, path: '/admin/requests' },
   { label: 'Delivery Slots', icon: CalendarClock, path: '/admin/delivery' },
-  { label: 'Logistics Command', icon: Truck, path: '/logistics' },
-  { label: 'Fleet Tracker', icon: Truck, path: '/fleet' },
   { label: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
   { label: 'Global Settings', icon: Settings2, path: '/admin/settings' },
   { label: 'Audit Logs', icon: ClipboardList, path: '/audit' },
 ];
 
 interface OpsSidebarProps {
-  userRole?: 'ADMIN' | 'USER' | null;
+  userRole?: UserRole | null;
 }
 
 const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const effectiveRole = userRole || localStorage.getItem('mami_role');
-  if (effectiveRole !== 'ADMIN') return null;
+  const effectiveRole =
+    userRole || normalizeRole(localStorage.getItem('mami_role'));
+  if (!isOpsRole(effectiveRole)) return null;
+
+  const showManagementLinks = effectiveRole === 'ADMIN';
 
   const renderNavGroup = (title: string, items: any[]) => (
     <div className="space-y-2">
@@ -94,7 +77,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
 
       <div className="flex-1 px-4 space-y-8 py-4 overflow-y-auto no-scrollbar">
         {renderNavGroup("Operations", navItems)}
-        {renderNavGroup("Management", adminItems)}
+        {showManagementLinks && renderNavGroup("Management", adminItems)}
       </div>
 
       <div className="p-6 border-t bg-gray-50/50">

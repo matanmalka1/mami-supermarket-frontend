@@ -1,5 +1,4 @@
-import React from "react";
-import { Bell, ShoppingCart, LayoutDashboard, ShieldCheck, Lock } from "lucide-react";
+import { Bell, ShoppingCart, Lock } from "lucide-react";
 import { Link } from "react-router";
 import NotifDropdown from "../store-header/NotifDropdown";
 import AccountDropdown from "../store-header/AccountDropdown";

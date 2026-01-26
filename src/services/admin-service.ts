@@ -18,7 +18,6 @@ const ADMIN_ENDPOINTS = {
   adminBulkStockRequests: "/stock-requests/admin/bulk-review",
   settings: "/admin/settings",
   analyticsRevenue: "/admin/analytics/revenue",
-  fleetStatus: "/admin/fleet/status",
   deliverySlots: "/admin/delivery-slots",
   audit: "/admin/audit",
 };
@@ -94,7 +93,6 @@ export const adminService = {
     ),
   getRevenueAnalytics: () =>
     apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
-  getFleetStatus: () => apiClient.get<any, any>(ADMIN_ENDPOINTS.fleetStatus),
   getDeliverySlots: () =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
   updateDeliverySlot: (id: string, data: {

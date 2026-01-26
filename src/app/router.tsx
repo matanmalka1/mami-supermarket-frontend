@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router";
 import StoreLayout from "../components/layout/StoreLayout";
 import OpsLayout from "../components/layout/OpsLayout";
@@ -7,7 +6,6 @@ import Dashboard from "../pages/ops/Dashboard";
 import PickingInterface from "../pages/ops/PickingInterface";
 import Inventory from "../pages/ops/Inventory";
 import Storefront from "../pages/store/Storefront";
-import Logistics from "../pages/ops/Logistics";
 import AuditLogs from "../pages/ops/AuditLogs";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -29,9 +27,10 @@ import CatalogManager from "../pages/admin/CatalogManager";
 import StockRequestManager from "../pages/admin/StockRequestManager";
 import DeliverySlotManager from "../pages/admin/DeliverySlotManager";
 import GlobalSettings from "../pages/admin/GlobalSettings";
-import FleetTracker from "../pages/admin/FleetTracker";
 import ManagerAnalytics from "../pages/admin/ManagerAnalytics";
 import { UserRole } from "../types/auth";
+import RoleGuard from "./guards/RoleGuard";
+import { normalizeRole, OPS_ROLES } from "../utils/roles";
 
 interface RouterProps {
   isAuthenticated: boolean;
@@ -44,19 +43,6 @@ interface RouterProps {
   logout: () => void;
 }
 
-const RoleGuard: React.FC<{
-  allowedRoles: UserRole[];
-  userRole: UserRole | null;
-  children: React.ReactNode;
-}> = ({ allowedRoles, userRole, children }) => {
-  const effectiveRole =
-    userRole || (localStorage.getItem("mami_role") as UserRole);
-  if (!effectiveRole) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(effectiveRole))
-    return <Navigate to="/store" replace />;
-  return <>{children}</>;
-};
-
 export const AppRouter: React.FC<RouterProps> = ({
   isAuthenticated,
   userRole,
@@ -64,7 +50,7 @@ export const AppRouter: React.FC<RouterProps> = ({
   logout,
 }) => {
   const effectiveRole =
-    userRole || (localStorage.getItem("mami_role") as UserRole);
+    userRole || normalizeRole(localStorage.getItem("mami_role"));
 
   return (
     <Routes>
@@ -82,7 +68,7 @@ export const AppRouter: React.FC<RouterProps> = ({
           <Route
             element={
               <RequireAuth>
-                <RoleGuard allowedRoles={["ADMIN"]} userRole={userRole}>
+                <RoleGuard allowedRoles={OPS_ROLES} userRole={userRole}>
                   <OpsLayout userRole={userRole} />
                 </RoleGuard>
               </RequireAuth>
@@ -91,8 +77,6 @@ export const AppRouter: React.FC<RouterProps> = ({
             <Route path="/" element={<Dashboard />} />
             <Route path="/picking/:id" element={<PickingInterface />} />
             <Route path="/inventory" element={<Inventory />} />
-            <Route path="/logistics" element={<Logistics />} />
-            <Route path="/fleet" element={<FleetTracker />} />
             <Route path="/audit" element={<AuditLogs />} />
             <Route path="/performance" element={<StaffPerformance />} />
             <Route path="/stock-requests" element={<StockRequests />} />

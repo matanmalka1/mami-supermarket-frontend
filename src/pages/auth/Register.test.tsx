@@ -1,32 +1,9 @@
-import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import Register from "./Register";
 import renderWithRouter from "@/test/render";
-
-const { mockRegister, mockLogin, mockNavigate } = vi.hoisted(() => ({
-  mockRegister: vi.fn(),
-  mockLogin: vi.fn(),
-  mockNavigate: vi.fn(),
-}));
-
-vi.mock("@/services/api", () => ({
-  apiService: {
-    auth: {
-      register: mockRegister,
-      login: mockLogin,
-    },
-  },
-}));
-
-vi.mock("react-router", async (importActual) => {
-  const actual = await importActual<any>();
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
+import { mockLogin, mockNavigate, mockRegister } from "./testUtils";
 
 describe("Register", () => {
   beforeEach(() => {
@@ -37,7 +14,7 @@ describe("Register", () => {
 
   it("submits full_name to register and stores token from login", async () => {
     mockRegister.mockResolvedValue({ ok: true });
-    mockLogin.mockResolvedValue({ data: { access_token: "a.b.c", user: { role: "USER" } } });
+    mockLogin.mockResolvedValue({ data: { access_token: "a.b.c", user: { role: "CUSTOMER" } } });
     const onRegister = vi.fn();
 
     renderWithRouter({
@@ -69,7 +46,7 @@ describe("Register", () => {
     await waitFor(() =>
       expect(onRegister).toHaveBeenCalledWith({
         token: "a.b.c",
-        role: "USER",
+        role: "CUSTOMER",
         remember: false,
       }),
     );

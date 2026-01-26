@@ -1,8 +1,5 @@
-
-import React from 'react';
 import { X, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from 'react-router';
 import Button from '../ui/Button';
 import { currencyILS } from '../../utils/format';

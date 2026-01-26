@@ -1,19 +1,9 @@
-
-import React, { useEffect, useState } from 'react';
-import { Bell, Plus, Settings2, AlertTriangle, Info } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Bell, Settings2, AlertTriangle, Info } from 'lucide-react';
 import SearchInput from '../ui/SearchInput';
-import Button from '../ui/Button';
 import { Link, useNavigate } from 'react-router';
 import { apiService } from '@/services/api';
-
-type OpsAlert = {
-  id: string | number;
-  text: string;
-  type?: string;
-  severity?: string;
-  time?: string;
-  createdAt?: string;
-};
+import { OpsAlert } from "@/types/ops";
 
 const OpsHeader: React.FC = () => {
   const [showNotifs, setShowNotifs] = useState(false);
@@ -31,10 +21,6 @@ const OpsHeader: React.FC = () => {
           minute: "2-digit",
         })
       : "Just now");
-
-  const handleNewOrder = () => {
-    navigate("/store/checkout");
-  };
 
   useEffect(() => {
     let isMounted = true;
@@ -114,15 +100,7 @@ const OpsHeader: React.FC = () => {
         <Link to="/admin/settings" className="text-gray-400 hover:text-gray-600 p-2 rounded-xl hover:bg-gray-100 transition-all">
           <Settings2 size={22} />
         </Link>
-        <div className="h-8 w-px bg-gray-100 mx-2"></div>
-        <Button 
-          variant="primary" 
-          icon={<Plus size={18} />}
-          className="h-11 rounded-xl"
-          onClick={handleNewOrder}
-        >
-          <span className="hidden sm:inline">New Order</span>
-        </Button>
+
       </div>
     </header>
   );

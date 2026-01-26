@@ -1,6 +1,3 @@
-
-import React from 'react';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from 'react-router';
 import { User, Package, MapPin, LogOut, LayoutDashboard } from 'lucide-react';
 

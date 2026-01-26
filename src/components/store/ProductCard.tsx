@@ -1,9 +1,7 @@
 
-import React from 'react';
 import { useCart } from '../../context/CartContext';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from 'react-router';
 import { currencyILS } from '../../utils/format';
 import { useWishlist } from '@/hooks/useWishlist';

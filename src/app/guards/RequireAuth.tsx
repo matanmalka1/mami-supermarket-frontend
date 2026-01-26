@@ -1,7 +1,5 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 
-// Route guard: checks for mami_token in storage (local or session)
 const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token =
     localStorage.getItem("mami_token") || sessionStorage.getItem("mami_token");

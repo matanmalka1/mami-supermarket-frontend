@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ShieldCheck, Truck, RefreshCcw } from "lucide-react";
 import { Product } from "@/types/domain";
 

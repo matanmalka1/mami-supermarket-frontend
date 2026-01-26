@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Timer, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { apiService } from "@/services/api";

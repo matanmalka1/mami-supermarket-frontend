@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { apiService } from '@/services/api';
-
-type OpsAlert = {
-  id: string | number;
-  text: string;
-  type?: string;
-  severity?: string;
-  time?: string;
-  createdAt?: string;
-};
+import { OpsAlert } from "@/types/ops";
 
 interface NotifDropdownProps {
   items: any[];

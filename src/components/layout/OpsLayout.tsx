@@ -1,12 +1,10 @@
-
-import React from 'react';
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Outlet } from 'react-router';
 import OpsSidebar from './OpsSidebar';
 import OpsHeader from './OpsHeader';
+import { UserRole } from '@/types/auth';
 
 interface OpsLayoutProps {
-  userRole?: 'ADMIN' | 'USER' | null;
+  userRole?: UserRole | null;
 }
 
 const OpsLayout: React.FC<OpsLayoutProps> = ({ userRole }) => {

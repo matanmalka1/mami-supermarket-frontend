@@ -1,15 +1,18 @@
 import { useState, useCallback } from "react";
 import { UserRole } from "../types/auth";
+import { normalizeRole } from "../utils/roles";
 
-type LoginPayload = { token: string; role?: UserRole | null; remember?: boolean };
+type LoginPayload = { token: string; role?: string | null; remember?: boolean };
 
 const readRoleFromToken = (token: string): UserRole | null => {
   try {
     const payload = JSON.parse(atob(token.split(".")[1] || ""));
     return (
-      payload.role ||
-      payload.user_role ||
-      payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"] ||
+      normalizeRole(payload.role) ||
+      normalizeRole(payload.user_role) ||
+      normalizeRole(
+        payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"],
+      ) ||
       null
     );
   } catch {
@@ -27,12 +30,12 @@ export const useAuth = () => {
   );
 
   const [userRole, setUserRole] = useState<UserRole | null>(
-    () => (localStorage.getItem("mami_role") as UserRole) || null,
+    () => normalizeRole(localStorage.getItem("mami_role")) || null,
   );
 
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
-      const resolvedRole = role || readRoleFromToken(token);
+      const resolvedRole = normalizeRole(role) || readRoleFromToken(token);
       if (resolvedRole) {
         localStorage.setItem("mami_role", resolvedRole);
         setUserRole(resolvedRole);

@@ -1,7 +1,7 @@
 import React from "react";
 
 type DashboardMetricCardProps = {
-  label: string;
+  label: React.ReactNode;
   value: React.ReactNode;
   sub?: string;
   accent?: "emerald" | "amber" | "slate" | "sky";

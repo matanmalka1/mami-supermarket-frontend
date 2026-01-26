@@ -59,9 +59,6 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
             View Picking Board
           </Button>
         )}
-        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-500">
-          Express queue: {expressDue}
-        </p>
       </div>
     </div>
 
@@ -95,20 +92,17 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
         sub="Immediate action"
         accent="amber"
       />
-      <div className="rounded-[2rem] border border-gray-200 p-5 bg-gray-50 flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <AlertTriangle size={16} className="text-red-500" />
-          <p className="text-[10px] uppercase tracking-[0.4em] font-black text-gray-500">
-            Live Alerts
-          </p>
-        </div>
-        <p className="text-sm font-bold text-gray-800">
-          {urgentCount > 0 ? `${urgentCount} critical orders` : "No immediate escalations"}
-        </p>
-        <p className="text-xs text-gray-500">
-          Urgent carts are prioritized on the picking board.
-        </p>
-      </div>
+      <DashboardMetricCard
+        label={
+          <span className="flex items-center gap-2">
+            <AlertTriangle size={14} />
+            Urgent Exceptions
+          </span>
+        }
+        value={urgentCount ?? "—"}
+        sub="Requires immediate review"
+        accent="slate"
+      />
     </div>
   </div>
 );

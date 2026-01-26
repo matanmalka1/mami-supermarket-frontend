@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "jscpd": "jscpd --min-tokens 50 --reporters console,html --output reports/jscpd . --ignore node_modules"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

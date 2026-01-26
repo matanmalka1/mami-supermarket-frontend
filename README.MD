@@ -203,7 +203,6 @@ Database (PostgreSQL) + Cache (Redis)
 - **New Stock Request Form** — Request inventory replenishment
 - **My Stock Requests History** — Track submitted stock requests
 - **Staff Performance Dashboard** — KPIs, picking speed, accuracy
-- **Warehouse Aisle Mapping** — Visual warehouse layout (if applicable)
 
 ### 4) Admin Management (Catalog & Business)
 

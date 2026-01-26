@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Heart, Maximize2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useWishlist } from "@/hooks/useWishlist";

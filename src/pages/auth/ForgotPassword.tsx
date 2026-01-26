@@ -1,12 +1,14 @@
 
 import React, { useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link, useNavigate } from "react-router";
-import { Mail, ArrowLeft, ShieldCheck } from "lucide-react";
+import { useNavigate } from "react-router";
+import { Mail, ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { apiService } from "@/services/api";
 import { toast } from "react-hot-toast";
 import ForgotPasswordDone from "./ForgotPasswordDone";
+import ResetForm from "./ResetForm";
+import AuthHeader from "./AuthHeader";
 
 type Stage = "REQUEST" | "RESET" | "DONE";
 
@@ -55,82 +57,61 @@ const ForgotPassword: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8">
       <div className="w-full max-w-md space-y-8 bg-white p-12 rounded-[3rem] shadow-xl border border-gray-100">
-        <div className="text-center space-y-4">
-          <Link to="/login" className="inline-flex items-center gap-2 text-xs font-black text-gray-400 hover:text-emerald-600 uppercase tracking-widest transition-colors mb-4">
-            <ArrowLeft size={16} /> Back to Login
-          </Link>
-          <h1 className="text-4xl font-black italic tracking-tight">Recover Account</h1>
-          <p className="text-gray-500 font-medium">Enter your email to receive a reset link. In development, you can paste the token directly.</p>
-        </div>
+        <AuthHeader
+          title="Recover Account"
+          description="Enter your email to receive a reset link. In development, you can paste the token directly."
+        />
 
         {stage === "DONE" ? (
           <ForgotPasswordDone onNavigate={() => navigate("/login")} />
         ) : (
           <>
-            <form
-              onSubmit={stage === "REQUEST" ? handleRequest : handleReset}
-              className="space-y-6"
-            >
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                    size={20}
-                  />
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 pl-12 pr-6 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
-                    placeholder="name@example.com"
-                    disabled={stage !== "REQUEST"}
-                  />
-                </div>
-              </div>
-
-              {stage === "RESET" && (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-700">
-                      Reset Token
-                    </label>
-                    <input
-                      required
-                      value={token}
-                      onChange={(e) => setToken(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 px-4 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all font-mono text-sm"
-                      placeholder="Paste token from email"
+            {stage === "REQUEST" ? (
+              <form onSubmit={handleRequest} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={20}
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-700">
-                      New Password
-                    </label>
                     <input
+                      type="email"
                       required
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 px-4 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
-                      placeholder="Enter a strong password"
-                      minLength={8}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 pl-12 pr-6 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
+                      placeholder="name@example.com"
+                      disabled={stage !== "REQUEST"}
                     />
                   </div>
                 </div>
-              )}
 
-              <Button fullWidth size="lg" loading={loading} type="submit">
-                {stage === "REQUEST" ? "Send Reset Link" : "Update Password"}
-              </Button>
-            </form>
-            {stage === "RESET" && !token && (
-              <p className="text-xs text-gray-400 font-bold text-center">
-                In production, check your email for the token. In dev, the token is returned in the response.
-              </p>
+                <Button fullWidth size="lg" loading={loading} type="submit">
+                  Send Reset Link
+                </Button>
+              </form>
+            ) : (
+              <>
+                <ResetForm
+                  email={email}
+                  token={token}
+                  newPassword={newPassword}
+                  loading={loading}
+                  showError={false}
+                  onEmailChange={setEmail}
+                  onTokenChange={setToken}
+                  onNewPasswordChange={setNewPassword}
+                  onSubmit={handleReset}
+                />
+                {!token && (
+                  <p className="text-xs text-gray-400 font-bold text-center">
+                    In production, check your email for the token. In dev, the token is returned in the response.
+                  </p>
+                )}
+              </>
             )}
           </>
         )}

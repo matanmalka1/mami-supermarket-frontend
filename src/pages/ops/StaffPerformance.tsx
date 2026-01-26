@@ -1,8 +1,74 @@
-import React from 'react';
-import { Info } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Info, RefreshCcw } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import StatCard from '@/components/ui/StatCard';
+import LoadingState from '@/components/shared/LoadingState';
+import EmptyState from '@/components/shared/EmptyState';
+import { apiService } from '@/services/api';
+import { OpsPerformanceMetrics } from '@/types/ops';
+
+const formatPercent = (value?: number) =>
+  typeof value === 'number' ? `${value.toFixed(2)}%` : '—';
+
+const formatNumber = (value?: number) =>
+  typeof value === 'number' ? value : '—';
 
 const StaffPerformance: React.FC = () => {
+  const [metrics, setMetrics] = useState<OpsPerformanceMetrics | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const isMounted = useRef(true);
+
+  const fetchMetrics = useCallback(async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const response = await apiService.ops.getPerformance();
+      if (!isMounted.current) return;
+      setMetrics(response as OpsPerformanceMetrics);
+    } catch (err: any) {
+      if (!isMounted.current) return;
+      setError(err?.message || 'Unable to load performance metrics');
+    } finally {
+      if (isMounted.current) setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    isMounted.current = true;
+    fetchMetrics();
+    return () => {
+      isMounted.current = false;
+    };
+  }, [fetchMetrics]);
+
+  const showFallback = !metrics && (loading || error);
+
+  const summaryCards = [
+    {
+      label: 'Batch Efficiency',
+      value: metrics ? formatPercent(metrics.batchEfficiency) : '—',
+      sub: metrics ? `${metrics.pickedItems}/${metrics.totalItems} items picked` : undefined,
+    },
+    {
+      label: 'Live Pickers',
+      value: metrics ? formatNumber(metrics.livePickers) : '—',
+      sub: metrics ? `Window: ${metrics.pickerWindowMinutes} min` : undefined,
+    },
+    {
+      label: 'Active Orders',
+      value: metrics
+        ? `${metrics.activeOrders.toLocaleString()} / ${metrics.totalOrders.toLocaleString()}`
+        : '—',
+      sub: 'Created vs. in-progress',
+    },
+    {
+      label: 'Items Picked',
+      value: metrics ? metrics.pickedItems.toLocaleString() : '—',
+      sub: 'Since start of day',
+    },
+  ];
+
   return (
     <div className="space-y-12 pb-20 animate-in fade-in duration-700">
       <div className="flex items-end justify-between border-b pb-8">
@@ -10,18 +76,89 @@ const StaffPerformance: React.FC = () => {
           <h1 className="text-5xl font-black italic text-gray-900 tracking-tighter">Performance Hub</h1>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Operational Analytics</p>
         </div>
+        <Button
+          variant="ghost"
+          onClick={fetchMetrics}
+          disabled={loading}
+          className="text-[11px] tracking-widest uppercase"
+        >
+          <RefreshCcw size={16} className="mr-2" /> Refresh Metrics
+        </Button>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-sm text-center space-y-6">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-xs font-black uppercase tracking-[0.2em]">
-          <Info size={14} /> Performance metrics not available yet
+      {error && !metrics && (
+        <EmptyState
+          title="Performance metrics unavailable"
+          description={error}
+          action={
+            <Button onClick={fetchMetrics} variant="emerald" disabled={loading}>
+              Retry
+            </Button>
+          }
+        />
+      )}
+
+      {showFallback && !metrics ? (
+        <LoadingState label="Loading performance metrics..." />
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {summaryCards.map((card) => (
+            <StatCard
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              sub={card.sub}
+              loading={loading && !metrics}
+            />
+          ))}
         </div>
-        <p className="text-sm font-bold text-gray-500 max-w-2xl mx-auto">
-          Live picker analytics and staff performance dashboards are pending backend support. No simulated or random data is shown.
-        </p>
-        <Button variant="outline" onClick={() => window.location.hash = '#/inventory'}>
-          Go to Inventory
-        </Button>
+      )}
+
+      <div className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-sm space-y-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Operational pulse</p>
+            <p className="text-sm font-bold text-gray-500 max-w-3xl">
+              Metrics refresh every few minutes and summarize picker throughput across orders, picks, and fulfillment efficiency.
+            </p>
+          </div>
+          <Button
+            variant="emerald"
+            onClick={fetchMetrics}
+            disabled={loading}
+            className="uppercase text-[10px] tracking-[0.3em]"
+          >
+            {loading ? 'Refreshing...' : 'Sync Now'}
+          </Button>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3 text-sm text-gray-600">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Total Orders</p>
+            <p className="text-3xl font-black text-gray-900">
+              {metrics ? metrics.totalOrders.toLocaleString() : '—'}
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">across all statuses</p>
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Total Items</p>
+            <p className="text-3xl font-black text-gray-900">
+              {metrics ? metrics.totalItems.toLocaleString() : '—'}
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">includes picked & pending</p>
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Picker Window</p>
+            <p className="text-3xl font-black text-gray-900">
+              {metrics ? `${metrics.pickerWindowMinutes} min` : '—'}
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">recent window</p>
+          </div>
+        </div>
+
+        <div className="pt-3 border-t border-gray-100 text-xs font-bold uppercase tracking-[0.4em] text-gray-400 flex items-center gap-2">
+          <Info size={14} /> Data powered by `/ops/performance`
+        </div>
       </div>
     </div>
   );
