@@ -27,7 +27,11 @@ const Checkout: React.FC = () => {
     preview,
   } = useCheckoutFlow();
 
-  const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
+  const idempotencyKey = useMemo(
+    () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    [],
+  );
+  const paymentTokenId = useMemo(() => Math.floor(Math.random() * 1_000_000), []);
 
   const handleConfirm = async () => {
     if (!isAuthenticated) {
@@ -47,7 +51,7 @@ const Checkout: React.FC = () => {
       const data: any = await apiService.checkout.confirm(
         {
           cart_id: serverCartId,
-          payment_token_id: crypto.randomUUID(),
+          payment_token_id: paymentTokenId,
           fulfillment_type: method,
           branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
           delivery_slot_id: slotId || undefined,

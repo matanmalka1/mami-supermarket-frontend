@@ -1,5 +1,5 @@
 export interface Vehicle {
-  id: string;
+  id: number;
   driver: string;
   status: 'ON_ROUTE' | 'LOADING' | 'RETURNING' | 'STANDBY';
   load: string;
@@ -8,7 +8,7 @@ export interface Vehicle {
 }
 
 export interface StaffPerformance {
-  pickerId: string;
+  pickerId: number;
   avgPickTime: number;
   accuracyRate: number;
   itemsPicked: number;
@@ -26,7 +26,7 @@ export interface OpsPerformanceMetrics {
 }
 
 export interface StockRequest {
-  id: string;
+  id: number;
   productName: string;
   sku: string;
   quantity: number;
@@ -37,7 +37,7 @@ export interface StockRequest {
 }
 
 export type OpsAlert = {
-  id: string | number;
+  id: number;
   text: string;
   type?: string;
   severity?: string;

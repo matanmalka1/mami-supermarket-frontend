@@ -15,27 +15,27 @@ export interface CreateProductRequest {
   name: string;
   sku: string;
   price: number;
-  category_id: string;
+  category_id: number;
   description?: string;
 }
 export interface UpdateProductRequest {
   name?: string;
   sku?: string;
   price?: number;
-  category_id?: string;
+  category_id?: number;
   description?: string;
 }
 export interface InventoryCreateRequest {
-  product_id: string;
-  branch_id: string;
+  product_id: number;
+  branch_id: number;
   available_quantity: number;
   reserved_quantity?: number;
 }
 export interface InventoryResponse {
-  id: string;
-  branch_id: string;
+  id: number;
+  branch_id: number;
   branch_name: string;
-  product_id: string;
+  product_id: number;
   product_name: string;
   available_quantity: number;
   reserved_quantity: number;
@@ -49,7 +49,7 @@ export interface CreateBranchRequest {
   address: string;
 }
 export interface CreateDeliverySlotRequest {
-  branch_id: string;
+  branch_id: number;
   day_of_week: number;
   start_time: string;
   end_time: string;

@@ -25,16 +25,16 @@ export const opsService = {
     });
   },
 
-  updateOrderStatus: (oId: string, data: UpdateOrderStatusRequest) =>
+  updateOrderStatus: (oId: number, data: UpdateOrderStatusRequest) =>
     apiClient.patch<UpdateOrderStatusRequest, Order>(
       `/ops/orders/${oId}/status`,
       data,
     ),
-  getOrder: (id: string) =>
+  getOrder: (id: number) =>
     apiClient.get<Order, Order>(`/ops/orders/${id}`),
   updateItemStatus: (
-    orderId: string,
-    itemId: string,
+    orderId: number,
+    itemId: number,
     data: UpdateItemStatusRequest,
   ) =>
     apiClient.patch<UpdateItemStatusRequest, OrderItem>(
@@ -53,8 +53,8 @@ export const opsService = {
       data,
     ),
 
-  createBatch: (orderIds: string[]) =>
-    apiClient.post<string[], { id: string }[]>("/ops/batches", {
+  createBatch: (orderIds: number[]) =>
+    apiClient.post<number[], { id: number }[]>("/ops/batches", {
       orderIds,
     }),
 };

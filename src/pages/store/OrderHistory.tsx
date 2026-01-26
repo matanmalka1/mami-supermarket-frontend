@@ -23,8 +23,8 @@ import EmptyState from "@/components/shared/EmptyState";
 const OrderHistory: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
-  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -43,7 +43,7 @@ const OrderHistory: React.FC = () => {
     fetchOrders();
   }, []);
 
-  const handleDownloadInvoice = async (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleDownloadInvoice = async (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.stopPropagation();
     setDownloadingId(id);
     toast.loading(`Generating PDF invoice for #${id}...`, { id: "invoice" });
@@ -98,8 +98,8 @@ const OrderHistory: React.FC = () => {
                     <Package size={28} />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-black text-xl italic text-gray-900">
-                      #{order.orderNumber || order.id.slice(0, 8)}
+                      <h3 className="font-black text-xl italic text-gray-900">
+                      #{order.orderNumber || order.id?.toString().slice(0, 8)}
                     </h3>
                     <div className="flex gap-4 text-xs font-bold text-gray-400 uppercase tracking-widest">
                       <span className="flex items-center gap-1">

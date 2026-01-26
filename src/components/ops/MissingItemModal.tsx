@@ -6,10 +6,10 @@ import Button from "../ui/Button";
 import MissingItemReplacement from "@/components/ops/MissingItemReplacement";
 
 interface MissingItemModalProps {
-  itemId: string | null;
+  itemId: number | null;
   onClose: () => void;
   onUpdateStatus: (
-    itemId: string,
+    itemId: number,
     status: string,
     reason: string,
     replacement?: any,

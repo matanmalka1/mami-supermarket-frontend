@@ -7,7 +7,7 @@ export interface AuthRegisterRequest {
 }
 export interface AuthRegisterResponse {
   user: {
-    id: string;
+    id: number;
     email: string;
     full_name: string;
     role: string;

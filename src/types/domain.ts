@@ -18,14 +18,14 @@ export enum Urgency {
 }
 
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   icon?: string;
   description?: string;
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   sku: string;
   category: string;
@@ -41,25 +41,25 @@ export interface Product {
 }
 
 export interface OrderItem {
-  id: string;
-  productId: string;
+  id: number;
+  productId: number;
   product: Product;
   quantity: number;
   pickedStatus: 'PENDING' | 'PICKED' | 'MISSING' | 'REPLACED';
-  replacementProductId?: string;
+  replacementProductId?: number;
 }
 
 export interface DeliverySlot {
-  id: string;
+  id: number;
   startTime: string;
   endTime: string;
   date?: string;
 }
 
 export interface Order {
-  id: string;
+  id: number;
   orderNumber: string;
-  customerId: string;
+  customerId: number;
   customer?: {
     fullName: string;
     phone: string;

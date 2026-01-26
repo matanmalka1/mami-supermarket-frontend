@@ -1,5 +1,5 @@
 export interface InventoryProduct {
-  id: string;
+  id: number;
   name: string;
   sku: string;
   imageUrl?: string;
@@ -7,12 +7,12 @@ export interface InventoryProduct {
 }
 
 export interface InventoryBranch {
-  id?: string;
+  id?: number;
   name?: string;
 }
 
 export interface InventoryRow {
-  id: string;
+  id: number;
   availableQuantity?: number;
   reservedQuantity?: number;
   available_quantity?: number;

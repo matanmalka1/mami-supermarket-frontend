@@ -10,9 +10,9 @@ interface PickingItemRowProps {
   item: any;
   isExpanded: boolean;
   onToggle: () => void;
-  onUpdateStatus: (itemId: string, status: string) => void;
-  onReportMissing: (itemId: string) => void;
-  onReportDamage: (itemId: string) => Promise<void> | void;
+  onUpdateStatus: (itemId: number, status: string) => void;
+  onReportMissing: (itemId: number) => void;
+  onReportDamage: (itemId: number) => Promise<void> | void;
 }
 
 const PickingItemRow: React.FC<PickingItemRowProps> = ({ 

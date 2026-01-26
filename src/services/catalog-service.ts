@@ -3,8 +3,8 @@ import { Category, Product } from "../types/domain";
 
 // Interfaces for catalog-service
 export interface ProductSearchParams {
-  categoryId?: string;
-  branchId?: string;
+  categoryId?: number;
+  branchId?: number;
   q?: string;
   limit?: number;
   offset?: number;
@@ -16,7 +16,7 @@ export const catalogService = {
   getCategories: () =>
     apiClient.get<Category[], Category[]>("/catalog/categories"),
 
-  getProduct: (id: string) =>
+  getProduct: (id: number) =>
     apiClient.get<void, Product>(`/catalog/products/${id}`),
 
   getProducts: (params: ProductSearchParams) =>
@@ -29,7 +29,7 @@ export const catalogService = {
     
   getAutocomplete: (
     q: string,
-    options: { branchId?: string; limit?: number } = {},
+    options: { branchId?: number; limit?: number } = {},
   ) =>
     apiClient.get<Product[], Product[]>("/catalog/products/autocomplete", {
       params: {

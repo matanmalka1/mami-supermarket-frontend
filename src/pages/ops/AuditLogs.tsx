@@ -6,11 +6,11 @@ import EmptyState from "@/components/shared/EmptyState";
 import { apiService } from "@/services/api";
 
 type AuditLog = {
-  id: string;
+  id: number;
   entityType: string;
   action: string;
   actorEmail?: string | null;
-  actorUserId?: string | null;
+  actorUserId?: number | null;
   createdAt?: string;
   context?: Record<string, unknown>;
 };

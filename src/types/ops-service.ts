@@ -2,14 +2,14 @@
 export interface UpdateItemStatusRequest {
   picked_status: string;
   reason?: string;
-  replacement_product_id?: string;
+  replacement_product_id?: number;
 }
 export interface UpdateOrderStatusRequest {
   status: string;
 }
 export interface CreateStockRequest {
-  branch_id: string;
-  product_id: string;
+  branch_id: number;
+  product_id: number;
   quantity: number;
   request_type: string;
 }
@@ -21,7 +21,7 @@ export interface GetOrdersParams {
   offset?: number;
 }
 export interface OpsAlert {
-  id: string;
+  id: number;
   text: string;
   type?: string;
   severity?: string;

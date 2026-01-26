@@ -20,8 +20,14 @@ export const usePicking = (orderId?: string) => {
     if (!orderId || isBatchMode) return;
     setLoading(true);
     setError(null);
+    const parsedOrderId = Number(orderId);
+    if (Number.isNaN(parsedOrderId)) {
+      setError("Invalid order identifier");
+      setLoading(false);
+      return;
+    }
     try {
-      const data = await apiService.ops.getOrder(orderId);
+      const data = await apiService.ops.getOrder(parsedOrderId);
       setOrder(data);
       setItems(data.items || []);
     } catch (err: any) {
@@ -53,14 +59,18 @@ export const usePicking = (orderId?: string) => {
   }, [fetchPickList, orderId, isBatchMode]);
 
   const updateItemStatus = async (
-    itemId: string,
+    itemId: number,
     status: string,
     reason?: string,
-    replacementId?: string,
+    replacementId?: number,
   ) => {
     if (!orderId) return;
     try {
-      const updated = await apiService.ops.updateItemStatus(orderId, itemId, {
+      const parsedOrderId = Number(orderId);
+      if (Number.isNaN(parsedOrderId)) {
+        throw new Error("Invalid order identifier");
+      }
+      const updated = await apiService.ops.updateItemStatus(parsedOrderId, itemId, {
         picked_status: status,
       });
       setItems((prev) =>

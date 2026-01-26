@@ -4,7 +4,7 @@ import Badge from "../../components/ui/Badge";
 
 interface Props {
   items?: Array<{
-    id: string;
+    id: number;
     title: string;
     sku?: string;
     quantity: number;
@@ -15,7 +15,7 @@ interface Props {
 
 const defaultItems: Props["items"] = [
   {
-    id: "1",
+    id: 1,
     title: "Organic Milk 2L",
     sku: "SKU: 9422",
     quantity: 42,
@@ -23,7 +23,7 @@ const defaultItems: Props["items"] = [
     ago: "2 hours ago",
   },
   {
-    id: "2",
+    id: 2,
     title: "Artisan Baguette",
     sku: "SKU: 3341",
     quantity: 50,

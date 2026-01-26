@@ -39,11 +39,11 @@ describe("ProductDetail", () => {
   });
 
   it("loads product by id param and renders name", async () => {
-    mockGetProduct.mockResolvedValue({ id: "uuid-123", name: "Test Product" });
+    mockGetProduct.mockResolvedValue({ id: 123, name: "Test Product" });
     mockGetProducts.mockResolvedValue([]);
 
     renderWithRouter({
-      route: "/store/product/uuid-123",
+      route: "/store/product/123",
       path: "/store/product/:id",
       element: <ProductDetail />,
     });
@@ -53,6 +53,6 @@ describe("ProductDetail", () => {
     await waitFor(() => {
       expect(screen.getByText("Test Product")).toBeInTheDocument();
     });
-    expect(mockGetProduct).toHaveBeenCalledWith("uuid-123");
+    expect(mockGetProduct).toHaveBeenCalledWith(123);
   });
 });

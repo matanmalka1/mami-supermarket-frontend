@@ -11,9 +11,9 @@ import {
 
 type InventoryTableProps = {
   rows: InventoryRow[];
-  activeMenuId: string | null;
-  onMenuToggle: (id: string | null) => void;
-  onUpdateStock: (id: string, qty: number) => void;
+  activeMenuId: number | null;
+  onMenuToggle: (id: number | null) => void;
+  onUpdateStock: (id: number, qty: number) => void;
   onViewAnalytics: (row: InventoryRow) => void;
   onViewRelocation: (row: InventoryRow) => void;
 };

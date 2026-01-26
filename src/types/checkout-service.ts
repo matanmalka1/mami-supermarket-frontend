@@ -1,13 +1,13 @@
 // Types for checkout-service
 export type CheckoutPreviewPayload = {
-  cart_id: string;
+  cart_id: number;
   fulfillment_type: "DELIVERY" | "PICKUP";
-  branch_id?: string;
-  delivery_slot_id?: string;
+  branch_id?: number;
+  delivery_slot_id?: number;
   address?: string;
 };
 
 export type CheckoutConfirmPayload = CheckoutPreviewPayload & {
-  payment_token_id: string;
+  payment_token_id: number;
   save_as_default?: boolean;
 };

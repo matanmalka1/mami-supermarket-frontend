@@ -58,7 +58,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
           input={
             <input
               {...register("branchId")}
-              placeholder="UUID of branch"
+              placeholder="ID of branch"
               className={`w-full bg-gray-50 border ${errors.branchId ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold`}
             />
           }
@@ -69,7 +69,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
           input={
             <input
               {...register("productId")}
-              placeholder="UUID of product"
+              placeholder="ID of product"
               className={`w-full bg-gray-50 border ${errors.productId ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold`}
             />
           }

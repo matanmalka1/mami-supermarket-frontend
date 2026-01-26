@@ -1,19 +1,19 @@
 export interface BranchResponse {
-  id: string;
+  id: number;
   name: string;
   address: string;
   isActive: boolean;
 }
 
 export interface DeliverySlotResponse {
-  id: string;
-  branchId: string;
+  id: number;
+  branchId: number;
   dayOfWeek: number;
   startTime: string;
   endTime: string;
 }
 
 export type DeliverySlotOption = {
-  id: string;
+  id: number;
   label: string;
 };

@@ -25,7 +25,7 @@ const ADMIN_ENDPOINTS = {
 export const adminService = {
   getInventory: () => apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.inventory),
   updateStock: (
-    id: string,
+    id: number,
     data: { availableQuantity: number; reservedQuantity: number },
   ) =>
     apiClient.patch<
@@ -37,12 +37,12 @@ export const adminService = {
     }),
   getProducts: (params?: Record<string, any>) =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.productsSearch, { params }),
-  updateProduct: (id: string, data: UpdateProductRequest) =>
+  updateProduct: (id: number, data: UpdateProductRequest) =>
     apiClient.patch<UpdateProductRequest, void>(
       `${ADMIN_ENDPOINTS.adminProducts}/${id}`,
       data,
     ),
-  toggleProduct: (id: string, active: boolean) =>
+  toggleProduct: (id: number, active: boolean) =>
     apiClient.patch<void, void>(
       `${ADMIN_ENDPOINTS.adminProducts}/${id}/toggle`,
       null,
@@ -61,7 +61,7 @@ export const adminService = {
   getStockRequests: (params?: Record<string, any>) =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.adminStockRequests, { params }),
   resolveStockRequest: (
-    id: string,
+    id: number,
     data: {
       status: StockRequestStatus;
       approvedQuantity?: number;
@@ -74,7 +74,7 @@ export const adminService = {
     ),
   bulkResolveStockRequests: (
     items: {
-      request_id: string;
+      request_id: number;
       status: StockRequestStatus;
       approved_quantity?: number;
       rejection_reason?: string;
@@ -95,17 +95,17 @@ export const adminService = {
     apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
   getDeliverySlots: () =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
-  updateDeliverySlot: (id: string, data: {
+  updateDeliverySlot: (id: number, data: {
     day_of_week?: number;
     start_time?: string;
     end_time?: string;
-    branch_id?: string;
+    branch_id?: number;
   }) =>
     apiClient.patch<typeof data, void>(
       `${ADMIN_ENDPOINTS.deliverySlots}/${id}`,
       data,
     ),
-  toggleDeliverySlot: (id: string, active: boolean) =>
+  toggleDeliverySlot: (id: number, active: boolean) =>
     apiClient.patch<void, void>(
       `${ADMIN_ENDPOINTS.deliverySlots}/${id}/toggle`,
       null,

@@ -20,10 +20,17 @@ const ProductDetail: React.FC = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id) return;
+      const numericId = Number(id);
+      if (Number.isNaN(numericId)) {
+        setError("Invalid product ID");
+        setProduct(null);
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
-        const data = await apiService.catalog.getProduct(id);
+        const data = await apiService.catalog.getProduct(numericId);
         setProduct(data);
         addRecentlyViewedItem({
           id: data.id,

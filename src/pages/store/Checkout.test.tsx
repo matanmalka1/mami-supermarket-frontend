@@ -5,14 +5,12 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import { vi } from "vitest";
 import Checkout from "./Checkout";
 
-const { mockPreview, mockConfirm, mockNavigate, mockClearCart, mockRandom } =
-  vi.hoisted(() => ({
-    mockPreview: vi.fn(),
-    mockConfirm: vi.fn(),
-    mockNavigate: vi.fn(),
-    mockClearCart: vi.fn(),
-    mockRandom: vi.fn().mockReturnValue("uuid-123"),
-  }));
+const { mockPreview, mockConfirm, mockNavigate, mockClearCart } = vi.hoisted(() => ({
+  mockPreview: vi.fn(),
+  mockConfirm: vi.fn(),
+  mockNavigate: vi.fn(),
+  mockClearCart: vi.fn(),
+}));
 
 vi.mock("@/services/api", () => ({
   apiService: {
@@ -67,14 +65,8 @@ describe("Checkout", () => {
     mockConfirm.mockResolvedValue({ order_id: "order-9" });
     mockNavigate.mockReset();
     mockClearCart.mockReset();
-    mockRandom.mockReset();
-    mockRandom.mockReturnValue("uuid-123");
     mockPreview.mockClear();
     mockConfirm.mockClear();
-    Object.defineProperty(globalThis, "crypto", {
-      value: { randomUUID: mockRandom },
-      writable: true,
-    });
   });
 
   it("calls preview on mount and confirm with idempotency key", async () => {
@@ -103,9 +95,9 @@ describe("Checkout", () => {
         expect.objectContaining({
           cart_id: "cart-1",
           fulfillment_type: "DELIVERY",
-          payment_token_id: "uuid-123",
+          payment_token_id: expect.any(Number),
         }),
-        "uuid-123",
+        expect.any(String),
       ),
     );
     expect(mockClearCart).toHaveBeenCalled();

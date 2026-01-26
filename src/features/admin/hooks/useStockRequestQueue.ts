@@ -28,7 +28,7 @@ const buildResolvePayload = (request: StockRequest, status: StockRequestStatus) 
 
 const buildBulkItem = (request: StockRequest, status: StockRequestStatus) => {
   const item: {
-    request_id: string;
+    request_id: number;
     status: StockRequestStatus;
     approved_quantity?: number;
     rejection_reason?: string;
@@ -47,7 +47,7 @@ const buildBulkItem = (request: StockRequest, status: StockRequestStatus) => {
 export const useStockRequestQueue = () => {
   const [requests, setRequests] = useState<StockRequest[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
 
   const fetchRequests = useCallback(async () => {
@@ -67,7 +67,7 @@ export const useStockRequestQueue = () => {
     fetchRequests();
   }, [fetchRequests]);
 
-  const toggleSelect = (id: string) =>
+  const toggleSelect = (id: number) =>
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );

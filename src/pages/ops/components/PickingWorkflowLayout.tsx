@@ -13,12 +13,12 @@ import { Order, OrderItem } from "@/types/domain";
 interface Props {
   order: Order;
   items: OrderItem[];
-  expandedId: string | null;
-  missingItemId: string | null;
-  onToggleRow: (id: string) => void;
-  onUpdateStatus: (id: string, status: string, reason?: string, replacement?: any) => void;
-  onReportMissing: (id: string) => void;
-  onReportDamage: (id: string) => Promise<void> | void;
+  expandedId: number | null;
+  missingItemId: number | null;
+  onToggleRow: (id: number) => void;
+  onUpdateStatus: (id: number, status: string, reason?: string, replacement?: any) => void;
+  onReportMissing: (id: number) => void;
+  onReportDamage: (id: number) => Promise<void> | void;
   onWeightConfirm: () => void;
   weighingItem: OrderItem | null;
   resetScale: () => void;
@@ -29,7 +29,7 @@ interface Props {
   onSync: () => Promise<void>;
   onComplete: () => void;
   onBack: () => void;
-  setMissingItemId: (id: string | null) => void;
+  setMissingItemId: (id: number | null) => void;
 }
 
 const PickingWorkflowLayout: React.FC<Props> = ({

@@ -1,13 +1,13 @@
 export interface CartItemResponse {
-  id: string;
-  productId: string;
+  id: number;
+  productId: number;
   quantity: number;
   unitPrice: number;
 }
 
 export interface CartResponse {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   totalAmount: number;
   items: CartItemResponse[];
 }

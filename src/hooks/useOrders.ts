@@ -3,10 +3,10 @@ import { apiService } from "../services/api";
 import { Order } from "../types/domain";
 import { useAsyncResource } from "./useAsyncResource";
 
-type RawOrder = Order & { orderId?: string };
+type RawOrder = Order & { orderId?: number };
 
 export const useOrders = () => {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const normalizeOrders = useCallback(
     (orders: RawOrder[]) =>
@@ -30,7 +30,7 @@ export const useOrders = () => {
     errorMessage: "Orders sync failed. Reconnecting...",
   });
 
-  const toggleSelect = useCallback((id: string) => {
+  const toggleSelect = useCallback((id: number) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );

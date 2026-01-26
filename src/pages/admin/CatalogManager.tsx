@@ -53,7 +53,7 @@ const CatalogManager: React.FC = () => {
           name: values.name,
           sku: values.sku,
           price: Number(values.price),
-          category_id: values.categoryId || undefined,
+          category_id: values.categoryId ? Number(values.categoryId) : undefined,
           description: values.description,
         });
         toast.success("Product updated");
@@ -62,7 +62,9 @@ const CatalogManager: React.FC = () => {
           name: values.name,
           sku: values.sku,
           price: Number(values.price),
-          category_id: values.categoryId || categories[0]?.id,
+          category_id: values.categoryId
+            ? Number(values.categoryId)
+            : categories[0]?.id,
           description: values.description,
         });
         toast.success("Product created");

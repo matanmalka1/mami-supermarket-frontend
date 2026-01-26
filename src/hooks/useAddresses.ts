@@ -37,7 +37,7 @@ export const useAddresses = () => {
       const saved = await apiService.profile.addAddress(address);
       setAddresses((prev) => [
         ...prev,
-        saved || { ...address, id: Date.now().toString() },
+        saved || { ...address, id: Date.now() },
       ]);
       toast.success("Address added");
     } catch {
@@ -45,7 +45,7 @@ export const useAddresses = () => {
     }
   };
 
-  const deleteAddress = async (id: string) => {
+  const deleteAddress = async (id: number) => {
     try {
       await apiService.profile.deleteAddress(id);
       setAddresses((prev) => prev.filter((a) => a.id !== id));
@@ -63,7 +63,7 @@ export const useAddresses = () => {
     );
   };
 
-  const setDefault = async (id: string) => {
+  const setDefault = async (id: number) => {
     try {
       await apiService.profile.setDefaultAddress(id);
       setAddresses((prev) =>

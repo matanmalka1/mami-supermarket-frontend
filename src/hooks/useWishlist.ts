@@ -1,14 +1,35 @@
+
 import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "freshmarket:wishlist";
 
-const readInitialWishlist = (): string[] => {
+export type WishlistItem = {
+  id: number;
+  note?: string;
+  priority?: number;
+};
+
+const readInitialWishlist = (): WishlistItem[] => {
   if (typeof window === "undefined") return [];
   try {
     const value = window.localStorage.getItem(STORAGE_KEY);
     if (!value) return [];
     const parsed = JSON.parse(value);
-    if (Array.isArray(parsed)) return parsed.filter((item) => typeof item === "string");
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((item) => {
+          if (typeof item === "number") return { id: item };
+          if (typeof item === "object" && item !== null && typeof item.id === "number") {
+            return {
+              id: item.id,
+              note: typeof item.note === "string" ? item.note : undefined,
+              priority: typeof item.priority === "number" ? item.priority : undefined,
+            };
+          }
+          return null;
+        })
+        .filter((item): item is WishlistItem => !!item && !Number.isNaN(item.id));
+    }
   } catch {
     // ignore malformed values
   }
@@ -16,7 +37,7 @@ const readInitialWishlist = (): string[] => {
 };
 
 export const useWishlist = () => {
-  const [items, setItems] = useState<string[]>(readInitialWishlist);
+  const [items, setItems] = useState<WishlistItem[]>(readInitialWishlist);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -27,18 +48,26 @@ export const useWishlist = () => {
     }
   }, [items]);
 
-  const toggleWishlist = useCallback((productId: string) => {
+  const toggleWishlist = useCallback((productId: number) => {
     setItems((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId],
+      prev.some((item) => item.id === productId)
+        ? prev.filter((item) => item.id !== productId)
+        : [...prev, { id: productId }],
     );
   }, []);
 
   const isWishlisted = useCallback(
-    (productId: string) => items.includes(productId),
+    (productId: number) => items.some((item) => item.id === productId),
     [items],
   );
 
-  return { items, toggleWishlist, isWishlisted };
+  const updateWishlistItem = useCallback((productId: number, changes: Partial<Omit<WishlistItem, "id">>) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === productId ? { ...item, ...changes } : item
+      )
+    );
+  }, []);
+
+  return { items, toggleWishlist, isWishlisted, updateWishlistItem };
 };

@@ -5,7 +5,7 @@ import { useAsyncResource } from "./useAsyncResource";
 
 export const useCatalogManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState<string | number>("all");
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
   const fetchProducts = useCallback(async () => {
@@ -18,7 +18,7 @@ export const useCatalogManager = () => {
     errorMessage: "Failed to load catalog",
   });
 
-  const deactivateProduct = async (id: string) => {
+  const deactivateProduct = async (id: number) => {
     try {
       await apiService.admin.toggleProduct(id, false);
       toast.success("Product deactivated");
@@ -28,18 +28,21 @@ export const useCatalogManager = () => {
     }
   };
 
-  const filteredProducts = products.filter((p) => {
-    const name = (p.name || "").toLowerCase();
-    const sku = (p.sku || "").toLowerCase();
-    const matchesSearch =
-      name.includes(searchTerm.toLowerCase()) ||
-      sku.includes(searchTerm.toLowerCase());
-    const matchesFilter =
-      activeFilter === "all" ||
-      p.category_id === activeFilter ||
-      p.categoryId === activeFilter;
-    return matchesSearch && matchesFilter;
-  });
+    const filteredProducts = products.filter((p) => {
+      const name = (p.name || "").toLowerCase();
+      const sku = (p.sku || "").toLowerCase();
+      const matchesSearch =
+        name.includes(searchTerm.toLowerCase()) ||
+        sku.includes(searchTerm.toLowerCase());
+      const matchesFilter =
+        activeFilter === "all" ||
+        [p.category_id, p.categoryId].some(
+          (cat) =>
+            cat !== undefined &&
+            String(cat) === String(activeFilter),
+        );
+      return matchesSearch && matchesFilter;
+    });
 
   return {
     products: filteredProducts,

@@ -3,11 +3,11 @@ import PickingItemRow from '@/components/ops/PickingItemRow';
 
 interface PickingItemsTableProps {
   items: any[];
-  expandedId: string | null;
-  onToggle: (id: string) => void;
-  onUpdateStatus: (id: string, status: string) => void;
-  onReportMissing: (id: string) => void;
-  onReportDamage: (id: string) => Promise<void> | void;
+  expandedId: number | null;
+  onToggle: (id: number) => void;
+  onUpdateStatus: (id: number, status: string) => void;
+  onReportMissing: (id: number) => void;
+  onReportDamage: (id: number) => Promise<void> | void;
 }
 
 const PickingItemsTable: React.FC<PickingItemsTableProps> = ({

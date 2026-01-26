@@ -8,8 +8,8 @@ import { formatOrderLabel } from "@/utils/orderLabel";
 
 interface OrderTableProps {
   orders: Order[];
-  selectedIds: string[];
-  onToggleSelect: (id: string) => void;
+  selectedIds: number[];
+  onToggleSelect: (id: number) => void;
 }
 
 const OrderTable: React.FC<OrderTableProps> = ({

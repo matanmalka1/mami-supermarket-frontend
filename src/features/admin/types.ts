@@ -1,15 +1,15 @@
 export type StockRequest = {
-  id: string;
+  id: number;
   productName?: string;
   productSku?: string;
-  productId?: string;
-  branchId?: string;
+  productId?: number;
+  branchId?: number;
   branchName?: string;
   quantity?: number;
   requestType?: string;
   status?: string;
   requester?: string;
   time?: string;
-  actorUserId?: string;
+  actorUserId?: number;
   createdAt?: string;
 };

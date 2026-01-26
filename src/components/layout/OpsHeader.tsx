@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Bell, Settings2, AlertTriangle, Info } from 'lucide-react';
 import SearchInput from '../ui/SearchInput';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { apiService } from '@/services/api';
 import { OpsAlert } from "@/types/ops";
 
@@ -10,8 +10,6 @@ const OpsHeader: React.FC = () => {
   const [alerts, setAlerts] = useState<OpsAlert[]>([]);
   const [alertsLoading, setAlertsLoading] = useState(true);
   const [alertsError, setAlertsError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
   const hasAlerts = alerts.length > 0;
   const formatAlertTime = (alert: OpsAlert) =>
     alert.time ||

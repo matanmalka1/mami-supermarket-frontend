@@ -2,7 +2,7 @@ export const RECENTLY_VIEWED_KEY = "mami_recent_items";
 const MAX_RECENT = 8;
 
 export type RecentlyViewedProduct = {
-  id: string;
+  id: number;
   name: string;
   category?: string;
   price: number;
@@ -19,7 +19,7 @@ const readStored = (): RecentlyViewedProduct[] => {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item) => typeof item?.id === "string");
+    return parsed.filter((item) => typeof item?.id === "number");
   } catch {
     return [];
   }

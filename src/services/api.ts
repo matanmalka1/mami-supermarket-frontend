@@ -27,7 +27,7 @@ export const apiService = {
   orders: {
     list: (params?: Record<string, unknown>) =>
       apiClient.get<Order[], Order[]>("/orders", { params }),
-    get: (id: string) => apiClient.get<Order, Order>(`/orders/${id}`),
-    cancel: (id: string) => apiClient.post(`/orders/${id}/cancel`),
+    get: (id: number) => apiClient.get<Order, Order>(`/orders/${id}`),
+    cancel: (id: number) => apiClient.post(`/orders/${id}/cancel`),
   },
 };

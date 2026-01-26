@@ -17,8 +17,8 @@ export const apiService = {
   },
   orders: {
     list: (params?: any) => apiClient.get<any[], any[]>('/orders', { params }),
-    get: (id: string) => apiClient.get<any, any>(`/orders/${id}`),
-    cancel: (id: string) => apiClient.post(`/orders/${id}/cancel`),
+    get: (id: number) => apiClient.get<any, any>(`/orders/${id}`),
+    cancel: (id: number) => apiClient.post(`/orders/${id}/cancel`),
   },
   checkout: {
     preview: (data: any) => apiClient.post('/checkout/preview', data),

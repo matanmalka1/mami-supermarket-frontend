@@ -7,7 +7,7 @@ import { currencyILS } from '../../utils/format';
 import { useWishlist } from '@/hooks/useWishlist';
 
 type CardProduct = {
-  id: string;
+  id: number;
   name: string;
   category?: string;
   price: number;
