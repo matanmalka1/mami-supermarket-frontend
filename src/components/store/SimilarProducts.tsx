@@ -11,12 +11,18 @@ const SimilarProducts: React.FC<Props> = ({ categoryId, excludeId }) => {
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
 
+  const parseCategoryId = () => {
+    if (!categoryId) return undefined;
+    const parsed = Number(categoryId);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  };
+
   const fetchSimilar = async (nextOffset = 0) => {
     setLoading(true);
     setError(null);
     try {
       const response = await apiService.catalog.getProducts({
-        categoryId,
+        categoryId: parseCategoryId(),
         limit: 8,
         offset: nextOffset,
       });

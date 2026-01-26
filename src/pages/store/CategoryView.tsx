@@ -12,11 +12,14 @@ import { Product } from '@/types/domain';
 
 const CategoryView: React.FC = () => {
   const { id } = useParams();
-  const { products, loading } = useCatalog(id);
+  const categoryId = id ? Number(id) : undefined;
+  const { products, loading } = useCatalog(categoryId);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<string[]>([]);
   const { categories } = useCatalogCategories();
-  const matchedCategory = categories.find((cat) => cat.id === id);
+  const matchedCategory = typeof categoryId === "number"
+    ? categories.find((cat) => cat.id === categoryId)
+    : undefined;
   const categoryLabel = matchedCategory?.name || id;
 
   const togglePreference = (p: string) => {

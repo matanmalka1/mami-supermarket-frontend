@@ -54,7 +54,7 @@ const Checkout: React.FC = () => {
           payment_token_id: paymentTokenId,
           fulfillment_type: method,
           branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
-          delivery_slot_id: slotId || undefined,
+          delivery_slot_id: slotId ?? undefined,
         },
         idempotencyKey,
       );
@@ -106,7 +106,7 @@ const Checkout: React.FC = () => {
           <ScheduleStep
             slots={deliverySlots}
             selected={slotId}
-            onSelect={setSlotId}
+            onSelect={(id) => setSlotId(id)}
             onBack={() => setStep("FULFILLMENT")}
             onNext={setStep}
           />

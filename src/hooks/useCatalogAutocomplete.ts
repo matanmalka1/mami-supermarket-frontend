@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { catalogService } from "@/services/catalog-service";
 import { useOptionalBranchSelection } from "@/context/branch-context-core";
 import type { Product } from "@/types/domain";
+import { normalizeProductList } from "@/utils/products";
 
 type UseCatalogAutocompleteOptions = {
   initialQuery?: string;
@@ -31,24 +32,14 @@ export const useCatalogAutocomplete = ({
       setLoading(true);
       const fetchSuggestions = async () => {
         try {
-          const primaryPayload = await catalogService.getAutocomplete(query.trim(), {
+          const payload = await catalogService.getProducts({
+            q: query.trim(),
             branchId,
             limit: requestLimit,
           });
           if (!active) return;
-          const primary = normalizeProductPayload(primaryPayload);
-          if (primary.length > 0) {
-            setSuggestions(limitUniqueProducts(primary, limit));
-            return;
-          }
-          const fallbackPayload = await catalogService.getProducts({
-            q: query.trim(),
-            branchId,
-            limit,
-          });
-          if (!active) return;
-          const fallback = normalizeProductPayload(fallbackPayload);
-          setSuggestions(limitUniqueProducts(fallback, limit));
+          const normalized = normalizeProductList(payload);
+          setSuggestions(limitUniqueProducts(normalized, limit));
         } catch {
           if (!active) return;
           setSuggestions([]);
@@ -79,16 +70,8 @@ export const useCatalogAutocomplete = ({
   };
 };
 
-const normalizeProductPayload = (
-  payload: Product[] | { items?: Product[] } | null | undefined,
-): Product[] => {
-  if (Array.isArray(payload)) return payload;
-  if (payload && Array.isArray(payload.items)) return payload.items;
-  return [];
-};
-
 const limitUniqueProducts = (items: Product[], limit: number): Product[] => {
-  const seen = new Set<string>();
+  const seen = new Set<number>();
   const output: Product[] = [];
   for (const item of items) {
     if (seen.has(item.id)) continue;

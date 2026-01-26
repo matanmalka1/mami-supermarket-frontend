@@ -1,20 +1,17 @@
 import { useCallback } from "react";
 import { apiService } from "../services/api";
-import { Product } from "../types/domain";
+import type { Product } from "../types/domain";
 import { useAsyncResource } from "./useAsyncResource";
+import { normalizeProductList } from "@/utils/products";
 
-export const useCatalog = (categoryId?: string, query?: string) => {
+export const useCatalog = (categoryId?: number, query?: string) => {
   const fetchCatalog = useCallback(async () => {
-    if (categoryId) {
-      // Fix: Use getProducts with categoryId parameter because getCategoryProducts is not defined in the catalog service
-      return apiService.catalog.getProducts({ categoryId });
-    }
-
-    if (query) {
-      return apiService.catalog.getProducts({ q: query });
-    }
-
-    return apiService.catalog.getProducts({});
+    const payload = await (categoryId
+      ? apiService.catalog.getProducts({ categoryId })
+      : query
+      ? apiService.catalog.getProducts({ q: query })
+      : apiService.catalog.getProducts({}));
+    return normalizeProductList(payload);
   }, [categoryId, query]);
 
   const { data: products, loading, refresh } = useAsyncResource<Product[]>(fetchCatalog, {

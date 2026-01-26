@@ -27,13 +27,22 @@ const buildUniqueSlotOptions = (slots: DeliverySlotResponse[]): DeliverySlotOpti
 
 type Method = "DELIVERY" | "PICKUP";
 
+const parseCartId = (value: number | string | undefined): number | null => {
+  if (typeof value === "number") return value;
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+  return null;
+};
+
 export const useCheckoutFlow = () => {
   const { isAuthenticated } = useAuth();
   const { selectedBranch } = useBranchSelection();
   const [method, setMethod] = useState<Method>("DELIVERY");
-  const [serverCartId, setServerCartId] = useState<string | null>(null);
+  const [serverCartId, setServerCartId] = useState<number | null>(null);
   const [deliverySlots, setDeliverySlots] = useState<DeliverySlotOption[]>([]);
-  const [slotId, setSlotId] = useState<string | null>(null);
+  const [slotId, setSlotId] = useState<number | null>(null);
   const [preview, setPreview] = useState<any>(null);
 
   useEffect(() => {
@@ -47,7 +56,7 @@ export const useCheckoutFlow = () => {
       try {
         const data = await apiService.cart.get();
         if (active) {
-          setServerCartId(data?.id || null);
+          setServerCartId(parseCartId(data?.id));
         }
       } catch {
         toast.error("Failed to sync cart with server");
@@ -61,7 +70,7 @@ export const useCheckoutFlow = () => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (method !== "DELIVERY" || !selectedBranch?.id) {
+    if (!selectedBranch?.id) {
       setDeliverySlots([]);
       setSlotId(null);
       return;
@@ -71,7 +80,7 @@ export const useCheckoutFlow = () => {
     let active = true;
     const loadSlots = async () => {
       try {
-        const data = await apiService.branches.listSlots({ branchId: selectedBranch.id });
+        const data = await apiService.branches.listSlots({ branchId: String(selectedBranch.id) });
         if (!active) return;
         setDeliverySlots(buildUniqueSlotOptions(data));
       } catch {
@@ -101,7 +110,7 @@ export const useCheckoutFlow = () => {
           cart_id: serverCartId,
           fulfillment_type: method,
           branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
-          delivery_slot_id: slotId || undefined,
+          delivery_slot_id: slotId ?? undefined,
         });
         setPreview(data);
       } catch (err: any) {

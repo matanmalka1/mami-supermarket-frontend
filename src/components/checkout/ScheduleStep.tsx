@@ -5,8 +5,8 @@ import { DeliverySlotOption } from "@/types/branch";
 
 type Props = {
   slots: DeliverySlotOption[];
-  selected: string | null;
-  onSelect: (s: string) => void;
+  selected: number | null;
+  onSelect: (s: number) => void;
   onBack: () => void;
   onNext: (step: CheckoutStep) => void;
 };
