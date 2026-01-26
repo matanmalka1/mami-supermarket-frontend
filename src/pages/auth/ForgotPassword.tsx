@@ -1,6 +1,5 @@
 
-import React, { useState } from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Mail, ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
