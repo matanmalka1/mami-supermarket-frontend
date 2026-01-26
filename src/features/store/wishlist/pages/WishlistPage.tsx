@@ -6,8 +6,10 @@ import ProductCard from "@/components/store/ProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistProducts } from "@/features/store/wishlist/hooks/useWishlistProducts";
 
+import type { WishlistItem } from "@/hooks/useWishlist";
+
 const WishlistPage: React.FC = () => {
-  const { items } = useWishlist();
+  const { items, updateWishlistItem } = useWishlist();
   const { products, loading } = useWishlistProducts();
   const hasItems = items.length > 0;
 
@@ -26,7 +28,10 @@ const WishlistPage: React.FC = () => {
           title="Your wishlist is empty"
           description="Tap the heart on any product to keep it here for later."
           action={
-            <Link to="/store" className="text-xs font-black uppercase tracking-widest text-[#008A45]">
+            <Link
+              to="/store"
+              className="text-xs font-black uppercase tracking-widest text-[#008A45]"
+            >
               Continue shopping
             </Link>
           }
@@ -42,7 +47,10 @@ const WishlistPage: React.FC = () => {
           title="Wishlist items unavailable"
           description="One or more saved products cannot be found right now."
           action={
-            <Link to="/store" className="text-xs font-black uppercase tracking-widest text-[#008A45]">
+            <Link
+              to="/store"
+              className="text-xs font-black uppercase tracking-widest text-[#008A45]"
+            >
               Browse the store
             </Link>
           }
@@ -51,11 +59,17 @@ const WishlistPage: React.FC = () => {
     );
   }
 
+  // Helper to get WishlistItem by product id
+  const getWishlistItem = (productId: number): WishlistItem | undefined =>
+    items.find((item: WishlistItem) => item.id === productId);
+
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400 font-black">Favorites</p>
+          <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400 font-black">
+            Favorites
+          </p>
           <h1 className="text-3xl font-black tracking-tighter">My Wishlist</h1>
         </div>
         <Link
@@ -66,20 +80,54 @@ const WishlistPage: React.FC = () => {
         </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            item={{
-              id: product.id,
-              name: product.name,
-              category: product.category,
-              price: product.price,
-              image: product.imageUrl,
-              oldPrice: product.oldPrice,
-              unit: product.unit,
-            }}
-          />
-        ))}
+        {products.map((product) => {
+          const wishlistItem = getWishlistItem(product.id);
+          return (
+            <div key={product.id} className="relative">
+              <ProductCard
+                item={{
+                  id: product.id,
+                  name: product.name,
+                  category: product.category,
+                  price: product.price,
+                  image: product.imageUrl,
+                  oldPrice: product.oldPrice,
+                  unit: product.unit,
+                }}
+              />
+              <div className="mt-2 p-2 bg-gray-50 rounded shadow-sm">
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-semibold">Note:</label>
+                  <input
+                    type="text"
+                    className="border px-2 py-1 rounded text-xs"
+                    value={wishlistItem?.note || ""}
+                    onChange={(e) =>
+                      updateWishlistItem(product.id, { note: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <label className="text-xs font-semibold">Priority:</label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={5}
+                    className="border px-2 py-1 rounded text-xs w-16"
+                    value={wishlistItem?.priority ?? ""}
+                    onChange={(e) =>
+                      updateWishlistItem(product.id, {
+                        priority: e.target.value
+                          ? Number(e.target.value)
+                          : undefined,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

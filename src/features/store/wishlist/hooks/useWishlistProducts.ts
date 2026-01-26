@@ -4,13 +4,15 @@ import { catalogService } from "@/services/catalog-service";
 import { Product } from "@/types/domain";
 import { useWishlist } from "@/hooks/useWishlist";
 
+import type { WishlistItem } from "@/hooks/useWishlist";
+
 export const useWishlistProducts = () => {
   const { items } = useWishlist();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const ids = Array.from(new Set(items));
+    const ids = Array.from(new Set(items.map((item: WishlistItem) => item.id)));
     if (!ids.length) {
       setProducts([]);
       setLoading(false);
