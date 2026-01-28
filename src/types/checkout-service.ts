@@ -1,6 +1,6 @@
 // Types for checkout-service
 export type CheckoutPreviewPayload = {
-  cart_id: number;
+  cart_id: number | string;
   fulfillment_type: "DELIVERY" | "PICKUP";
   branch_id?: number;
   delivery_slot_id?: number;

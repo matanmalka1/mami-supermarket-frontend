@@ -44,6 +44,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/api/v1": {
+        target: proxyTarget,
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

@@ -100,6 +100,24 @@ describe("useCheckoutFlow", () => {
     });
   });
 
+  it("should accept string cart IDs so preview still runs", async () => {
+    apiService.cart = {
+      get: vi.fn().mockResolvedValue({ id: "cart-abc" }),
+    } as any;
+    apiService.checkout = {
+      preview: vi.fn().mockResolvedValue({ total: 55 }),
+    } as any;
+    const { result } = renderHook(() => useCheckoutFlow());
+    await waitFor(() => {
+      expect(result.current.serverCartId).toBe("cart-abc");
+    });
+    await waitFor(() => {
+      expect(apiService.checkout.preview).toHaveBeenCalledWith(
+        expect.objectContaining({ cart_id: "cart-abc" }),
+      );
+    });
+  });
+
   it("should fetch delivery slots when branch changes", async () => {
     (apiService.branches.listSlots as any) = vi.fn().mockResolvedValue([
       { id: 1, startTime: "10:00", endTime: "12:00" },

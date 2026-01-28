@@ -11,8 +11,11 @@ type Props = {
   total: number;
   loading: boolean;
   onBack: () => void;
-  onConfirm: () => void;
-  cartItems: CartItem[];
+  onConfirm: (paymentTokenId: number) => void;
+  onCreatePaymentToken?: (
+    cardDetails: any,
+  ) => Promise<{ payment_token_id: number }>;
+  cartItems?: CartItem[];
 };
 
 const formatCardNumber = (value: string) => {
@@ -35,13 +38,16 @@ export const PaymentStep: React.FC<Props> = ({
   loading,
   onBack,
   onConfirm,
+  onCreatePaymentToken,
 }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolderName, setCardHolderName] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
 
-  const handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCardNumberChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setCardNumber(formatCardNumber(event.target.value));
   };
 
@@ -51,6 +57,27 @@ export const PaymentStep: React.FC<Props> = ({
 
   const handleCvvChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCvv(event.target.value.replace(/\D/g, "").slice(0, 4));
+  };
+
+  const [error, setError] = useState<string | null>(null);
+
+  const handleConfirmAndPay = async () => {
+    setError(null);
+    try {
+      let paymentTokenId = 1;
+      if (onCreatePaymentToken) {
+        const result = await onCreatePaymentToken({
+          cardNumber,
+          cardHolderName,
+          expiry,
+          cvv,
+        });
+        paymentTokenId = result.payment_token_id;
+      }
+      onConfirm(paymentTokenId);
+    } catch (e: any) {
+      setError(e?.message || "Failed to create payment token");
+    }
   };
 
   return (
@@ -140,6 +167,9 @@ export const PaymentStep: React.FC<Props> = ({
           </div>
         </div>
       </div>
+      {error && (
+        <div className="text-red-600 font-bold text-center">{error}</div>
+      )}
       <div className="flex gap-4">
         <Button variant="ghost" className="flex-1 h-16" onClick={onBack}>
           Back
@@ -148,7 +178,7 @@ export const PaymentStep: React.FC<Props> = ({
           size="lg"
           className="flex-[2] h-16 rounded-2xl"
           loading={loading}
-          onClick={onConfirm}
+          onClick={handleConfirmAndPay}
         >
           Confirm & Pay {currencyILS(total)}
         </Button>

@@ -27,20 +27,11 @@ const buildUniqueSlotOptions = (slots: DeliverySlotResponse[]): DeliverySlotOpti
 
 type Method = "DELIVERY" | "PICKUP";
 
-const parseCartId = (value: number | string | undefined): number | null => {
-  if (typeof value === "number") return value;
-  if (typeof value === "string") {
-    const parsed = Number(value);
-    return Number.isNaN(parsed) ? null : parsed;
-  }
-  return null;
-};
-
 export const useCheckoutFlow = () => {
   const { isAuthenticated } = useAuth();
   const { selectedBranch } = useBranchSelection();
   const [method, setMethod] = useState<Method>("DELIVERY");
-  const [serverCartId, setServerCartId] = useState<number | null>(null);
+  const [serverCartId, setServerCartId] = useState<string | number | null>(null);
   const [deliverySlots, setDeliverySlots] = useState<DeliverySlotOption[]>([]);
   const [slotId, setSlotId] = useState<number | null>(null);
   const [preview, setPreview] = useState<any>(null);
@@ -56,7 +47,7 @@ export const useCheckoutFlow = () => {
       try {
         const data = await apiService.cart.get();
         if (active) {
-          setServerCartId(parseCartId(data?.id));
+          setServerCartId(data?.id ?? null);
         }
       } catch {
         toast.error("Failed to sync cart with server");

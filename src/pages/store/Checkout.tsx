@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { useCart } from "@/context/CartContext";
-import CheckoutStepper, { CheckoutStep } from "@/components/checkout/CheckoutStepper";
+import CheckoutStepper, {
+  CheckoutStep,
+} from "@/components/checkout/CheckoutStepper";
 import FulfillmentStep from "@/components/checkout/FulfillmentStep";
 import ScheduleStep from "@/components/checkout/ScheduleStep";
 import PaymentStep from "@/components/checkout/PaymentStep";
@@ -31,9 +33,13 @@ const Checkout: React.FC = () => {
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     [],
   );
-  const paymentTokenId = useMemo(() => Math.floor(Math.random() * 1_000_000), []);
 
-  const handleConfirm = async () => {
+  // Store the payment token id from PaymentStep
+  const [paymentTokenId, setPaymentTokenId] = useState<number | null>(null);
+
+  // Called by PaymentStep after payment token is created
+  const handleConfirm = async (tokenId: number) => {
+    setPaymentTokenId(tokenId);
     if (!isAuthenticated) {
       toast.error("Sign in to complete the order");
       return;
@@ -51,7 +57,7 @@ const Checkout: React.FC = () => {
       const data: any = await apiService.checkout.confirm(
         {
           cart_id: serverCartId,
-          payment_token_id: paymentTokenId,
+          payment_token_id: tokenId,
           fulfillment_type: method,
           branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
           delivery_slot_id: slotId ?? undefined,
@@ -68,8 +74,14 @@ const Checkout: React.FC = () => {
     }
   };
 
+  // Avoid calling navigate during render: useEffect for redirect
+  useEffect(() => {
+    if (items.length === 0 && !loading) {
+      navigate("/store");
+    }
+  }, [items.length, loading, navigate]);
+
   if (items.length === 0 && !loading) {
-    navigate("/store");
     return null;
   }
 
@@ -99,7 +111,11 @@ const Checkout: React.FC = () => {
 
       <div className="bg-white border rounded-[3rem] p-12 shadow-xl space-y-10 min-h-[500px]">
         {step === "FULFILLMENT" && (
-          <FulfillmentStep method={method} onSelect={setMethod} onNext={setStep} />
+          <FulfillmentStep
+            method={method}
+            onSelect={setMethod}
+            onNext={setStep}
+          />
         )}
 
         {step === "SCHEDULE" && (
@@ -121,6 +137,7 @@ const Checkout: React.FC = () => {
             loading={loading}
             onBack={() => setStep("SCHEDULE")}
             onConfirm={handleConfirm}
+            onCreatePaymentToken={apiService.checkout.createPaymentToken}
           />
         )}
       </div>
