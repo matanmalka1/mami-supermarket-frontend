@@ -10,9 +10,7 @@ import { apiErrorSchema } from "@/validation/apiError";
 const getBaseUrl = () => {
   const envUrl = (import.meta as any).env?.VITE_API_BASE_URL;
   if (envUrl && envUrl.trim() !== "") return envUrl.trim();
-  // In dev, point directly to backend if no env override is set
   if ((import.meta as any).env?.DEV) return "http://localhost:5000/api/v1";
-  // Default relative base (prod)
   return "/api/v1";
 };
 const BASE_URL = getBaseUrl();
@@ -128,7 +126,7 @@ apiClient.interceptors.response.use(
       code: "INTERNAL_ERROR",
       message: error.message || "Unknown network error",
     };
-    // Validate error shape with Zod
+    
     const parsed = apiErrorSchema.safeParse(apiError);
     if (!parsed.success) {
       apiError = {
