@@ -1,5 +1,5 @@
-import React from 'react';
-import PickingItemRow from '@/components/ops/PickingItemRow';
+import PickingItemRow from "@/components/ops/PickingItemRow";
+import BaseTable from "@/components/ui/BaseTable";
 
 interface PickingItemsTableProps {
   items: any[];
@@ -18,23 +18,22 @@ const PickingItemsTable: React.FC<PickingItemsTableProps> = ({
   onReportMissing,
   onReportDamage,
 }) => (
-  <div className="bg-white rounded-[3rem] border border-gray-100 shadow-xl overflow-hidden">
-    <table className="w-full text-left border-collapse">
-      <tbody className="divide-y divide-gray-50">
-        {items.map((item) => (
-          <PickingItemRow
-            key={item.id}
-            item={item}
-            isExpanded={expandedId === item.id}
-            onToggle={() => onToggle(item.id)}
-            onUpdateStatus={onUpdateStatus}
-            onReportMissing={onReportMissing}
-            onReportDamage={onReportDamage}
-          />
-        ))}
-      </tbody>
-    </table>
-  </div>
+  <BaseTable
+    data={items}
+    rowKey={(item) => item.id}
+    containerClassName="bg-white rounded-[3rem] border border-gray-100 shadow-xl overflow-hidden"
+    bodyClassName="divide-y divide-gray-50"
+    renderRow={(item) => (
+      <PickingItemRow
+        item={item}
+        isExpanded={expandedId === item.id}
+        onToggle={() => onToggle(item.id)}
+        onUpdateStatus={onUpdateStatus}
+        onReportMissing={onReportMissing}
+        onReportDamage={onReportDamage}
+      />
+    )}
+  />
 );
 
 export default PickingItemsTable;

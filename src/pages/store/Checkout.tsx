@@ -1,16 +1,15 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { useCart } from "@/context/CartContext";
-import CheckoutStepper, {
-  CheckoutStep,
-} from "@/components/checkout/CheckoutStepper";
+import CheckoutStepper, {CheckoutStep} from "@/components/checkout/CheckoutStepper";
 import FulfillmentStep from "@/components/checkout/FulfillmentStep";
 import ScheduleStep from "@/components/checkout/ScheduleStep";
 import PaymentStep from "@/components/checkout/PaymentStep";
 import Button from "@/components/ui/Button";
 import { useCheckoutFlow } from "@/hooks/useCheckoutFlow";
+import { OrderSuccessSnapshot } from "@/types/order-success";
+import { saveOrderSnapshot } from "@/utils/order";
 
 const Checkout: React.FC = () => {
   const { items, total, clearCart } = useCart();
@@ -66,9 +65,51 @@ const Checkout: React.FC = () => {
         },
         idempotencyKey,
       );
-      clearCart();
       const orderId = data?.order_id || data?.orderId || data?.id || "order";
-      navigate(`/store/order-success/${orderId}`);
+      const resolvedOrderId = String(orderId);
+      const subtotalBefore = preview?.cart_total
+        ? Number(preview.cart_total)
+        : total;
+      const deliveryFeeBefore =
+        preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
+          ? Number(preview.delivery_fee)
+          : 0;
+      const slotLabel = deliverySlots.find((slot) => slot.id === slotId)?.label;
+      const estimatedDelivery =
+        method === "DELIVERY"
+          ? slotLabel
+            ? `Delivery window ${slotLabel}`
+            : "Delivery window pending"
+          : selectedBranch
+            ? `Pickup ready at ${selectedBranch.name}`
+            : "Pickup time pending";
+      const orderSnapshot: OrderSuccessSnapshot = {
+        orderId: resolvedOrderId,
+        orderNumber:
+          String(data?.order_number || data?.orderNumber || resolvedOrderId),
+        fulfillmentType: method,
+        items: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          image: item.image,
+          unit: item.unit,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        subtotal: subtotalBefore,
+        deliveryFee: deliveryFeeBefore,
+        total: subtotalBefore + deliveryFeeBefore,
+        estimatedDelivery,
+        deliverySlot: slotLabel,
+        pickupBranch: method === "PICKUP" ? selectedBranch?.name : undefined,
+        deliveryAddress:
+          method === "PICKUP" ? selectedBranch?.address : undefined,
+      };
+      saveOrderSnapshot(resolvedOrderId, orderSnapshot);
+      clearCart();
+      navigate(`/store/order-success/${resolvedOrderId}`, {
+        state: { snapshot: orderSnapshot },
+      });
     } catch (err: any) {
       setError(err.message || "Checkout failed. Please try again.");
     } finally {

@@ -1,12 +1,60 @@
-
-import React from 'react';
+import React, { useEffect, useState } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { useParams, Link } from 'react-router';
-import { CheckCircle2, Package, Truck, Home } from 'lucide-react';
-import Button from '@/components/ui/Button';
+import { useLocation, useParams, Link } from "react-router";
+import { CheckCircle2 } from "lucide-react";
+import Button from "@/components/ui/Button";
+import OrderSummaryCard from "@/components/store/OrderSummaryCard";
+import OrderProgressTimeline from "@/components/store/OrderProgressTimeline";
+import { OrderSuccessSnapshot } from "@/types/order-success";
+import { useAddresses } from "@/hooks/useAddresses";
+import { loadOrderSnapshot } from "@/utils/order";
+
+type OrderSuccessState = {
+  snapshot?: OrderSuccessSnapshot;
+};
+
+const formatAddressLine = (address?: Record<string, any>) => {
+  if (!address) return undefined;
+  const parts = [
+    address.address_line ?? address.addressLine,
+    address.city,
+    address.postal_code ?? address.postalCode,
+    address.country,
+  ].filter(Boolean);
+  return parts.join(", ");
+};
 
 const OrderSuccess: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation<OrderSuccessState>();
+  const [snapshot, setSnapshot] = useState<OrderSuccessSnapshot | null>(
+    location.state?.snapshot ?? null,
+  );
+  const { addresses } = useAddresses();
+
+  useEffect(() => {
+    if (snapshot || !id) return;
+    const stored = loadOrderSnapshot(id);
+    if (stored) {
+      setSnapshot(stored);
+    }
+  }, [id, snapshot]);
+
+  const preferredAddress =
+    snapshot?.deliveryAddress ||
+    formatAddressLine(
+      addresses.find((addr) => addr.is_default ?? addr.isDefault) ??
+        addresses[0],
+    ) ||
+    undefined;
+
+  const estimatedDelivery =
+    snapshot?.estimatedDelivery || "Delivery window will be confirmed shortly.";
+  const fulfillmentLabel =
+    snapshot?.fulfillmentType === "PICKUP" ? "Pickup" : "Delivery";
+  const addressLabel =
+    preferredAddress ||
+    "Delivery address will be confirmed once your courier is en route.";
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-12">
@@ -18,33 +66,38 @@ const OrderSuccess: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        <h1 className="text-6xl font-black italic tracking-tighter">Ordered Successfully!</h1>
-        <p className="text-xl text-gray-500 font-bold">Order ID: <span className="text-[#008A45]">{id}</span></p>
+        <h1 className="text-6xl font-black italic tracking-tighter">
+          Ordered Successfully!
+        </h1>
+        <p className="text-xl text-gray-500 font-bold">
+          Order ID:{" "}
+          <span className="text-[#008A45]">
+            {snapshot?.orderNumber || id || "––"}
+          </span>
+        </p>
         <p className="text-gray-400 max-w-md mx-auto leading-relaxed">
-          Your items are now being routed to our optimized picking queue. 
+          Your items are now being routed to our optimized picking queue.
           We'll notify you when they are out for delivery.
         </p>
       </div>
 
-      <div className="bg-white border rounded-[3rem] p-12 shadow-xl space-y-10">
-        <div className="flex justify-between items-center relative">
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-100 -z-10" />
-          <div className="absolute top-1/2 left-0 w-1/4 h-1 bg-emerald-500 -z-10" />
-          {[
-            { icon: <Package size={20} />, label: 'Confirmed', active: true },
-            { icon: <CheckCircle2 size={20} />, label: 'Picking', active: false },
-            { icon: <Truck size={20} />, label: 'En Route', active: false },
-            { icon: <Home size={20} />, label: 'Delivered', active: false },
-          ].map((s, i) => (
-            <div key={i} className="flex flex-col items-center gap-3">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 shadow-sm ${s.active ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-gray-300 border-gray-100'}`}>
-                {s.icon}
-              </div>
-              <span className={`text-[10px] font-black uppercase tracking-widest ${s.active ? 'text-emerald-600' : 'text-gray-300'}`}>{s.label}</span>
-            </div>
-          ))}
+      <OrderProgressTimeline />
+
+      {snapshot ? (
+        <OrderSummaryCard
+          snapshot={snapshot}
+          addressLabel={addressLabel}
+          fulfillmentLabel={fulfillmentLabel}
+          estimatedDelivery={estimatedDelivery}
+        />
+      ) : (
+        <div className="bg-white border rounded-[3rem] p-12 shadow-xl">
+          <p className="text-sm text-gray-500">
+            We’re still preparing your summary. Check your order history if you
+            need a breakdown.
+          </p>
         </div>
-      </div>
+      )}
 
       <div className="flex gap-4 max-w-md mx-auto">
         <Link to="/store" className="flex-1">

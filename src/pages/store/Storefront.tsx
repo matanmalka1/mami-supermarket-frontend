@@ -10,6 +10,8 @@ import Section from "@/components/ui/Section";
 import Grid from "@/components/ui/Grid";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
 import { apiService } from "@/services/api";
 import { HeroSection, BenefitCard } from "@/components/store/StorefrontComponents";
 import { extractArrayPayload } from "@/utils/api-response";
@@ -48,9 +50,16 @@ const Storefront: React.FC = () => {
 
       <div ref={categoryRef} className="scroll-mt-32">
         {loading ? (
-          <div className="text-center text-gray-400 font-bold py-8">Loading categories...</div>
+          <div className="py-8">
+            <LoadingState label="Loading categories..." />
+          </div>
         ) : categories.length === 0 ? (
-          <div className="text-center text-gray-400 font-bold py-8">No categories available</div>
+          <div className="py-8">
+            <EmptyState
+              title="No categories available"
+              description="Our catalog is syncing. Check back soon."
+            />
+          </div>
         ) : (
           <Grid cols={6} gap={6}>
             {categories.map((cat) => (
@@ -75,9 +84,16 @@ const Storefront: React.FC = () => {
 
       <Section title="Today's Selection" subtitle={<><TrendingUp size={16} className="text-[#008A45]" /> Trending in your area</>} linkTo="/store/search">
         {loading ? (
-          <div className="text-center text-gray-400 font-bold py-8">Loading featured products...</div>
+          <div className="py-8">
+            <LoadingState label="Loading featured products..." />
+          </div>
         ) : featured.length === 0 ? (
-          <div className="text-center text-gray-400 font-bold py-8">No featured products</div>
+          <div className="py-8">
+            <EmptyState
+              title="No featured products"
+              description="We’ll refresh the spotlight soon."
+            />
+          </div>
         ) : (
           <Grid>{featured.map((item: any) => <ProductCard key={item.id} item={item} />)}</Grid>
         )}

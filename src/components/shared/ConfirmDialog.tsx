@@ -1,7 +1,5 @@
 import React from "react";
-import Modal from "@/components/ui/Modal";
-import Button from "@/components/ui/Button";
-import { AlertCircle } from "lucide-react";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 type ConfirmDialogProps = {
   isOpen: boolean;
@@ -26,39 +24,18 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   onConfirm,
   onClose,
 }) => (
-  <Modal
+  <ConfirmModal
     isOpen={isOpen}
-    onClose={onClose}
+    onCancel={onClose}
+    onConfirm={onConfirm}
     title={title}
+    description={message}
+    confirmLabel={confirmLabel}
+    cancelLabel={cancelLabel}
+    variant={variant}
+    loading={loading}
     size="sm"
-    footer={
-      <>
-        <Button variant="ghost" onClick={onClose} disabled={loading}>
-          {cancelLabel}
-        </Button>
-        <Button
-          variant={variant === "danger" ? "danger" : "primary"}
-          onClick={onConfirm}
-          loading={loading}
-        >
-          {confirmLabel}
-        </Button>
-      </>
-    }
-  >
-    <div className="flex items-start gap-4 py-2">
-      <div
-        className={`p-3 rounded-2xl shrink-0 ${
-          variant === "danger"
-            ? "bg-red-50 text-red-500"
-            : "bg-teal-50 text-[#006666]"
-        }`}
-      >
-        <AlertCircle size={24} />
-      </div>
-      <p className="text-gray-600 leading-relaxed font-medium">{message}</p>
-    </div>
-  </Modal>
+  />
 );
 
 export default ConfirmDialog;
