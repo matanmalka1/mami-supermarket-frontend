@@ -1,7 +1,6 @@
 import { apiClient } from "./api-client";
 import { Category, Product } from "../types/domain";
 
-// Interfaces for catalog-service
 export interface ProductSearchParams {
   categoryId?: number;
   branchId?: number;
@@ -19,14 +18,16 @@ export const catalogService = {
   getProduct: (id: number) =>
     apiClient.get<void, Product>(`/catalog/products/${id}`),
 
-  getProducts: (params: ProductSearchParams) =>
-    apiClient.get<Product[], Product[]>("/catalog/products/search", { params }),
+  getProducts: (params: ProductSearchParams = {}) =>
+    apiClient.get<Product[], Product[]>("/catalog/products/search", {
+      params,
+    }),
 
   getFeatured: (limit = 4) =>
     apiClient.get<Product[], Product[]>("/catalog/products/featured", {
       params: { limit },
     }),
-    
+
   getAutocomplete: (
     q: string,
     options: { branchId?: number; limit?: number } = {},

@@ -32,7 +32,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
   const handleShare = async () => {
     const shareData = {
       title: product.name,
-      text: `Check out this ${product.name} I found at FreshMarket!`,
+      text: `Check out this ${product.name} I found at Mami Supermarket!`,
       url: window.location.href,
     };
 
@@ -61,9 +61,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="text-4xl font-bold text-gray-900 font-mono">₪ {product.price}</span>
+          <span className="text-4xl font-bold text-gray-900 font-mono">
+            ₪ {product.price}
+          </span>
           {product.oldPrice && (
-            <span className="text-lg text-gray-300 line-through">₪ {product.oldPrice}</span>
+            <span className="text-lg text-gray-300 line-through">
+              ₪ {product.oldPrice}
+            </span>
           )}
         </div>
 
@@ -78,28 +82,36 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
 
         <div className="pt-8 space-y-6 border-t border-gray-100">
           <div className="space-y-4">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Select Quantity</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+              Select Quantity
+            </label>
             <div className="flex items-center w-fit border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
-              <button onClick={() => setQty(q => Math.max(1, q - 1))} className="p-4 hover:bg-gray-100 transition-colors">
+              <button
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                className="p-4 hover:bg-gray-100 transition-colors"
+              >
                 <Minus size={16} className="text-gray-400" />
               </button>
               <span className="w-12 text-center font-black text-sm">{qty}</span>
-              <button onClick={() => setQty(q => q + 1)} className="p-4 hover:bg-gray-100 transition-colors">
+              <button
+                onClick={() => setQty((q) => q + 1)}
+                className="p-4 hover:bg-gray-100 transition-colors"
+              >
                 <Plus size={16} className="text-gray-400" />
               </button>
             </div>
           </div>
 
           <div className="flex gap-4">
-            <Button 
+            <Button
               onClick={handleAddToCart}
-              variant="emerald" 
-              className="flex-1 h-14 rounded-xl text-sm font-black italic tracking-wide" 
+              variant="emerald"
+              className="flex-1 h-14 rounded-xl text-sm font-black italic tracking-wide"
               icon={<ShoppingCart size={18} />}
             >
               Add to Cart
             </Button>
-            <button 
+            <button
               onClick={handleShare}
               className="w-14 h-14 border border-gray-100 rounded-xl flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-50 transition-all active:scale-95 shadow-sm"
             >
@@ -113,7 +125,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                 <Truck size={20} />
               </div>
               <div>
-                <p className="font-bold text-gray-900 uppercase text-[9px] tracking-widest">Shipping</p>
+                <p className="font-bold text-gray-900 uppercase text-[9px] tracking-widest">
+                  Shipping
+                </p>
                 <p className="font-medium">Free Worldwide</p>
               </div>
             </div>
@@ -122,7 +136,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                 <ShieldCheck size={20} />
               </div>
               <div>
-                <p className="font-bold text-gray-900 uppercase text-[9px] tracking-widest">Warranty</p>
+                <p className="font-bold text-gray-900 uppercase text-[9px] tracking-widest">
+                  Warranty
+                </p>
                 <p className="font-medium">Coverage info not provided</p>
               </div>
             </div>

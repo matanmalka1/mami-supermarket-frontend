@@ -57,7 +57,7 @@ const FlashDeals: React.FC = () => {
           <div className="flex items-center gap-2 text-orange-600 font-black uppercase text-xs tracking-widest">
             <Zap size={16} fill="currentColor" /> Flash Deals
           </div>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight italic">Ending Soon</h2>
+          <h2 className="text-3xl font-black text-gray-900 tracking-tight italic">Ending Soon</h2>
         </div>
         <div className="bg-white px-8 py-4 rounded-3xl border border-orange-200 shadow-sm flex items-center gap-4">
           <Timer size={24} className="text-orange-500" />

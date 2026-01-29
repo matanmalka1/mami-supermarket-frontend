@@ -108,7 +108,7 @@ const LoginFormCard: React.FC<Props> = ({
       </form>
       <div className="text-center">
         <p className="text-sm font-bold text-gray-400">
-          New to FreshMarket?{" "}
+          New to Mami Supermarket?{" "}
           <Link
             to="/register"
             className="text-[#008A45] font-black hover:underline ml-1"

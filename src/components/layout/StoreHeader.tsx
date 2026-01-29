@@ -59,7 +59,7 @@ const StoreHeader: React.FC = () => {
               <div className="w-10 h-10 bg-[#008A45] rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-900/20">
                 <ShoppingBag size={24} />
               </div>
-              FRESHMARKET
+              Mami Supermarket
             </Link>
 
             <nav className="hidden lg:flex items-center gap-1">

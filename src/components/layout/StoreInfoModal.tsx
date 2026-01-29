@@ -17,7 +17,7 @@ const StoreInfoModal: React.FC<StoreInfoModalProps> = ({ infoModal, onClose }) =
       {infoModal?.title === "Our Mission" ? (
         <>
           <p className="text-gray-500 text-base leading-relaxed">
-            FreshMarket’s mission is to deliver a premium, high-fidelity grocery
+            Mami Supermarket's mission is to deliver a premium, high-fidelity grocery
             experience rooted in transparency, sustainability, and human care.
           </p>
           <p className="text-base text-gray-500 font-bold">

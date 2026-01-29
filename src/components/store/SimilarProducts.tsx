@@ -3,26 +3,19 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { apiService } from "@/services/api";
 import ProductCard from "./ProductCard";
 
-type Props = { categoryId?: string; excludeId?: string };
+type Props = { category?: string; excludeId?: string };
 
-const SimilarProducts: React.FC<Props> = ({ categoryId, excludeId }) => {
+const SimilarProducts: React.FC<Props> = ({ category, excludeId }) => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
-
-  const parseCategoryId = () => {
-    if (!categoryId) return undefined;
-    const parsed = Number(categoryId);
-    return Number.isNaN(parsed) ? undefined : parsed;
-  };
 
   const fetchSimilar = async (nextOffset = 0) => {
     setLoading(true);
     setError(null);
     try {
       const response = await apiService.catalog.getProducts({
-        categoryId: parseCategoryId(),
         limit: 8,
         offset: nextOffset,
       });
@@ -31,7 +24,12 @@ const SimilarProducts: React.FC<Props> = ({ categoryId, excludeId }) => {
         : Array.isArray(response)
           ? response
           : [];
-      const filtered = list.filter((p: any) => p.id !== excludeId);
+      const normalizedCategory = category?.trim().toLowerCase();
+      const filtered = list.filter((p: any) => {
+        if (excludeId && p.id === excludeId) return false;
+        if (!normalizedCategory) return true;
+        return p.category?.toLowerCase() === normalizedCategory;
+      });
       setItems(filtered);
       setOffset(nextOffset);
     } catch (err: any) {
@@ -44,8 +42,7 @@ const SimilarProducts: React.FC<Props> = ({ categoryId, excludeId }) => {
 
   useEffect(() => {
     fetchSimilar(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, excludeId]);
+  }, [category, excludeId]);
 
   return (
     <div className="py-24 space-y-8">

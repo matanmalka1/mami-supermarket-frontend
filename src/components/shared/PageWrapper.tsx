@@ -6,7 +6,7 @@ type PageWrapperProps = {
 };
 
 const PageWrapper: FC<PageWrapperProps> = ({ children, className = "" }) => (
-  <div className={`mx-auto w-[90vw] max-w-full px-2 ${className}`}>{children}</div>
+  <div className={`w-full px-4 sm:px-6 ${className}`}>{children}</div>
 );
 
 export default PageWrapper;

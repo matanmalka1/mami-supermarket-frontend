@@ -5,7 +5,10 @@ import * as productsUtils from "@/utils/products";
 
 vi.mock("@/services/api");
 
-const mockProducts = [{ id: 1, name: "P1" }];
+const mockProducts = [
+  { id: 1, name: "P1", category: "Produce" },
+  { id: 2, name: "P2", category: "Dairy" },
+];
 
 vi.spyOn(productsUtils, "normalizeProductList").mockImplementation(
   (x: any) => x,
@@ -27,23 +30,27 @@ describe("useCatalog", () => {
     });
   });
 
-  it("should fetch by categoryId", async () => {
+  it("should filter by category name", async () => {
     (apiService.catalog.getProducts as any) = vi
       .fn()
-      .mockResolvedValue([{ id: 2 }]);
-    const { result } = renderHook(() => useCatalog(5));
+      .mockResolvedValue(mockProducts);
+    const { result } = renderHook(() => useCatalog("Produce"));
     await waitFor(() => {
-      expect(result.current.products).toEqual([{ id: 2 }]);
+      expect(result.current.products).toEqual([
+        { id: 1, name: "P1", category: "Produce" },
+      ]);
     });
   });
 
   it("should fetch by query", async () => {
+    const queryResponse = [{ id: 3, name: "P3" }];
     (apiService.catalog.getProducts as any) = vi
       .fn()
-      .mockResolvedValue([{ id: 3 }]);
+      .mockResolvedValue(queryResponse);
     const { result } = renderHook(() => useCatalog(undefined, "milk"));
     await waitFor(() => {
-      expect(result.current.products).toEqual([{ id: 3 }]);
+      expect(result.current.products).toEqual(queryResponse);
+      expect(apiService.catalog.getProducts).toHaveBeenCalledWith({ q: "milk" });
     });
   });
 

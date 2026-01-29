@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { Lock } from "lucide-react";
 import { Category } from "@/types/domain";
 import PageWrapper from "../shared/PageWrapper";
 
@@ -10,28 +9,35 @@ type StoreFooterProps = {
 };
 
 const StoreFooter: React.FC<StoreFooterProps> = ({ categories, loading, onStaticLink }) => (
-  <footer className="bg-gray-50 border-t py-20">
-    <PageWrapper className="space-y-10">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
-        <div className="space-y-6">
-          <h4 className="font-black text-sm uppercase tracking-widest">
+  <footer className="border-t border-slate-200 bg-gradient-to-b from-white to-slate-50 py-20">
+    <PageWrapper className="space-y-14">
+      <div className="grid gap-10 md:grid-cols-[2fr,1fr,1fr]">
+        <div className="space-y-4">
+          <p className="text-xs uppercase tracking-[0.4em] text-emerald-500 font-black">
+            FreshMarket HQ
+          </p>
+          <h4 className="text-2xl font-black text-slate-900">Natural, local, ready.</h4>
+          <p className="text-sm text-slate-500 font-medium max-w-2xl">
+            We partner with trusted farms and fulfillment partners to keep your pantry stocked with curated essentials.
+            Expect quick fulfillment and consistent quality every time.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <h5 className="text-xs uppercase tracking-[0.4em] text-slate-400 font-black">
             Departments
-          </h4>
+          </h5>
           {loading ? (
-            <p className="text-sm text-gray-400 font-bold">
-              Loading departments...
-            </p>
+            <p className="text-sm text-slate-400">Loading departments…</p>
           ) : categories.length === 0 ? (
-            <p className="text-sm text-gray-400 font-bold">
-              Departments unavailable (backend feed missing)
-            </p>
+            <p className="text-sm text-slate-400">Departments unavailable</p>
           ) : (
-            <ul className="text-sm text-gray-500 space-y-3 font-medium">
-              {categories.slice(0, 4).map((cat) => (
+            <ul className="text-sm text-slate-600 space-y-2">
+              {categories.slice(0, 5).map((cat) => (
                 <li key={cat.id}>
                   <Link
                     to={`/store/category/${cat.id}`}
-                    className="hover:text-[#008A45] transition-colors"
+                    className="hover:text-emerald-600 transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -40,34 +46,16 @@ const StoreFooter: React.FC<StoreFooterProps> = ({ categories, loading, onStatic
             </ul>
           )}
         </div>
-        <div className="space-y-6">
-          <h4 className="font-black text-sm uppercase tracking-widest">
-            About FreshMarket
-          </h4>
-          <ul className="text-sm text-gray-500 space-y-3 font-medium">
-            <li
-              onClick={() => onStaticLink("Our Mission")}
-              className="hover:text-[#008A45] cursor-pointer transition-colors"
-            >
-              Our Mission
-            </li>
-            <li
-              onClick={() => onStaticLink("Verified Farmers")}
-              className="hover:text-[#008A45] cursor-pointer transition-colors"
-            >
-              Verified Farmers
-            </li>
-          </ul>
-        </div>
-        <div className="space-y-6">
-          <h4 className="font-black text-sm uppercase tracking-widest">
-            Client Care
-          </h4>
-          <ul className="text-sm text-gray-500 space-y-3 font-medium">
+
+        <div className="space-y-4">
+          <h5 className="text-xs uppercase tracking-[0.4em] text-slate-400 font-black">
+            Customer care
+          </h5>
+          <ul className="text-sm text-slate-600 space-y-2">
             <li>
               <Link
                 to="/store/account/settings"
-                className="hover:text-[#008A45] transition-colors"
+                className="hover:text-emerald-600 transition-colors"
               >
                 Help Center
               </Link>
@@ -75,25 +63,39 @@ const StoreFooter: React.FC<StoreFooterProps> = ({ categories, loading, onStatic
             <li>
               <Link
                 to="/store/account/orders"
-                className="hover:text-[#008A45] transition-colors"
+                className="hover:text-emerald-600 transition-colors"
               >
-                Track Delivery
+                Track delivery
               </Link>
+            </li>
+            <li
+              onClick={() => onStaticLink("Our Mission")}
+              className="hover:text-emerald-600 transition-colors cursor-pointer"
+            >
+              Our Mission
+            </li>
+            <li
+              onClick={() => onStaticLink("Verified Farmers")}
+              className="hover:text-emerald-600 transition-colors cursor-pointer"
+            >
+              Verified Farmers
             </li>
           </ul>
         </div>
-        <div className="space-y-10">
-          <div className="space-y-4">
-            <h4 className="font-black text-sm uppercase tracking-widest">
-              Internal Access
-            </h4>
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 bg-[#008A45]/5 text-[#008A45] px-4 py-2.5 rounded-xl text-xs font-black hover:bg-[#008A45]/10 transition-all italic border border-emerald-100"
-            >
-              <Lock size={14} /> OPS PORTAL
-            </Link>
-          </div>
+      </div>
+
+      <div className="flex flex-col gap-2 border-t border-white/40 pt-6 text-xs uppercase tracking-[0.35em] text-slate-400 md:flex-row md:items-center md:justify-between">
+        <span>© {new Date().getFullYear()} Mami Supermarket</span>
+        <div className="flex flex-wrap gap-4 text-[0.65rem]">
+          <Link to="/store/account/settings" className="hover:text-emerald-500">
+            Terms
+          </Link>
+          <Link to="/store/account/orders" className="hover:text-emerald-500">
+            Privacy
+          </Link>
+          <Link to="/store" className="hover:text-emerald-500">
+            Store
+          </Link>
         </div>
       </div>
     </PageWrapper>

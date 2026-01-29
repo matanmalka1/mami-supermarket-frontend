@@ -28,9 +28,11 @@ import StockRequestManager from "../pages/admin/StockRequestManager";
 import DeliverySlotManager from "../pages/admin/DeliverySlotManager";
 import GlobalSettings from "../pages/admin/GlobalSettings";
 import ManagerAnalytics from "../pages/admin/ManagerAnalytics";
+import ForbiddenPage from "../pages/errors/ForbiddenPage";
+import NotFoundPage from "../pages/errors/NotFoundPage";
 import { UserRole } from "../types/auth";
 import RoleGuard from "./guards/RoleGuard";
-import { normalizeRole, OPS_ROLES } from "../utils/roles";
+import { OPS_ROLES } from "../utils/roles";
 
 interface RouterProps {
   isAuthenticated: boolean;
@@ -49,20 +51,16 @@ export const AppRouter: React.FC<RouterProps> = ({
   login,
   logout,
 }) => {
-  const effectiveRole =
-    userRole || normalizeRole(localStorage.getItem("mami_role"));
 
   return (
     <Routes>
-      {!isAuthenticated ? (
-        <>
-          <Route path="/login" element={<Login onLogin={login} />} />
-          <Route path="/register" element={<Register onRegister={login} />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </>
-      ) : (
+      <Route path="/login" element={!isAuthenticated ? (<Login onLogin={login} />) : (<Navigate to="/store" replace />)}
+      />
+      <Route path="/register" element={!isAuthenticated ? (<Register onRegister={login} />) : (<Navigate to="/store" replace />)}
+      />
+      <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/store" replace />}
+      />
+      <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <Navigate to="/store" replace />} />{isAuthenticated ? ( 
         <>
           {/* Internal Portal Branch */}
           <Route
@@ -87,6 +85,8 @@ export const AppRouter: React.FC<RouterProps> = ({
             <Route path="/admin/settings" element={<GlobalSettings />} />
           </Route>
 
+          <Route path="/403" element={<ForbiddenPage />} />
+
           {/* Customer Store Branch */}
           <Route element={<StoreLayout />}>
             <Route path="/store" element={<Storefront />} />
@@ -108,17 +108,10 @@ export const AppRouter: React.FC<RouterProps> = ({
             </Route>
           </Route>
 
-          <Route
-            path="*"
-            element={
-              effectiveRole === "ADMIN" ? (
-                <Navigate to="/" replace />
-              ) : (
-                <Navigate to="/store" replace />
-              )
-            }
-          />
+          <Route path="*" element={<NotFoundPage />} />
         </>
+      ) : (
+        <Route path="*" element={<Navigate to="/login" replace />} />
       )}
     </Routes>
   );

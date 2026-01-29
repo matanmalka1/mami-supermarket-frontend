@@ -1,41 +1,14 @@
-import React, { useEffect, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
-import { apiService } from '@/services/api';
+import useOpsAlerts from '@/hooks/useOpsAlerts';
 import { OpsAlert } from "@/types/ops";
 
 interface NotifDropdownProps {
-  items: any[];
+  items?: OpsAlert[];
   onClose: () => void;
 }
 
 const NotifDropdown: React.FC<NotifDropdownProps> = ({ items, onClose }) => {
-  const [alerts, setAlerts] = useState<OpsAlert[]>(items ?? []);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchAlerts = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await apiService.ops.getAlerts();
-        if (!isMounted) return;
-        setAlerts(Array.isArray(data) ? data : []);
-      } catch (err: any) {
-        if (!isMounted) return;
-        setError(err.message || "Unable to load notifications");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchAlerts();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
+  const { alerts, loading, error } = useOpsAlerts(items);
   const formatTime = (alert: OpsAlert) =>
     alert.time ||
     (alert.createdAt

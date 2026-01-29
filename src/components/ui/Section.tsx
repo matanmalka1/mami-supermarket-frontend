@@ -35,7 +35,7 @@ const Section: React.FC<SectionProps> = ({
       {(title || subtitle) && (
         <div className="flex items-end justify-between border-b border-gray-100 pb-8">
           <div className="space-y-1">
-            {title && <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight italic">{title}</h2>}
+            {title && <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight italic">{title}</h2>}
             {subtitle && (
               <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
                 {subtitle}

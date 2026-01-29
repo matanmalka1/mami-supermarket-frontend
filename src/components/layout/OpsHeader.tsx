@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Bell, Settings2, AlertTriangle, Info } from 'lucide-react';
 import SearchInput from '../ui/SearchInput';
 import { Link } from 'react-router';
-import { apiService } from '@/services/api';
+import useOpsAlerts from '@/hooks/useOpsAlerts';
 import { OpsAlert } from "@/types/ops";
 
 const OpsHeader: React.FC = () => {
   const [showNotifs, setShowNotifs] = useState(false);
-  const [alerts, setAlerts] = useState<OpsAlert[]>([]);
-  const [alertsLoading, setAlertsLoading] = useState(true);
-  const [alertsError, setAlertsError] = useState<string | null>(null);
+  const { alerts, loading: alertsLoading, error: alertsError } = useOpsAlerts();
   const hasAlerts = alerts.length > 0;
   const formatAlertTime = (alert: OpsAlert) =>
     alert.time ||
@@ -19,31 +17,6 @@ const OpsHeader: React.FC = () => {
           minute: "2-digit",
         })
       : "Just now");
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchAlerts = async () => {
-      setAlertsLoading(true);
-      setAlertsError(null);
-      try {
-        const data = await apiService.ops.getAlerts();
-        if (!isMounted) return;
-        setAlerts(Array.isArray(data) ? data : []);
-      } catch (err: any) {
-        if (!isMounted) return;
-        setAlertsError(err.message || "Unable to load alerts");
-      } finally {
-        if (isMounted) setAlertsLoading(false);
-      }
-    };
-
-    fetchAlerts();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b flex items-center justify-between px-8 sticky top-0 z-40">
       <div className="flex-1 max-w-xl">

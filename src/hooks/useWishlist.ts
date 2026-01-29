@@ -1,7 +1,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const STORAGE_KEY = "freshmarket:wishlist";
+const STORAGE_KEY = "Mami Supermarket:wishlist";
 
 export type WishlistItem = {
   id: number;

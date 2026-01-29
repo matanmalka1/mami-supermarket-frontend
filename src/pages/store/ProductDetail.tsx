@@ -82,7 +82,7 @@ const ProductDetail: React.FC = () => {
 
         <ProductTabs product={product} />
 
-        <SimilarProducts categoryId={product.category} excludeId={product.id} />
+        <SimilarProducts category={product.category} excludeId={product.id} />
       </div>
     </div>
   );

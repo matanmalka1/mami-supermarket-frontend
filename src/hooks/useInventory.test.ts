@@ -19,39 +19,37 @@ const mockInventory = [
   },
 ];
 
+const renderInventoryHook = async (
+  response: any = { items: mockInventory },
+) => {
+  (apiService.admin.getInventory as any) = vi.fn().mockResolvedValue(response);
+  const hook = renderHook(() => useInventory());
+  await waitFor(() => expect(hook.result.current.loading).toBe(false));
+  await waitFor(() =>
+    expect(hook.result.current.inventory.length).toBeGreaterThan(0),
+  );
+  return hook;
+};
+
 describe("useInventory", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("should fetch and normalize inventory", async () => {
-    (apiService.admin.getInventory as any) = vi
-      .fn()
-      .mockResolvedValue({ items: mockInventory });
-    const { result } = renderHook(() => useInventory());
-    await waitFor(() => {
-      expect(result.current.inventory[0].id).toBe(1);
-      expect(result.current.inventory[0].availableQuantity).toBe(5);
-      expect(result.current.loading).toBe(false);
-    });
+    const { result } = await renderInventoryHook();
+    expect(result.current.inventory[0].id).toBe(1);
+    expect(result.current.inventory[0].availableQuantity).toBe(5);
+    expect(result.current.loading).toBe(false);
   });
 
   it("should handle array response", async () => {
-    (apiService.admin.getInventory as any) = vi
-      .fn()
-      .mockResolvedValue([mockInventory[0]]);
-    const { result } = renderHook(() => useInventory());
-    await waitFor(() => {
-      expect(result.current.inventory.length).toBe(1);
-    });
+    const { result } = await renderInventoryHook([mockInventory[0]]);
+    expect(result.current.inventory.length).toBe(1);
   });
 
   it("should show error for invalid updateStock", async () => {
-    (apiService.admin.getInventory as any) = vi
-      .fn()
-      .mockResolvedValue({ items: mockInventory });
-    const { result } = renderHook(() => useInventory());
-    await waitFor(() => expect(result.current.inventory.length).toBeGreaterThan(0));
+    const { result } = await renderInventoryHook();
     await act(async () => {
       await result.current.updateStock(1, -1);
     });
@@ -61,12 +59,8 @@ describe("useInventory", () => {
   });
 
   it("should update stock and show success", async () => {
-    (apiService.admin.getInventory as any) = vi
-      .fn()
-      .mockResolvedValue({ items: mockInventory });
     (apiService.admin.updateStock as any) = vi.fn().mockResolvedValue({});
-    const { result } = renderHook(() => useInventory());
-    await waitFor(() => expect(result.current.inventory.length).toBeGreaterThan(0));
+    const { result } = await renderInventoryHook();
     await act(async () => {
       await result.current.updateStock(1, 10);
     });
@@ -78,14 +72,10 @@ describe("useInventory", () => {
   });
 
   it("should show error if updateStock fails", async () => {
-    (apiService.admin.getInventory as any) = vi
-      .fn()
-      .mockResolvedValue({ items: mockInventory });
     (apiService.admin.updateStock as any) = vi
       .fn()
       .mockRejectedValue(new Error("fail"));
-    const { result } = renderHook(() => useInventory());
-    await waitFor(() => expect(result.current.inventory.length).toBeGreaterThan(0));
+    const { result } = await renderInventoryHook();
     await act(async () => {
       await result.current.updateStock(1, 10);
     });

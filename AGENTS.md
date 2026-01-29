@@ -1,6 +1,6 @@
-FreshMarket & OpsPortal — Agent Ecosystem (AGENTS.md)
+Mami Supermarket & OpsPortal — Agent Ecosystem (AGENTS.md)
 
-This document defines roles (Agents), responsibilities, and engineering standards for the FreshMarket (Customer) and OpsPortal (Operations) platform.
+This document defines roles (Agents), responsibilities, and engineering standards for the Mami Supermarket (Customer) and OpsPortal (Operations) platform.
 
 Applies to: Frontend + shared API/types packages
 Non-goal: This is not a product spec. It is an ownership + quality system.
@@ -23,7 +23,7 @@ Single Source of Truth
 
 1) System Personas (Agents)
 
-1. Customer Agent (FreshMarket)
+1. Customer Agent (Mami Supermarket)
 
 Context: Browse, Search, Cart, Checkout
 Goal: Seamless discovery and frictionless commerce

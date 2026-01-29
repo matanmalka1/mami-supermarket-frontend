@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { SlidersHorizontal, ChevronRight, LayoutGrid, List, Check, Box } from 'lucide-react';
@@ -13,13 +12,14 @@ import { Product } from '@/types/domain';
 const CategoryView: React.FC = () => {
   const { id } = useParams();
   const categoryId = id ? Number(id) : undefined;
-  const { products, loading } = useCatalog(categoryId);
-  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
-  const [preferences, setPreferences] = useState<string[]>([]);
   const { categories } = useCatalogCategories();
   const matchedCategory = typeof categoryId === "number"
     ? categories.find((cat) => cat.id === categoryId)
     : undefined;
+  const categoryFilter = matchedCategory?.name;
+  const { products, loading } = useCatalog(categoryFilter);
+  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState<string[]>([]);
   const categoryLabel = matchedCategory?.name || id;
 
   const togglePreference = (p: string) => {

@@ -103,7 +103,7 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
           to="/store"
           className="flex items-center gap-3 text-[#008A45] font-black text-2xl italic tracking-tighter"
         >
-          <ShoppingBag size={28} /> FRESHMARKET
+          <ShoppingBag size={28} /> Mami Supermarket
         </Link>
         <Link
           to="/login"
