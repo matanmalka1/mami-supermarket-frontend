@@ -7,6 +7,7 @@ import { useCatalogManager } from "@/hooks/useCatalogManager";
 import { apiService } from "@/services/api";
 import CatalogProductTable from "./CatalogProductTable";
 import { CatalogProductForm } from "./CatalogProductForm";
+import { extractArrayPayload } from "@/utils/api-response";
 const CatalogManager: React.FC = () => {
   const {
     products,
@@ -29,8 +30,7 @@ const CatalogManager: React.FC = () => {
     apiService.catalog
       .getCategories()
       .then((cats: any) => {
-        const rows = Array.isArray(cats?.items) ? cats.items : Array.isArray(cats) ? cats : [];
-        setCategories(rows);
+        setCategories(extractArrayPayload<any>(cats));
       })
       .catch(() => {});
   }, []);

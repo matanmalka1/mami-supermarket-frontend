@@ -12,6 +12,7 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { apiService } from "@/services/api";
 import { HeroSection, BenefitCard } from "@/components/store/StorefrontComponents";
+import { extractArrayPayload } from "@/utils/api-response";
 
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
@@ -30,8 +31,8 @@ const Storefront: React.FC = () => {
         ]);
         const catData: any = cats as any;
         const featData: any = feats as any;
-        setCategories(Array.isArray(catData?.items) ? catData.items : Array.isArray(catData) ? catData : []);
-        setFeatured(Array.isArray(featData?.items) ? featData.items : Array.isArray(featData) ? featData : []);
+        setCategories(extractArrayPayload<any>(catData));
+        setFeatured(extractArrayPayload<any>(featData));
       } finally {
         setLoading(false);
       }

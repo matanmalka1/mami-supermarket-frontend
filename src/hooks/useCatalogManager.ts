@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
 import { useAsyncResource } from "./useAsyncResource";
+import { extractArrayPayload } from "@/utils/api-response";
 
 export const useCatalogManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,7 +11,7 @@ export const useCatalogManager = () => {
 
   const fetchProducts = useCallback(async () => {
     const data: any = await apiService.admin.getProducts();
-    return Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+    return extractArrayPayload<any>(data);
   }, []);
 
   const { data: products, loading, refresh } = useAsyncResource<any[]>(fetchProducts, {

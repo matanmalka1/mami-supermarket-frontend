@@ -4,6 +4,7 @@ import { History, Shield, UserCheck } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import { apiService } from "@/services/api";
+import { extractArrayPayload } from "@/utils/api-response";
 
 type AuditLog = {
   id: number;
@@ -35,11 +36,7 @@ const AuditLogs: React.FC = () => {
         limit: 20,
         offset: append ? logs.length : 0,
       });
-      const items = Array.isArray((data as any)?.items)
-        ? (data as any).items
-        : Array.isArray(data)
-          ? data
-          : [];
+      const items = extractArrayPayload<AuditLog>(data);
       setLogs((prev) => (append ? [...prev, ...items] : items));
       setHasMore(items.length === 20);
     } catch (err: any) {

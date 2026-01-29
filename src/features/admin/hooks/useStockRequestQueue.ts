@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { StockRequestStatus } from "@/services/admin-service";
 import type { StockRequest } from "@/features/admin/types";
+import { extractArrayPayload } from "@/utils/api-response";
 
 const ensureQuantity = (request: StockRequest) => {
   const qty = request.quantity ?? 0;
@@ -54,8 +55,7 @@ export const useStockRequestQueue = () => {
     setLoading(true);
     try {
       const data: any = await apiService.admin.getStockRequests({ status: "PENDING" });
-      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-      setRequests(rows);
+      setRequests(extractArrayPayload<StockRequest>(data));
     } catch (err: any) {
       toast.error(err.message || "Failed to load request queue");
     } finally {

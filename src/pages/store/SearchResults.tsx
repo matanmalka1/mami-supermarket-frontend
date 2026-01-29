@@ -10,6 +10,7 @@ import { apiService } from '@/services/api';
 import ProductGrid from '@/components/store/ProductGrid';
 import SearchFiltersDrawer from '@/features/store/search/components/SearchFiltersDrawer';
 import { Product } from '@/types/domain';
+import { extractArrayPayload } from '@/utils/api-response';
 
 const SearchResults: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -26,12 +27,7 @@ const SearchResults: React.FC = () => {
       setLoading(true);
       try {
         const response = await apiService.catalog.getProducts({ q: query, limit: 24, offset: 0 });
-        const payload = response as { items?: Product[] };
-        const items = Array.isArray(payload?.items)
-          ? payload.items
-          : Array.isArray(response)
-            ? (response as Product[])
-            : [];
+        const items = extractArrayPayload<Product>(response);
         if (active) setResults(items);
       } catch (err: unknown) {
         if (active) {

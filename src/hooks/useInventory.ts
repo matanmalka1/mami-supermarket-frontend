@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { useAsyncResource } from "./useAsyncResource";
 import { InventoryRow } from "@/types/inventory";
 import type { InventoryResponse } from "@/types/admin-service";
+import { extractArrayPayload } from "@/utils/api-response";
 
 export const useInventory = () => {
   const toInventoryRow = (payload: InventoryResponse): InventoryRow => ({
@@ -23,11 +24,7 @@ export const useInventory = () => {
 
   const fetchInventory = useCallback(async () => {
     const data = await apiService.admin.getInventory();
-    const rows = Array.isArray(data?.items)
-      ? data.items
-      : Array.isArray(data)
-        ? data
-        : [];
+    const rows = extractArrayPayload<InventoryResponse>(data);
     return rows.map(toInventoryRow);
   }, []);
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { apiService } from "@/services/api";
 import ProductCard from "./ProductCard";
+import { extractArrayPayload } from "@/utils/api-response";
 
 type Props = { category?: string; excludeId?: string };
 
@@ -19,11 +20,7 @@ const SimilarProducts: React.FC<Props> = ({ category, excludeId }) => {
         limit: 8,
         offset: nextOffset,
       });
-      const list = Array.isArray((response as any)?.items)
-        ? (response as any).items
-        : Array.isArray(response)
-          ? response
-          : [];
+      const list = extractArrayPayload<any>(response);
       const normalizedCategory = category?.trim().toLowerCase();
       const filtered = list.filter((p: any) => {
         if (excludeId && p.id === excludeId) return false;

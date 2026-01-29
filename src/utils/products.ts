@@ -1,4 +1,5 @@
 import { Product } from "@/types/domain";
+import { extractArrayPayload } from "@/utils/api-response";
 
 const toNumber = (value: number | string | undefined | null) => {
   if (value === null || value === undefined) return 0;
@@ -21,10 +22,6 @@ export const normalizeProduct = (product: Product): Product => ({
 export const normalizeProductList = (
   payload: Product[] | { items?: Product[] } | null | undefined,
 ): Product[] => {
-  const items = Array.isArray(payload)
-    ? payload
-    : payload && Array.isArray(payload.items)
-    ? payload.items
-    : [];
+  const items = extractArrayPayload<Product>(payload);
   return items.map((item) => normalizeProduct(item));
 };

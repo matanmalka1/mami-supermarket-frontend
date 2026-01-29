@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Timer, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { apiService } from "@/services/api";
+import { extractArrayPayload } from "@/utils/api-response";
 
 function formatSeconds(totalSeconds: number) {
   const s = Math.max(0, Math.floor(totalSeconds));
@@ -33,12 +34,7 @@ const FlashDeals: React.FC = () => {
       setError(null);
       try {
         const data = await apiService.catalog.getFeatured(4);
-        const items = Array.isArray((data as any)?.items)
-          ? (data as any).items
-          : Array.isArray(data)
-            ? data
-            : [];
-        setDeals(items);
+        setDeals(extractArrayPayload<any>(data));
       } catch (err: any) {
         setError(err.message || "Unable to load flash deals");
       } finally {

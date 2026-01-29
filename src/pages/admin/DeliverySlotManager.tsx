@@ -10,6 +10,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import ErrorState from "../../components/shared/ErrorState";
 import type { BranchResponse } from "@/types/branch";
+import { extractArrayPayload } from "@/utils/api-response";
 
 const DeliverySlotManager: React.FC = () => {
   const [slots, setSlots] = useState<any[]>([]);
@@ -24,8 +25,7 @@ const DeliverySlotManager: React.FC = () => {
     setLoading(true);
     try {
       const data: any = await apiService.admin.getDeliverySlots();
-      const rows = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
-      setSlots(rows);
+      setSlots(extractArrayPayload<any>(data));
       setError(null);
     } catch (err: any) {
       setError(err.message || "Failed to load delivery slots");

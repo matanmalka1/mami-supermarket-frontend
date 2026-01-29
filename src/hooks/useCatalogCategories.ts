@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiService } from "@/services/api";
 import { Category } from "@/types/domain";
+import { extractArrayPayload } from "@/utils/api-response";
 
 type CategoryState = {
   categories: Category[];
@@ -20,11 +21,7 @@ export const useCatalogCategories = (): CategoryState => {
     const fetchCategories = async () => {
       try {
         const response = await apiService.catalog.getCategories();
-        const items = Array.isArray((response as any)?.items)
-          ? (response as any).items
-          : Array.isArray(response)
-            ? response
-            : [];
+        const items = extractArrayPayload<Category>(response);
         if (active) setState({ categories: items, loading: false, error: null });
       } catch (err: any) {
         if (active)
