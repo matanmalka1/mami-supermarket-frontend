@@ -36,20 +36,22 @@ const Checkout: React.FC = () => {
 
   // Store the payment token id from PaymentStep
   const [paymentTokenId, setPaymentTokenId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Called by PaymentStep after payment token is created
   const handleConfirm = async (tokenId: number) => {
     setPaymentTokenId(tokenId);
+    setError(null);
     if (!isAuthenticated) {
-      toast.error("Sign in to complete the order");
+      setError("Sign in to complete the order");
       return;
     }
     if (!serverCartId) {
-      toast.error("Cart is syncing, please wait");
+      setError("Cart is syncing, please wait");
       return;
     }
     if (method === "PICKUP" && !selectedBranch) {
-      toast.error("Pickup branch is loading, please wait");
+      setError("Pickup branch is loading, please wait");
       return;
     }
     setLoading(true);
@@ -68,7 +70,7 @@ const Checkout: React.FC = () => {
       const orderId = data?.order_id || data?.orderId || data?.id || "order";
       navigate(`/store/order-success/${orderId}`);
     } catch (err: any) {
-      toast.error(err.message || "Checkout failed");
+      setError(err.message || "Checkout failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -83,6 +85,31 @@ const Checkout: React.FC = () => {
 
   if (items.length === 0 && !loading) {
     return null;
+  }
+
+  // Inline error state UI for checkout errors
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-8">
+        <div className="bg-red-50 border border-red-200 rounded-3xl p-8 text-center space-y-4">
+          <p className="text-2xl font-black text-red-700 uppercase tracking-[0.2em]">
+            Checkout Error
+          </p>
+          <p className="text-red-600 font-bold">{error}</p>
+          <Button
+            variant="emerald"
+            onClick={() => {
+              setError(null);
+            }}
+          >
+            Retry
+          </Button>
+        </div>
+        <Button variant="outline" onClick={() => navigate("/store")}>
+          Back to Store
+        </Button>
+      </div>
+    );
   }
 
   const subtotal = preview?.cart_total ? Number(preview.cart_total) : total;
