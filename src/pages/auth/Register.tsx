@@ -95,7 +95,7 @@ const Register: React.FC<{
       <header className="px-12 py-8 flex items-center justify-between bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <Link
           to="/store"
-          className="flex items-center gap-3 text-[#008A45] font-black text-2xl italic tracking-tighter"
+          className="flex items-center gap-3 text-[#008A45] font-black text-2xl  tracking-tighter"
         >
           <ShoppingBag size={28} /> Mami Supermarket
         </Link>
@@ -110,7 +110,7 @@ const Register: React.FC<{
       <main className="flex-1 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 p-8 lg:p-24">
         <div className="space-y-12">
           <div className="space-y-3">
-            <h1 className="text-7xl font-black text-gray-900 tracking-tight italic leading-tight">
+            <h1 className="text-7xl font-black text-gray-900 tracking-tight  leading-tight">
               {step === "INFO" ? "Join Us" : "Verify"}
             </h1>
             <p className="text-gray-400 text-xl font-medium tracking-tight">

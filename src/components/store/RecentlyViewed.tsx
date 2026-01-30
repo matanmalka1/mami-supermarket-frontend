@@ -32,7 +32,7 @@ const RecentlyViewed: React.FC = () => {
             <History size={20} />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900 italic">Recently Viewed</h2>
+            <h2 className="text-2xl font-black text-gray-900 ">Recently Viewed</h2>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pick up where you left off</p>
           </div>
         </div>

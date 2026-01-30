@@ -59,7 +59,7 @@ const CatalogProductTable: React.FC<Props> = ({
               </div>
             )}
             <div>
-              <p className="text-gray-900 text-lg leading-tight italic">{product.name}</p>
+              <p className="text-gray-900 text-lg leading-tight ">{product.name}</p>
               <p className="text-[10px] text-gray-400 uppercase tracking-widest">SKU: {product.sku}</p>
             </div>
           </div>
@@ -72,7 +72,7 @@ const CatalogProductTable: React.FC<Props> = ({
             {(product.availableQuantity ?? 0) > 50 ? "Steady" : "Low Stock"}
           </Badge>
         </td>
-        <td className="px-6 py-6 text-right font-black italic text-gray-900">
+        <td className="px-6 py-6 text-right font-black  text-gray-900">
           {currencyILS(product.price ?? 0)}
         </td>
         <td className="px-8 py-6 text-right">

@@ -34,7 +34,7 @@ const StoreHeader: React.FC = () => {
             <div className="bg-teal-500/20 p-1.5 rounded-lg border border-teal-500/30 animate-pulse">
               <ShieldCheck size={16} className="text-teal-400" />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] italic">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em]">
               System Admin Session <span className="text-teal-400 ml-2 opacity-60">• Operational Override Active</span>
             </p>
           </div>
@@ -53,7 +53,7 @@ const StoreHeader: React.FC = () => {
           <div className="flex items-center gap-8">
             <Link
               to="/store"
-              className="flex items-center gap-2 text-[#008A45] font-black text-2xl tracking-tighter italic shrink-0"
+              className="flex items-center gap-2 text-[#008A45] font-black text-2xl tracking-tighter shrink-0"
               onClick={() => setActiveMenu(null)}
             >
               <div className="w-10 h-10 bg-[#008A45] rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-900/20">

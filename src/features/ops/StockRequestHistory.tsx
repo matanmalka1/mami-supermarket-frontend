@@ -44,7 +44,7 @@ const StockRequestHistory: React.FC<Props> = ({ items = defaultItems }) => (
             <Package size={24} />
           </div>
           <div>
-            <h4 className="font-black text-xl italic">{row.title}</h4>
+            <h4 className="font-black text-md">{row.title}</h4>
             <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
               Requested {row.ago} {row.sku ? `• ${row.sku}` : ""}
             </p>
@@ -52,7 +52,7 @@ const StockRequestHistory: React.FC<Props> = ({ items = defaultItems }) => (
         </div>
         <div className="flex items-center gap-6">
           <div className="text-right">
-            <p className="text-lg font-black italic">{row.quantity} Units</p>
+            <p className="text-lg font-black">{row.quantity} Units</p>
             <Badge color={row.status === "DELIVERED" ? "emerald" : "orange"}>
               {row.status === "DELIVERED" ? "Delivered" : "In Transit"}
             </Badge>

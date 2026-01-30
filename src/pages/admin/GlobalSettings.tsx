@@ -45,7 +45,7 @@ const GlobalSettings: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="flex justify-between items-end border-b pb-8">
         <div>
-          <h1 className="text-5xl font-black italic tracking-tighter">
+          <h1 className="text-5xl font-black  tracking-tighter">
             System Config
           </h1>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">
@@ -65,7 +65,7 @@ const GlobalSettings: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <section className="bg-white border border-gray-100 rounded-[2.5rem] p-10 space-y-6 shadow-sm">
-          <h3 className="text-xl font-black italic flex items-center gap-3 text-[#006666]">
+          <h3 className="text-xl font-black  flex items-center gap-3 text-[#006666]">
             <Coins size={22} /> Delivery Settings
           </h3>
           <div className="space-y-4">

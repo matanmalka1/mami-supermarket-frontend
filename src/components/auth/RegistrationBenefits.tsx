@@ -13,7 +13,7 @@ const RegistrationBenefits: React.FC = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="absolute inset-0 flex items-center justify-center p-12">
-          <h3 className="text-5xl font-black italic leading-[0.9] text-white text-center tracking-tighter">Join the<br/>Fresh Community</h3>
+          <h3 className="text-5xl font-black  leading-[0.9] text-white text-center tracking-tighter">Join the<br/>Fresh Community</h3>
         </div>
       </div>
 

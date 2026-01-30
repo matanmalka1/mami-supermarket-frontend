@@ -14,7 +14,7 @@ const SettingsField: React.FC<Props> = ({ label, value, onChange }) => (
     <input
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-4 font-black italic text-lg outline-none focus:border-emerald-500"
+      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-4 font-black text-lg outline-none focus:border-emerald-500"
     />
   </div>
 );

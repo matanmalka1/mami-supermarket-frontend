@@ -81,7 +81,7 @@ const DeliverySlotManager: React.FC = () => {
     <div className="space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black italic tracking-tight">
+          <h1 className="text-4xl font-black  tracking-tight">
             Fulfillment Config
           </h1>
           <p className="text-sm text-gray-500 font-bold uppercase tracking-widest mt-1">

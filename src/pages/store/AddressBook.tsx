@@ -29,14 +29,14 @@ const AddressBook: React.FC = () => {
     <div className="space-y-10">
       <div className="flex justify-between items-end">
         <div className="space-y-1">
-          <h1 className="text-5xl font-black italic text-gray-900 tracking-tighter">Addresses</h1>
+          <h1 className="text-5xl font-black  text-gray-900 tracking-tighter">Addresses</h1>
           <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em]">Manage your shipping nodes</p>
         </div>
         <Button variant="emerald" icon={<Plus size={18} />} className="rounded-2xl h-14 px-8" onClick={() => setIsModalOpen(true)}>Add New</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <button onClick={tagCurrentLocation} className="col-span-full bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-10 rounded-[2.5rem] flex items-center justify-center gap-4 text-emerald-700 font-black italic hover:bg-emerald-100/50 transition-all group">
+        <button onClick={tagCurrentLocation} className="col-span-full bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-10 rounded-[2.5rem] flex items-center justify-center gap-4 text-emerald-700 font-black  hover:bg-emerald-100/50 transition-all group">
           <Navigation size={24} className="group-hover:animate-pulse" />
           <span className="text-xl">Tag My Current Location</span>
         </button>
@@ -51,7 +51,7 @@ const AddressBook: React.FC = () => {
             {addr.is_default && <div className="absolute top-0 right-0 bg-emerald-500 text-white px-6 py-2 rounded-bl-[2rem] font-black text-[10px] uppercase tracking-widest">Default</div>}
             <div className="flex gap-5 items-start">
               <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border"><MapPin size={28} /></div>
-              <div><h4 className="font-black text-2xl italic text-gray-900">{addr.address_line || 'Address'}</h4><p className="text-sm font-bold text-gray-500">{addr.city}, {addr.country || 'Israel'} {addr.postal_code ? `• ${addr.postal_code}` : ''}</p></div>
+              <div><h4 className="font-black text-2xl  text-gray-900">{addr.address_line || 'Address'}</h4><p className="text-sm font-bold text-gray-500">{addr.city}, {addr.country || 'Israel'} {addr.postal_code ? `• ${addr.postal_code}` : ''}</p></div>
             </div>
             <div className="flex gap-3 pt-4 border-t border-gray-50">
               {!addr.is_default && <Button variant="ghost" size="sm" className="text-xs font-black uppercase" onClick={() => setDefault(addr.id)}>Set Default</Button>}

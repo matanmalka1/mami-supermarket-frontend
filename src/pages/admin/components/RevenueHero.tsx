@@ -18,7 +18,7 @@ const RevenueHero: React.FC<RevenueHeroProps> = ({ detail, hasData }) => (
       <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400">
         Revenue Trend
       </h4>
-      <p className="text-2xl font-bold italic pr-20 leading-tight">
+      <p className="text-2xl font-bold  pr-20 leading-tight">
         {detail}
       </p>
       <p className="text-sm font-semibold opacity-70">

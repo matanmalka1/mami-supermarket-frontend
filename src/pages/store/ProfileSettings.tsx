@@ -76,7 +76,7 @@ const ProfileSettings: React.FC = () => {
   return (
     <div className="space-y-10">
       <div className="space-y-1">
-        <h1 className="text-5xl font-black italic text-gray-900 tracking-tighter">Settings</h1>
+        <h1 className="text-5xl font-black  text-gray-900 tracking-tighter">Settings</h1>
         <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em]">Update your profile & preferences</p>
       </div>
 
@@ -130,7 +130,7 @@ const ProfileSettings: React.FC = () => {
             <div className="flex items-center gap-3 text-blue-600 font-black uppercase text-xs tracking-widest">
               <ShieldCheck size={16} /> Data Security
             </div>
-            <p className="text-sm font-medium text-blue-900/60 leading-relaxed italic">
+            <p className="text-sm font-medium text-blue-900/60 leading-relaxed ">
               Your account is secured with end-to-end encryption and biometric-ready protocols.
             </p>
           </div>

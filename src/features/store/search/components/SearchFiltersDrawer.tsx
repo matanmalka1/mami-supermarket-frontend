@@ -36,7 +36,7 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
       />
       <aside className="relative w-full max-w-sm bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-500">
         <div className="p-8 border-b flex items-center justify-between">
-          <h2 className="text-2xl font-black italic">Refine Search</h2>
+          <h2 className="text-2xl font-black ">Refine Search</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -77,7 +77,7 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
           <Button variant="ghost" className="flex-1" onClick={onClear}>
             Clear All
           </Button>
-          <Button variant="emerald" className="flex-[2] rounded-2xl font-black italic" onClick={onApply}>
+          <Button variant="emerald" className="flex-[2] rounded-2xl font-black " onClick={onApply}>
             Apply Filters
           </Button>
         </div>

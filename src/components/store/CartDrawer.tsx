@@ -21,7 +21,7 @@ const CartDrawer: React.FC = () => {
         <div className="p-8 border-b flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ShoppingBag className="text-[#008A45]" size={24} />
-            <h2 className="text-2xl font-black italic">Your Cart</h2>
+            <h2 className="text-2xl font-black ">Your Cart</h2>
           </div>
           <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
             <X size={24} />
@@ -47,7 +47,7 @@ const CartDrawer: React.FC = () => {
               <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-300 mx-auto">
                 <ShoppingBag size={40} />
               </div>
-              <p className="font-bold text-gray-400 italic">Your cart is feeling light...</p>
+              <p className="font-bold text-gray-400 ">Your cart is feeling light...</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -87,10 +87,10 @@ const CartDrawer: React.FC = () => {
         <div className="p-8 bg-gray-50 border-t space-y-6 shadow-[0_-20px_40px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-end">
             <span className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">Subtotal</span>
-            <span className="text-3xl font-black italic tracking-tighter">{currencyILS(total)}</span>
+            <span className="text-3xl font-black  tracking-tighter">{currencyILS(total)}</span>
           </div>
           <Link to="/store/checkout" onClick={() => setIsOpen(false)}>
-            <Button className="w-full h-16 rounded-2xl text-lg font-black italic shadow-xl shadow-emerald-900/20" disabled={items.length === 0}>
+            <Button className="w-full h-16 rounded-2xl text-lg font-black  shadow-xl shadow-emerald-900/20" disabled={items.length === 0}>
               Checkout Now <ArrowRight size={20} className="ml-2" />
             </Button>
           </Link>

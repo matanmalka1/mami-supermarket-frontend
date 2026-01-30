@@ -45,14 +45,14 @@ const PickingItemDetail: React.FC<PickingItemDetailProps> = ({ item, onToggle, o
             <h5 className="text-[11px] text-[#006666] font-black uppercase tracking-[0.3em] flex items-center gap-2">
               <Info size={14} /> Profile
             </h5>
-            <p className="text-gray-600 text-2xl font-bold italic pr-12">
+            <p className="text-gray-600 text-2xl font-bold  pr-12">
               {item.product?.description || "Locally sourced organic produce, picked daily for maximum freshness."}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-10">
             <div className="p-6 bg-blue-50/50 rounded-3xl border border-blue-100">
               <h5 className="text-[11px] text-blue-600 font-black uppercase mb-3">Customer Note</h5>
-              <p className="text-sm font-bold text-blue-900 leading-relaxed italic">
+              <p className="text-sm font-bold text-blue-900 leading-relaxed ">
                 "Please ensure they are firm and have a long expiry date."
               </p>
             </div>

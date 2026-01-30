@@ -121,7 +121,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
       <Button
         fullWidth
         size="lg"
-        className="rounded-[1.5rem] h-14 text-lg italic"
+        className="rounded-[1.5rem] h-14 text-lg "
         loading={isSubmitting}
         type="submit"
       >

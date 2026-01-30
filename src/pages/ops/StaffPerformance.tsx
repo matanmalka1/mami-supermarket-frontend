@@ -45,7 +45,7 @@ const StaffPerformance: React.FC = () => {
     <div className="space-y-12 pb-20 animate-in fade-in duration-700">
       <div className="flex items-end justify-between border-b pb-8">
         <div>
-          <h1 className="text-5xl font-black italic text-gray-900 tracking-tighter">Performance Hub</h1>
+          <h1 className="text-5xl font-black  text-gray-900 tracking-tighter">Performance Hub</h1>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Operational Analytics</p>
         </div>
         <Button

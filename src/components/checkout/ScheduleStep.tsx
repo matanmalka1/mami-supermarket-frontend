@@ -13,7 +13,7 @@ type Props = {
 
 export const ScheduleStep: React.FC<Props> = ({ slots, selected, onSelect, onBack, onNext }) => (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-    <h2 className="text-4xl font-black italic">Pick a time slot</h2>
+    <h2 className="text-4xl font-black ">Pick a time slot</h2>
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {slots.length === 0 ? (
         <div className="col-span-full text-center text-gray-400 font-bold uppercase text-xs tracking-[0.3em]">

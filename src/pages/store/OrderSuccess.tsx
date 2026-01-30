@@ -65,7 +65,7 @@ const OrderSuccess: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        <h1 className="text-6xl font-black italic tracking-tighter">
+        <h1 className="text-6xl font-black  tracking-tighter">
           Ordered Successfully!
         </h1>
         <p className="text-xl text-gray-500 font-bold">
@@ -102,13 +102,13 @@ const OrderSuccess: React.FC = () => {
         <Link to="/store" className="flex-1">
           <Button
             variant="outline"
-            className="w-full h-16 rounded-2xl font-black italic"
+            className="w-full h-16 rounded-2xl font-black "
           >
             Keep Shopping
           </Button>
         </Link>
         <Link to="/" className="flex-1">
-          <Button className="w-full h-16 rounded-2xl font-black italic">
+          <Button className="w-full h-16 rounded-2xl font-black ">
             Track Order
           </Button>
         </Link>

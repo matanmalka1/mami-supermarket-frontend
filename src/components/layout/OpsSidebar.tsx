@@ -92,7 +92,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
             <GripVertical size={24} />
           </div>
           <div>
-            <h1 className="font-black text-lg leading-tight tracking-tight text-gray-900 italic">
+            <h1 className="font-black text-lg leading-tight tracking-tight text-gray-900 ">
               Ops Portal
             </h1>
             <p className="text-[10px] text-gray-400 font-bold tracking-widest uppercase">
@@ -134,7 +134,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
         </button>
         <button
           onClick={handleGoToStore}
-          className="w-full flex items-center justify-center gap-2 mt-4 text-[10px] text-[#006666] font-black uppercase tracking-[0.2em] hover:underline italic"
+          className="w-full flex items-center justify-center gap-2 mt-4 text-[10px] text-[#006666] font-black uppercase tracking-[0.2em] hover:underline"
         >
           <Store size={14} /> Customer Hub
         </button>

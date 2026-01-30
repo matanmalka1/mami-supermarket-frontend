@@ -41,7 +41,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
                )}
             </div>
             <div>
-              <h2 className="font-black text-xl italic tracking-tight">John Doe</h2>
+              <h2 className="font-black text-xl  tracking-tight">John Doe</h2>
               <button 
                 onClick={togglePremium}
                 className={`text-[10px] font-black uppercase tracking-widest transition-all ${isPremium ? 'text-[#008A45] hover:underline' : 'text-gray-400 hover:text-emerald-600'}`}
@@ -83,7 +83,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
           <div className="p-8 bg-emerald-900 text-white rounded-[2.5rem] shadow-xl space-y-4 relative overflow-hidden group">
              <Star size={120} className="absolute -right-10 -bottom-10 opacity-5 group-hover:scale-110 transition-transform" />
              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Premium Perk</h4>
-             <p className="text-sm font-bold italic leading-relaxed">You're currently saving ₪45.00 on delivery fees this month.</p>
+             <p className="text-sm font-bold  leading-relaxed">You're currently saving ₪45.00 on delivery fees this month.</p>
           </div>
         )}
       </aside>

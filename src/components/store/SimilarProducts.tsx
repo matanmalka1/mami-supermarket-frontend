@@ -30,7 +30,7 @@ const SimilarProducts: React.FC<SimilarProductsProps> = ({
   return (
     <div className="py-24 space-y-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-gray-900 tracking-tight italic">
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight ">
           You May Also Like
         </h2>
         <div className="flex gap-2">

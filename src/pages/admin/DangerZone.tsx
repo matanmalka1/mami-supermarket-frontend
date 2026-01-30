@@ -9,7 +9,7 @@ type Props = {
 
 const DangerZone: React.FC<Props> = ({ onSuspend, onFlush }) => (
   <section className="bg-red-50 border border-red-100 rounded-[2.5rem] p-10 space-y-8">
-    <h3 className="text-xl font-black italic flex items-center gap-3 text-red-600">
+    <h3 className="text-xl font-black  flex items-center gap-3 text-red-600">
       <ShieldAlert size={22} /> Danger Zone
     </h3>
     <div className="space-y-4">

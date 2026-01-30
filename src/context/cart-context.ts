@@ -7,6 +7,7 @@ export interface CartItem {
   image: string;
   quantity: number;
   unit?: string;
+  availableQuantity?: number;
 }
 
 export interface CartContextValue {

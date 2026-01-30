@@ -11,7 +11,7 @@ const ErrorHero: React.FC<ErrorHeroProps> = ({ errorCode }) => {
   return (
     <div className="rounded-t-[2rem] bg-gradient-to-b from-emerald-100/80 via-emerald-50 to-white px-8 pt-10 pb-8 text-center border-b border-white/60">
       <p className="text-[0.65rem] font-black uppercase tracking-[0.8em] text-emerald-500">Mami Supermarket</p>
-      <div className="mt-4 text-5xl font-black italic text-gray-900">{errorCode}</div>
+      <div className="mt-4 text-5xl font-black  text-gray-900">{errorCode}</div>
       <p className="mt-2 text-xs uppercase tracking-[0.5em] text-gray-400">Error state</p>
       <div className="mt-6 flex flex-col items-center gap-2">
         <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white bg-white shadow-xl">

@@ -47,7 +47,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
           <TR>
             <TD
               colSpan={5}
-              className="text-center text-gray-400 py-12 font-bold italic"
+              className="text-center text-gray-400 py-12 font-bold "
             >
               No inventory found.
             </TD>
@@ -82,7 +82,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                       </div>
                     )}
                     <div>
-                      <h4 className="text-lg leading-tight italic">
+                      <h4 className="text-lg leading-tight ">
                         {inv.product?.name}
                       </h4>
                       <p className="text-[10px] text-gray-400 uppercase tracking-widest">
@@ -112,7 +112,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                   </div>
                 </TD>
                 <TD>
-                  <span className="text-orange-500 font-black italic">
+                  <span className="text-orange-500 font-black ">
                     {reserved} Units
                   </span>
                 </TD>

@@ -32,7 +32,7 @@ const SearchResults: React.FC = () => {
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Store
           </Link>
           <div className="space-y-1">
-            <h1 className="text-5xl font-black italic text-gray-900 tracking-tight">Search Results</h1>
+            <h1 className="text-5xl font-black  text-gray-900 tracking-tight">Search Results</h1>
             <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Showing results for: <span className="text-[#008A45]">"{query}"</span></p>
           </div>
         </div>

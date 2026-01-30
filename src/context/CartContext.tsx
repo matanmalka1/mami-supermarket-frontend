@@ -60,17 +60,39 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [items, storageKey]);
 
   const addItem = (product: any) => {
+    let added = false;
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
-        );
+      const availableQty =
+        typeof product.availableQuantity === "number"
+          ? Math.max(0, product.availableQuantity)
+          : undefined;
+      const currentQty = existing ? existing.quantity : 0;
+
+      if (availableQty !== undefined) {
+        if (availableQty <= 0) {
+          toast.error("This item is out of stock");
+          return prev;
+        }
+        if (currentQty >= availableQty) {
+          toast.error("You have reached the available stock for this item");
+          return prev;
+        }
       }
-      return [...prev, { ...product, quantity: 1 }];
+
+      const nextItems = existing
+        ? prev.map((i) =>
+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
+          )
+        : [...prev, { ...product, quantity: 1 }];
+      added = true;
+      return nextItems;
     });
-    toast.success(`${product.name} added to cart`);
-    setIsOpen(true);
+
+    if (added) {
+      toast.success(`${product.name} added to cart`);
+      setIsOpen(true);
+    }
   };
 
   const removeItem = (id: number | string) => {

@@ -15,7 +15,7 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({ title, description }) => (
     >
       <ArrowLeft size={16} /> Back to Login
     </Link>
-    <h1 className="text-4xl font-black italic tracking-tight">{title}</h1>
+    <h1 className="text-4xl font-black  tracking-tight">{title}</h1>
     <p className="text-gray-500 font-medium">{description}</p>
   </div>
 );

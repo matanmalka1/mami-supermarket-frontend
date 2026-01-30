@@ -12,7 +12,7 @@ const StockRequests: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-500">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-5xl font-black italic tracking-tighter">
+          <h1 className="text-5xl font-black  tracking-tighter">
             Stock Reports
           </h1>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">

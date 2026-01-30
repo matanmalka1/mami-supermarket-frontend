@@ -31,7 +31,7 @@ const InventoryAnalyticsPanel: React.FC<Props> = ({ data, onClose }) => {
             <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
               Analytics
             </p>
-            <h2 className="text-2xl font-black italic text-gray-900">
+            <h2 className="text-2xl font-black  text-gray-900">
               {productName}
             </h2>
           </div>

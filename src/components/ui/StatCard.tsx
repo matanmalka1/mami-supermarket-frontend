@@ -35,7 +35,7 @@ const StatCard: React.FC<StatCardProps> = ({
     ) : (
       <div className="space-y-1">
         <div className="flex items-end gap-3">
-          <h3 className="text-3xl font-black italic tracking-tighter text-gray-900">{value}</h3>
+          <h3 className="text-3xl font-black  tracking-tighter text-gray-900">{value}</h3>
           {trend && (
             <span className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${
               trend.startsWith('+') ? 'text-red-500' : 'text-emerald-500'
@@ -44,7 +44,7 @@ const StatCard: React.FC<StatCardProps> = ({
             </span>
           )}
         </div>
-        {sub && <p className="text-xs font-bold text-gray-400 italic">{sub}</p>}
+        {sub && <p className="text-xs font-bold text-gray-400 ">{sub}</p>}
       </div>
     )}
   </div>

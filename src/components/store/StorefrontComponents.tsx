@@ -11,7 +11,7 @@ export const HeroSection: React.FC<{ onStart: () => void; onExplore: () => void 
         <Sparkles size={16} className="text-yellow-400" />
         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Freshness Guaranteed</span>
       </div>
-      <h1 className="text-8xl font-black leading-[0.95] tracking-tighter italic">Purely Fresh. <br/><span className="text-emerald-300 not-italic">Honestly Sourced.</span></h1>
+      <h1 className="text-8xl font-black leading-[0.95] tracking-tighter ">Purely Fresh. <br/><span className="text-emerald-300 ">Honestly Sourced.</span></h1>
       <p className="text-xl font-medium opacity-80 max-w-lg leading-relaxed">Partnering with local organic farmers to bring the morning's harvest straight to your table.</p>
       <div className="flex gap-5">
         <Button variant="outline" size="xl" className="bg-white/30 text-[#0e2918] hover:bg-gray-100 border-white/20" onClick={onStart}>Start Shopping</Button>
@@ -26,7 +26,7 @@ export const BenefitCard: React.FC<{ icon: any, title: string, desc: string, bg:
     <div className={`w-20 h-20 bg-white rounded-3xl shadow-sm flex items-center justify-center ${color} group-hover:rotate-12 transition-transform`}>
       {React.cloneElement(icon, { size: 32 })}
     </div>
-    <h4 className="font-black text-2xl text-gray-900 italic">{title}</h4>
+    <h4 className="font-black text-2xl text-gray-900 ">{title}</h4>
     <p className="text-sm text-gray-500 font-medium leading-relaxed">{desc}</p>
   </div>
 );

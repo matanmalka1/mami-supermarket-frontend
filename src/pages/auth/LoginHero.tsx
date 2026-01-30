@@ -14,7 +14,7 @@ const LoginHero: React.FC = () => (
         <div className="w-12 h-12 bg-[#008A45] rounded-xl flex items-center justify-center">
           <ShoppingBag size={28} />
         </div>
-        <span className="text-3xl font-black italic">Mami Supermarket</span>
+        <span className="text-3xl font-black ">Mami Supermarket</span>
       </div>
       <h1 className="text-6xl font-black leading-[1.1]">
         Quality produce,

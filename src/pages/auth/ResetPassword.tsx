@@ -12,6 +12,7 @@ const ResetPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -25,6 +26,12 @@ const ResetPassword: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      const message = "New password and confirmation do not match";
+      setError(message);
+      toast.error(message);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -54,17 +61,19 @@ const ResetPassword: React.FC = () => {
         {done ? (
           <ForgotPasswordDone onNavigate={() => navigate("/login")} />
         ) : (
-          <ResetForm
-            email={email}
-            token={token}
-            newPassword={newPassword}
-            loading={loading}
-            error={error}
-            onEmailChange={setEmail}
-            onTokenChange={setToken}
-            onNewPasswordChange={setNewPassword}
-            onSubmit={handleSubmit}
-          />
+        <ResetForm
+          email={email}
+          token={token}
+          newPassword={newPassword}
+          confirmPassword={confirmPassword}
+          loading={loading}
+          error={error}
+          onEmailChange={setEmail}
+          onTokenChange={setToken}
+          onNewPasswordChange={setNewPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+          onSubmit={handleSubmit}
+        />
         )}
       </div>
     </div>

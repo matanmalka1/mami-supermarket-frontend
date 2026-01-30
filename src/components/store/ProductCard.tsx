@@ -1,4 +1,3 @@
-
 import { useCart } from "@/context/cart-context";
 import { ShoppingCart, Heart } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -6,7 +5,7 @@ import { Link } from 'react-router';
 import { currencyILS } from '../../utils/format';
 import { useWishlist } from '@/hooks/useWishlist';
 
-type CardProduct = {
+export type CardProduct = {
   id: number;
   name: string;
   category?: string;
@@ -15,6 +14,8 @@ type CardProduct = {
   image?: string;
   oldPrice?: number;
   unit?: string;
+  description?: string;
+  availableQuantity?: number;
 };
 
 interface ProductCardProps {
@@ -33,6 +34,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
       .join("") || "?";
 
   const isLiked = isWishlisted(item.id);
+  const availableQuantity =
+    typeof item.availableQuantity === "number"
+      ? Math.max(0, item.availableQuantity)
+      : undefined;
+  const isOutOfStock =
+    availableQuantity !== undefined ? availableQuantity <= 0 : false;
+
   const toggleWishlistHandler = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -68,15 +76,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
           <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
         </button>
         <div className="absolute inset-x-4 bottom-4 translate-y-[150%] group-hover:translate-y-0 transition-transform duration-300 z-10">
-          <button 
-            onClick={(e) => { 
+          <button
+            type="button"
+            disabled={isOutOfStock}
+            onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation(); 
-              addItem(item); 
+              e.stopPropagation();
+              if (!isOutOfStock) {
+                addItem(item);
+              }
             }}
-            className="w-full bg-[#008A45] text-white py-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-xl shadow-emerald-900/20 active:scale-95"
+            className={`w-full py-3 rounded-xl font-black flex items-center justify-center gap-2 transition-all ${
+              isOutOfStock
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+                : "bg-[#008A45] text-white shadow-xl shadow-emerald-900/20 hover:bg-emerald-600 active:scale-95"
+            }`}
           >
-            <ShoppingCart size={18} /> Add to Cart
+            <ShoppingCart size={18} className={isOutOfStock ? "text-gray-400" : ""} />
+            {isOutOfStock ? "Out of stock" : "Add to cart"}
           </button>
         </div>
       </div>

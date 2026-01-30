@@ -56,7 +56,7 @@ const FleetTracker: React.FC = () => {
           <Link to="/logistics" className="flex items-center gap-2 text-[10px] font-black text-gray-400 hover:text-gray-900 uppercase tracking-widest mb-4 group">
             <ArrowLeft size={14} /> Back to Command
           </Link>
-          <h1 className="text-5xl font-black italic tracking-tighter">Fleet Live</h1>
+          <h1 className="text-5xl font-black  tracking-tighter">Fleet Live</h1>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Real-time Tel Aviv Cluster Monitoring</p>
         </div>
         <div className="flex gap-4">
@@ -64,7 +64,7 @@ const FleetTracker: React.FC = () => {
              <Activity size={20} className="animate-pulse" />
              <div className="flex flex-col">
                 <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Fleet Pulse</span>
-                <span className="font-black text-xl italic">98.4% Efficiency</span>
+                <span className="font-black text-xl ">98.4% Efficiency</span>
              </div>
            </div>
         </div>
@@ -130,14 +130,14 @@ const FleetTracker: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg"><Truck size={32} /></div>
                   <div>
-                    <h3 className="text-2xl font-black italic">{d.name}</h3>
+                    <h3 className="text-2xl font-black ">{d.name}</h3>
                     <Badge color="emerald">{d.status}</Badge>
                   </div>
                 </div>
                 <div className="space-y-4 pt-6 border-t">
                    <div className="flex justify-between items-center text-xs">
                       <span className="font-bold text-gray-400 uppercase tracking-widest">Active Orders</span>
-                      <span className="font-black italic text-lg">{d.items}</span>
+                      <span className="font-black  text-lg">{d.items}</span>
                    </div>
                    <div className="flex justify-between items-center text-xs">
                       <span className="font-bold text-gray-400 uppercase tracking-widest">Load Capacity</span>
@@ -157,7 +157,7 @@ const FleetTracker: React.FC = () => {
 
            <div className="bg-[#006666] text-white p-8 rounded-[3rem] shadow-xl space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-300 flex items-center gap-2"><Info size={14} /> Status Brief</h4>
-              <p className="text-sm font-bold italic leading-relaxed">Fleet status is synchronized with central dispatch every 30 seconds for live node tracking.</p>
+              <p className="text-sm font-bold leading-relaxed">Fleet status is synchronized with central dispatch every 30 seconds for live node tracking.</p>
            </div>
         </aside>
       </div>

@@ -33,7 +33,7 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
   <div className="rounded-[3rem] bg-white border border-gray-100 p-8 shadow-2xl space-y-6">
     <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="text-4xl font-black italic tracking-tight">Orders Management</h1>
+        <h1 className="text-4xl font-black  tracking-tight">Orders Management</h1>
         <p className="text-xs uppercase tracking-[0.4em] text-gray-400 flex gap-2 items-center">
           <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
           {ordersCount} Active Orders • {pendingCount} Pending

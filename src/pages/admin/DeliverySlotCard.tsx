@@ -30,7 +30,7 @@ const DeliverySlotCard: React.FC<Props> = ({ slot, branchName, onEdit }) => {
           {isInactive ? <Lock size={24} /> : <Clock size={24} />}
         </div>
         <div>
-          <h4 className="text-2xl font-black italic text-gray-900">
+          <h4 className="text-2xl font-black  text-gray-900">
             {startLabel} &mdash; {endLabel}
           </h4>
           <div className="flex items-center gap-3 mt-1">

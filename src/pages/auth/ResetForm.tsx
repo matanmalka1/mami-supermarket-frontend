@@ -6,6 +6,7 @@ type ResetFormProps = {
   email: string;
   token: string;
   newPassword: string;
+  confirmPassword: string;
   loading: boolean;
   error?: string | null;
   showError?: boolean;
@@ -13,6 +14,7 @@ type ResetFormProps = {
   onEmailChange: (value: string) => void;
   onTokenChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
+  onConfirmPasswordChange: (value: string) => void;
   onSubmit: (event: React.FormEvent) => void;
 };
 
@@ -20,6 +22,7 @@ const ResetForm: React.FC<ResetFormProps> = ({
   email,
   token,
   newPassword,
+  confirmPassword,
   loading,
   error,
   showError = true,
@@ -27,6 +30,7 @@ const ResetForm: React.FC<ResetFormProps> = ({
   onEmailChange,
   onTokenChange,
   onNewPasswordChange,
+  onConfirmPasswordChange,
   onSubmit,
 }) => (
   <form onSubmit={onSubmit} className="space-y-6">
@@ -68,6 +72,22 @@ const ResetForm: React.FC<ResetFormProps> = ({
         onChange={(e) => onNewPasswordChange(e.target.value)}
         className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 px-4 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
         placeholder="Enter a strong password"
+        minLength={8}
+      />
+      <p className="text-[11px] text-gray-500">
+        at least 8 characters, must include at least one letter and one digit. Allowed special characters: ! @ # $ % ^ & * ( ) _ + = -
+      </p>
+    </div>
+
+    <div className="space-y-2">
+      <label className="text-sm font-bold text-gray-700">Confirm Password</label>
+      <input
+        required
+        type="password"
+        value={confirmPassword}
+        onChange={(e) => onConfirmPasswordChange(e.target.value)}
+        className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 px-4 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
+        placeholder="Repeat your new password"
         minLength={8}
       />
     </div>

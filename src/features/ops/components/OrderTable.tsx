@@ -54,7 +54,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
                     className="w-5 h-5 rounded-md accent-emerald-600 border-gray-200 cursor-pointer"
                   />
                 </TD>
-                <TD className="font-black italic text-[#006666]">
+                <TD className="font-black  text-[#006666]">
                   {formatOrderLabel(order)}
                 </TD>
                 <TD>
@@ -65,13 +65,13 @@ const OrderTable: React.FC<OrderTableProps> = ({
                     {order.urgency}
                   </div>
                 </TD>
-                <TD className="text-gray-600 font-medium italic">
+                <TD className="text-gray-600 font-medium ">
                   {order.deliverySlot?.startTime
                     ? `${order.deliverySlot.startTime} - ${order.deliverySlot.endTime}`
                     : "ASAP"}
                 </TD>
                 <TD className="text-left">
-                  <div className="text-xs text-gray-500 italic leading-tight">
+                  <div className="text-xs text-gray-500  leading-tight">
                     {order.itemsSummary || "Items not available"}
                   </div>
                 </TD>

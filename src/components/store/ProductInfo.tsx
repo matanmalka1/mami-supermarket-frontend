@@ -23,10 +23,23 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
     );
   }
 
+  const availableQuantity = Math.max(0, product.availableQuantity || 0);
+  const isOutOfStock = availableQuantity <= 0;
+
   const handleAddToCart = () => {
+    if (isOutOfStock) return;
     for (let i = 0; i < qty; i++) {
       addItem(product);
     }
+  };
+
+  const handleDecrease = () => {
+    setQty((current) => Math.max(1, current - 1));
+  };
+
+  const handleIncrease = () => {
+    if (availableQuantity <= 0) return;
+    setQty((current) => Math.min(current + 1, availableQuantity));
   };
 
   const handleShare = async () => {
@@ -55,7 +68,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
           <span className="text-[10px] font-black tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-md uppercase mb-4 inline-block">
             {product.category}
           </span>
-          <h1 className="text-5xl font-bold text-gray-900 tracking-tight leading-tight italic">
+          <h1 className="text-5xl font-bold text-gray-900 tracking-tight leading-tight ">
             {product.name}
           </h1>
         </div>
@@ -71,9 +84,17 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
           )}
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 uppercase tracking-widest">
-          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-          {product.availableQuantity > 0 ? "In Stock" : "Out of Stock"}
+        <div
+          className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest ${
+            isOutOfStock ? "text-red-500" : "text-emerald-600"
+          }`}
+        >
+          <div
+            className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+              isOutOfStock ? "bg-red-500" : "bg-emerald-500"
+            }`}
+          />
+          {isOutOfStock ? "Out of Stock" : "In Stock"}
         </div>
 
         <p className="text-gray-500 leading-relaxed text-sm font-medium">
@@ -87,15 +108,17 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
             </label>
             <div className="flex items-center w-fit border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
               <button
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="p-4 hover:bg-gray-100 transition-colors"
+                onClick={handleDecrease}
+                disabled={qty <= 1 || isOutOfStock}
+                className="p-4 hover:bg-gray-100 transition-colors disabled:cursor-not-allowed disabled:text-gray-300"
               >
                 <Minus size={16} className="text-gray-400" />
               </button>
               <span className="w-12 text-center font-black text-sm">{qty}</span>
               <button
-                onClick={() => setQty((q) => q + 1)}
-                className="p-4 hover:bg-gray-100 transition-colors"
+                onClick={handleIncrease}
+                disabled={isOutOfStock || qty >= availableQuantity}
+                className="p-4 hover:bg-gray-100 transition-colors disabled:cursor-not-allowed disabled:text-gray-300"
               >
                 <Plus size={16} className="text-gray-400" />
               </button>
@@ -106,10 +129,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
             <Button
               onClick={handleAddToCart}
               variant="emerald"
-              className="flex-1 h-14 rounded-xl text-sm font-black italic tracking-wide"
+              className="flex-1 h-14 rounded-xl text-sm font-black tracking-wide"
               icon={<ShoppingCart size={18} />}
+              disabled={isOutOfStock}
             >
-              Add to Cart
+              {isOutOfStock ? "Out of stock" : "Add to Cart"}
             </Button>
             <button
               onClick={handleShare}

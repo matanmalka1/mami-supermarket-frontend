@@ -28,7 +28,7 @@ const AuditLogs: React.FC = () => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-black text-gray-900 tracking-tighter italic">System Audit</h1>
+          <h1 className="text-4xl font-black text-gray-900 tracking-tighter ">System Audit</h1>
           <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Historical activity & security logs</p>
         </div>
       </div>

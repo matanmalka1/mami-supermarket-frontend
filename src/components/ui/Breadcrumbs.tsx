@@ -46,7 +46,7 @@ const Breadcrumbs: React.FC = () => {
           <React.Fragment key={to}>
             <ChevronRight size={10} className="shrink-0 text-gray-300" />
             {last ? (
-              <span className="text-[#008A45] italic truncate max-w-[150px]">
+              <span className="text-[#008A45] truncate max-w-[150px]">
                 {label}
               </span>
             ) : (

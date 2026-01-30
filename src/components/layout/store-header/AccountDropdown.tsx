@@ -13,7 +13,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({ onClose, userRole, on
   return (
     <div className="absolute top-full right-0 mt-4 w-64 bg-white border border-gray-100 rounded-3xl shadow-2xl p-2 animate-in slide-in-from-top-2 overflow-hidden">
       <div className={`px-4 py-4 border-b mb-1 ${isActuallyAdmin ? 'bg-teal-50/30' : 'bg-gray-50/50'}`}>
-        <p className="text-sm font-black italic">{isActuallyAdmin ? 'Administrator' : 'Customer Account'}</p>
+        <p className="text-sm font-black ">{isActuallyAdmin ? 'Administrator' : 'Customer Account'}</p>
         <div className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 mt-0.5 ${isActuallyAdmin ? 'text-teal-600' : 'text-emerald-600'}`}>
           <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isActuallyAdmin ? 'bg-teal-500' : 'bg-emerald-500'}`} /> 
           {isActuallyAdmin ? 'Active Admin Session' : 'Active Session'}
@@ -25,7 +25,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({ onClose, userRole, on
           <Link 
             to="/" 
             onClick={() => { onClose(); sessionStorage.removeItem('mami_manual_store_visit'); }} 
-            className="flex items-center gap-3 p-3 rounded-xl bg-teal-900 text-white transition-all text-xs font-black italic tracking-tight border border-teal-700 shadow-lg shadow-teal-900/20 hover:bg-teal-800"
+            className="flex items-center gap-3 p-3 rounded-xl bg-teal-900 text-white transition-all text-xs font-black  tracking-tight border border-teal-700 shadow-lg shadow-teal-900/20 hover:bg-teal-800"
           >
             <LayoutDashboard size={16} className="text-teal-300" /> ENTER ADMIN PORTAL
           </Link>

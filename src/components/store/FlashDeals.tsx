@@ -16,7 +16,7 @@ const FlashDeals: React.FC<FlashDealsProps> = ({ deals, loading, error, timeLeft
           <div className="flex items-center gap-2 text-orange-600 font-black uppercase text-xs tracking-widest">
             <Zap size={16} fill="currentColor" /> Flash Deals
           </div>
-          <h2 className="text-3xl font-black text-gray-900 tracking-tight italic">
+          <h2 className="text-3xl font-black text-gray-900 tracking-tight ">
             Ending Soon
           </h2>
         </div>

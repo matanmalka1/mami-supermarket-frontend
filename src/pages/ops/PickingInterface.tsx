@@ -73,7 +73,7 @@ const PickingInterface: React.FC = () => {
   };
   if (loading) {
     return (
-      <div className="p-20 text-center animate-pulse font-black text-gray-300 italic uppercase tracking-[0.3em]">
+      <div className="p-20 text-center animate-pulse font-black text-gray-300  uppercase tracking-[0.3em]">
         Loading picking data...
       </div>
     );

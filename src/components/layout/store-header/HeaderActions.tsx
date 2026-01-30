@@ -30,7 +30,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
       <Link
         to="/"
         onClick={() => sessionStorage.removeItem("mami_manual_store_visit")}
-        className="hidden md:flex items-center gap-2 bg-[#006666] text-white px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-teal-900/20 hover:bg-[#005555] transition-all italic border border-teal-400/20"
+        className="hidden md:flex items-center gap-2 bg-[#006666] text-white px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-teal-900/20 hover:bg-[#005555] transition-all  border border-teal-400/20"
       >
         <Lock size={14} /> OPS PORTAL
       </Link>

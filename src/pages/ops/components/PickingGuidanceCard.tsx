@@ -14,7 +14,7 @@ const PickingGuidanceCard: React.FC = () => (
         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-300">
           Operational Guidance
         </h4>
-        <p className="text-xl font-bold italic pr-20 leading-tight">
+        <p className="text-xl font-bold  pr-20 leading-tight">
           Please follow the bin sequence for maximum efficiency.
         </p>
       </div>

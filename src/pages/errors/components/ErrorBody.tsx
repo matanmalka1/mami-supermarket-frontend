@@ -20,7 +20,7 @@ const ErrorBody: React.FC<ErrorBodyProps> = ({
       <div className="text-[0.65rem] font-black uppercase tracking-[0.6em] text-emerald-500">
         {isForbidden ? "Restricted access" : "Page not found"}
       </div>
-      <h1 className="mt-5 text-3xl font-black italic text-slate-900 md:text-4xl">{title}</h1>
+      <h1 className="mt-5 text-3xl font-black  text-slate-900 md:text-4xl">{title}</h1>
       <p className="mt-3 text-sm text-slate-500 md:text-base">{description}</p>
 
       <div className="mt-8 flex justify-center">

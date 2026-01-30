@@ -79,7 +79,7 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
           <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
             Stock report
           </p>
-          <h3 className="text-2xl font-black italic text-gray-900">
+          <h3 className="text-2xl font-black  text-gray-900">
             Active inventory snapshot
           </h3>
         </div>

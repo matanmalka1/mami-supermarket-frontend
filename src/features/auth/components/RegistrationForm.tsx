@@ -58,7 +58,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ form, onSubmit, sho
         <label htmlFor="acceptTerms" className="text-sm font-bold text-gray-400 cursor-pointer">I agree to the <span className="text-[#008A45] font-black hover:underline">Terms</span>.</label>
       </div>
 
-      <Button disabled={isSubmitting} fullWidth className="h-16 rounded-2xl text-xl italic" icon={<ArrowRight size={24} />}>
+      <Button disabled={isSubmitting} fullWidth className="h-16 rounded-2xl text-xl " icon={<ArrowRight size={24} />}>
         {isSubmitting ? 'Processing...' : 'Continue'}
       </Button>
     </form>

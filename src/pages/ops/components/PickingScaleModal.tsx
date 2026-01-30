@@ -36,9 +36,9 @@ const PickingScaleModal: React.FC<PickingScaleModalProps> = ({
         <div className="relative inline-block">
           <div className="w-56 h-56 rounded-full border-8 transition-all flex flex-col items-center justify-center bg-gray-50 border-emerald-500">
             <Scale size={48} className="text-emerald-500" />
-            <span className="text-5xl font-black italic tracking-tighter mt-2">
+            <span className="text-5xl font-black  tracking-tighter mt-2">
               {weightValue}{" "}
-              <span className="text-lg not-italic opacity-50">KG</span>
+              <span className="text-lg opacity-50">KG</span>
             </span>
           </div>
         </div>
