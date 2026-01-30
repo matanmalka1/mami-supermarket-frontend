@@ -2,7 +2,21 @@ import React, { useState, useEffect } from "react";
 import { History, ArrowRight } from "lucide-react";
 import ProductCard from "@/components/store/ProductCard";
 import { toast } from "react-hot-toast";
-import { loadRecentlyViewedItems, RECENTLY_VIEWED_KEY } from "@/features/store/recently-viewed/utils/recentlyViewed";
+
+const RECENTLY_VIEWED_KEY = "mami_recent_items";
+
+const loadRecentlyViewedItems = () => {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(RECENTLY_VIEWED_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((item) => typeof item?.id === "number");
+  } catch {
+    return [];
+  }
+};
 
 const RecentlyViewed: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);

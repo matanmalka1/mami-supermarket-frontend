@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Button from "../../components/ui/Button";
-import { apiService } from "../../services/api";
+import { stockRequestsService } from "@/domains/stock-requests/service";
 import { stockRequestSchema, StockRequestInput } from "../../validation/ops";
 interface Props { onSubmitted: () => void; }
 const REQUEST_TYPES: StockRequestInput["requestType"][] = ["ADD_QUANTITY", "SET_QUANTITY"];
@@ -30,11 +30,11 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
       id: "stock-req",
     });
     try {
-      await apiService.ops.createStockRequest({
-        branch_id: data.branchId,
-        product_id: data.productId,
-        request_type: data.requestType,
+      await stockRequestsService.create({
+        branch: String(data.branchId),
+        product: String(data.productId),
         quantity: data.quantity,
+        type: data.requestType,
       });
       toast.success("Stock request submitted.", {
         id: "stock-req",
