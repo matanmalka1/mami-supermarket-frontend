@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { User, Mail, Bell, ShieldCheck } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
 import { sleep } from '@/utils/async';
 import { useProfileSettings } from '@/features/auth/hooks/useProfileSettings';
+import { useUserProfile } from '@/features/auth/hooks/useUserProfile';
 
 type PasswordFormShape = {
   currentPassword: string;
@@ -13,9 +14,35 @@ type PasswordFormShape = {
 };
 
 const ProfileSettings: React.FC = () => {
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm({
-    defaultValues: { firstName: 'John', lastName: 'Doe', email: 'john@example.com', phone: '050-1234567' }
+  const { user } = useUserProfile();
+  const defaultValues = useMemo(
+    () => ({
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
+      email: user?.email ?? "",
+      phone: user?.phone ?? "",
+    }),
+    [user],
+  );
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+    reset,
+  } = useForm({
+    defaultValues,
   });
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
+        email: user.email ?? "",
+        phone: user.phone ?? "",
+      });
+    }
+  }, [user, reset]);
 
   const [notificationSettings, setNotificationSettings] = useState({
     orderUpdates: true,
@@ -99,6 +126,10 @@ const ProfileSettings: React.FC = () => {
             <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Email</label>
             <div className="relative"><Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300" size={18} /><input {...register('email')} className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-14 pr-6 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold" /></div>
           </div>
+          <div className="space-y-2">
+            <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Phone</label>
+            <input {...register('phone')} className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold" />
+          </div>
           <Button fullWidth size="lg" loading={isSubmitting} type="submit" className="h-16 rounded-2xl">Save Changes</Button>
         </form>
 
@@ -152,7 +183,7 @@ const ProfileSettings: React.FC = () => {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-[0.6rem] font-black uppercase tracking-[0.5em] text-slate-500">
-                  New password
+                 Set new password
                 </label>
                 <input
                   type="password"

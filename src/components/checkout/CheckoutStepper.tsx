@@ -12,7 +12,7 @@ export const CheckoutStepper: React.FC<{ step: CheckoutStep }> = ({ step }) => {
       {steps.map((s, i) => (
         <div key={s} className="bg-white px-4 flex flex-col items-center gap-2">
           <div
-            className={`w-12 h-12 rounded-full border-4 flex items-center justify-center font-black transition-all ${
+            className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-all ${
               step === s
                 ? "border-[#008A45] bg-[#008A45] text-white scale-110 shadow-lg"
                 : i < currentIndex
@@ -23,7 +23,7 @@ export const CheckoutStepper: React.FC<{ step: CheckoutStep }> = ({ step }) => {
             {i < currentIndex ? <CheckCircle2 size={24} /> : i + 1}
           </div>
           <span
-            className={`text-[10px] font-black uppercase tracking-widest ${
+            className={`text-[10px] uppercase tracking-widest ${
               step === s ? "text-[#008A45]" : "text-gray-300"
             }`}
           >

@@ -82,7 +82,7 @@ export const PaymentStep: React.FC<Props> = ({
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-      <h2 className="text-4xl font-black ">Final Payment</h2>
+      <h2 className="text-4xl ">Final Payment</h2>
       <div className="p-8 bg-gray-50 rounded-3xl space-y-6 border border-gray-100">
         <div className="flex justify-between items-center font-bold text-gray-500 uppercase text-xs tracking-widest border-b pb-6">
           <span>Order Summary</span>
@@ -97,7 +97,7 @@ export const PaymentStep: React.FC<Props> = ({
             <span>Delivery</span>
             <span>{deliveryFee === 0 ? "FREE" : currencyILS(deliveryFee)}</span>
           </div>
-          <div className="flex justify-between text-2xl font-black  pt-4 border-t">
+          <div className="flex justify-between text-2xl  pt-4 border-t">
             <span>Total</span>
             <span>{currencyILS(total)}</span>
           </div>
@@ -105,7 +105,7 @@ export const PaymentStep: React.FC<Props> = ({
       </div>
       <div className="space-y-6">
         <div className="space-y-3">
-          <label className="text-xs font-black uppercase text-gray-400 tracking-widest">
+          <label className="text-xs uppercase text-gray-400 tracking-widest">
             Card Number
           </label>
           <div className="relative">
@@ -124,7 +124,7 @@ export const PaymentStep: React.FC<Props> = ({
           </div>
         </div>
         <div className="space-y-3">
-          <label className="text-xs font-black uppercase text-gray-400 tracking-widest">
+          <label className="text-xs uppercase text-gray-400 tracking-widest">
             Card Holder Name
           </label>
           <input
@@ -138,7 +138,7 @@ export const PaymentStep: React.FC<Props> = ({
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-3">
-            <label className="text-xs font-black uppercase text-gray-400 tracking-widest">
+            <label className="text-xs uppercase text-gray-400 tracking-widest">
               Expiry Date
             </label>
             <input
@@ -152,7 +152,7 @@ export const PaymentStep: React.FC<Props> = ({
             />
           </div>
           <div className="space-y-3">
-            <label className="text-xs font-black uppercase text-gray-400 tracking-widest">
+            <label className="text-xs uppercase text-gray-400 tracking-widest">
               CVV
             </label>
             <input

@@ -13,13 +13,8 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
   itemName,
   onSelect,
 }) => {
-  const {
-    query,
-    setQuery,
-    suggestions,
-    loading,
-    resetSuggestions,
-  } = useCatalogAutocomplete({ limit: 8 });
+  const { query, setQuery, suggestions, loading, resetSuggestions } =
+    useCatalogAutocomplete({ limit: 8 });
 
   const handleSelect = (product: Product) => {
     onSelect(product);
@@ -51,7 +46,7 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
 
       <div className="max-h-72 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
         {loading ? (
-          <div className="py-12 text-center text-gray-300 animate-pulse font-black uppercase tracking-widest">
+          <div className="py-12 text-center text-gray-300 animate-pulse uppercase tracking-widest">
             Searching...
           </div>
         ) : suggestions.length > 0 ? (
@@ -68,7 +63,9 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
                 className="w-14 h-14 rounded-xl object-cover border"
               />
               <div className="flex-1">
-                <p className="font-bold text-gray-900 truncate">{product.name}</p>
+                <p className="font-bold text-gray-900 truncate">
+                  {product.name}
+                </p>
                 <p className="text-[10px] uppercase tracking-[0.5em] text-gray-400">
                   {product.category}
                 </p>

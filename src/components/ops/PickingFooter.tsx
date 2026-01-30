@@ -42,16 +42,16 @@ const PickingFooter: React.FC<PickingFooterProps> = ({
       <div className="flex items-center gap-12">
         {/* Progress Section */}
         <div className="flex flex-col">
-          <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Batch Progress</span>
+          <span className="text-[10px] text-gray-400 uppercase tracking-[0.2em] mb-1">Batch Progress</span>
           <div className="flex items-baseline gap-2">
-             <span className="text-5xl font-black text-[#006666] tracking-tighter tabular-nums leading-none">
+             <span className="text-5xl text-[#006666] tracking-tighter tabular-nums leading-none">
               {pickedCount}
              </span>
-             <span className="text-xl font-black text-gray-200">/</span>
-             <span className="text-2xl font-black text-gray-300 tabular-nums">
+             <span className="text-xl text-gray-200">/</span>
+             <span className="text-2xl text-gray-300 tabular-nums">
               {items.length}
              </span>
-             <span className="text-[10px] font-black text-gray-400 ml-2 uppercase tracking-widest">Items Picked</span>
+             <span className="text-[10px] text-gray-400 ml-2 uppercase tracking-widest">Items Picked</span>
           </div>
         </div>
 
@@ -60,15 +60,15 @@ const PickingFooter: React.FC<PickingFooterProps> = ({
         {/* Stats Section */}
         <div className="flex gap-10">
           <div className="space-y-1">
-            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">To Collect</span>
-            <div className="flex items-center gap-2 text-sm font-black text-orange-600 uppercase">
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest">To Collect</span>
+            <div className="flex items-center gap-2 text-sm text-orange-600 uppercase">
               <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.5)]"></div>
               {pendingCount} Remaining
             </div>
           </div>
           <div className="space-y-1">
-            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Time Remaining</span>
-            <div className="flex items-center gap-2 text-sm font-black text-gray-600 uppercase">
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest">Time Remaining</span>
+            <div className="flex items-center gap-2 text-sm text-gray-600 uppercase">
               <Timer size={16} className="text-gray-400" />
               Est. {Math.floor(estMinutes)}m
             </div>
@@ -92,7 +92,7 @@ const PickingFooter: React.FC<PickingFooterProps> = ({
           size="lg"
           disabled={progress < 100} 
           onClick={onComplete} 
-          className={`rounded-2xl w-80 h-16 transition-all duration-500 font-black text-lg uppercase tracking-widest ${
+          className={`rounded-2xl w-80 h-16 transition-all duration-500 text-lg uppercase tracking-widest ${
             progress === 100 
               ? 'bg-[#008A45] hover:bg-[#006b35] scale-105 shadow-[0_20px_40px_rgba(0,138,69,0.2)]' 
               : 'bg-gray-100 text-gray-300 border-transparent shadow-none cursor-not-allowed opacity-60'

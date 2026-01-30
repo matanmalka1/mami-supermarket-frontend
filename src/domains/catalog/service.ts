@@ -16,17 +16,18 @@ export interface ProductDTO {
   name: string;
   sku: string;
   price: number;
-  old_price?: number | null;
+  oldPrice?: number | null;
   unit?: string | null;
-  nutritional_info?: Record<string, unknown> | null;
-  is_organic?: boolean;
-  bin_location?: string | null;
-  image_url?: string | null;
+  nutritionalInfo?: Record<string, unknown> | null;
+  isOrganic?: boolean;
+  binLocation?: string | null;
+  imageUrl?: string | null;
   description?: string | null;
-  category_id: number;
-  is_active: boolean;
-  in_stock_anywhere: boolean;
-  in_stock_for_branch?: boolean | null;
+  categoryId: number;
+  isActive: boolean;
+  inStockAnywhere: boolean;
+  inStockForBranch?: boolean | null;
+  availableQuantity?: number | null;
 }
 
 export interface PaginationDTO {
@@ -49,14 +50,19 @@ const mapProduct = (dto: ProductDTO): Product => ({
   id: dto.id,
   name: dto.name,
   sku: dto.sku,
-  category: String(dto.category_id),
+  category: String(dto.categoryId),
   price: dto.price,
-  oldPrice: dto.old_price ?? undefined,
-  availableQuantity: dto.in_stock_anywhere ? 1 : 0,
+  oldPrice: dto.oldPrice ?? undefined,
+  availableQuantity:
+    typeof dto.availableQuantity === "number"
+      ? Math.max(0, dto.availableQuantity)
+      : dto.inStockAnywhere
+      ? 1
+      : 0,
   reservedQuantity: 0,
-  status: dto.is_active ? "active" : "inactive",
-  imageUrl: dto.image_url ?? "",
-  binLocation: dto.bin_location ?? undefined,
+  status: dto.isActive ? "active" : "inactive",
+  imageUrl: dto.imageUrl ?? "",
+  binLocation: dto.binLocation ?? undefined,
   description: dto.description ?? undefined,
   unit: dto.unit ?? undefined,
 });
@@ -227,21 +233,21 @@ export const catalogService = {
   }): Promise<Array<{ id: number; name: string }>> {
     const { q, limit = 10 } = params;
 
-    const response = await apiClient.get<{
+    const { data } = await apiClient.get<{
       items: Array<{ id: number; name: string }>;
     }>(`${catalogPrefix}/products/autocomplete`, {
       params: { q, limit },
     });
-    return Array.isArray(response.items) ? response.items : [];
+    return Array.isArray(data.items) ? data.items : [];
   },
 
   /**
    * Get product reviews (always empty for now)
    */
   async getProductReviews(productId: number): Promise<{ items: any[] }> {
-    const response = await apiClient.get<any>(
+    const { data } = await apiClient.get<any>(
       `${catalogPrefix}/products/${productId}/reviews`,
     );
-    return { items: response.items ?? [] };
+    return { items: data.items ?? [] };
   },
 };

@@ -43,7 +43,7 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
       <div className="relative z-10 flex gap-10 items-center">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="text-5xl font-black text-gray-900 tracking-tighter">
+            <h1 className="text-5xl text-gray-900 tracking-tighter">
               {formatOrderLabel(order)}
             </h1>
             <Badge color="emerald">{order.status}</Badge>

@@ -33,13 +33,10 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
     event.preventDefault();
     event.stopPropagation();
     toggleWishlist(item.id);
-    toast(
-      isLiked ? "Removed from wishlist" : "Added to wishlist",
-      {
-        icon: isLiked ? "🟣" : "🧡",
-        style: { borderRadius: "1rem", fontWeight: "bold" },
-      },
-    );
+    toast(isLiked ? "Removed from wishlist" : "Added to wishlist", {
+      icon: isLiked ? "🟣" : "🧡",
+      style: { borderRadius: "1rem", fontWeight: "bold" },
+    });
   };
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -63,30 +60,28 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-3xl font-black text-gray-300">
+            <div className="flex h-full w-full items-center justify-center text-3xl text-gray-300">
               {getInitials(item.name)}
             </div>
           )}
           {item.tag && (
-            <span className="absolute left-4 top-4 rounded-full bg-[#008A45] px-3 py-1 text-[10px] font-black uppercase tracking-[0.4em] text-white">
+            <span className="absolute left-4 top-4 rounded-full bg-[#008A45] px-3 py-1 text-[10px] uppercase tracking-[0.4em] text-white">
               {item.tag}
             </span>
           )}
         </div>
         <div className="flex-1 space-y-3">
           {item.category && (
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-400">
+            <p className="text-[10px] uppercase tracking-[0.5em] text-gray-400">
               {item.category}
             </p>
           )}
-          <h3 className="text-2xl font-black text-gray-900 leading-tight">
-            {item.name}
-          </h3>
+          <h3 className="text-2xl text-gray-900 leading-tight">{item.name}</h3>
           {item.description && (
             <p className="text-sm text-gray-500">{item.description}</p>
           )}
           <div className="flex items-baseline gap-3">
-            <span className="text-2xl font-black text-[#008A45]">
+            <span className="text-2xl text-[#008A45]">
               {currencyILS(item.price)}
               {item.unit ?? ""}
             </span>
@@ -98,13 +93,11 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
           </div>
           {availableQuantity !== undefined && (
             <p
-              className={`text-[10px] font-black uppercase tracking-[0.4em] ${
+              className={`text-[10px] uppercase tracking-[0.4em] ${
                 isOutOfStock ? "text-red-500" : "text-gray-400"
               }`}
             >
-              {isOutOfStock
-                ? "Out of stock"
-                : `${availableQuantity} in stock`}
+              {isOutOfStock ? "Out of stock" : `${availableQuantity} in stock`}
             </p>
           )}
         </div>
@@ -113,13 +106,16 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
             type="button"
             onClick={handleAddToCart}
             disabled={isOutOfStock}
-            className={`flex items-center justify-center gap-2 rounded-2xl border border-transparent px-5 py-3 text-sm font-black uppercase tracking-[0.3em] transition active:scale-95 ${
+            className={`flex items-center justify-center gap-2 rounded-2xl border border-transparent px-5 py-3 text-sm uppercase tracking-[0.3em] transition active:scale-95 ${
               isOutOfStock
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
                 : "bg-[#008A45] text-white hover:bg-emerald-600 shadow-xl shadow-emerald-900/20"
             }`}
           >
-            <ShoppingCart size={16} className={isOutOfStock ? "text-gray-400" : ""} />
+            <ShoppingCart
+              size={16}
+              className={isOutOfStock ? "text-gray-400" : ""}
+            />
             {isOutOfStock ? "Out of stock" : "Add to cart"}
           </button>
           <button

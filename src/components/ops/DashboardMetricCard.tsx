@@ -31,8 +31,8 @@ const DashboardMetricCard: React.FC<DashboardMetricCardProps> = ({
   <div
     className={`rounded-[2rem] p-6 bg-gradient-to-br shadow-2xl border border-white/20 animate-in fade-in duration-500 ${accentClass(accent)}`}
   >
-    <p className="text-[10px] uppercase tracking-[0.4em] font-black opacity-80">{label}</p>
-    <h3 className="text-3xl md:text-4xl font-black  mt-2">
+    <p className="text-[10px] uppercase tracking-[0.4em] opacity-80">{label}</p>
+    <h3 className="text-3xl md:text-4xl  mt-2">
       {loading ? "—" : value}
     </h3>
     {sub && <p className="text-[11px] mt-1 opacity-80">{sub}</p>}

@@ -10,7 +10,7 @@ type Props = {
 
 export const FulfillmentStep: React.FC<Props> = ({ method, onSelect, onNext }) => (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-    <h2 className="text-4xl font-black ">How would you like your groceries?</h2>
+    <h2 className="text-4xl ">How would you like your groceries?</h2>
     <div className="grid grid-cols-2 gap-6">
       <button
         onClick={() => onSelect("DELIVERY")}
@@ -20,7 +20,7 @@ export const FulfillmentStep: React.FC<Props> = ({ method, onSelect, onNext }) =
       >
         <Truck size={40} className={method === "DELIVERY" ? "text-[#008A45]" : "text-gray-300"} />
         <div>
-          <h3 className="text-xl font-black ">Home Delivery</h3>
+          <h3 className="text-xl ">Home Delivery</h3>
           <p className="text-sm text-gray-500 font-bold">Directly to your doorstep</p>
         </div>
       </button>
@@ -32,7 +32,7 @@ export const FulfillmentStep: React.FC<Props> = ({ method, onSelect, onNext }) =
       >
         <Store size={40} className={method === "PICKUP" ? "text-[#008A45]" : "text-gray-300"} />
         <div>
-          <h3 className="text-xl font-black ">Store Pickup</h3>
+          <h3 className="text-xl ">Store Pickup</h3>
           <p className="text-sm text-gray-500 font-bold">Pick up from nearest branch</p>
         </div>
       </button>

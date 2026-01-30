@@ -33,7 +33,7 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
         onClick={onToggle}
       >
         <td className="px-10 py-8 text-center">
-          <div className={`w-16 h-16 flex items-center justify-center rounded-2xl font-black text-xl border-2 transition-all shadow-sm ${isExpanded ? 'bg-[#006666] text-white border-[#006666]' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
+          <div className={`w-16 h-16 flex items-center justify-center rounded-2xl text-xl border-2 transition-all shadow-sm ${isExpanded ? 'bg-[#006666] text-white border-[#006666]' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
             {item.product?.binLocation || 'A-12'}
           </div>
         </td>
@@ -50,9 +50,9 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
               </div>
             </div>
             <div className="space-y-1">
-              <h4 className="font-black text-2xl text-gray-900 leading-none tracking-tight">{item.product?.name}</h4>
+              <h4 className="text-2xl text-gray-900 leading-none tracking-tight">{item.product?.name}</h4>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-black bg-gray-100 px-3 py-1 rounded-lg text-gray-600">x{item.quantity}</span>
+                <span className="text-sm bg-gray-100 px-3 py-1 rounded-lg text-gray-600">x{item.quantity}</span>
                 {isMissing && <Badge color="red">Shortage</Badge>}
                 {isPicked && <Badge color="emerald">Collected</Badge>}
               </div>

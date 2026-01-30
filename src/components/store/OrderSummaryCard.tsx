@@ -21,7 +21,7 @@ const OrderSummaryCard: React.FC<Props> = ({
         <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           Estimated {fulfillmentLabel}
         </p>
-        <p className="font-black text-xl text-gray-900">{estimatedDelivery}</p>
+        <p className="text-xl text-gray-900">{estimatedDelivery}</p>
       </div>
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400">
@@ -45,9 +45,7 @@ const OrderSummaryCard: React.FC<Props> = ({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="font-black text-2xl text-gray-300">
-                {item.name?.[0]}
-              </span>
+              <span className="text-2xl text-gray-300">{item.name?.[0]}</span>
             )}
           </div>
           <div className="flex-1 text-left">
@@ -61,9 +59,7 @@ const OrderSummaryCard: React.FC<Props> = ({
               Qty {item.quantity} • {currencyILS(item.price)} each
             </p>
           </div>
-          <p className="font-black text-lg">
-            {currencyILS(item.price * item.quantity)}
-          </p>
+          <p className="text-lg">{currencyILS(item.price * item.quantity)}</p>
         </div>
       ))}
     </div>
@@ -81,7 +77,7 @@ const OrderSummaryCard: React.FC<Props> = ({
             : currencyILS(snapshot.deliveryFee)}
         </span>
       </div>
-      <div className="flex justify-between text-2xl font-black uppercase tracking-[0.2em]">
+      <div className="flex justify-between text-2xl uppercase tracking-[0.2em]">
         <span>Total Paid</span>
         <span>{currencyILS(snapshot.total)}</span>
       </div>

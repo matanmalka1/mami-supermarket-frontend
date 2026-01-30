@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Minus, Plus, ShoppingCart, Share2, Truck, ShieldCheck } from "lucide-react";
+import {
+  Minus,
+  Plus,
+  ShoppingCart,
+  Share2,
+  Truck,
+  ShieldCheck,
+} from "lucide-react";
 import Button from "../ui/Button";
 import { toast } from "react-hot-toast";
 import { useCart } from "@/context/cart-context";
@@ -65,7 +72,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
     <div className="flex flex-col">
       <div className="space-y-6 flex-1">
         <div>
-          <span className="text-[10px] font-black tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-md uppercase mb-4 inline-block">
+          <span className="text-[10px] tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-md uppercase mb-4 inline-block">
             {product.category}
           </span>
           <h1 className="text-5xl font-bold text-gray-900 tracking-tight leading-tight ">
@@ -103,7 +110,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
 
         <div className="pt-8 space-y-6 border-t border-gray-100">
           <div className="space-y-4">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+            <label className="text-[10px] uppercase tracking-widest text-gray-400">
               Select Quantity
             </label>
             <div className="flex items-center w-fit border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
@@ -114,7 +121,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
               >
                 <Minus size={16} className="text-gray-400" />
               </button>
-              <span className="w-12 text-center font-black text-sm">{qty}</span>
+              <span className="w-12 text-center text-sm">{qty}</span>
               <button
                 onClick={handleIncrease}
                 disabled={isOutOfStock || qty >= availableQuantity}
@@ -129,7 +136,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
             <Button
               onClick={handleAddToCart}
               variant="emerald"
-              className="flex-1 h-14 rounded-xl text-sm font-black tracking-wide"
+              className="flex-1 h-14 rounded-xl text-sm tracking-wide"
               icon={<ShoppingCart size={18} />}
               disabled={isOutOfStock}
             >
