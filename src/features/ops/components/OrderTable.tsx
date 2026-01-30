@@ -43,7 +43,9 @@ const OrderTable: React.FC<OrderTableProps> = ({
             };
             return (
               <TR
-                key={order.id ?? order.orderNumber ?? `${order.createdAt}-${index}`}
+                key={
+                  order.id ?? order.orderNumber ?? `${order.createdAt}-${index}`
+                }
                 className={isSelected ? "bg-emerald-50/30" : ""}
               >
                 <TD>
@@ -54,12 +56,12 @@ const OrderTable: React.FC<OrderTableProps> = ({
                     className="w-5 h-5 rounded-md accent-emerald-600 border-gray-200 cursor-pointer"
                   />
                 </TD>
-                <TD className=" text-[#006666]">
-                  {formatOrderLabel(order)}
-                </TD>
+                <TD className=" text-[#006666]">{formatOrderLabel(order)}</TD>
                 <TD>
                   <div className="text-gray-900">
-                    {order.customerName || order.customer?.fullName || "Anonymous"}
+                    {order.customerName ||
+                      order.customer?.fullName ||
+                      "Anonymous"}
                   </div>
                   <div className="text-[10px] uppercase text-gray-400 tracking-widest">
                     {order.urgency}

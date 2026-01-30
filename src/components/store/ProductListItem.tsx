@@ -21,7 +21,7 @@ const getInitials = (text?: string) =>
 const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
   const { addItem } = useCart();
   const { toggleWishlist, isWishlisted } = useWishlist();
-  
+
   const isLiked = isWishlisted(item.id);
   const availableQuantity = typeof item.availableQuantity === "number" ? Math.max(0, item.availableQuantity) : undefined;
   const isOutOfStock = availableQuantity !== undefined ? availableQuantity <= 0 : false;
@@ -77,12 +77,11 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
           {item.description && (
             <p className="text-sm text-gray-500">{item.description}</p>
           )}
-          <div className="flex items-baseline gap-3">
-            <span className="text-2xl text-[#008A45]">
+          <div className="flex items-baseline gap-4">
+            <div className="text-2xl font-black text-[#008A45]">
               {currencyILS(item.price)}
-              {item.unit ?? ""}
-            </span>
-            {item.oldPrice && (
+            </div>
+            {item.oldPrice && item.oldPrice > 0 && (
               <span className="text-sm text-gray-400 line-through">
                 {currencyILS(item.oldPrice)}
               </span>

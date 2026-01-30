@@ -21,9 +21,7 @@ const FlashDeals: React.FC<FlashDealsProps> = ({
           <p className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-[#ff6f1e]">
             <Zap size={16} aria-hidden /> Flash Deals
           </p>
-          <h2 className="text-4xl text-gray-900 tracking-tight">
-            Ending Soon
-          </h2>
+          <h2 className="text-4xl text-gray-900 tracking-tight">Ending Soon</h2>
         </div>
         <div className="flex items-center gap-4 rounded-3xl border border-[#ffd7b3] bg-white/90 px-6 py-3 shadow-sm">
           <Timer size={24} className="text-orange-500" />

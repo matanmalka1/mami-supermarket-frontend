@@ -115,12 +115,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
         <h4 className="font-bold text-lg leading-tight truncate">
           {item.name}
         </h4>
-        <div className="flex items-baseline gap-2">
-          <span className="text-xl text-[#008A45]">
+        <div className="flex items-baseline gap-3">
+          <div className="text-xl text-[#008A45]">
             {currencyILS(item.price)}
-            {item.unit}
-          </span>
-          {item.oldPrice && (
+          </div>
+          {item.oldPrice && item.oldPrice > 0 && (
             <span className="text-sm text-gray-400 line-through">
               {currencyILS(item.oldPrice)}
             </span>

@@ -1,6 +1,10 @@
 import React from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from "react-hook-form";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link } from "react-router";
 import { LoginInput } from "@/validation/auth";
@@ -109,10 +113,7 @@ const LoginFormCard: React.FC<Props> = ({
       <div className="text-center">
         <p className="text-sm font-bold text-gray-400">
           New to Mami Supermarket?{" "}
-          <Link
-            to="/register"
-            className="text-[#008A45] hover:underline ml-1"
-          >
+          <Link to="/register" className="text-[#008A45] hover:underline ml-1">
             Create an account
           </Link>
         </p>

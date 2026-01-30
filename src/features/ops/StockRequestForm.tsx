@@ -6,8 +6,13 @@ import { toast } from "react-hot-toast";
 import Button from "../../components/ui/Button";
 import { stockRequestsService } from "@/domains/stock-requests/service";
 import { stockRequestSchema, StockRequestInput } from "../../validation/ops";
-interface Props { onSubmitted: () => void; }
-const REQUEST_TYPES: StockRequestInput["requestType"][] = ["ADD_QUANTITY", "SET_QUANTITY"];
+interface Props {
+  onSubmitted: () => void;
+}
+const REQUEST_TYPES: StockRequestInput["requestType"][] = [
+  "ADD_QUANTITY",
+  "SET_QUANTITY",
+];
 
 const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   const {
@@ -42,7 +47,9 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
       reset();
       onSubmitted();
     } catch (err: any) {
-      toast.error(err.message || "Failed to submit stock request", { id: "stock-req" });
+      toast.error(err.message || "Failed to submit stock request", {
+        id: "stock-req",
+      });
     }
   };
 
@@ -115,7 +122,8 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
 
       <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl text-sm font-bold text-emerald-800 flex gap-3">
         <AlertTriangle size={18} className="text-emerald-500 shrink-0" />
-        Use exact branch & product IDs. request_type must be ADD_QUANTITY or SET_QUANTITY.
+        Use exact branch & product IDs. request_type must be ADD_QUANTITY or
+        SET_QUANTITY.
       </div>
 
       <Button
@@ -131,13 +139,15 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   );
 };
 
-const Field: React.FC<{ label: string; input: React.ReactNode; error?: string }> = ({
-  label,
-  input,
-  error,
-}) => (
+const Field: React.FC<{
+  label: string;
+  input: React.ReactNode;
+  error?: string;
+}> = ({ label, input, error }) => (
   <div className="space-y-2">
-    <label className="text-[10px] uppercase tracking-[0.2em] text-gray-400">{label}</label>
+    <label className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
+      {label}
+    </label>
     {input}
     {error && <p className="text-xs text-red-500 font-bold">{error}</p>}
   </div>
