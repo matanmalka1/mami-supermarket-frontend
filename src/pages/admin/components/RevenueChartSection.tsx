@@ -22,7 +22,7 @@ const RevenueChartSection: React.FC<Props> = ({
   <div className="grid grid-cols-12 gap-10">
     <Card className="col-span-12 lg:col-span-8 p-10 space-y-8">
       <div className="flex justify-between items-center">
-        <h3 className="text-2xl font-black ">Revenue Velocity</h3>
+        <h3 className="text-2xl ">Revenue Velocity</h3>
         <TrendingUp size={20} className="text-emerald-500" />
       </div>
       {hasData ? (
@@ -35,7 +35,7 @@ const RevenueChartSection: React.FC<Props> = ({
               title={entry.label}
             >
               <div className="absolute -top-8 left-0 right-0 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="text-[10px] font-black ">₪{entry.value}</span>
+                <span className="text-[10px] ">₪{entry.value}</span>
               </div>
             </div>
           ))}
@@ -52,6 +52,7 @@ const RevenueChartSection: React.FC<Props> = ({
       <Card variant="emerald" className="p-10 space-y-6">
         <DollarSign size={40} className="opacity-40" />
         <h3 className="text-3xl font-black ">Momentum</h3>
+        <h3 className="text-3xl ">Momentum</h3>
         <p className="font-bold opacity-80 ">{momentumText}</p>
         <div className="h-3 bg-white/20 rounded-full overflow-hidden">
           <div
@@ -63,6 +64,7 @@ const RevenueChartSection: React.FC<Props> = ({
       <Card className="p-10">
         <TrendingUp size={40} className="opacity-40" />
         <h4 className="font-black text-xl  text-slate-800">Scope</h4>
+        <h4 className="text-xl  text-slate-800">Scope</h4>
         <p className="text-sm font-bold text-slate-600 leading-relaxed mt-2 ">
           {scopeText}
         </p>

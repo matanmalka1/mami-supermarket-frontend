@@ -13,7 +13,8 @@ const DeliverySlotManager: React.FC = () => {
   const [editingSlot, setEditingSlot] = useState<any | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<string>("");
   const [selectedDay, setSelectedDay] = useState<string>("");
-  const { slots, setSlots, branches, loading, error, refreshSlots } = useDeliverySlots();
+  const { slots, setSlots, branches, loading, error, refreshSlots } =
+    useDeliverySlots();
 
   const handleSave = async () => {
     await refreshSlots();
@@ -81,9 +82,7 @@ const DeliverySlotManager: React.FC = () => {
     <div className="space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black  tracking-tight">
-            Fulfillment Config
-          </h1>
+          <h1 className="text-4xl  tracking-tight">Fulfillment Config</h1>
           <p className="text-sm text-gray-500 font-bold uppercase tracking-widest mt-1">
             Branch Delivery Slots
           </p>
@@ -98,7 +97,7 @@ const DeliverySlotManager: React.FC = () => {
         </Button>
       </div>
       <div className="flex flex-wrap items-center gap-4">
-        <label className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">
+        <label className="text-xs uppercase tracking-[0.3em] text-gray-400">
           Filter by branch
         </label>
         {availableBranches.length > 0 ? (
@@ -118,7 +117,7 @@ const DeliverySlotManager: React.FC = () => {
             No branch
           </div>
         )}
-        <label className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">
+        <label className="text-xs uppercase tracking-[0.3em] text-gray-400">
           Day of week
         </label>
         {availableDays.length > 0 ? (

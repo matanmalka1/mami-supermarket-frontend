@@ -9,7 +9,7 @@ import useSearchResults from "@/features/store/search/useSearchResults";
 
 const SearchResults: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('q') || '';
+  const query = searchParams.get("q") || "";
   const {
     results,
     loading,
@@ -28,23 +28,35 @@ const SearchResults: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-12 relative">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b pb-12">
         <div className="space-y-4">
-          <Link to="/store" className="flex items-center gap-2 text-xs font-black text-gray-400 hover:text-[#008A45] uppercase tracking-widest group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Store
+          <Link
+            to="/store"
+            className="flex items-center gap-2 text-xs text-gray-400 hover:text-[#008A45] uppercase tracking-widest group"
+          >
+            <ArrowLeft
+              size={16}
+              className="group-hover:-translate-x-1 transition-transform"
+            />{" "}
+            Back to Store
           </Link>
           <div className="space-y-1">
-            <h1 className="text-5xl font-black  text-gray-900 tracking-tight">Search Results</h1>
-            <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Showing results for: <span className="text-[#008A45]">"{query}"</span></p>
+            <h1 className="text-5xl  text-gray-900 tracking-tight">
+              Search Results
+            </h1>
+            <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">
+              Showing results for:{" "}
+              <span className="text-[#008A45]">"{query}"</span>
+            </p>
           </div>
         </div>
-        <button 
+        <button
           onClick={openFilters}
-          className="flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl hover:bg-gray-800 transition-all active:scale-95"
+          className="flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-[1.5rem] text-xs uppercase tracking-widest shadow-xl hover:bg-gray-800 transition-all active:scale-95"
         >
           <Filter size={18} /> Advanced Filters
         </button>
       </div>
 
-      {(loading || results.length > 0) ? (
+      {loading || results.length > 0 ? (
         <ProductGrid
           loading={loading}
           products={results}
@@ -53,9 +65,9 @@ const SearchResults: React.FC = () => {
         />
       ) : (
         <div className="py-20">
-          <EmptyState 
-            title="No matches found" 
-            description={`We couldn't find any products matching "${query}". Try searching for categories like "Produce" or "Bakery".`} 
+          <EmptyState
+            title="No matches found"
+            description={`We couldn't find any products matching "${query}". Try searching for categories like "Produce" or "Bakery".`}
           />
         </div>
       )}

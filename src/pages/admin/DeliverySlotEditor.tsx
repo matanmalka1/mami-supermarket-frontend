@@ -81,7 +81,7 @@ const DeliverySlotEditor: React.FC<Props> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4 p-2">
         <div className="grid grid-cols-2 gap-4">
-          <label className="space-y-1 text-xs uppercase font-black tracking-[0.3em] text-gray-500">
+          <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-gray-500">
             Start time
             <input
               type="time"
@@ -90,7 +90,7 @@ const DeliverySlotEditor: React.FC<Props> = ({
               className="w-full rounded-xl border border-gray-100 bg-gray-50 px-3 py-2 text-base font-bold outline-none"
             />
           </label>
-          <label className="space-y-1 text-xs uppercase font-black tracking-[0.3em] text-gray-500">
+          <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-gray-500">
             End time
             <input
               type="time"
@@ -100,7 +100,7 @@ const DeliverySlotEditor: React.FC<Props> = ({
             />
           </label>
         </div>
-        <label className="space-y-1 text-xs uppercase font-black tracking-[0.3em] text-gray-500">
+        <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-gray-500">
           Day of week (0=Sun)
           <input
             type="number"

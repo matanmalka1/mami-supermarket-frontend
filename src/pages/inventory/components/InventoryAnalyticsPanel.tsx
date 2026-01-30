@@ -31,14 +31,12 @@ const InventoryAnalyticsPanel: React.FC<Props> = ({ data, onClose }) => {
             <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
               Analytics
             </p>
-            <h2 className="text-2xl font-black  text-gray-900">
-              {productName}
-            </h2>
+            <h2 className="text-2xl  text-gray-900">{productName}</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-xs font-black uppercase tracking-[0.4em] text-gray-400"
+            className="text-xs uppercase tracking-[0.4em] text-gray-400"
           >
             Close
           </button>
@@ -48,7 +46,7 @@ const InventoryAnalyticsPanel: React.FC<Props> = ({ data, onClose }) => {
             <p className="uppercase tracking-[0.4em] text-xs text-gray-400">
               SKU
             </p>
-            <p className="font-black text-lg">{sku}</p>
+            <p className="text-lg">{sku}</p>
           </div>
           <div>
             <p className="uppercase tracking-[0.4em] text-xs text-gray-400">

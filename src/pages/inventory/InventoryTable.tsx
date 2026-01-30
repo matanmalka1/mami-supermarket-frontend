@@ -77,7 +77,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                         className="w-14 h-14 rounded-xl object-cover border shadow-sm"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-xl bg-gray-100 border flex items-center justify-center text-gray-400 font-black">
+                      <div className="w-14 h-14 rounded-xl bg-gray-100 border flex items-center justify-center text-gray-400 ">
                         {(inv.product?.name || "?").slice(0, 2).toUpperCase()}
                       </div>
                     )}
@@ -94,16 +94,14 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                 <TD>
                   <div className="flex flex-col gap-2">
                     <StatusBadge status={statusLabel} />
-                    <p className="text-sm font-black text-gray-600">
-                      {branchName}
-                    </p>
+                    <p className="text-sm text-gray-600">{branchName}</p>
                   </div>
                 </TD>
                 <TD>
                   <div className="flex items-center justify-center">
                     <input
                       type="number"
-                      className="w-24 bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 font-black text-center focus:border-[#006666] outline-none"
+                      className="w-24 bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-center focus:border-[#006666] outline-none"
                       value={available}
                       onChange={(e) =>
                         onUpdateStock(inv.id, parseInt(e.target.value, 10) || 0)
@@ -112,9 +110,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                   </div>
                 </TD>
                 <TD>
-                  <span className="text-orange-500 font-black ">
-                    {reserved} Units
-                  </span>
+                  <span className="text-orange-500 ">{reserved} Units</span>
                 </TD>
                 <TD className="text-right relative">
                   <button

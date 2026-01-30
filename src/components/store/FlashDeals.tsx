@@ -6,6 +6,7 @@ type FlashDealsProps = {
   loading: boolean;
   error: string | null;
   timeLeft: string;
+  secondsLeft: number;
 };
 
 const FlashDeals: React.FC<FlashDealsProps> = ({
@@ -13,6 +14,7 @@ const FlashDeals: React.FC<FlashDealsProps> = ({
   loading,
   error,
   timeLeft,
+  secondsLeft,
 }) => {
   return (
     <section className="bg-orange-50 rounded-[3rem] p-12 space-y-10 border border-orange-100">
@@ -35,6 +37,11 @@ const FlashDeals: React.FC<FlashDealsProps> = ({
               Remaining
             </span>
           </div>
+          {secondsLeft >= 0 && (
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
+              ({secondsLeft}s)
+            </span>
+          )}
         </div>
       </div>
 

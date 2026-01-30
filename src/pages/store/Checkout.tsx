@@ -66,7 +66,7 @@ const Checkout: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-8">
         <div className="bg-red-50 border border-red-200 rounded-3xl p-8 text-center space-y-4">
-          <p className="text-2xl font-black text-red-700 uppercase tracking-[0.2em]">
+          <p className="text-2xl text-red-700 uppercase tracking-[0.2em]">
             Checkout Error
           </p>
           <p className="text-red-600 font-bold">{error}</p>

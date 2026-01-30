@@ -27,10 +27,10 @@ const PickingFinalizedNotice: React.FC<Props> = ({
   <div className="bg-white rounded-[3rem] border border-gray-100 p-10 space-y-6 shadow-2xl text-center relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent pointer-events-none"></div>
     <div className="relative z-10 space-y-3">
-      <p className="text-[10px] uppercase tracking-[0.4em] font-black text-gray-400">
+      <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
         Picking Disconnected
       </p>
-      <h3 className="text-3xl font-black text-gray-900">
+      <h3 className="text-3xl text-gray-900">
         {orderNumber || "Order status confirmed"}
       </h3>
       <Badge color="gray">{STATUS_COPY[status] || status}</Badge>

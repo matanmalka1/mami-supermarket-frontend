@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({
       >
         <div className="p-8 pb-4 flex justify-between items-start">
           <div>
-            <h3 className="text-2xl font-black text-gray-900 tracking-tight">{title}</h3>
+            <h3 className="text-2xl text-gray-900 tracking-tight">{title}</h3>
             {subtitle && <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">{subtitle}</p>}
           </div>
           <button 

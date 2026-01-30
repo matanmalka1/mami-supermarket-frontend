@@ -1,5 +1,5 @@
-import React from 'react';
-import { Package } from 'lucide-react';
+import React from "react";
+import { Package } from "lucide-react";
 
 const PickingGuidanceCard: React.FC = () => (
   <div className="bg-teal-900 rounded-[2.5rem] p-8 text-white flex items-center justify-between shadow-2xl relative overflow-hidden group">
@@ -11,7 +11,7 @@ const PickingGuidanceCard: React.FC = () => (
         <Package size={32} className="text-teal-300" />
       </div>
       <div className="space-y-1">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-300">
+        <h4 className="text-[10px] uppercase tracking-[0.3em] text-teal-300">
           Operational Guidance
         </h4>
         <p className="text-xl font-bold  pr-20 leading-tight">

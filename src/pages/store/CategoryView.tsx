@@ -46,7 +46,7 @@ const CategoryView: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 mb-8">
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 mb-8">
         <Link to="/store" className="hover:text-[#008A45]">
           Home
         </Link>
@@ -60,7 +60,7 @@ const CategoryView: React.FC = () => {
         {/* Sidebar Filters */}
         <aside className="col-span-12 lg:col-span-3 space-y-10">
           <div className="space-y-6">
-            <h3 className="text-xl font-black  flex items-center gap-3">
+            <h3 className="text-xl flex items-center gap-3">
               <SlidersHorizontal size={20} className="text-[#008A45]" /> Filter
               Results
             </h3>
@@ -72,7 +72,8 @@ const CategoryView: React.FC = () => {
                       key={p}
                       className="flex items-center gap-3 cursor-pointer group"
                     >
-                      <div onClick={() => handlePriceSelection(p)}
+                      <div
+                        onClick={() => handlePriceSelection(p)}
                         className={`w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center ${selectedPrice === p ? "border-[#008A45] bg-emerald-50 text-[#008A45]" : "border-gray-200 group-hover:border-[#008A45]"}`}
                       >
                         {selectedPrice === p && (
@@ -120,11 +121,11 @@ const CategoryView: React.FC = () => {
         <main className="col-span-12 lg:col-span-9 space-y-8">
           <div className="flex items-center justify-between border-b pb-6">
             <div className="flex items-baseline gap-4">
-              <h1 className="text-4xl font-black  text-gray-900 capitalize">
+              <h1 className="text-4xl text-gray-900 capitalize">
                 {categoryLabel}
               </h1>
               {!loading && (
-                <span className="text-xs font-black text-gray-300 uppercase tracking-widest">
+                <span className="text-xs text-gray-300 uppercase tracking-widest">
                   {products.length} Items Found
                 </span>
               )}
@@ -160,9 +161,7 @@ const CategoryView: React.FC = () => {
           {viewMode === "list" && loading ? (
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, index) => (
-                <ProductListItemSkeleton
-                  key={`list-skeleton-${index}`}
-                />
+                <ProductListItemSkeleton key={`list-skeleton-${index}`} />
               ))}
             </div>
           ) : viewMode === "list" ? (
@@ -189,7 +188,7 @@ const CategoryView: React.FC = () => {
               <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mx-auto">
                 <Box size={32} />
               </div>
-              <p className="font-black  text-gray-300 uppercase tracking-widest">
+              <p className="text-gray-300 uppercase tracking-widest">
                 Aisle Empty in this Department
               </p>
             </div>

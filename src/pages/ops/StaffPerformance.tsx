@@ -1,16 +1,16 @@
-import React from 'react';
-import { Info, RefreshCcw } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import StatCard from '@/components/ui/StatCard';
-import LoadingState from '@/components/shared/LoadingState';
-import EmptyState from '@/components/shared/EmptyState';
-import { useOpsPerformance } from '@/features/ops/hooks/useOpsPerformance';
+import React from "react";
+import { Info, RefreshCcw } from "lucide-react";
+import Button from "@/components/ui/Button";
+import StatCard from "@/components/ui/StatCard";
+import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/shared/EmptyState";
+import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
 
 const formatPercent = (value?: number) =>
-  typeof value === 'number' ? `${value.toFixed(2)}%` : '—';
+  typeof value === "number" ? `${value.toFixed(2)}%` : "—";
 
 const formatNumber = (value?: number) =>
-  typeof value === 'number' ? value : '—';
+  typeof value === "number" ? value : "—";
 
 const StaffPerformance: React.FC = () => {
   const { metrics, loading, error, refresh } = useOpsPerformance();
@@ -18,26 +18,28 @@ const StaffPerformance: React.FC = () => {
 
   const summaryCards = [
     {
-      label: 'Batch Efficiency',
-      value: metrics ? formatPercent(metrics.batchEfficiency) : '—',
-      sub: metrics ? `${metrics.pickedItems}/${metrics.totalItems} items picked` : undefined,
+      label: "Batch Efficiency",
+      value: metrics ? formatPercent(metrics.batchEfficiency) : "—",
+      sub: metrics
+        ? `${metrics.pickedItems}/${metrics.totalItems} items picked`
+        : undefined,
     },
     {
-      label: 'Live Pickers',
-      value: metrics ? formatNumber(metrics.livePickers) : '—',
+      label: "Live Pickers",
+      value: metrics ? formatNumber(metrics.livePickers) : "—",
       sub: metrics ? `Window: ${metrics.pickerWindowMinutes} min` : undefined,
     },
     {
-      label: 'Active Orders',
+      label: "Active Orders",
       value: metrics
         ? `${metrics.activeOrders.toLocaleString()} / ${metrics.totalOrders.toLocaleString()}`
-        : '—',
-      sub: 'Created vs. in-progress',
+        : "—",
+      sub: "Created vs. in-progress",
     },
     {
-      label: 'Items Picked',
-      value: metrics ? metrics.pickedItems.toLocaleString() : '—',
-      sub: 'Since start of day',
+      label: "Items Picked",
+      value: metrics ? metrics.pickedItems.toLocaleString() : "—",
+      sub: "Since start of day",
     },
   ];
 
@@ -45,8 +47,12 @@ const StaffPerformance: React.FC = () => {
     <div className="space-y-12 pb-20 animate-in fade-in duration-700">
       <div className="flex items-end justify-between border-b pb-8">
         <div>
-          <h1 className="text-5xl font-black  text-gray-900 tracking-tighter">Performance Hub</h1>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Operational Analytics</p>
+          <h1 className="text-5xl  text-gray-900 tracking-tighter">
+            Performance Hub
+          </h1>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">
+            Operational Analytics
+          </p>
         </div>
         <Button
           variant="ghost"
@@ -89,9 +95,12 @@ const StaffPerformance: React.FC = () => {
       <div className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-sm space-y-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Operational pulse</p>
+            <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
+              Operational pulse
+            </p>
             <p className="text-sm font-bold text-gray-500 max-w-3xl">
-              Metrics refresh every few minutes and summarize picker throughput across orders, picks, and fulfillment efficiency.
+              Metrics refresh every few minutes and summarize picker throughput
+              across orders, picks, and fulfillment efficiency.
             </p>
           </div>
           <Button
@@ -106,25 +115,37 @@ const StaffPerformance: React.FC = () => {
 
         <div className="grid gap-6 md:grid-cols-3 text-sm text-gray-600">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Total Orders</p>
-            <p className="text-3xl font-black text-gray-900">
-              {metrics ? metrics.totalOrders.toLocaleString() : '—'}
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-400">
+              Total Orders
             </p>
-            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">across all statuses</p>
+            <p className="text-3xl text-gray-900">
+              {metrics ? metrics.totalOrders.toLocaleString() : "—"}
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">
+              across all statuses
+            </p>
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Total Items</p>
-            <p className="text-3xl font-black text-gray-900">
-              {metrics ? metrics.totalItems.toLocaleString() : '—'}
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-400">
+              Total Items
             </p>
-            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">includes picked & pending</p>
+            <p className="text-3xl text-gray-900">
+              {metrics ? metrics.totalItems.toLocaleString() : "—"}
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">
+              includes picked & pending
+            </p>
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">Picker Window</p>
-            <p className="text-3xl font-black text-gray-900">
-              {metrics ? `${metrics.pickerWindowMinutes} min` : '—'}
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-400">
+              Picker Window
             </p>
-            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">recent window</p>
+            <p className="text-3xl text-gray-900">
+              {metrics ? `${metrics.pickerWindowMinutes} min` : "—"}
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em]">
+              recent window
+            </p>
           </div>
         </div>
 

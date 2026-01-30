@@ -54,13 +54,17 @@ const CatalogProductTable: React.FC<Props> = ({
                 alt=""
               />
             ) : (
-              <div className="w-12 h-12 rounded-xl bg-gray-100 border flex items-center justify-center text-gray-400 font-black">
+              <div className="w-12 h-12 rounded-xl bg-gray-100 border flex items-center justify-center text-gray-400 ">
                 {(product.name || "?").slice(0, 2).toUpperCase()}
               </div>
             )}
             <div>
-              <p className="text-gray-900 text-lg leading-tight ">{product.name}</p>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest">SKU: {product.sku}</p>
+              <p className="text-gray-900 text-lg leading-tight ">
+                {product.name}
+              </p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest">
+                SKU: {product.sku}
+              </p>
             </div>
           </div>
         </td>
@@ -68,11 +72,13 @@ const CatalogProductTable: React.FC<Props> = ({
           <Badge color="blue">{product.binLocation || "A-00"}</Badge>
         </td>
         <td className="px-6 py-6 text-center">
-          <Badge color={(product.availableQuantity ?? 0) > 50 ? "emerald" : "orange"}>
+          <Badge
+            color={(product.availableQuantity ?? 0) > 50 ? "emerald" : "orange"}
+          >
             {(product.availableQuantity ?? 0) > 50 ? "Steady" : "Low Stock"}
           </Badge>
         </td>
-        <td className="px-6 py-6 text-right font-black  text-gray-900">
+        <td className="px-6 py-6 text-right  text-gray-900">
           {currencyILS(product.price ?? 0)}
         </td>
         <td className="px-8 py-6 text-right">

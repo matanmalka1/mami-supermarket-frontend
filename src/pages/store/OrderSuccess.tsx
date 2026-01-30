@@ -65,9 +65,7 @@ const OrderSuccess: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        <h1 className="text-6xl font-black  tracking-tighter">
-          Ordered Successfully!
-        </h1>
+        <h1 className="text-6xl  tracking-tighter">Ordered Successfully!</h1>
         <p className="text-xl text-gray-500 font-bold">
           Order ID:{" "}
           <span className="text-[#008A45]">
@@ -93,24 +91,19 @@ const OrderSuccess: React.FC = () => {
         <div className="bg-white border rounded-[3rem] p-12 shadow-xl">
           <p className="text-sm text-gray-500">
             We’re still preparing your summary. Check your order history if you
-            need a breakdown.
+            className="w-full h-16 rounded-2xl "
           </p>
         </div>
       )}
 
       <div className="flex gap-4 max-w-md mx-auto">
         <Link to="/store" className="flex-1">
-          <Button
-            variant="outline"
-            className="w-full h-16 rounded-2xl font-black "
-          >
+          <Button variant="outline" className="w-full h-16 rounded-2xl ">
             Keep Shopping
           </Button>
         </Link>
         <Link to="/" className="flex-1">
-          <Button className="w-full h-16 rounded-2xl font-black ">
-            Track Order
-          </Button>
+          <Button className="w-full h-16 rounded-2xl ">Track Order</Button>
         </Link>
       </div>
     </div>

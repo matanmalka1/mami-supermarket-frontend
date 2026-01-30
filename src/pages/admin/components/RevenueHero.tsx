@@ -15,14 +15,14 @@ const RevenueHero: React.FC<RevenueHeroProps> = ({ detail, hasData }) => (
       <ShieldCheck size={40} className="text-emerald-400" />
     </div>
     <div className="space-y-2">
-      <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400">
+      <h4 className="text-[10px] uppercase tracking-[0.4em] text-emerald-400">
         Revenue Trend
       </h4>
-      <p className="text-2xl font-bold  pr-20 leading-tight">
-        {detail}
-      </p>
+      <p className="text-2xl font-bold  pr-20 leading-tight">{detail}</p>
       <p className="text-sm font-semibold opacity-70">
-        {hasData ? "Live series refreshed from backend data." : "Awaiting revenue metrics..."}
+        {hasData
+          ? "Live series refreshed from backend data."
+          : "Awaiting revenue metrics..."}
       </p>
     </div>
   </div>

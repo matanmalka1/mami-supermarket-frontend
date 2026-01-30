@@ -46,7 +46,7 @@ const StockRequestRow: React.FC<Props> = ({
           <Package size={20} />
         </div>
         <div>
-          <p className="font-black text-lg text-gray-900">
+          <p className="text-lg text-gray-900">
             {request.productName || "Product"}
           </p>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
