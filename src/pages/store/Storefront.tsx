@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link, useNavigate } from "react-router";
 import { TrendingUp, Clock, Leaf, Sparkles, MapPin, ChevronRight } from "lucide-react";
@@ -12,47 +12,30 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
-import { apiService } from "@/services/api";
 import { HeroSection, BenefitCard } from "@/components/store/StorefrontComponents";
-import { extractArrayPayload } from "@/utils/api-response";
 import { useFlashDeals, formatSeconds } from "@/features/store/flash-deals/flashDealsFeature";
+import useStorefront from "@/features/store/storefront/useStorefront";
 
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
   const categoryRef = useRef<HTMLDivElement>(null);
-  const [isFarmModalOpen, setIsFarmModalOpen] = useState<boolean>(false);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [featured, setFeatured] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    categories,
+    featured,
+    loading,
+    isFarmModalOpen,
+    openFarmModal,
+    closeFarmModal,
+  } = useStorefront();
   const { secondsLeft, deals, loading: flashLoading, error: flashError } =
     useFlashDeals();
   const flashTimeLeft = formatSeconds(secondsLeft);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [cats, feats] = await Promise.all([
-          apiService.catalog.getCategories(),
-          apiService.catalog.getFeatured(),
-        ]);
-
-        const catData: any = cats as any;
-        const featData: any = feats as any;
-
-        setCategories(extractArrayPayload<any>(catData));
-        setFeatured(extractArrayPayload<any>(featData));
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
 
   const scrollToCategories = () => categoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-24">
-      <HeroSection onStart={scrollToCategories} onExplore={() => setIsFarmModalOpen(true)} />
+      <HeroSection onStart={scrollToCategories} onExplore={openFarmModal} />
 
       <div ref={categoryRef} className="scroll-mt-32">
         {loading ? (
@@ -119,7 +102,7 @@ const Storefront: React.FC = () => {
         <BenefitCard icon={<Sparkles />} title="Certified Organic" desc="100% pesticide-free produce from local farms." bg="bg-orange-50" color="text-orange-500" />
       </Grid>
 
-      <Modal isOpen={isFarmModalOpen} onClose={() => setIsFarmModalOpen(false)} title="Verified Local Producers" subtitle="Direct from Israeli soil">
+        <Modal isOpen={isFarmModalOpen} onClose={closeFarmModal} title="Verified Local Producers" subtitle="Direct from Israeli soil">
         <div className="py-6 space-y-4">
           {[
             { name: "Kfar Azar Orchards", location: "Central", specialty: "Citrus" },
@@ -133,7 +116,7 @@ const Storefront: React.FC = () => {
               <ChevronRight className="text-gray-300 group-hover:text-emerald-500 transition-all" size={20} />
             </div>
           ))}
-          <Button fullWidth onClick={() => { setIsFarmModalOpen(false);
+          <Button fullWidth onClick={() => { closeFarmModal();
              navigate('/store/category/produce'); }} 
              className="mt-4 rounded-2xl">View All Local Produce</Button>
         </div>

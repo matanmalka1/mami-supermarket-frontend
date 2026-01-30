@@ -61,6 +61,43 @@ const mapProduct = (dto: ProductDTO): Product => ({
   unit: dto.unit ?? undefined,
 });
 
+const catalogPrefix = "/catalog";
+
+const buildCategoryResponse = async (params?: {
+  limit?: number;
+  offset?: number;
+}) => {
+  const { limit = 50, offset = 0 } = params || {};
+  const { data } = await apiClient.get<CategoryDTO[]>(
+    `${catalogPrefix}/categories`,
+    {
+      params: { limit, offset },
+    },
+  );
+  const items = Array.isArray(data) ? data.map(mapCategory) : [];
+  const effectiveTotal = offset + items.length;
+  const hasNext = items.length === limit;
+  return {
+    items,
+    pagination: { total: effectiveTotal, limit, offset, hasNext },
+  };
+};
+
+const buildFeaturedResponse = async (params?: {
+  branchId?: number;
+  limit?: number;
+}) => {
+  const { branchId, limit = 10 } = params || {};
+  const { data } = await apiClient.get<ProductDTO[]>(
+    `${catalogPrefix}/products/featured`,
+    {
+      params: { branchId, limit },
+    },
+  );
+  const items = Array.isArray(data) ? data.map(mapProduct) : [];
+  return items;
+};
+
 export const catalogService = {
   /**
    * List all categories (paginated)
@@ -69,29 +106,13 @@ export const catalogService = {
     limit?: number;
     offset?: number;
   }): Promise<{ items: Category[]; pagination: Pagination }> {
-    const { limit = 50, offset = 0 } = params || {};
-    const response = await apiClient.get<{
-      items: CategoryDTO[];
-      total: number;
-      limit: number;
-      offset: number;
-      has_next?: boolean;
-    }>("/categories", {
-      params: { limit, offset },
-    });
-    const data = response.data;
-    return {
-      items: Array.isArray(data.items) ? data.items.map(mapCategory) : [],
-      pagination: {
-        total: data.total,
-        limit: data.limit,
-        offset: data.offset,
-        hasNext:
-          typeof data.has_next === "boolean"
-            ? data.has_next
-            : data.total > data.offset + data.limit,
-      },
-    };
+    return buildCategoryResponse(params);
+  },
+  async getCategories(params?: {
+    limit?: number;
+    offset?: number;
+  }): Promise<{ items: Category[]; pagination: Pagination }> {
+    return buildCategoryResponse(params);
   },
 
   /**
@@ -102,26 +123,18 @@ export const catalogService = {
     params?: { branchId?: number; limit?: number; offset?: number },
   ): Promise<{ items: Product[]; pagination: Pagination }> {
     const { branchId, limit = 50, offset = 0 } = params || {};
-    const data = await apiClient.get<{
-      items: ProductDTO[];
-      total: number;
-      limit: number;
-      offset: number;
-      has_next?: boolean;
-    }>(`/categories/${categoryId}/products`, {
-      params: { branchId, limit, offset },
-    });
-    return {
-      items: Array.isArray(data.items) ? data.items.map(mapProduct) : [],
-      pagination: {
-        total: data.total,
-        limit: data.limit,
-        offset: data.offset,
-        hasNext:
-          typeof data.has_next === "boolean"
-            ? data.has_next
-            : data.total > data.offset + data.limit,
+    const { data } = await apiClient.get<ProductDTO[]>(
+      `${catalogPrefix}/categories/${categoryId}/products`,
+      {
+        params: { branchId, limit, offset },
       },
+    );
+    const items = Array.isArray(data) ? data.map(mapProduct) : [];
+    const effectiveTotal = offset + items.length;
+    const hasNext = items.length === limit;
+    return {
+      items,
+      pagination: { total: effectiveTotal, limit, offset, hasNext },
     };
   },
 
@@ -133,10 +146,13 @@ export const catalogService = {
     params?: { branchId?: number },
   ): Promise<Product> {
     const { branchId } = params || {};
-    const raw = await apiClient.get<ProductDTO>(`/products/${productId}`, {
-      params: { branchId },
-    });
-    return mapProduct(raw);
+    const {data} = await apiClient.get<ProductDTO>(
+      `${catalogPrefix}/products/${productId}`,
+      {
+        params: { branchId },
+      },
+    );
+    return mapProduct(data);
   },
 
   /**
@@ -151,40 +167,55 @@ export const catalogService = {
     sort?: string;
   }): Promise<{ items: Product[]; pagination: Pagination }> {
     const { q, limit = 50, offset = 0, minPrice, maxPrice, sort } = params;
-    const data = await apiClient.get<{
-      items: ProductDTO[];
-      total: number;
-      limit: number;
-      offset: number;
-      has_next?: boolean;
-    }>("/products/search", {
-      params: { q, limit, offset, minPrice, maxPrice, sort },
-    });
-    return {
-      items: Array.isArray(data.items) ? data.items.map(mapProduct) : [],
-      pagination: {
-        total: data.total,
-        limit: data.limit,
-        offset: data.offset,
-        hasNext:
-          typeof data.has_next === "boolean"
-            ? data.has_next
-            : data.total > data.offset + data.limit,
+    const { data } = await apiClient.get<ProductDTO[]>(
+      `${catalogPrefix}/products/search`,
+      {
+        params: { q, limit, offset, minPrice, maxPrice, sort },
       },
+    );
+    const items = Array.isArray(data) ? data.map(mapProduct) : [];
+    const effectiveTotal = offset + items.length;
+    const hasNext = items.length === limit;
+    return {
+      items,
+      pagination: { total: effectiveTotal, limit, offset, hasNext },
     };
+  },
+  async getProducts(params?: {
+    categoryId?: number;
+    q?: string;
+    limit?: number;
+    offset?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    sort?: string;
+    branchId?: number;
+  }): Promise<{ items: Product[]; pagination: Pagination }> {
+    if (params?.categoryId) {
+      const { categoryId, limit, offset, branchId } = params;
+      return this.listCategoryProducts(categoryId, {
+        branchId,
+        limit,
+        offset,
+      });
+    }
+    return this.searchProducts({
+      q: params?.q ?? "",
+      limit: params?.limit,
+      offset: params?.offset,
+      minPrice: params?.minPrice,
+      maxPrice: params?.maxPrice,
+      sort: params?.sort,
+    });
   },
   async listFeaturedProducts(params?: {
     branchId?: number;
     limit?: number;
   }): Promise<Product[]> {
-    const { branchId, limit = 10 } = params || {};
-    const data = await apiClient.get<{ items: ProductDTO[] }>(
-      "/products/featured",
-      {
-        params: { branchId, limit },
-      },
-    );
-    return Array.isArray(data.items) ? data.items.map(mapProduct) : [];
+    return buildFeaturedResponse(params);
+  },
+  async getFeatured(limit?: number): Promise<Product[]> {
+    return buildFeaturedResponse({ limit });
   },
 
   /**
@@ -195,9 +226,10 @@ export const catalogService = {
     limit?: number;
   }): Promise<Array<{ id: number; name: string }>> {
     const { q, limit = 10 } = params;
-    const data = await apiClient.get<{
+
+    const {data} = await apiClient.get<{
       items: Array<{ id: number; name: string }>;
-    }>("/products/autocomplete", {
+    }>(`${catalogPrefix}/products/autocomplete`, {
       params: { q, limit },
     });
     return Array.isArray(data.items) ? data.items : [];
@@ -207,7 +239,9 @@ export const catalogService = {
    * Get product reviews (always empty for now)
    */
   async getProductReviews(productId: number): Promise<{ items: any[] }> {
-    const data = await apiClient.get<any>(`/products/${productId}/reviews`);
+    const {data} = await apiClient.get<any>(
+      `${catalogPrefix}/products/${productId}/reviews`,
+    );
     return { items: data.items ?? [] };
   },
 };

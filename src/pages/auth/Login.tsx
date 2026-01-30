@@ -40,28 +40,35 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
     toast.loading("Authenticating secure session...", {
       id: "auth",
     });
+    
     try {
       // Backend only accepts email/password; strip rememberMe before sending
       const response: any = await apiService.auth.login({
         email: data.email,
         password: data.password,
       });
+
       console.debug("[Login] login response:", response);
+
       const token =
         response?.data?.access_token ||
         response?.access_token ||
         response?.accessToken ||
         response?.data?.token ||
         response?.token;
+
       const roleFromResponse =
         response?.data?.user?.role ||
         response?.user?.role ||
         response?.data?.role ||
         response?.role ||
         null;
+
       if (!token)
         return toast.error("No token returned from backend", { id: "auth" });
+
       onLogin({ token, role: roleFromResponse, remember: data.rememberMe });
+
       if (roleFromResponse === "ADMIN") {
         toast.success("Administrator access granted. Entering Ops Portal...", {
           id: "auth",

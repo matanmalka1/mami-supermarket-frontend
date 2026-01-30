@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, Link } from "react-router";
 import {
   SlidersHorizontal,
@@ -10,77 +10,23 @@ import {
 } from "lucide-react";
 import ProductCard from "@/screens/Storefront/components/ProductCard";
 import ProductGrid from "@/components/store/ProductGrid";
-import { useCatalog } from "@/hooks/useCatalog";
-import { toast } from "react-hot-toast";
-import { useCatalogCategories } from "@/hooks/useCatalogCategories";
 import FilterSection from "@/features/store/category/components/FilterSection";
+import useCategory from "@/features/store/category/useCategory";
 import { Product } from "@/types/domain";
 
 const CategoryView: React.FC = () => {
   const { id } = useParams();
   const categoryId = id ? Number(id) : undefined;
-  const { categories } = useCatalogCategories();
-  const matchedCategory =
-    typeof categoryId === "number"
-      ? categories.find((cat) => cat.id === categoryId)
-      : undefined;
-  const categoryFilter = matchedCategory?.name;
-  const { products, loading } = useCatalog(
-    categoryFilter ? Number(categoryFilter) : undefined,
-  );
-  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
-  const [preferences, setPreferences] = useState<string[]>([]);
-  const categoryLabel = matchedCategory?.name || id;
-
-  const togglePreference = (p: string) => {
-    setPreferences((prev) =>
-      prev.includes(p) ? prev.filter((item) => item !== p) : [...prev, p],
-    );
-    toast.success(`Filter: ${p} updated`, {
-      style: { borderRadius: "1rem", fontWeight: "bold" },
-    });
-  };
-
-  const priceMatches = (product: Product) => {
-    if (!selectedPrice) return true;
-    const price = Number(product.price);
-    if (Number.isNaN(price)) return true;
-    if (selectedPrice === "Under ₪20") return price < 20;
-    if (selectedPrice === "₪20 - ₪50") return price >= 20 && price <= 50;
-    if (selectedPrice === "Over ₪50") return price > 50;
-    return true;
-  };
-
-  const preferenceMatches = (product: Product) => {
-    if (preferences.length === 0) return true;
-    return preferences.every((pref) => {
-      const normalized = pref.toLowerCase();
-      if (normalized === "organic") {
-        return (
-          product.category?.toLowerCase().includes("organic") ||
-          product.description?.toLowerCase().includes("organic")
-        );
-      }
-      if (normalized === "on sale") {
-        return !!(
-          product.oldPrice &&
-          product.price &&
-          Number(product.oldPrice) > Number(product.price)
-        );
-      }
-      if (normalized === "gluten free") {
-        return (
-          product.description?.toLowerCase().includes("gluten-free") ||
-          product.description?.toLowerCase().includes("gluten free")
-        );
-      }
-      return true;
-    });
-  };
-
-  const filteredProducts = products.filter(
-    (item: Product) => priceMatches(item) && preferenceMatches(item),
-  );
+  const {
+    categoryLabel,
+    products,
+    loading,
+    filteredProducts,
+    selectedPrice,
+    preferences,
+    togglePreference,
+    handlePriceSelection,
+  } = useCategory({ categoryId, categoryParam: id });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -110,10 +56,7 @@ const CategoryView: React.FC = () => {
                       key={p}
                       className="flex items-center gap-3 cursor-pointer group"
                     >
-                      <div
-                        onClick={() =>
-                          setSelectedPrice(selectedPrice === p ? null : p)
-                        }
+                      <div onClick={() => handlePriceSelection(p)}
                         className={`w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center ${selectedPrice === p ? "border-[#008A45] bg-emerald-50 text-[#008A45]" : "border-gray-200 group-hover:border-[#008A45]"}`}
                       >
                         {selectedPrice === p && (

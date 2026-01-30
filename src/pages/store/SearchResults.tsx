@@ -1,64 +1,28 @@
-
-import React, { useState, useEffect } from 'react';
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { useSearchParams, Link } from 'react-router';
-import { Search, ArrowLeft, Filter } from 'lucide-react';
-import EmptyState from '@/components/shared/EmptyState';
-import Button from '@/components/ui/Button';
-import { toast } from 'react-hot-toast';
-import { apiService } from '@/services/api';
-import ProductGrid from '@/components/store/ProductGrid';
-import SearchFiltersDrawer from '@/features/store/search/components/SearchFiltersDrawer';
-import { Product } from '@/types/domain';
-import { extractArrayPayload } from '@/utils/api-response';
+import { useSearchParams, Link } from "react-router";
+import { ArrowLeft, Filter } from "lucide-react";
+import EmptyState from "@/components/shared/EmptyState";
+import ProductGrid from "@/components/store/ProductGrid";
+import SearchFiltersDrawer from "@/features/store/search/components/SearchFiltersDrawer";
+import { Product } from "@/types/domain";
+import useSearchResults from "@/features/store/search/useSearchResults";
 
 const SearchResults: React.FC = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const [results, setResults] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [activeSort, setActiveSort] = useState('Relevance');
-  const [activePrefs, setActivePrefs] = useState<string[]>([]);
-
-  useEffect(() => {
-    let active = true;
-    const fetchResults = async () => {
-      setLoading(true);
-      try {
-        const response = await apiService.catalog.getProducts({ q: query, limit: 24, offset: 0 });
-        const items = extractArrayPayload<Product>(response);
-        if (active) setResults(items);
-      } catch (err: unknown) {
-        if (active) {
-          setResults([]);
-          const message = err instanceof Error ? err.message : "Search failed";
-          toast.error(message);
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
-    };
-    fetchResults();
-    return () => {
-      active = false;
-    };
-  }, [query, activeSort, activePrefs]);
-
-  const handleApply = () => {
-    setIsFilterOpen(false);
-    toast.success("Search parameters applied", { icon: '🔍' });
-  };
-
-  const handleClear = () => {
-    setActivePrefs([]);
-    setActiveSort('Relevance');
-    toast("Filters cleared", { icon: '🧹' });
-  };
-
-  const togglePref = (p: string) => {
-    setActivePrefs(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
-  };
+  const {
+    results,
+    loading,
+    isFilterOpen,
+    openFilters,
+    closeFilters,
+    activeSort,
+    setActiveSort,
+    activePrefs,
+    togglePref,
+    handleApply,
+    handleClear,
+  } = useSearchResults(query);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-12 relative">
@@ -73,7 +37,7 @@ const SearchResults: React.FC = () => {
           </div>
         </div>
         <button 
-          onClick={() => setIsFilterOpen(true)}
+          onClick={openFilters}
           className="flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl hover:bg-gray-800 transition-all active:scale-95"
         >
           <Filter size={18} /> Advanced Filters
@@ -100,7 +64,7 @@ const SearchResults: React.FC = () => {
         isOpen={isFilterOpen}
         activeSort={activeSort}
         activePrefs={activePrefs}
-        onClose={() => setIsFilterOpen(false)}
+        onClose={closeFilters}
         onApply={handleApply}
         onClear={handleClear}
         onSetSort={(value) => setActiveSort(value)}
