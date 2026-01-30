@@ -34,7 +34,7 @@ describe("useCatalog", () => {
     (apiService.catalog.getProducts as any) = vi
       .fn()
       .mockResolvedValue(mockProducts);
-    const { result } = renderHook(() => useCatalog("Produce"));
+    const { result } = renderHook(() => useCatalog(1));
     await waitFor(() => {
       expect(result.current.products).toEqual([
         { id: 1, name: "P1", category: "Produce" },
@@ -50,7 +50,9 @@ describe("useCatalog", () => {
     const { result } = renderHook(() => useCatalog(undefined, "milk"));
     await waitFor(() => {
       expect(result.current.products).toEqual(queryResponse);
-      expect(apiService.catalog.getProducts).toHaveBeenCalledWith({ q: "milk" });
+      expect(apiService.catalog.getProducts).toHaveBeenCalledWith({
+        q: "milk",
+      });
     });
   });
 

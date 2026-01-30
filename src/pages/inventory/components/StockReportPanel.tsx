@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import StockReportTable from "@/pages/inventory/components/StockReportTable";
-import type { InventoryRow } from "@/types/inventory";
-import type { BranchResponse } from "@/types/branch";
+import type { InventoryRow } from "@/domains/inventory/types";
+import type { BranchResponse } from "@/domains/branch/types";
 
 type Props = {
   rows: InventoryRow[];
@@ -17,38 +17,46 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
   const filtered = useMemo(() => {
     return rows.filter((row) => {
       const branchMatch =
-        branchFilter === "all" || row.branch?.id === branchFilter;
+        branchFilter === "all" || String(row.branch?.id) === branchFilter;
       const product = row.product?.name?.toLowerCase() || "";
       const sku = row.product?.sku?.toLowerCase() || "";
       const query = search.trim().toLowerCase();
-      const textMatch = !query || product.includes(query) || sku.includes(query);
+      const textMatch =
+        !query || product.includes(query) || sku.includes(query);
       const inStockMatch =
-        !inStockOnly || (row.availableQuantity ?? row.available_quantity ?? 0) > 0;
+        !inStockOnly || (row.availableQuantity ?? 0) > 0;
       return branchMatch && textMatch && inStockMatch;
     });
   }, [branchFilter, rows, search, inStockOnly]);
 
   const totalAvailable = filtered.reduce(
-    (sum, row) => sum + (row.availableQuantity ?? row.available_quantity ?? 0),
+    (sum, row) => sum + (row.availableQuantity ?? 0),
     0,
   );
   const totalReserved = filtered.reduce(
-    (sum, row) => sum + (row.reservedQuantity ?? row.reserved_quantity ?? 0),
+    (sum, row) => sum + (row.reservedQuantity ?? 0),
     0,
   );
   const lowStockRows = filtered.filter(
-    (row) => (row.availableQuantity ?? row.available_quantity ?? 0) <= 25,
+    (row) => (row.availableQuantity ?? 0) <= 25,
   );
 
   const printReport = () => window.print();
   const exportCsv = () => {
-    const header = ["SKU", "Product", "Branch", "Available", "Reserved", "Status"];
+    const header = [
+      "SKU",
+      "Product",
+      "Branch",
+      "Available",
+      "Reserved",
+      "Status",
+    ];
     const lines = filtered.map((row) => {
       const product = row.product?.name || "SKU";
       const sku = row.product?.sku || "n/a";
       const branch = row.branch?.name || "Central Hub";
-      const available = row.availableQuantity ?? row.available_quantity ?? 0;
-      const reserved = row.reservedQuantity ?? row.reserved_quantity ?? 0;
+      const available = row.availableQuantity ?? 0;
+      const reserved = row.reservedQuantity ?? 0;
       const status =
         available <= 0 ? "Out" : available <= 25 ? "Low" : "Healthy";
       return [sku, product, branch, available, reserved, status].join(",");

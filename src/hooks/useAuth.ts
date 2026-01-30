@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { UserRole } from "../types/auth";
+import type { UserRole } from "@/domains/users/types";
 import { normalizeRole } from "../utils/roles";
 
 type LoginPayload = { token: string; role?: string | null; remember?: boolean };

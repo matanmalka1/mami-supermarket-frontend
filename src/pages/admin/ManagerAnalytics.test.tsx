@@ -25,11 +25,7 @@ describe("ManagerAnalytics", () => {
     mockGetRevenue.mockResolvedValueOnce({
       data: { labels: ["Jan", "Feb"], values: [1000, 1500] },
     });
-    renderWithRouter({
-      route: "/admin/analytics",
-      path: "/admin/analytics",
-      element: <ManagerAnalytics />,
-    });
+    renderWithRouter();
 
     await waitFor(() => expect(mockGetRevenue).toHaveBeenCalled());
     expect(screen.getByText(/Revenue Velocity/i)).toBeInTheDocument();
@@ -42,15 +38,13 @@ describe("ManagerAnalytics", () => {
     mockGetRevenue
       .mockRejectedValueOnce(new Error("boom"))
       .mockResolvedValueOnce({ data: { labels: ["Mar"], values: [2000] } });
-    renderWithRouter({
-      route: "/admin/analytics",
-      path: "/admin/analytics",
-      element: <ManagerAnalytics />,
-    });
+    renderWithRouter();
 
     await waitFor(() => expect(screen.getByText("boom")).toBeInTheDocument());
     await userEvent.click(screen.getByRole("button", { name: /retry/i }));
-    await waitFor(() => expect(screen.getByText(/Revenue Velocity/i)).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText(/Revenue Velocity/i)).toBeInTheDocument(),
+    );
     expect(mockGetRevenue).toHaveBeenCalledTimes(2);
   });
 });

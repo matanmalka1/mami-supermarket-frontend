@@ -5,7 +5,7 @@ import DeliverySlotEditor from "./DeliverySlotEditor";
 import { Save } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
-import { branchService } from "@/services/branch-service";
+import { branchService } from "@/domains/branch/service";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import ErrorState from "../../components/shared/ErrorState";
@@ -60,7 +60,9 @@ const DeliverySlotManager: React.FC = () => {
       const branchMatches = selectedBranch
         ? (slot.branchId || slot.branch_id) === selectedBranch
         : true;
-      const slotDay = String(slot.dayOfWeek ?? slot.day_of_week ?? "").toLowerCase();
+      const slotDay = String(
+        slot.dayOfWeek ?? slot.day_of_week ?? "",
+      ).toLowerCase();
       const dayMatches = selectedDay ? slotDay === selectedDay : true;
       return branchMatches && dayMatches;
     });
@@ -89,12 +91,12 @@ const DeliverySlotManager: React.FC = () => {
       const branchId = slot.branchId || slot.branch_id;
       if (branchId) branchIds.add(branchId);
     });
-    return branches.filter((branch) => branchIds.has(branch.id));
+    return branches.filter((branch) => branchIds.has(String(branch.id)));
   }, [slots, branches]);
 
   useEffect(() => {
     if (!selectedBranch && availableBranches.length) {
-      setSelectedBranch(availableBranches[0].id);
+      setSelectedBranch(String(availableBranches[0].id));
     }
     if (!availableBranches.length) {
       setSelectedBranch("");
@@ -114,7 +116,9 @@ const DeliverySlotManager: React.FC = () => {
     <div className="space-y-12 animate-in fade-in duration-500 pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black italic tracking-tight">Fulfillment Config</h1>
+          <h1 className="text-4xl font-black italic tracking-tight">
+            Fulfillment Config
+          </h1>
           <p className="text-sm text-gray-500 font-bold uppercase tracking-widest mt-1">
             Branch Delivery Slots
           </p>

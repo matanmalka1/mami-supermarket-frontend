@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router';
-import OpsSidebar from './OpsSidebar';
-import OpsHeader from './OpsHeader';
-import { UserRole } from '@/types/auth';
+import { Outlet } from "react-router";
+import OpsSidebar from "./OpsSidebar";
+import OpsHeader from "./OpsHeader";
+import type { UserRole } from "@/domains/users/types";
 
 interface OpsLayoutProps {
   userRole?: UserRole | null;

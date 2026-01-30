@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 import EmptyState from "@/components/shared/EmptyState";
 import LoadingState from "@/components/shared/LoadingState";
-import ProductCard from "@/components/store/ProductCard";
+import ProductCard from "@/screens/Storefront/components/ProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistProducts } from "@/features/store/wishlist/hooks/useWishlistProducts";
 

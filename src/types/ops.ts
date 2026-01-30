@@ -1,46 +1,12 @@
-export interface Vehicle {
-  id: number;
-  driver: string;
-  status: 'ON_ROUTE' | 'LOADING' | 'RETURNING' | 'STANDBY';
-  load: string;
-  eta: string;
-  pos: { x: number; y: number };
-}
+// Bridge re-export for ops types
+export type {
+  Vehicle,
+  StaffPerformance,
+  OpsPerformanceMetrics,
+} from "@/domains/ops/types";
 
-export interface StaffPerformance {
-  pickerId: number;
-  avgPickTime: number;
-  accuracyRate: number;
-  itemsPicked: number;
-  shiftRank: number;
-}
+// Bridge re-export
+export type { StockRequest } from "../domains/stock-requests/types";
 
-export interface OpsPerformanceMetrics {
-  batchEfficiency: number;
-  livePickers: number;
-  activeOrders: number;
-  totalOrders: number;
-  pickedItems: number;
-  totalItems: number;
-  pickerWindowMinutes: number;
-}
-
-export interface StockRequest {
-  id: number;
-  productName: string;
-  sku: string;
-  quantity: number;
-  priority: 'NORMAL' | 'URGENT' | 'CRITICAL';
-  requester: string;
-  status: 'PENDING' | 'RESOLVED' | 'CANCELLED';
-  createdAt: string;
-}
-
-export type OpsAlert = {
-  id: number;
-  text: string;
-  type?: string;
-  severity?: string;
-  time?: string;
-  createdAt?: string;
-};
+// Bridge re-export for notifications types
+export type { OpsAlert } from "@/domains/notifications/types";

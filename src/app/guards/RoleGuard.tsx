@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import { UserRole } from "@/types/auth";
+import type { UserRole } from "@/domains/users/types";
 
 type RoleGuardProps = {
   allowedRoles: UserRole[];
@@ -7,11 +7,16 @@ type RoleGuardProps = {
   children: React.ReactNode;
 };
 
-const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles, userRole, children }) => {
+const RoleGuard: React.FC<RoleGuardProps> = ({
+  allowedRoles,
+  userRole,
+  children,
+}) => {
   const effectiveRole =
     userRole || (localStorage.getItem("mami_role") as UserRole | null);
   if (!effectiveRole) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(effectiveRole)) return <Navigate to="/403" replace />;
+  if (!allowedRoles.includes(effectiveRole))
+    return <Navigate to="/403" replace />;
   return <>{children}</>;
 };
 

@@ -5,7 +5,8 @@ export type AdminSettings = {
   slots: string;
 };
 
-export type StockRequestStatus = "PENDING" | "APPROVED" | "REJECTED";
+// Bridge re-export
+export type { StockRequestStatus } from "../domains/stock-requests/types";
 
 export interface CreateCategoryRequest {
   name: string;
@@ -48,9 +49,5 @@ export interface CreateBranchRequest {
   name: string;
   address: string;
 }
-export interface CreateDeliverySlotRequest {
-  branch_id: number;
-  day_of_week: number;
-  start_time: string;
-  end_time: string;
-}
+// Bridge re-export for delivery types
+export type { CreateDeliverySlotRequest } from "@/domains/delivery/types";

@@ -24,16 +24,20 @@ describe("ResetPassword", () => {
 
   it("prefills token from query and submits reset", async () => {
     mockReset.mockResolvedValue({});
-    renderWithRouter({
-      route: "/reset-password?token=abc123",
-      path: "/reset-password",
-      element: <ResetPassword />,
-    });
+    renderWithRouter();
 
     expect(screen.getByPlaceholderText(/token/)).toHaveValue("abc123");
-    await userEvent.type(screen.getByPlaceholderText(/name@example/), "user@example.com");
-    await userEvent.type(screen.getByPlaceholderText(/strong password/), "Secure123!");
-    await userEvent.click(screen.getByRole("button", { name: /update password/i }));
+    await userEvent.type(
+      screen.getByPlaceholderText(/name@example/),
+      "user@example.com",
+    );
+    await userEvent.type(
+      screen.getByPlaceholderText(/strong password/),
+      "Secure123!",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /update password/i }),
+    );
 
     await waitFor(() =>
       expect(mockReset).toHaveBeenCalledWith({
@@ -42,22 +46,30 @@ describe("ResetPassword", () => {
         new_password: "Secure123!",
       }),
     );
-    await waitFor(() => expect(screen.getByText(/Password updated/i)).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText(/Password updated/i)).toBeInTheDocument(),
+    );
   });
 
   it("shows error when backend rejects token", async () => {
     mockReset.mockRejectedValue(new Error("Invalid token"));
-    renderWithRouter({
-      route: "/reset-password",
-      path: "/reset-password",
-      element: <ResetPassword />,
-    });
+    renderWithRouter();
 
-    await userEvent.type(screen.getByPlaceholderText(/name@example/), "user@example.com");
+    await userEvent.type(
+      screen.getByPlaceholderText(/name@example/),
+      "user@example.com",
+    );
     await userEvent.type(screen.getByPlaceholderText(/token/), "bad-token");
-    await userEvent.type(screen.getByPlaceholderText(/strong password/), "Secure123!");
-    await userEvent.click(screen.getByRole("button", { name: /update password/i }));
+    await userEvent.type(
+      screen.getByPlaceholderText(/strong password/),
+      "Secure123!",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /update password/i }),
+    );
 
-    await waitFor(() => expect(screen.getByText(/Invalid token/)).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText(/Invalid token/)).toBeInTheDocument(),
+    );
   });
 });

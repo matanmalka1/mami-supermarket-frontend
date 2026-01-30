@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
-import { adminService } from "@/services/admin-service";
+import { adminService } from "@/domains/admin/service";
 import { useCatalogCategories } from "@/hooks/useCatalogCategories";
 import { useBranches } from "@/hooks/useBranches";
 import { generateSku } from "@/utils/generateSku";
@@ -39,12 +39,12 @@ const NewSkuForm: React.FC<NewSkuFormProps> = ({ isOpen, onSuccess }) => {
 
   useEffect(() => {
     if (!isOpen || categories.length === 0) return;
-    setSelectedCategory(categories[0].id);
+    setSelectedCategory(String(categories[0].id));
   }, [categories, isOpen]);
 
   useEffect(() => {
     if (!isOpen || branches.length === 0) return;
-    setSelectedBranch(branches[0].id);
+    setSelectedBranch(String(branches[0].id));
   }, [branches, isOpen]);
 
   const skuPreview = useMemo(
@@ -52,7 +52,7 @@ const NewSkuForm: React.FC<NewSkuFormProps> = ({ isOpen, onSuccess }) => {
     [productName],
   );
   const branchLabel =
-    branches.find((branch) => branch.id === selectedBranch)?.name ||
+    branches.find((branch) => String(branch.id) === selectedBranch)?.name ||
     "selected branch";
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -69,19 +69,20 @@ const NewSkuForm: React.FC<NewSkuFormProps> = ({ isOpen, onSuccess }) => {
         name: trimmedName,
         sku: skuPreview,
         price,
-        category_id: selectedCategory,
+        category_id: Number(selectedCategory),
         description: description.trim() || undefined,
       });
       await adminService.createInventory({
         product_id: product.id,
-        branch_id: selectedBranch,
+        branch_id: Number(selectedBranch),
         available_quantity: initialStock,
         reserved_quantity: 0,
       });
       toast.success("SKU registered and stocked");
       onSuccess();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to register SKU";
+      const message =
+        err instanceof Error ? err.message : "Failed to register SKU";
       setError(message);
     } finally {
       setSubmitting(false);
@@ -114,14 +115,19 @@ const NewSkuForm: React.FC<NewSkuFormProps> = ({ isOpen, onSuccess }) => {
         setPrice={setPrice}
         setInitialStock={setInitialStock}
       />
-      <NewSkuDescription description={description} setDescription={setDescription} />
+      <NewSkuDescription
+        description={description}
+        setDescription={setDescription}
+      />
       <NewSkuFooter
         initialStock={initialStock}
         branchLabel={branchLabel}
         summaryLabel={summaryLabel}
         isBusy={isBusy}
         error={error}
-        disabled={isBusy || !productName.trim() || !selectedCategory || !selectedBranch}
+        disabled={
+          isBusy || !productName.trim() || !selectedCategory || !selectedBranch
+        }
       />
     </form>
   );

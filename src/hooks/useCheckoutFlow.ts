@@ -1,3 +1,5 @@
+// This is the content of useCheckoutFlow.ts
+// Removed duplicate minimal stub. Only the full-featured hook below remains.
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
@@ -13,7 +15,9 @@ const formatSlotLabel = (slot: DeliverySlotResponse): string | null => {
   return label || null;
 };
 
-const buildUniqueSlotOptions = (slots: DeliverySlotResponse[]): DeliverySlotOption[] => {
+const buildUniqueSlotOptions = (
+  slots: DeliverySlotResponse[],
+): DeliverySlotOption[] => {
   const seen = new Set<string>();
   const options: DeliverySlotOption[] = [];
   slots.forEach((slot) => {
@@ -31,7 +35,9 @@ export const useCheckoutFlow = () => {
   const { isAuthenticated } = useAuth();
   const { selectedBranch } = useBranchSelection();
   const [method, setMethod] = useState<Method>("DELIVERY");
-  const [serverCartId, setServerCartId] = useState<string | number | null>(null);
+  const [serverCartId, setServerCartId] = useState<string | number | null>(
+    null,
+  );
   const [deliverySlots, setDeliverySlots] = useState<DeliverySlotOption[]>([]);
   const [slotId, setSlotId] = useState<number | null>(null);
   const [preview, setPreview] = useState<any>(null);
@@ -71,7 +77,9 @@ export const useCheckoutFlow = () => {
     let active = true;
     const loadSlots = async () => {
       try {
-        const data = await apiService.branches.listSlots({ branchId: String(selectedBranch.id) });
+        const data = await apiService.branches.listSlots({
+          branchId: String(selectedBranch.id),
+        });
         if (!active) return;
         setDeliverySlots(buildUniqueSlotOptions(data));
       } catch {

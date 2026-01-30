@@ -1,20 +1,8 @@
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: Record<string, any>;
-}
+// Bridge re-export for errors types
+export type { ApiError, ApiEnvelope } from "@/domains/errors/types";
 
-export interface ApiEnvelope<T> {
-  data: T;
-  error?: ApiError;
-}
-
-export interface Pagination {
-  total: number;
-  limit: number;
-  offset: number;
-  hasNext: boolean;
-}
+// Bridge re-export for pagination types
+export type { Pagination } from "@/domains/pagination/types";
 
 export type MoneyILS = number;
 export type ISODateTime = string;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { catalogService } from "@/services/catalog-service";
+import { catalogService } from "@/domains/catalog/service";
 import { useOptionalBranchSelection } from "@/context/branch-context-core";
 import type { Product } from "@/types/domain";
 import { normalizeProductList } from "@/utils/products";

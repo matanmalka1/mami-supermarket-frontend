@@ -1,8 +1,10 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { apiService } from "@/services/api";
+import { checkoutService } from "@/domains/checkout/service";
 import { useCart } from "@/context/CartContext";
-import CheckoutStepper, {CheckoutStep} from "@/components/checkout/CheckoutStepper";
+import CheckoutStepper, {
+  CheckoutStep,
+} from "@/components/checkout/CheckoutStepper";
 import FulfillmentStep from "@/components/checkout/FulfillmentStep";
 import ScheduleStep from "@/components/checkout/ScheduleStep";
 import PaymentStep from "@/components/checkout/PaymentStep";
@@ -55,13 +57,13 @@ const Checkout: React.FC = () => {
     }
     setLoading(true);
     try {
-      const data: any = await apiService.checkout.confirm(
+      const data: any = await checkoutService.confirm(
         {
-          cart_id: serverCartId,
-          payment_token_id: tokenId,
-          fulfillment_type: method,
-          branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
-          delivery_slot_id: slotId ?? undefined,
+          cartId: serverCartId,
+          paymentTokenId: tokenId,
+          fulfillmentType: method,
+          branchId: method === "PICKUP" ? selectedBranch?.id : undefined,
+          deliverySlotId: slotId ?? undefined,
         },
         idempotencyKey,
       );
@@ -85,8 +87,9 @@ const Checkout: React.FC = () => {
             : "Pickup time pending";
       const orderSnapshot: OrderSuccessSnapshot = {
         orderId: resolvedOrderId,
-        orderNumber:
-          String(data?.order_number || data?.orderNumber || resolvedOrderId),
+        orderNumber: String(
+          data?.order_number || data?.orderNumber || resolvedOrderId,
+        ),
         fulfillmentType: method,
         items: items.map((item) => ({
           id: item.id,
@@ -205,7 +208,7 @@ const Checkout: React.FC = () => {
             loading={loading}
             onBack={() => setStep("SCHEDULE")}
             onConfirm={handleConfirm}
-            onCreatePaymentToken={apiService.checkout.createPaymentToken}
+            onCreatePaymentToken={checkoutService.createPaymentToken}
           />
         )}
       </div>

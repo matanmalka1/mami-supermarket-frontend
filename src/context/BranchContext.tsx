@@ -19,7 +19,7 @@ export const BranchProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setBranches(data || []);
         const storedId = localStorage.getItem(STORAGE_KEY);
         const resolved =
-          data?.find((branch) => branch.id === Number(storedId)) ?? data?.[0] ?? null;
+          data?.find((branch: BranchResponse) => branch.id === Number(storedId)) ?? data?.[0] ?? null;
         setSelectedBranch(resolved);
         setError(null);
       } catch (err: any) {

@@ -1,5 +1,5 @@
 import React from "react";
-import type { InventoryRow } from "@/types/inventory";
+import type { InventoryRow } from "@/domains/inventory/types";
 import BaseTable, { type ColumnDefinition } from "@/components/ui/BaseTable";
 
 type Props = {

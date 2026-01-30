@@ -7,11 +7,15 @@ import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { loginSchema, LoginInput } from "@/validation/auth";
-import { UserRole } from "@/types/auth";
+import type { UserRole } from "@/domains/users/types";
 import LoginHero from "./LoginHero";
 import LoginFormCard from "./LoginFormCard";
 
-type LoginPayload = { token: string; role?: UserRole | null; remember?: boolean };
+type LoginPayload = {
+  token: string;
+  role?: UserRole | null;
+  remember?: boolean;
+};
 
 const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
   onLogin,
@@ -55,7 +59,8 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
         response?.data?.role ||
         response?.role ||
         null;
-      if (!token) return toast.error("No token returned from backend", { id: "auth" });
+      if (!token)
+        return toast.error("No token returned from backend", { id: "auth" });
       onLogin({ token, role: roleFromResponse, remember: data.rememberMe });
       if (roleFromResponse === "ADMIN") {
         toast.success("Administrator access granted. Entering Ops Portal...", {

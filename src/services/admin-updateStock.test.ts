@@ -16,7 +16,7 @@ describe("adminService.updateStock", () => {
   it("sends snake_case quantities", async () => {
     patch.mockResolvedValue({});
 
-    await adminService.updateStock("item-1", {
+    await adminService.updateStock(1, {
       availableQuantity: 7,
       reservedQuantity: 2,
     });

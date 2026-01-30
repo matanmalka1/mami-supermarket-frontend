@@ -31,8 +31,10 @@ const Storefront: React.FC = () => {
           apiService.catalog.getCategories(),
           apiService.catalog.getFeatured(),
         ]);
+
         const catData: any = cats as any;
         const featData: any = feats as any;
+
         setCategories(extractArrayPayload<any>(catData));
         setFeatured(extractArrayPayload<any>(featData));
       } finally {
@@ -121,7 +123,9 @@ const Storefront: React.FC = () => {
               <ChevronRight className="text-gray-300 group-hover:text-emerald-500 transition-all" size={20} />
             </div>
           ))}
-          <Button fullWidth onClick={() => { setIsFarmModalOpen(false); navigate('/store/category/produce'); }} className="mt-4 rounded-2xl">View All Local Produce</Button>
+          <Button fullWidth onClick={() => { setIsFarmModalOpen(false);
+             navigate('/store/category/produce'); }} 
+             className="mt-4 rounded-2xl">View All Local Produce</Button>
         </div>
       </Modal>
     </div>

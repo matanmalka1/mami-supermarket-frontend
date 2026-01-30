@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useLocation, useParams, Link } from "react-router";
 import { CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -26,7 +25,7 @@ const formatAddressLine = (address?: Record<string, any>) => {
 
 const OrderSuccess: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation<OrderSuccessState>();
+  const location = useLocation();
   const [snapshot, setSnapshot] = useState<OrderSuccessSnapshot | null>(
     location.state?.snapshot ?? null,
   );
@@ -76,8 +75,8 @@ const OrderSuccess: React.FC = () => {
           </span>
         </p>
         <p className="text-gray-400 max-w-md mx-auto leading-relaxed">
-          Your items are now being routed to our optimized picking queue.
-          We'll notify you when they are out for delivery.
+          Your items are now being routed to our optimized picking queue. We'll
+          notify you when they are out for delivery.
         </p>
       </div>
 
@@ -101,7 +100,10 @@ const OrderSuccess: React.FC = () => {
 
       <div className="flex gap-4 max-w-md mx-auto">
         <Link to="/store" className="flex-1">
-          <Button variant="outline" className="w-full h-16 rounded-2xl font-black italic">
+          <Button
+            variant="outline"
+            className="w-full h-16 rounded-2xl font-black italic"
+          >
             Keep Shopping
           </Button>
         </Link>

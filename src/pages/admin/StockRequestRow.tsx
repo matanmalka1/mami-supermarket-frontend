@@ -2,12 +2,12 @@ import React from "react";
 import { CheckCircle2, Clock, Package, XCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import type { StockRequest } from "@/features/admin/types";
+import type { AdminStockRequest } from "@/domains/admin/types";
 
-export type { StockRequest };
+export type { AdminStockRequest };
 
 type Props = {
-  request: StockRequest;
+  request: AdminStockRequest;
   selected: boolean;
   disabled: boolean;
   onSelect: () => void;
@@ -25,7 +25,11 @@ const StockRequestRow: React.FC<Props> = ({
 }) => {
   const status = request.status ?? "PENDING";
   const statusVariant =
-    status === "APPROVED" ? "emerald" : status === "REJECTED" ? "red" : "orange";
+    status === "APPROVED"
+      ? "emerald"
+      : status === "REJECTED"
+        ? "red"
+        : "orange";
   const displayTime = request.createdAt
     ? new Date(request.createdAt).toLocaleString()
     : request.time || "Just now";
@@ -47,7 +51,9 @@ const StockRequestRow: React.FC<Props> = ({
           </p>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
             {request.quantity ?? "-"} units •{" "}
-            {request.requestType ? request.requestType.replace("_", " ") : "Request"}
+            {request.requestType
+              ? request.requestType.replace("_", " ")
+              : "Request"}
           </p>
           {request.productSku && (
             <p className="text-xs text-gray-500 uppercase tracking-widest">
@@ -67,10 +73,20 @@ const StockRequestRow: React.FC<Props> = ({
           <Clock size={14} /> {displayTime}
         </span>
         <div className="flex gap-2">
-          <Button variant="ghost" size="sm" disabled={disabled} onClick={onReject}>
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={disabled}
+            onClick={onReject}
+          >
             <XCircle size={14} /> Reject
           </Button>
-          <Button variant="emerald" size="sm" disabled={disabled} onClick={onApprove}>
+          <Button
+            variant="emerald"
+            size="sm"
+            disabled={disabled}
+            onClick={onApprove}
+          >
             <CheckCircle2 size={14} /> Approve
           </Button>
         </div>

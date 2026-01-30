@@ -1,10 +1,10 @@
-import { authService } from "./auth-service";
+import { authService } from "@/domains/auth/service";
 import { opsService } from "./ops-service";
-import { adminService } from "./admin-service";
-import { catalogService } from "./catalog-service";
-import { checkoutService } from "./checkout-service";
-import { cartService } from "./cart-service";
-import { branchService } from "./branch-service";
+import { adminService } from "@/domains/admin/service";
+import { catalogService } from "@/domains/catalog/service";
+import { checkoutService } from "@/domains/checkout/service";
+import { cartService } from "@/domains/cart/service";
+import { branchService } from "@/domains/branch/service";
 import { apiClient } from "./api-client";
 import { Order } from "../types/domain";
 

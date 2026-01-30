@@ -18,8 +18,8 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   } = useForm<StockRequestInput>({
     resolver: zodResolver(stockRequestSchema),
     defaultValues: {
-      branchId: "",
-      productId: "",
+      branchId: 0,
+      productId: 0,
       quantity: 1,
       requestType: "ADD_QUANTITY",
     },
@@ -48,7 +48,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit as any)}
       className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-sm space-y-8"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

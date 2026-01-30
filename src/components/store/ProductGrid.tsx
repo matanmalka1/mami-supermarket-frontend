@@ -1,5 +1,5 @@
 import React, { type FC } from "react";
-import ProductCard from "@/components/store/ProductCard";
+import ProductCard from "@/screens/Storefront/components/ProductCard";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
 import type { Product } from "@/types/domain";
 
@@ -23,7 +23,8 @@ const ProductGrid: FC<ProductGridProps> = ({
   className = "",
   renderItem,
 }) => {
-  const fallbackRender = renderItem ?? ((product: Product) => <ProductCard item={product} />);
+  const fallbackRender =
+    renderItem ?? ((product: Product) => <ProductCard item={product} />);
 
   if (loading) {
     return (
@@ -40,7 +41,9 @@ const ProductGrid: FC<ProductGridProps> = ({
   return (
     <div className={`${gridClassName} ${className}`}>
       {products.map((product) => (
-        <React.Fragment key={product.id}>{fallbackRender(product)}</React.Fragment>
+        <React.Fragment key={product.id}>
+          {fallbackRender(product)}
+        </React.Fragment>
       ))}
     </div>
   );

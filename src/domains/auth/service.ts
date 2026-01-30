@@ -1,5 +1,5 @@
-import { apiClient } from "./api-client";
-import { User } from "../types/auth";
+import { apiClient } from "@/services/api-client";
+import type { User } from "@/domains/users/types";
 import {
   AuthRegisterRequest,
   AuthRegisterResponse,
@@ -10,7 +10,7 @@ import {
   AuthRegisterOtpRequest,
   AuthRegisterVerifyOtpRequest,
   AuthRegisterOtpResponse,
-} from "../types/auth-service";
+} from "@/types/auth-service";
 
 export const authService = {
   login: async (cred: AuthLoginRequest): Promise<AuthLoginResponse> => {
@@ -56,7 +56,10 @@ export const authService = {
       data,
     ),
   resetPassword: (data: AuthResetPasswordRequest) =>
-    apiClient.post<AuthResetPasswordRequest, void>("/auth/reset-password", data),
+    apiClient.post<AuthResetPasswordRequest, void>(
+      "/auth/reset-password",
+      data,
+    ),
   verifyRegisterOtp: (data: AuthRegisterVerifyOtpRequest) =>
     apiClient.post<AuthRegisterVerifyOtpRequest, { message: string }>(
       "/auth/register/verify-otp",

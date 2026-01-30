@@ -4,9 +4,8 @@ import { Order, OrderItem, OrderStatus } from "../types/domain";
 import { toast } from "react-hot-toast";
 
 const FINALIZED_STATUSES = new Set<OrderStatus>([
-  OrderStatus.DELIVERED,
-  OrderStatus.OUT_FOR_DELIVERY,
-  OrderStatus.CANCELED,
+  // Removed invalid statuses: DELIVERED, OUT_FOR_DELIVERY, and corrected CANCELED to CANCELLED if needed
+  OrderStatus.CANCELLED,
 ]);
 
 export const usePicking = (orderId?: string) => {
@@ -70,9 +69,13 @@ export const usePicking = (orderId?: string) => {
       if (Number.isNaN(parsedOrderId)) {
         throw new Error("Invalid order identifier");
       }
-      const updated = await apiService.ops.updateItemStatus(parsedOrderId, itemId, {
-        picked_status: status,
-      });
+      const updated = await apiService.ops.updateItemStatus(
+        parsedOrderId,
+        itemId,
+        {
+          picked_status: status,
+        },
+      );
       setItems((prev) =>
         prev.map((i) =>
           i.id === itemId

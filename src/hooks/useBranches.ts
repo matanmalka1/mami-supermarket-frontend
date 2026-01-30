@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { branchService } from "@/services/branch-service";
+import { branchService } from "@/domains/branch/service";
 import type { BranchResponse } from "@/types/branch";
 import { extractArrayPayload } from "@/utils/api-response";
 
@@ -29,7 +29,8 @@ export const useBranches = (): BranchState => {
         });
       } catch (err: unknown) {
         if (!active) return;
-        const message = err instanceof Error ? err.message : "Failed to load branches";
+        const message =
+          err instanceof Error ? err.message : "Failed to load branches";
         setState({ branches: [], loading: false, error: message });
       }
     };

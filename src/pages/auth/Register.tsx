@@ -9,7 +9,7 @@ import RegistrationForm from "@/features/auth/components/RegistrationForm";
 import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import { registerSchema, RegisterInput } from "@/validation/auth";
-import { UserRole } from "@/types/auth";
+import type { UserRole } from "@/domains/users/types";
 
 type RegisterPayload = {
   token: string;
@@ -17,9 +17,9 @@ type RegisterPayload = {
   remember?: boolean;
 };
 
-const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = ({
-  onRegister,
-}) => {
+const Register: React.FC<{
+  onRegister: (payload: RegisterPayload) => void;
+}> = ({ onRegister }) => {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [step, setStep] = useState<"INFO" | "OTP">("INFO");
@@ -85,9 +85,14 @@ const Register: React.FC<{ onRegister: (payload: RegisterPayload) => void }> = (
         loginRes?.user?.role ||
         loginRes?.data?.role ||
         loginRes?.role;
-      if (!token) return toast.error("No token returned from backend", { id: "reg" });
+      if (!token)
+        return toast.error("No token returned from backend", { id: "reg" });
       toast.success("Welcome aboard!", { id: "reg" });
-      onRegister({ token, role: role as UserRole | undefined, remember: false });
+      onRegister({
+        token,
+        role: role as UserRole | undefined,
+        remember: false,
+      });
       navigate("/store");
     } catch (err: any) {
       toast.error(err.message || "Registration failed", { id: "reg" });

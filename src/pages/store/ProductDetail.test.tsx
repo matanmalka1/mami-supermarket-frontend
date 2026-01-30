@@ -42,11 +42,7 @@ describe("ProductDetail", () => {
     mockGetProduct.mockResolvedValue({ id: 123, name: "Test Product" });
     mockGetProducts.mockResolvedValue([]);
 
-    renderWithRouter({
-      route: "/store/product/123",
-      path: "/store/product/:id",
-      element: <ProductDetail />,
-    });
+    renderWithRouter();
 
     expect(screen.getByText(/gathering product details/i)).toBeInTheDocument();
 

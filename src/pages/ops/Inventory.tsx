@@ -11,14 +11,18 @@ import EmptyState from "@/components/shared/EmptyState";
 import InventoryAnalyticsPanel from "@/pages/inventory/components/InventoryAnalyticsPanel";
 import InventoryRelocationPanel from "@/pages/inventory/components/InventoryRelocationPanel";
 import StockReportPanel from "@/pages/inventory/components/StockReportPanel";
-import { InventoryRow } from "@/types/inventory";
+import { InventoryRow } from "@/domains/inventory/types";
 
 const Inventory: React.FC = () => {
   const { inventory, loading, updateStock, refresh } = useInventory();
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
-  const [analyticsFocus, setAnalyticsFocus] = useState<InventoryRow | null>(null);
-  const [relocationFocus, setRelocationFocus] = useState<InventoryRow | null>(null);
+  const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
+  const [analyticsFocus, setAnalyticsFocus] = useState<InventoryRow | null>(
+    null,
+  );
+  const [relocationFocus, setRelocationFocus] = useState<InventoryRow | null>(
+    null,
+  );
   const { branches, loading: branchesLoading } = useBranches();
 
   const rows = inventory;
@@ -27,7 +31,9 @@ const Inventory: React.FC = () => {
     <div className="space-y-8 pb-12 animate-in fade-in duration-500 relative">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-black italic tracking-tight">Inventory Control</h1>
+          <h1 className="text-4xl font-black italic tracking-tight">
+            Inventory Control
+          </h1>
           <p className="text-sm text-gray-500 mt-1 font-bold uppercase tracking-widest">
             Global Stock Monitoring • Phase 2 Nodes
           </p>
@@ -45,20 +51,23 @@ const Inventory: React.FC = () => {
       <InventoryHighlights rows={rows} />
       <StockReportPanel rows={rows} branches={branches} />
 
-        {loading ? (
-          <LoadingState label="Loading global inventory..." />
-        ) : rows.length === 0 ? (
-          <EmptyState title="No inventory found." description="All branches are currently empty." />
-        ) : (
-          <InventoryTable
-            rows={rows}
-            activeMenuId={activeMenuId}
-            onMenuToggle={setActiveMenuId}
-            onUpdateStock={updateStock}
-            onViewAnalytics={(row) => setAnalyticsFocus(row)}
-            onViewRelocation={(row) => setRelocationFocus(row)}
-          />
-        )}
+      {loading ? (
+        <LoadingState label="Loading global inventory..." />
+      ) : rows.length === 0 ? (
+        <EmptyState
+          title="No inventory found."
+          description="All branches are currently empty."
+        />
+      ) : (
+        <InventoryTable
+          rows={rows}
+          activeMenuId={activeMenuId}
+          onMenuToggle={(id) => setActiveMenuId(id)}
+          onUpdateStock={updateStock}
+          onViewAnalytics={(row) => setAnalyticsFocus(row)}
+          onViewRelocation={(row) => setRelocationFocus(row)}
+        />
+      )}
 
       <NewSkuModal
         isOpen={isNewModalOpen}
@@ -85,7 +94,12 @@ const Inventory: React.FC = () => {
         />
       )}
 
-      {activeMenuId && <div className="fixed inset-0 z-[60]" onClick={() => setActiveMenuId(null)} />}
+      {activeMenuId && (
+        <div
+          className="fixed inset-0 z-[60]"
+          onClick={() => setActiveMenuId(null)}
+        />
+      )}
     </div>
   );
 };

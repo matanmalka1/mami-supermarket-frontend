@@ -1,15 +1,14 @@
-import { apiClient } from "./api-client";
-import type { Product } from "@/types/domain";
-import {
+import { apiClient } from "@/services/api-client";
+import type {
+  AdminProduct,
   AdminSettings,
-  InventoryCreateRequest,
-  InventoryResponse,
-  StockRequestStatus,
-  CreateProductRequest,
-  UpdateProductRequest,
-} from "../types/admin-service";
+  AdminStockRequestStatus,
+  AdminInventoryCreateRequest,
+  AdminInventoryResponse,
+  AdminCreateProductRequest,
+  AdminUpdateProductRequest,
+} from "./types";
 
-// Endpoint map for easy backend contract swaps (do not guess endpoints)
 const ADMIN_ENDPOINTS = {
   inventory: "/admin/inventory",
   productsSearch: "/catalog/products/search",
@@ -23,7 +22,10 @@ const ADMIN_ENDPOINTS = {
 };
 
 export const adminService = {
-  getInventory: () => apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.inventory),
+  getInventory: () =>
+    apiClient.get<AdminInventoryResponse[], AdminInventoryResponse[]>(
+      ADMIN_ENDPOINTS.inventory,
+    ),
   updateStock: (
     id: number,
     data: { availableQuantity: number; reservedQuantity: number },
@@ -36,9 +38,12 @@ export const adminService = {
       reserved_quantity: data.reservedQuantity,
     }),
   getProducts: (params?: Record<string, any>) =>
-    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.productsSearch, { params }),
-  updateProduct: (id: number, data: UpdateProductRequest) =>
-    apiClient.patch<UpdateProductRequest, void>(
+    apiClient.get<AdminProduct[], AdminProduct[]>(
+      ADMIN_ENDPOINTS.productsSearch,
+      { params },
+    ),
+  updateProduct: (id: number, data: AdminUpdateProductRequest) =>
+    apiClient.patch<AdminUpdateProductRequest, void>(
       `${ADMIN_ENDPOINTS.adminProducts}/${id}`,
       data,
     ),
@@ -48,22 +53,22 @@ export const adminService = {
       null,
       { params: { active } },
     ),
-  createProduct: (data: CreateProductRequest) =>
-    apiClient.post<CreateProductRequest, Product>(
+  createProduct: (data: AdminCreateProductRequest) =>
+    apiClient.post<AdminCreateProductRequest, AdminProduct>(
       ADMIN_ENDPOINTS.adminProducts,
       data,
     ),
-  createInventory: (data: InventoryCreateRequest) =>
-    apiClient.post<InventoryCreateRequest, InventoryResponse>(
+  createInventory: (data: AdminInventoryCreateRequest) =>
+    apiClient.post<AdminInventoryCreateRequest, AdminInventoryResponse>(
       ADMIN_ENDPOINTS.inventory,
       data,
     ),
   getStockRequests: (params?: Record<string, any>) =>
-    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.adminStockRequests, { params }),
+    apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.adminStockRequests, { params }), // TODO: Replace any with AdminStockRequest[] if shape is confirmed
   resolveStockRequest: (
     id: number,
     data: {
-      status: StockRequestStatus;
+      status: AdminStockRequestStatus;
       approvedQuantity?: number;
       rejectionReason?: string;
     },
@@ -74,10 +79,10 @@ export const adminService = {
     ),
   bulkResolveStockRequests: (
     items: {
-      request_id: number;
-      status: StockRequestStatus;
-      approved_quantity?: number;
-      rejection_reason?: string;
+      requestId: number;
+      status: AdminStockRequestStatus;
+      approvedQuantity?: number;
+      rejectionReason?: string;
     }[],
   ) =>
     apiClient.patch<{ items: any[] }, void>(
@@ -95,12 +100,15 @@ export const adminService = {
     apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
   getDeliverySlots: () =>
     apiClient.get<any[], any[]>(ADMIN_ENDPOINTS.deliverySlots),
-  updateDeliverySlot: (id: number, data: {
-    day_of_week?: number;
-    start_time?: string;
-    end_time?: string;
-    branch_id?: number;
-  }) =>
+  updateDeliverySlot: (
+    id: number,
+    data: {
+      day_of_week?: number;
+      start_time?: string;
+      end_time?: string;
+      branch_id?: number;
+    },
+  ) =>
     apiClient.patch<typeof data, void>(
       `${ADMIN_ENDPOINTS.deliverySlots}/${id}`,
       data,

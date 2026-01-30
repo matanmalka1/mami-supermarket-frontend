@@ -6,7 +6,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 interface ProductGalleryProps {
   images?: string[];
   name?: string;
-  productId?: string;
+  productId?: number;
 }
 
 const initials = (text?: string) => {
@@ -26,10 +26,10 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, name, productId
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
   const [isZooming, setIsZooming] = useState(false);
   const { toggleWishlist, isWishlisted } = useWishlist();
-  const isLiked = Boolean(productId && isWishlisted(productId));
+  const isLiked = Boolean(productId !== undefined && isWishlisted(productId));
 
   const handleWishlistToggle = () => {
-    if (!productId) {
+    if (productId === undefined) {
       toast("Wishlist is not available for this product", {
         icon: '⚠️',
         style: { borderRadius: '1rem', fontWeight: 'bold' },

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
 import { useAsyncResource } from "./useAsyncResource";
-import { InventoryRow } from "@/types/inventory";
+import { InventoryRow } from "@/domains/inventory/types";
 import type { InventoryResponse } from "@/types/admin-service";
 import { extractArrayPayload } from "@/utils/api-response";
 
@@ -28,11 +28,15 @@ export const useInventory = () => {
     return rows.map(toInventoryRow);
   }, []);
 
-  const { data: inventory, setData: setInventory, loading, refresh } =
-    useAsyncResource<InventoryRow[]>(fetchInventory, {
-      initialData: [],
-      errorMessage: "Failed to load global inventory",
-    });
+  const {
+    data: inventory,
+    setData: setInventory,
+    loading,
+    refresh,
+  } = useAsyncResource<InventoryRow[]>(fetchInventory, {
+    initialData: [],
+    errorMessage: "Failed to load global inventory",
+  });
 
   const updateStock = async (id: number, newQty: number) => {
     if (Number.isNaN(newQty) || newQty < 0) {

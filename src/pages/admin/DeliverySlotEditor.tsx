@@ -2,7 +2,7 @@ import React, { FormEvent, useMemo, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
-import { adminService } from "@/services/admin-service";
+import { adminService } from "@/domains/admin/service";
 import type { DeliverySlot } from "@/features/admin/deliverySlots/types";
 
 type Props = {
@@ -12,7 +12,12 @@ type Props = {
   onSave: (slot: DeliverySlot) => void;
 };
 
-const DeliverySlotEditor: React.FC<Props> = ({ slot, isOpen, onClose, onSave }) => {
+const DeliverySlotEditor: React.FC<Props> = ({
+  slot,
+  isOpen,
+  onClose,
+  onSave,
+}) => {
   const [saving, setSaving] = useState(false);
   const initialStart = slot?.startTime || slot?.start_time || "";
   const initialEnd = slot?.endTime || slot?.end_time || "";

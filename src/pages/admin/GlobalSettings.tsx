@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { apiService } from "@/services/api";
 import SettingsField from "./SettingsField";
 import DangerZone from "./DangerZone";
-import { AdminSettings } from "@/services/admin-service";
+import type { AdminSettings } from "@/domains/admin/types";
 
 type SettingsPayload = Partial<AdminSettings>;
 
@@ -63,7 +63,9 @@ const GlobalSettings: React.FC = () => {
   };
 
   const handleSuspendCatalog = () => {
-    toast.error("Global Catalog Suspended. All checkout flows halted.", { duration: 5000 });
+    toast.error("Global Catalog Suspended. All checkout flows halted.", {
+      duration: 5000,
+    });
     setIsSuspendDialogOpen(false);
   };
 

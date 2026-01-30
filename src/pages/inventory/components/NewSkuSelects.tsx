@@ -1,6 +1,6 @@
 import React from "react";
-import type { Category } from "@/types/domain";
-import type { BranchResponse } from "@/types/branch";
+import type { Category } from "@/domains/catalog/types";
+import type { BranchResponse } from "@/domains/branch/types";
 
 type Props = {
   categories: Category[];

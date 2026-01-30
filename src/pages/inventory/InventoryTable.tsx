@@ -7,7 +7,7 @@ import {
   InventoryRow,
   getAvailableQuantity,
   getReservedQuantity,
-} from "@/types/inventory";
+} from "@/domains/inventory/types";
 
 type InventoryTableProps = {
   rows: InventoryRow[];
@@ -45,7 +45,10 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
       <TBody>
         {rows.length === 0 ? (
           <TR>
-            <TD colSpan={5} className="text-center text-gray-400 py-12 font-bold italic">
+            <TD
+              colSpan={5}
+              className="text-center text-gray-400 py-12 font-bold italic"
+            >
               No inventory found.
             </TD>
           </TR>
@@ -59,7 +62,11 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
             return (
               <TR
                 key={inv.id}
-                className={isLowStock ? "bg-emerald-50/40 hover:bg-emerald-50/30" : undefined}
+                className={
+                  isLowStock
+                    ? "bg-emerald-50/40 hover:bg-emerald-50/30"
+                    : undefined
+                }
               >
                 <TD>
                   <div className="flex items-center gap-4">
@@ -75,7 +82,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                       </div>
                     )}
                     <div>
-                      <h4 className="text-lg leading-tight italic">{inv.product?.name}</h4>
+                      <h4 className="text-lg leading-tight italic">
+                        {inv.product?.name}
+                      </h4>
                       <p className="text-[10px] text-gray-400 uppercase tracking-widest">
                         SKU: {inv.product?.sku}
                       </p>
@@ -85,7 +94,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                 <TD>
                   <div className="flex flex-col gap-2">
                     <StatusBadge status={statusLabel} />
-                    <p className="text-sm font-black text-gray-600">{branchName}</p>
+                    <p className="text-sm font-black text-gray-600">
+                      {branchName}
+                    </p>
                   </div>
                 </TD>
                 <TD>
@@ -94,7 +105,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                       type="number"
                       className="w-24 bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 font-black text-center focus:border-[#006666] outline-none"
                       value={available}
-                      onChange={(e) => onUpdateStock(inv.id, parseInt(e.target.value, 10) || 0)}
+                      onChange={(e) =>
+                        onUpdateStock(inv.id, parseInt(e.target.value, 10) || 0)
+                      }
                     />
                   </div>
                 </TD>
@@ -105,39 +118,54 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                 </TD>
                 <TD className="text-right relative">
                   <button
-                    onClick={() => onMenuToggle(activeMenuId === inv.id ? null : inv.id)}
+                    onClick={() =>
+                      onMenuToggle(activeMenuId === inv.id ? null : inv.id)
+                    }
                     className={`p-2 transition-all rounded-xl ${
-                      activeMenuId === inv.id ? "text-gray-900 bg-gray-100" : "text-gray-300 hover:text-gray-900"
+                      activeMenuId === inv.id
+                        ? "text-gray-900 bg-gray-100"
+                        : "text-gray-300 hover:text-gray-900"
                     }`}
                   >
                     <MoreVertical size={20} />
                   </button>
                   {activeMenuId === inv.id && (
                     <div className="absolute right-8 top-16 w-56 bg-white border border-gray-100 rounded-[1.5rem] shadow-2xl z-[70] p-2 animate-in zoom-in-95">
-            <button
-            onClick={() => {
-              handleAction("Relocation", inv.product?.name ?? "SKU");
-              onViewRelocation(inv);
-            }}
-            className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
-          >
-            <Move size={14} className="text-[#006666]" /> Relocate SKU
-          </button>
-            <button
-              onClick={() => {
-                handleAction("Analytics View", inv.product?.name ?? "SKU");
-                onViewAnalytics(inv);
-              }}
-            className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
-          >
-            <BarChart2 size={14} className="text-blue-500" /> Item Analytics
-          </button>
+                      <button
+                        onClick={() => {
+                          handleAction(
+                            "Relocation",
+                            inv.product?.name ?? "SKU",
+                          );
+                          onViewRelocation(inv);
+                        }}
+                        className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
+                      >
+                        <Move size={14} className="text-[#006666]" /> Relocate
+                        SKU
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleAction(
+                            "Analytics View",
+                            inv.product?.name ?? "SKU",
+                          );
+                          onViewAnalytics(inv);
+                        }}
+                        className="w-full text-left p-3 rounded-xl hover:bg-gray-50 flex items-center gap-3 transition-colors text-xs"
+                      >
+                        <BarChart2 size={14} className="text-blue-500" /> Item
+                        Analytics
+                      </button>
                       <div className="h-px bg-gray-50 my-1" />
                       <button
-                        onClick={() => handleAction("Archival", inv.product?.name ?? "SKU")}
+                        onClick={() =>
+                          handleAction("Archival", inv.product?.name ?? "SKU")
+                        }
                         className="w-full text-left p-3 rounded-xl hover:bg-red-50 hover:text-red-500 flex items-center gap-3 transition-colors text-xs"
                       >
-                        <Archive size={14} className="text-red-400" /> Archive SKU
+                        <Archive size={14} className="text-red-400" /> Archive
+                        SKU
                       </button>
                     </div>
                   )}

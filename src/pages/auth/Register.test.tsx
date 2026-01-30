@@ -27,11 +27,7 @@ describe("Register", () => {
     mockVerifyRegisterOtp.mockResolvedValue({ message: "OTP verified" });
     const onRegister = vi.fn();
 
-    renderWithRouter({
-      route: "/register",
-      path: "/register",
-      element: <Register onRegister={onRegister} />,
-    });
+    renderWithRouter();
 
     await userEvent.type(screen.getByPlaceholderText("John"), "Jane");
     await userEvent.type(screen.getByPlaceholderText("Doe"), "Smith");

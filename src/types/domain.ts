@@ -1,76 +1,68 @@
-import { MoneyILS, ISODateTime } from './api';
+// Bridge re-exports for order history types
+export type {
+  OrderTrackingStep,
+  OrderHistoryEntry,
+} from "@/types/order-history";
+// Bridge re-exports for UI state types
+export type {} from "@/domains/ui/types";
+// Bridge re-exports for pagination types
+export type { Pagination } from "@/domains/pagination/types";
+// Bridge re-exports for errors types
+export type { ErrorCode, ApiError, ApiEnvelope } from "@/domains/errors/types";
+// Bridge re-exports for ops types
+export type {
+  Vehicle,
+  StaffPerformance,
+  OpsPerformanceMetrics,
+} from "@/domains/ops/types";
+// Bridge re-exports for notifications types
+export type { OpsAlert } from "@/domains/notifications/types";
+// Bridge re-exports for auth types
+export type { AuthResponse } from "@/domains/auth/types";
+// Bridge re-exports for payments types
+export type {} from "@/domains/payments/types";
 
-export enum OrderStatus {
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PICKING = 'PICKING',
-  RECEIVED = 'RECEIVED',
-  DELAYED = 'DELAYED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED'
-}
+// Bridge re-exports for analytics types
+export type {} from "@/domains/analytics/types";
+// Bridge re-exports for inventory types
+export type {
+  InventoryProduct,
+  InventoryBranch,
+  InventoryRow,
+} from "@/domains/inventory/types";
+// Bridge re-exports for branch types
+export type {
+  BranchResponse,
+  DeliverySlotResponse,
+  DeliverySlotOption,
+} from "@/domains/branch/types";
+// Bridge re-exports for users/auth types
+export type { User, UserRole } from "@/domains/users/types";
+// Bridge re-exports for domain types
+export type {
+  Order,
+  OrderItem,
+  OrderSuccessSnapshot,
+} from "@/domains/orders/types";
+export { OrderStatus } from "@/domains/orders/types";
+import type { OrderStatus, OrderItem, Order } from "@/domains/orders/types";
+import { MoneyILS, ISODateTime } from "./api";
 
 export enum Urgency {
-  CRITICAL = 'CRITICAL',
-  DUE_SOON = 'DUE_SOON',
-  ON_TRACK = 'ON_TRACK',
-  SCHEDULED = 'SCHEDULED'
+  CRITICAL = "CRITICAL",
+  DUE_SOON = "DUE_SOON",
+  ON_TRACK = "ON_TRACK",
+  SCHEDULED = "SCHEDULED",
 }
+// Bridge re-exports for catalog types
+export type { Product, Category } from "@/domains/catalog/types";
 
-export interface Category {
-  id: number;
-  name: string;
-  icon?: string;
-  description?: string;
-}
+// Bridge re-exports for stock-request types
+export type {
+  StockRequest,
+  StockRequestStatus,
+  CreateStockRequest,
+} from "@/domains/stock-requests/types";
 
-export interface Product {
-  id: number;
-  name: string;
-  sku: string;
-  category: string;
-  price: MoneyILS;
-  oldPrice?: MoneyILS;
-  availableQuantity: number;
-  reservedQuantity: number;
-  status: string;
-  imageUrl: string;
-  binLocation?: string;
-  description?: string;
-  unit?: string;
-}
-
-export interface OrderItem {
-  id: number;
-  productId: number;
-  product: Product;
-  quantity: number;
-  pickedStatus: 'PENDING' | 'PICKED' | 'MISSING' | 'REPLACED';
-  replacementProductId?: number;
-}
-
-export interface DeliverySlot {
-  id: number;
-  startTime: string;
-  endTime: string;
-  date?: string;
-}
-
-export interface Order {
-  id: number;
-  orderNumber: string;
-  customerId: number;
-  customer?: {
-    fullName: string;
-    phone: string;
-  };
-  customerName?: string;
-  itemsSummary?: string;
-  status: OrderStatus;
-  urgency: Urgency;
-  total: MoneyILS;
-  itemsCount: number;
-  items?: OrderItem[];
-  deliverySlot?: DeliverySlot;
-  createdAt: ISODateTime;
-}
+// Bridge re-export for delivery types
+export type { DeliverySlot } from "@/domains/delivery/types";

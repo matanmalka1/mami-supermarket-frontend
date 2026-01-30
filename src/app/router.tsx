@@ -30,7 +30,7 @@ import GlobalSettings from "../pages/admin/GlobalSettings";
 import ManagerAnalytics from "../pages/admin/ManagerAnalytics";
 import ForbiddenPage from "../pages/errors/ForbiddenPage";
 import NotFoundPage from "../pages/errors/NotFoundPage";
-import { UserRole } from "../types/auth";
+import type { UserRole } from "@/domains/users/types";
 import RoleGuard from "./guards/RoleGuard";
 import { OPS_ROLES } from "../utils/roles";
 
@@ -51,16 +51,49 @@ export const AppRouter: React.FC<RouterProps> = ({
   login,
   logout,
 }) => {
-
   return (
     <Routes>
-      <Route path="/login" element={!isAuthenticated ? (<Login onLogin={login} />) : (<Navigate to="/store" replace />)}
+      <Route
+        path="/login"
+        element={
+          !isAuthenticated ? (
+            <Login onLogin={login} />
+          ) : (
+            <Navigate to="/store" replace />
+          )
+        }
       />
-      <Route path="/register" element={!isAuthenticated ? (<Register onRegister={login} />) : (<Navigate to="/store" replace />)}
+      <Route
+        path="/register"
+        element={
+          !isAuthenticated ? (
+            <Register onRegister={login} />
+          ) : (
+            <Navigate to="/store" replace />
+          )
+        }
       />
-      <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/store" replace />}
+      <Route
+        path="/forgot-password"
+        element={
+          !isAuthenticated ? (
+            <ForgotPassword />
+          ) : (
+            <Navigate to="/store" replace />
+          )
+        }
       />
-      <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <Navigate to="/store" replace />} />{isAuthenticated ? ( 
+      <Route
+        path="/reset-password"
+        element={
+          !isAuthenticated ? (
+            <ResetPassword />
+          ) : (
+            <Navigate to="/store" replace />
+          )
+        }
+      />
+      {isAuthenticated ? (
         <>
           {/* Internal Portal Branch */}
           <Route

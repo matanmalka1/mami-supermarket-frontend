@@ -3,7 +3,21 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { AppError } from "../types/error";
+// AppError is a runtime class, not migrated to types domain. Define locally if needed.
+class AppError extends Error {
+  code: string;
+  details?: Record<string, any>;
+  constructor(apiError: {
+    code: string;
+    message: string;
+    details?: Record<string, any>;
+  }) {
+    super(apiError.message);
+    this.code = apiError.code;
+    this.details = apiError.details;
+    this.name = "AppError";
+  }
+}
 import { apiErrorSchema } from "@/validation/apiError";
 
 // Single source of truth for baseURL
@@ -126,7 +140,7 @@ apiClient.interceptors.response.use(
       code: "INTERNAL_ERROR",
       message: error.message || "Unknown network error",
     };
-    
+
     const parsed = apiErrorSchema.safeParse(apiError);
     if (!parsed.success) {
       apiError = {

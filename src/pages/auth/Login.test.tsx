@@ -16,14 +16,16 @@ describe("Login", () => {
       data: { access_token: "a.b.c", user: { role: "CUSTOMER" } },
     });
     const onLogin = vi.fn();
-    renderWithRouter({
-      route: "/login",
-      path: "/login",
-      element: <Login onLogin={onLogin} />,
-    });
+    renderWithRouter();
 
-    await userEvent.type(screen.getByPlaceholderText(/name@example/), "user@mami.com");
-    await userEvent.type(screen.getByPlaceholderText("••••••••"), "password123");
+    await userEvent.type(
+      screen.getByPlaceholderText(/name@example/),
+      "user@mami.com",
+    );
+    await userEvent.type(
+      screen.getByPlaceholderText("••••••••"),
+      "password123",
+    );
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() =>

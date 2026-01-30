@@ -4,7 +4,7 @@ import { apiService } from "@/services/api";
 import ProductCard from "./ProductCard";
 import { extractArrayPayload } from "@/utils/api-response";
 
-type Props = { category?: string; excludeId?: string };
+type Props = { category?: string; excludeId?: number };
 
 const SimilarProducts: React.FC<Props> = ({ category, excludeId }) => {
   const [items, setItems] = useState<any[]>([]);
@@ -64,7 +64,9 @@ const SimilarProducts: React.FC<Props> = ({ category, excludeId }) => {
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-400 font-bold">Loading recommendations...</p>
+        <p className="text-sm text-gray-400 font-bold">
+          Loading recommendations...
+        </p>
       ) : error ? (
         <p className="text-sm text-gray-400 font-bold">{error}</p>
       ) : items.length === 0 ? (

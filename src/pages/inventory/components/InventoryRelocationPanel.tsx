@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import Button from "@/components/ui/Button";
-import { InventoryRow } from "@/types/inventory";
-import type { BranchResponse } from "@/types/branch";
+import { InventoryRow } from "@/domains/inventory/types";
+import type { BranchResponse } from "@/domains/branch/types";
 
 type Props = {
   data: InventoryRow;
@@ -18,16 +18,13 @@ const InventoryRelocationPanel: React.FC<Props> = ({
   branchesLoading,
 }) => {
   const [targetBranch, setTargetBranch] = useState("");
-  const [quantity, setQuantity] = useState(
-    data.availableQuantity ?? data.available_quantity ?? 0,
-  );
+  const [quantity, setQuantity] = useState(data.availableQuantity ?? 0);
 
   const currentBranch = data.branch?.name || "Central Hub";
   const productName = data.product?.name || "SKU";
 
   const options = useMemo(
-    () =>
-      branches.filter((branch) => branch.name !== currentBranch),
+    () => branches.filter((branch) => branch.name !== currentBranch),
     [branches, currentBranch],
   );
 
@@ -37,7 +34,8 @@ const InventoryRelocationPanel: React.FC<Props> = ({
       toast.error("Select a destination branch");
       return;
     }
-    const branchName = branches.find((b) => b.id === targetBranch)?.name || "branch";
+    const branchName =
+      branches.find((b) => String(b.id) === targetBranch)?.name || "branch";
     toast.success(
       `Relocation scheduled: ${quantity} units of ${productName} → ${branchName}`,
     );
@@ -53,8 +51,12 @@ const InventoryRelocationPanel: React.FC<Props> = ({
       >
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-gray-400">Relocation</p>
-            <h2 className="text-2xl font-black italic text-gray-900">{productName}</h2>
+            <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
+              Relocation
+            </p>
+            <h2 className="text-2xl font-black italic text-gray-900">
+              {productName}
+            </h2>
           </div>
           <button
             type="button"
@@ -98,10 +100,12 @@ const InventoryRelocationPanel: React.FC<Props> = ({
           <input
             type="number"
             min={1}
-            max={data.availableQuantity ?? data.available_quantity ?? 0}
+            max={data.availableQuantity ?? 0}
             value={quantity}
             onChange={(event) =>
-              setQuantity(Math.max(1, Number.parseInt(event.target.value, 10) || 1))
+              setQuantity(
+                Math.max(1, Number.parseInt(event.target.value, 10) || 1),
+              )
             }
             className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-bold"
           />
