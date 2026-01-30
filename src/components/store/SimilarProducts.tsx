@@ -1,46 +1,23 @@
-import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { apiService } from "@/services/api";
 import ProductCard from "./ProductCard";
-import { extractArrayPayload } from "@/utils/api-response";
 
-type Props = { category?: string; excludeId?: number };
+type SimilarProductsProps = {
+  items: any[];
+  loading: boolean;
+  error: string | null;
+  offset: number;
+  onPrev: () => void;
+  onNext: () => void;
+};
 
-const SimilarProducts: React.FC<Props> = ({ category, excludeId }) => {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
-
-  const fetchSimilar = async (nextOffset = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await apiService.catalog.getProducts({
-        limit: 8,
-        offset: nextOffset,
-      });
-      const list = extractArrayPayload<any>(response);
-      const normalizedCategory = category?.trim().toLowerCase();
-      const filtered = list.filter((p: any) => {
-        if (excludeId && p.id === excludeId) return false;
-        if (!normalizedCategory) return true;
-        return p.category?.toLowerCase() === normalizedCategory;
-      });
-      setItems(filtered);
-      setOffset(nextOffset);
-    } catch (err: any) {
-      setError(err.message || "Failed to load recommendations");
-      setItems([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSimilar(0);
-  }, [category, excludeId]);
-
+const SimilarProducts: React.FC<SimilarProductsProps> = ({
+  items,
+  loading,
+  error,
+  offset,
+  onPrev,
+  onNext,
+}) => {
   return (
     <div className="py-24 space-y-8">
       <div className="flex items-center justify-between">
@@ -49,13 +26,13 @@ const SimilarProducts: React.FC<Props> = ({ category, excludeId }) => {
         </h2>
         <div className="flex gap-2">
           <button
-            onClick={() => fetchSimilar(Math.max(offset - 8, 0))}
+            onClick={onPrev}
             className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-300 transition-all active:scale-95 shadow-sm"
           >
             <ArrowLeft size={18} />
           </button>
           <button
-            onClick={() => fetchSimilar(offset + 8)}
+            onClick={onNext}
             className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-300 transition-all active:scale-95 shadow-sm"
           >
             <ArrowRight size={18} />

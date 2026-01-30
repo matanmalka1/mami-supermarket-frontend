@@ -15,6 +15,7 @@ import EmptyState from "@/components/shared/EmptyState";
 import { apiService } from "@/services/api";
 import { HeroSection, BenefitCard } from "@/components/store/StorefrontComponents";
 import { extractArrayPayload } from "@/utils/api-response";
+import { useFlashDeals, formatSeconds } from "@/features/store/flash-deals/flashDealsFeature";
 
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
@@ -23,6 +24,9 @@ const Storefront: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [featured, setFeatured] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { secondsLeft, deals, loading: flashLoading, error: flashError } =
+    useFlashDeals();
+  const flashTimeLeft = formatSeconds(secondsLeft);
 
   useEffect(() => {
     const load = async () => {
@@ -82,7 +86,13 @@ const Storefront: React.FC = () => {
         )}
       </div>
 
-      <FlashDeals />
+      <FlashDeals
+        secondsLeft={secondsLeft}
+        deals={deals}
+        loading={flashLoading}
+        error={flashError}
+        timeLeft={flashTimeLeft}
+      />
 
       <Section title="Today's Selection" subtitle={<><TrendingUp size={16} className="text-[#008A45]" /> Trending in your area</>} linkTo="/store/search">
         {loading ? (

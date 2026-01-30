@@ -3,11 +3,11 @@ import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/Table";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { MoreVertical, Move, Archive, BarChart2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { InventoryRow } from "@/domains/inventory/types";
 import {
-  InventoryRow,
   getAvailableQuantity,
   getReservedQuantity,
-} from "@/domains/inventory/types";
+} from "@/types/inventory";
 
 type InventoryTableProps = {
   rows: InventoryRow[];
@@ -70,9 +70,9 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
               >
                 <TD>
                   <div className="flex items-center gap-4">
-                    {inv.product?.imageUrl || inv.product?.image_url ? (
+                    {inv.product?.imageUrl ? (
                       <img
-                        src={inv.product?.imageUrl || inv.product?.image_url}
+                        src={inv.product?.imageUrl}
                         alt={inv.product?.name}
                         className="w-14 h-14 rounded-xl object-cover border shadow-sm"
                       />
