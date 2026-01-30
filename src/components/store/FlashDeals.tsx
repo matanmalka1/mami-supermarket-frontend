@@ -2,20 +2,13 @@ import { Timer, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
 
 type FlashDealsProps = {
-  secondsLeft: number;
   deals: any[];
   loading: boolean;
   error: string | null;
   timeLeft: string;
 };
 
-const FlashDeals: React.FC<FlashDealsProps> = ({
-  secondsLeft,
-  deals,
-  loading,
-  error,
-  timeLeft,
-}) => {
+const FlashDeals: React.FC<FlashDealsProps> = ({ deals, loading, error, timeLeft }) => {
   return (
     <section className="bg-orange-50 rounded-[3rem] p-12 space-y-10 border border-orange-100">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">

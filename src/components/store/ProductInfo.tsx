@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Minus, Plus, ShoppingCart, Share2, Truck, ShieldCheck } from "lucide-react";
 import Button from "../ui/Button";
 import { toast } from "react-hot-toast";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "@/context/cart-context";
 import { Product } from "@/domains/catalog/types";
 
 interface ProductInfoProps {

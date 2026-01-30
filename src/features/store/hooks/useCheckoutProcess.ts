@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useCheckoutFlow } from "@/features/store/hooks/useCheckoutFlow";
 import { checkoutService } from "@/domains/checkout/service";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cart-context";
 import type {
   OrderSuccessSnapshot,
   OrderSuccessFulfillment,

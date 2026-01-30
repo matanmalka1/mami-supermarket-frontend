@@ -21,7 +21,6 @@ const Checkout: React.FC = () => {
     isAuthenticated,
     method,
     setMethod,
-    serverCartId,
     selectedBranch,
     deliverySlots,
     slotId,
@@ -39,11 +38,8 @@ const Checkout: React.FC = () => {
   );
 
   // Store the payment token id from PaymentStep
-  const [paymentTokenId, setPaymentTokenId] = useState<number | null>(null);
-
   // Called by PaymentStep after payment token is created
   const handleConfirm = async (tokenId: number) => {
-    setPaymentTokenId(tokenId);
     setError(null);
     const payload = await confirmOrder(tokenId, idempotencyKey);
     if (!payload) return;

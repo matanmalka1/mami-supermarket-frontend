@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CreditCard } from "lucide-react";
 import Button from "../ui/Button";
 import { currencyILS } from "../../utils/format";
-import type { CartItem } from "@/context/CartContext";
+import type { CartItem } from "@/context/cart-context";
 
 type Props = {
   itemsCount: number;

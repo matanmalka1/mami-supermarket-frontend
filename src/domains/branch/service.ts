@@ -6,11 +6,8 @@ import type {
 
 const BRANCH_ENDPOINTS = {
   list: "/branches",
-  slots: (branchId: string | number) => `/branches/${branchId}/slots`,
+  deliverySlots: "/delivery-slots",
 };
-
-const toBranchList = (payload: any): BranchResponse[] =>
-  Array.isArray(payload) ? payload : [];
 
 export const branchService = {
   list: (params?: Record<string, unknown>) =>
@@ -19,6 +16,7 @@ export const branchService = {
     }),
   listSlots: ({ branchId }: { branchId: string | number }) =>
     apiClient.get<DeliverySlotResponse[], DeliverySlotResponse[]>(
-      BRANCH_ENDPOINTS.slots(branchId),
+      BRANCH_ENDPOINTS.deliverySlots,
+      { params: { branchId } },
     ),
 };

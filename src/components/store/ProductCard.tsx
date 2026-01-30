@@ -1,5 +1,5 @@
 
-import { useCart } from '../../context/CartContext';
+import { useCart } from "@/context/cart-context";
 import { ShoppingCart, Heart } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router';

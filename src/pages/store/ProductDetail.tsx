@@ -12,7 +12,10 @@ import { useProductDetail } from "@/features/store/hooks/useProductDetail";
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const parsedId = id ? Number(id) : undefined;
-  if (id && Number.isNaN(Number(id))) {
+  const isIdInvalid = Boolean(id && Number.isNaN(Number(id)));
+  const { product, loading, error } = useProductDetail(isIdInvalid ? undefined : parsedId);
+
+  if (isIdInvalid) {
     return (
       <div className="py-20">
         <EmptyState
@@ -22,7 +25,6 @@ const ProductDetail: React.FC = () => {
       </div>
     );
   }
-  const { product, loading, error } = useProductDetail(parsedId);
 
   if (loading)
     return (

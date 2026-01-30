@@ -9,7 +9,7 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import SearchTypeahead from "./store-header/SearchTypeahead";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "@/context/cart-context";
 import { useAuth } from "../../hooks/useAuth";
 import DeptMegaMenu from "./store-header/DeptMegaMenu";
 import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";

@@ -1,7 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CartProvider, useCart } from "./CartContext";
+import { CartProvider } from "./CartContext";
+import { useCart } from "./cart-context";
 import { vi } from "vitest";
 
 const { mockToast } = vi.hoisted(() => ({

@@ -1,5 +1,5 @@
-import { X, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
+import { X, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
+import { useCart } from "@/context/cart-context";
 import { Link } from 'react-router';
 import Button from '../ui/Button';
 import { currencyILS } from '../../utils/format';

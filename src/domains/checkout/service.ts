@@ -31,9 +31,7 @@ export const checkoutService = {
       },
     ),
 
-  createPaymentToken: async (
-    cardDetails?: any,
-  ): Promise<{ paymentTokenId: number }> => {
+  createPaymentToken: async (): Promise<{ paymentTokenId: number }> => {
     return { paymentTokenId: 1 };
   },
 };
