@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
+import { authService } from "@/domains/auth/service";
 
 export const useAddresses = () => {
   const [addresses, setAddresses] = useState<any[]>([]);
@@ -9,7 +9,7 @@ export const useAddresses = () => {
   const fetchAddresses = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await apiService.profile.getAddresses();
+      const data = await authService.getAddresses();
       setAddresses(data || []);
     } catch {
       toast.error("Sync failed");
@@ -34,7 +34,7 @@ export const useAddresses = () => {
       return;
     }
     try {
-      const saved = await apiService.profile.addAddress(address);
+      const saved = await authService.addAddress(address);
       setAddresses((prev) => [
         ...prev,
         saved || { ...address, id: Date.now() },
@@ -47,7 +47,7 @@ export const useAddresses = () => {
 
   const deleteAddress = async (id: number) => {
     try {
-      await apiService.profile.deleteAddress(id);
+      await authService.deleteAddress(id);
       setAddresses((prev) => prev.filter((a) => a.id !== id));
       toast.success("Address removed");
     } catch (err: any) {
@@ -65,7 +65,7 @@ export const useAddresses = () => {
 
   const setDefault = async (id: number) => {
     try {
-      await apiService.profile.setDefaultAddress(id);
+      await authService.setDefaultAddress(id);
       setAddresses((prev) =>
         prev.map((a) => ({
           ...a,

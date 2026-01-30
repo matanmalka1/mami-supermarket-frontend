@@ -4,18 +4,12 @@ import { vi } from "vitest";
 import ProductDetail from "./ProductDetail";
 import renderWithRouter from "@/test/render";
 
-const { mockGetProduct, mockGetProducts } = vi.hoisted(() => ({
-  mockGetProduct: vi.fn(),
-  mockGetProducts: vi.fn(),
+const { mockUseProductDetail } = vi.hoisted(() => ({
+  mockUseProductDetail: vi.fn(),
 }));
 
-vi.mock("@/services/api", () => ({
-  apiService: {
-    catalog: {
-      getProduct: mockGetProduct,
-      getProducts: mockGetProducts,
-    },
-  },
+vi.mock("@/features/store/hooks/useProductDetail", () => ({
+  useProductDetail: (id?: number) => mockUseProductDetail(id),
 }));
 
 vi.mock("@/components/store/ProductGallery", () => ({
@@ -34,21 +28,27 @@ vi.mock("@/components/store/ProductTabs", () => ({
 
 describe("ProductDetail", () => {
   beforeEach(() => {
-    mockGetProduct.mockReset();
-    mockGetProducts.mockReset();
+    mockUseProductDetail.mockReset();
   });
 
   it("loads product by id param and renders name", async () => {
-    mockGetProduct.mockResolvedValue({ id: 123, name: "Test Product" });
-    mockGetProducts.mockResolvedValue([]);
+    mockUseProductDetail.mockReturnValue({
+      product: {
+        id: 123,
+        name: "Test Product",
+        category: "Produce",
+        price: 10,
+        imageUrl: "image.jpg",
+      },
+      loading: false,
+      error: null,
+    });
 
     renderWithRouter();
-
-    expect(screen.getByText(/gathering product details/i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText("Test Product")).toBeInTheDocument();
     });
-    expect(mockGetProduct).toHaveBeenCalledWith(123);
+    expect(mockUseProductDetail).toHaveBeenCalledWith(123);
   });
 });

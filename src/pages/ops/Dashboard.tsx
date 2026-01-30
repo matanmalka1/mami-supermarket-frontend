@@ -1,18 +1,13 @@
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import DashboardHero from "@/components/ops/DashboardHero";
 import LoadingState from "@/components/shared/LoadingState";
 import { toast } from "react-hot-toast";
 import OrderTable from "@/features/ops/components/OrderTable";
-import { useOrders } from "@/hooks/useOrders";
-import { apiService } from "@/services/api";
-
-type PerformanceMetrics = {
-  batchEfficiency?: string | number;
-  livePickers?: string | number;
-  [key: string]: any;
-};
+import { useOrders } from "@/features/ops/hooks/useOrders";
+import { useOpsBatchActions } from "@/features/ops/hooks/useOpsBatchActions";
+import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -20,15 +15,15 @@ const Dashboard: React.FC = () => {
   const pendingCount = orders.filter((o) => o.status === "PENDING").length;
   const expressDue = orders.filter((o) => o.urgency === "CRITICAL").length;
   const urgentOrders = useMemo(() => orders.filter((o) => o.urgency === "CRITICAL"), [orders]);
-  const [performance, setPerformance] = useState<PerformanceMetrics | null>(null);
-  const [perfLoading, setPerfLoading] = useState(true);
-  const [perfError, setPerfError] = useState<string | null>(null);
+  const { metrics: performance, loading: perfLoading, error: perfError, refresh: refreshPerf } =
+    useOpsPerformance();
+  const { createBatch } = useOpsBatchActions();
 
   const startBatch = async () => {
     if (selectedIds.length < 2) return toast.error("Select at least 2 orders for a batch");
     toast.loading("Submitting batch for picking...", { id: "batch" });
     try {
-      await apiService.ops.createBatch(selectedIds);
+      await createBatch(selectedIds);
       toast.success("Batch created", { id: "batch" });
       navigate(`/picking/batch-${selectedIds.join("-")}`);
     } catch (err: any) {
@@ -37,26 +32,8 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchPerformance = async () => {
-      setPerfLoading(true);
-      setPerfError(null);
-      try {
-        const data = await apiService.ops.getPerformance();
-        if (!isMounted) return;
-        setPerformance(data || null);
-      } catch (err: any) {
-        if (!isMounted) return;
-        setPerfError(err.message || "Performance metrics unavailable");
-      } finally {
-        if (isMounted) setPerfLoading(false);
-      }
-    };
-    fetchPerformance();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    refreshPerf();
+  }, [refreshPerf]);
 
   useEffect(() => {
     const handleFocus = () => refresh();

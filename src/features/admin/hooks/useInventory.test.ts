@@ -1,9 +1,8 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useInventory } from "./useInventory";
-import { apiService } from "@/services/api";
+import { adminService } from "@/domains/admin/service";
 import { toast } from "react-hot-toast";
 
-vi.mock("@/services/api");
 vi.mock("react-hot-toast");
 
 const mockInventory = [
@@ -22,7 +21,7 @@ const mockInventory = [
 const renderInventoryHook = async (
   response: any = { items: mockInventory },
 ) => {
-  (apiService.admin.getInventory as any) = vi.fn().mockResolvedValue(response);
+  vi.spyOn(adminService, "getInventory").mockResolvedValue(response as any);
   const hook = renderHook(() => useInventory());
   await waitFor(() => expect(hook.result.current.loading).toBe(false));
   await waitFor(() =>
@@ -59,12 +58,14 @@ describe("useInventory", () => {
   });
 
   it("should update stock and show success", async () => {
-    (apiService.admin.updateStock as any) = vi.fn().mockResolvedValue({});
+    const updateSpy = vi
+      .spyOn(adminService, "updateStock")
+      .mockResolvedValue({} as any);
     const { result } = await renderInventoryHook();
     await act(async () => {
       await result.current.updateStock(1, 10);
     });
-    expect(apiService.admin.updateStock).toHaveBeenCalledWith(1, {
+    expect(updateSpy).toHaveBeenCalledWith(1, {
       availableQuantity: 10,
       reservedQuantity: 2,
     });
@@ -72,9 +73,9 @@ describe("useInventory", () => {
   });
 
   it("should show error if updateStock fails", async () => {
-    (apiService.admin.updateStock as any) = vi
-      .fn()
-      .mockRejectedValue(new Error("fail"));
+    vi.spyOn(adminService, "updateStock").mockRejectedValue(
+      new Error("fail"),
+    );
     const { result } = await renderInventoryHook();
     await act(async () => {
       await result.current.updateStock(1, 10);

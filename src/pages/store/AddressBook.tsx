@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Plus, Trash2, Navigation, Info } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import { useAddresses } from '@/hooks/useAddresses';
+import { useAddresses } from '@/features/store/hooks/useAddresses';
 import LoadingState from '@/components/shared/LoadingState';
 import EmptyState from '@/components/shared/EmptyState';
 

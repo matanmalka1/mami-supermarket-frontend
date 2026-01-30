@@ -1,8 +1,12 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { useCatalogCategories } from "./useCatalogCategories";
-import { apiService } from "@/services/api";
+import { catalogService } from "@/domains/catalog/service";
 
-vi.mock("@/services/api");
+vi.mock("@/domains/catalog/service", () => ({
+  catalogService: {
+    listCategories: vi.fn(),
+  },
+}));
 
 describe("useCatalogCategories", () => {
   beforeEach(() => {
@@ -17,7 +21,7 @@ describe("useCatalogCategories", () => {
   });
 
   it("should set categories on successful fetch", async () => {
-    (apiService.catalog.getCategories as any) = vi
+    (catalogService.listCategories as any) = vi
       .fn()
       .mockResolvedValue({ items: [{ id: 1, name: "A" }] });
     const { result } = renderHook(() => useCatalogCategories());
@@ -29,7 +33,7 @@ describe("useCatalogCategories", () => {
   });
 
   it("should handle array response", async () => {
-    (apiService.catalog.getCategories as any) = vi
+    (catalogService.listCategories as any) = vi
       .fn()
       .mockResolvedValue([{ id: 2, name: "B" }]);
     const { result } = renderHook(() => useCatalogCategories());
@@ -39,7 +43,7 @@ describe("useCatalogCategories", () => {
   });
 
   it("should set error on fetch failure", async () => {
-    (apiService.catalog.getCategories as any) = vi
+    (catalogService.listCategories as any) = vi
       .fn()
       .mockRejectedValue(new Error("fail"));
     const { result } = renderHook(() => useCatalogCategories());

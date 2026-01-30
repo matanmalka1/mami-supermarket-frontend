@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { User, Mail, Bell, ShieldCheck } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
-import { apiService } from '@/services/api';
 import { sleep } from '@/utils/async';
+import { useProfileSettings } from '@/features/auth/hooks/useProfileSettings';
 
 type PasswordFormShape = {
   currentPassword: string;
@@ -28,8 +28,12 @@ const ProfileSettings: React.FC = () => {
     newPassword: '',
     confirmPassword: '',
   });
-  const [passwordLoading, setPasswordLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const {
+    changePassword,
+    passwordLoading,
+    passwordError,
+    setPasswordError,
+  } = useProfileSettings();
 
   const toggleNotification = (key: keyof typeof notificationSettings) => {
     setNotificationSettings(prev => ({ ...prev, [key]: !prev[key] }));
@@ -55,19 +59,17 @@ const ProfileSettings: React.FC = () => {
       return toast.error("Please fill every field");
     }
 
-    setPasswordLoading(true);
     try {
-      await apiService.auth.changePassword({
+      await changePassword({
         current_password: passwordForm.currentPassword,
         new_password: passwordForm.newPassword,
       });
       toast.success("Password updated securely");
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err: any) {
-      setPasswordError(err?.message || "Unable to update password");
-      toast.error(err?.message || "Unable to update password");
-    } finally {
-      setPasswordLoading(false);
+      const message = typeof err === 'string' ? err : err?.message;
+      const errorMessage = message || "Unable to update password";
+      toast.error(errorMessage);
     }
   };
 

@@ -5,7 +5,7 @@ import { ShieldCheck } from "lucide-react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { loginSchema, LoginInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
 import LoginHero from "./LoginHero";
@@ -22,6 +22,7 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
 }) => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const { loginUser } = useAuthActions();
 
   const {
     register,
@@ -43,33 +44,17 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
     
     try {
       // Backend only accepts email/password; strip rememberMe before sending
-      const response: any = await apiService.auth.login({
+      const { token, role } = await loginUser({
         email: data.email,
         password: data.password,
       });
 
-      console.debug("[Login] login response:", response);
-
-      const token =
-        response?.data?.access_token ||
-        response?.access_token ||
-        response?.accessToken ||
-        response?.data?.token ||
-        response?.token;
-
-      const roleFromResponse =
-        response?.data?.user?.role ||
-        response?.user?.role ||
-        response?.data?.role ||
-        response?.role ||
-        null;
-
       if (!token)
         return toast.error("No token returned from backend", { id: "auth" });
 
-      onLogin({ token, role: roleFromResponse, remember: data.rememberMe });
+      onLogin({ token, role, remember: data.rememberMe });
 
-      if (roleFromResponse === "ADMIN") {
+      if (role === "ADMIN") {
         toast.success("Administrator access granted. Entering Ops Portal...", {
           id: "auth",
           icon: <ShieldCheck className="text-teal-600" />,

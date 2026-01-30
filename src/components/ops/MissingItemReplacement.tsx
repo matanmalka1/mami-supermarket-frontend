@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { Search, CheckCircle2 } from "lucide-react";
-import { useCatalogAutocomplete } from "@/hooks/useCatalogAutocomplete";
-import type { Product } from "@/types/domain";
+import { useCatalogAutocomplete } from "@/features/store/hooks/useCatalogAutocomplete";
+import type { Product } from "@/domains/catalog/types";
 
 type MissingItemReplacementProps = {
   itemName?: string;

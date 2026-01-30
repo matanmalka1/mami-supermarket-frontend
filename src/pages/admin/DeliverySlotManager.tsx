@@ -1,57 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import DeliverySlotCard from "./DeliverySlotCard";
 import DeliverySlotEditor from "./DeliverySlotEditor";
 import { Save } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
-import { branchService } from "@/domains/branch/service";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import ErrorState from "../../components/shared/ErrorState";
-import type { BranchResponse } from "@/types/branch";
-import { extractArrayPayload } from "@/utils/api-response";
+import { useDeliverySlots } from "@/features/admin/hooks/useDeliverySlots";
 
 const DeliverySlotManager: React.FC = () => {
-  const [slots, setSlots] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [editingSlot, setEditingSlot] = useState<any | null>(null);
-  const [branches, setBranches] = useState<BranchResponse[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<string>("");
   const [selectedDay, setSelectedDay] = useState<string>("");
-
-  const loadSlots = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data: any = await apiService.admin.getDeliverySlots();
-      setSlots(extractArrayPayload<any>(data));
-      setError(null);
-    } catch (err: any) {
-      setError(err.message || "Failed to load delivery slots");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadSlots();
-  }, [loadSlots]);
-
-  useEffect(() => {
-    const loadBranches = async () => {
-      try {
-        const data = await branchService.list({ limit: 50 });
-        setBranches(Array.isArray(data) ? data : []);
-      } catch {
-        // ignore
-      }
-    };
-    loadBranches();
-  }, []);
+  const { slots, branches, loading, error, refreshSlots } = useDeliverySlots();
 
   const handleSave = async () => {
-    await loadSlots();
+    await refreshSlots();
     toast.success("Delivery slots refreshed");
   };
 

@@ -4,29 +4,20 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { vi } from "vitest";
 import Checkout from "./Checkout";
+import type { OrderSuccessSnapshot } from "@/types/order-success";
 
-const { mockPreview, mockConfirm, mockNavigate, mockClearCart } = vi.hoisted(() => ({
-  mockPreview: vi.fn(),
-  mockConfirm: vi.fn(),
+const {
+  mockUseCheckoutProcess,
+  mockNavigate,
+  mockClearCart,
+} = vi.hoisted(() => ({
+  mockUseCheckoutProcess: vi.fn(),
   mockNavigate: vi.fn(),
   mockClearCart: vi.fn(),
 }));
 
-vi.mock("@/services/api", () => ({
-  apiService: {
-    checkout: {
-      preview: mockPreview,
-      confirm: mockConfirm,
-    },
-  },
-}));
-
-vi.mock("@/context/CartContext", () => ({
-  useCart: () => ({
-    items: [{ cart_id: "cart-1" }],
-    total: 120,
-    clearCart: mockClearCart,
-  }),
+vi.mock("@/features/store/hooks/useCheckoutProcess", () => ({
+  useCheckoutProcess: () => mockUseCheckoutProcess(),
 }));
 
 vi.mock("react-router", async (importActual) => {
@@ -60,16 +51,52 @@ vi.mock("@/components/checkout/PaymentStep", () => ({
 }));
 
 describe("Checkout", () => {
-  beforeEach(() => {
-    mockPreview.mockResolvedValue({ cart_total: 120, delivery_fee: 0 });
-    mockConfirm.mockResolvedValue({ order_id: "order-9" });
-    mockNavigate.mockReset();
-    mockClearCart.mockReset();
-    mockPreview.mockClear();
-    mockConfirm.mockClear();
+  const snapshot = {
+    orderId: "order-9",
+    orderNumber: "order-9",
+    fulfillmentType: "DELIVERY",
+    items: [
+      { id: 1, name: "A", image: "", unit: "", price: 10, quantity: 1 },
+    ],
+    subtotal: 120,
+    deliveryFee: 0,
+    total: 120,
+    estimatedDelivery: "Delivery window pending",
+  } as OrderSuccessSnapshot;
+  const confirmOrder = vi.fn().mockResolvedValue({
+    orderId: "order-9",
+    snapshot,
   });
 
-  it("calls preview on mount and confirm with idempotency key", async () => {
+  beforeEach(() => {
+    mockUseCheckoutProcess.mockReset();
+    mockNavigate.mockReset();
+    mockClearCart.mockReset();
+    confirmOrder.mockReset().mockResolvedValue({
+      orderId: "order-9",
+      snapshot,
+    });
+    mockUseCheckoutProcess.mockReturnValue({
+      items: snapshot.items,
+      total: 120,
+      clearCart: mockClearCart,
+      isAuthenticated: true,
+      method: "DELIVERY",
+      setMethod: vi.fn(),
+      serverCartId: "cart-1",
+      deliverySlots: [],
+      slotId: null,
+      setSlotId: vi.fn(),
+      preview: { cart_total: 120, delivery_fee: 0 },
+      selectedBranch: null,
+      loading: false,
+      error: null,
+      setError: vi.fn(),
+      confirmOrder,
+    });
+  });
+
+  it("confirms and navigates after payment", async () => {
     render(
       <MemoryRouter initialEntries={["/store/checkout"]}>
         <Routes>
@@ -78,29 +105,14 @@ describe("Checkout", () => {
       </MemoryRouter>,
     );
 
-    await waitFor(() =>
-      expect(mockPreview).toHaveBeenCalledWith({
-        cart_id: "cart-1",
-        fulfillment_type: "DELIVERY",
-        delivery_slot_id: undefined,
-      }),
-    );
-
     await userEvent.click(screen.getByText(/next to schedule/i));
     await userEvent.click(screen.getByText(/next to payment/i));
     await userEvent.click(screen.getByText(/confirm order/i));
 
-    await waitFor(() =>
-      expect(mockConfirm).toHaveBeenCalledWith(
-        expect.objectContaining({
-          cart_id: "cart-1",
-          fulfillment_type: "DELIVERY",
-          payment_token_id: expect.any(Number),
-        }),
-        expect.any(String),
-      ),
-    );
+    await waitFor(() => expect(confirmOrder).toHaveBeenCalled());
     expect(mockClearCart).toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith("/store/order-success/order-9");
+    expect(mockNavigate).toHaveBeenCalledWith("/store/order-success/order-9", {
+      state: { snapshot },
+    });
   });
 });

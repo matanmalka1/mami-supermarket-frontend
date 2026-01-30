@@ -2,22 +2,21 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useCheckoutFlow } from "./useCheckoutFlow";
 import { useAuth } from "@/hooks/useAuth";
 import { useBranchSelection } from "@/context/branch-context-core";
-import { apiService } from "@/services/api";
+import { cartService } from "@/domains/cart/service";
+import { checkoutService } from "@/domains/checkout/service";
+import { branchService } from "@/domains/branch/service";
 
 vi.mock("@/hooks/useAuth");
 vi.mock("@/context/branch-context-core");
-vi.mock("@/services/api");
 
 describe("useCheckoutFlow", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useAuth as any).mockReturnValue({ isAuthenticated: true });
     (useBranchSelection as any).mockReturnValue({ selectedBranch: { id: 1 } });
-    apiService.cart = { get: vi.fn().mockResolvedValue({ id: 123 }) } as any;
-    apiService.branches = { listSlots: vi.fn().mockResolvedValue([]) } as any;
-    apiService.checkout = {
-      preview: vi.fn().mockResolvedValue({ total: 100 }),
-    } as any;
+    vi.spyOn(cartService, "get").mockResolvedValue({ id: 123 } as any);
+    (branchService as any).listSlots = vi.fn().mockResolvedValue([]);
+    vi.spyOn(checkoutService, "preview").mockResolvedValue({ total: 100 } as any);
   });
 
   it("should initialize with default values", () => {
@@ -64,9 +63,7 @@ describe("useCheckoutFlow", () => {
   });
 
   it("should handle error when cart fetch fails", async () => {
-    apiService.cart = {
-      get: vi.fn().mockRejectedValue(new Error("fail")),
-    } as any;
+    vi.spyOn(cartService, "get").mockRejectedValue(new Error("fail"));
     const { result } = renderHook(() => useCheckoutFlow());
     await waitFor(() => {
       expect(result.current.serverCartId).toBeNull();
@@ -74,9 +71,9 @@ describe("useCheckoutFlow", () => {
   });
 
   it("should handle error when slot fetch fails", async () => {
-    apiService.branches = {
-      listSlots: vi.fn().mockRejectedValue(new Error("fail")),
-    } as any;
+    (branchService as any).listSlots = vi
+      .fn()
+      .mockRejectedValue(new Error("fail"));
     const { result } = renderHook(() => useCheckoutFlow());
     await waitFor(() => {
       expect(result.current.deliverySlots).toEqual([]);
@@ -84,9 +81,7 @@ describe("useCheckoutFlow", () => {
   });
 
   it("should handle error when preview fetch fails", async () => {
-    apiService.checkout = {
-      preview: vi.fn().mockRejectedValue(new Error("fail")),
-    } as any;
+    vi.spyOn(checkoutService, "preview").mockRejectedValue(new Error("fail"));
     const { result } = renderHook(() => useCheckoutFlow());
     await waitFor(() => {
       expect(result.current.preview).toBeNull();
@@ -101,28 +96,27 @@ describe("useCheckoutFlow", () => {
   });
 
   it("should accept string cart IDs so preview still runs", async () => {
-    apiService.cart = {
-      get: vi.fn().mockResolvedValue({ id: "cart-abc" }),
-    } as any;
-    apiService.checkout = {
-      preview: vi.fn().mockResolvedValue({ total: 55 }),
-    } as any;
+    vi.spyOn(cartService, "get").mockResolvedValue({ id: "cart-abc" } as any);
+    const previewSpy = vi
+      .spyOn(checkoutService, "preview")
+      .mockResolvedValue({ total: 55 } as any);
     const { result } = renderHook(() => useCheckoutFlow());
     await waitFor(() => {
       expect(result.current.serverCartId).toBe("cart-abc");
     });
     await waitFor(() => {
-      expect(apiService.checkout.preview).toHaveBeenCalledWith(
-        expect.objectContaining({ cart_id: "cart-abc" }),
+      expect(previewSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ cartId: "cart-abc" }),
       );
     });
   });
 
   it("should fetch delivery slots when branch changes", async () => {
-    (apiService.branches.listSlots as any) = vi.fn().mockResolvedValue([
+    const slots = [
       { id: 1, startTime: "10:00", endTime: "12:00" },
       { id: 2, startTime: "12:00", endTime: "14:00" },
-    ]);
+    ];
+    (branchService as any).listSlots = vi.fn().mockResolvedValue(slots);
     const { result } = renderHook(() => useCheckoutFlow());
     await waitFor(() => {
       expect(result.current.deliverySlots.length).toBe(2);

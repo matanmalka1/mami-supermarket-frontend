@@ -3,16 +3,16 @@ import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import Login from "./Login";
 import renderWithRouter from "@/test/render";
-import { mockLogin, mockNavigate } from "./testUtils";
+import { mockLoginUser, mockNavigate } from "./testUtils";
 
 describe("Login", () => {
   beforeEach(() => {
-    mockLogin.mockReset();
+    mockLoginUser.mockReset();
     mockNavigate.mockReset();
   });
 
   it("stores token and navigates after successful login", async () => {
-    mockLogin.mockResolvedValue({
+    mockLoginUser.mockResolvedValue({
       data: { access_token: "a.b.c", user: { role: "CUSTOMER" } },
     });
     const onLogin = vi.fn();

@@ -2,9 +2,9 @@ import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import {
-  mockLogin,
+  mockLoginUser,
   mockNavigate,
-  mockRegister,
+  mockRegisterUser,
   mockSendRegisterOtp,
   mockVerifyRegisterOtp,
 } from "./testUtils";
@@ -13,16 +13,18 @@ import Register from "./Register";
 
 describe("Register", () => {
   beforeEach(() => {
-    mockRegister.mockReset();
-    mockLogin.mockReset();
+    mockRegisterUser.mockReset();
+    mockLoginUser.mockReset();
     mockSendRegisterOtp.mockReset();
     mockVerifyRegisterOtp.mockReset();
     mockNavigate.mockReset();
   });
 
   it("submits full_name to register and stores token from login", async () => {
-    mockRegister.mockResolvedValue({ ok: true });
-    mockLogin.mockResolvedValue({ data: { access_token: "a.b.c", user: { role: "CUSTOMER" } } });
+    mockRegisterUser.mockResolvedValue({ ok: true });
+    mockLoginUser.mockResolvedValue({
+      data: { access_token: "a.b.c", user: { role: "CUSTOMER" } },
+    });
     mockSendRegisterOtp.mockResolvedValue({ message: "OTP sent" });
     mockVerifyRegisterOtp.mockResolvedValue({ message: "OTP verified" });
     const onRegister = vi.fn();
@@ -59,7 +61,7 @@ describe("Register", () => {
       }),
     );
 
-    expect(mockRegister).toHaveBeenCalledWith({
+    expect(mockRegisterUser).toHaveBeenCalledWith({
       email: "jane@example.com",
       password: "StrongPass1",
       full_name: "Jane Smith",

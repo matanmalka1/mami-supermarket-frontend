@@ -1,7 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { checkoutService } from "@/domains/checkout/service";
-import { useCart } from "@/context/CartContext";
 import CheckoutStepper, {
   CheckoutStep,
 } from "@/components/checkout/CheckoutStepper";
@@ -9,16 +7,16 @@ import FulfillmentStep from "@/components/checkout/FulfillmentStep";
 import ScheduleStep from "@/components/checkout/ScheduleStep";
 import PaymentStep from "@/components/checkout/PaymentStep";
 import Button from "@/components/ui/Button";
-import { useCheckoutFlow } from "@/hooks/useCheckoutFlow";
-import { OrderSuccessSnapshot } from "@/types/order-success";
+import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { saveOrderSnapshot } from "@/utils/order";
 
 const Checkout: React.FC = () => {
-  const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
-  const [loading, setLoading] = useState(false);
   const {
+    items,
+    total,
+    clearCart,
     isAuthenticated,
     method,
     setMethod,
@@ -28,7 +26,11 @@ const Checkout: React.FC = () => {
     slotId,
     setSlotId,
     preview,
-  } = useCheckoutFlow();
+    loading,
+    error,
+    setError,
+    confirmOrder,
+  } = useCheckoutProcess();
 
   const idempotencyKey = useMemo(
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -37,87 +39,18 @@ const Checkout: React.FC = () => {
 
   // Store the payment token id from PaymentStep
   const [paymentTokenId, setPaymentTokenId] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   // Called by PaymentStep after payment token is created
   const handleConfirm = async (tokenId: number) => {
     setPaymentTokenId(tokenId);
     setError(null);
-    if (!isAuthenticated) {
-      setError("Sign in to complete the order");
-      return;
-    }
-    if (!serverCartId) {
-      setError("Cart is syncing, please wait");
-      return;
-    }
-    if (method === "PICKUP" && !selectedBranch) {
-      setError("Pickup branch is loading, please wait");
-      return;
-    }
-    setLoading(true);
-    try {
-      const data: any = await checkoutService.confirm(
-        {
-          cartId: serverCartId,
-          paymentTokenId: tokenId,
-          fulfillmentType: method,
-          branchId: method === "PICKUP" ? selectedBranch?.id : undefined,
-          deliverySlotId: slotId ?? undefined,
-        },
-        idempotencyKey,
-      );
-      const orderId = data?.order_id || data?.orderId || data?.id || "order";
-      const resolvedOrderId = String(orderId);
-      const subtotalBefore = preview?.cart_total
-        ? Number(preview.cart_total)
-        : total;
-      const deliveryFeeBefore =
-        preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
-          ? Number(preview.delivery_fee)
-          : 0;
-      const slotLabel = deliverySlots.find((slot) => slot.id === slotId)?.label;
-      const estimatedDelivery =
-        method === "DELIVERY"
-          ? slotLabel
-            ? `Delivery window ${slotLabel}`
-            : "Delivery window pending"
-          : selectedBranch
-            ? `Pickup ready at ${selectedBranch.name}`
-            : "Pickup time pending";
-      const orderSnapshot: OrderSuccessSnapshot = {
-        orderId: resolvedOrderId,
-        orderNumber: String(
-          data?.order_number || data?.orderNumber || resolvedOrderId,
-        ),
-        fulfillmentType: method,
-        items: items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-          unit: item.unit,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        subtotal: subtotalBefore,
-        deliveryFee: deliveryFeeBefore,
-        total: subtotalBefore + deliveryFeeBefore,
-        estimatedDelivery,
-        deliverySlot: slotLabel,
-        pickupBranch: method === "PICKUP" ? selectedBranch?.name : undefined,
-        deliveryAddress:
-          method === "PICKUP" ? selectedBranch?.address : undefined,
-      };
-      saveOrderSnapshot(resolvedOrderId, orderSnapshot);
-      clearCart();
-      navigate(`/store/order-success/${resolvedOrderId}`, {
-        state: { snapshot: orderSnapshot },
-      });
-    } catch (err: any) {
-      setError(err.message || "Checkout failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    const payload = await confirmOrder(tokenId, idempotencyKey);
+    if (!payload) return;
+    saveOrderSnapshot(payload.orderId, payload.snapshot);
+    clearCart();
+    navigate(`/store/order-success/${payload.orderId}`, {
+      state: { snapshot: payload.snapshot },
+    });
   };
 
   // Avoid calling navigate during render: useEffect for redirect

@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router";
 import RegistrationBenefits from "@/components/auth/RegistrationBenefits";
 import RegistrationForm from "@/features/auth/components/RegistrationForm";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { registerSchema, RegisterInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
 
@@ -25,6 +25,8 @@ const Register: React.FC<{
   const [step, setStep] = useState<"INFO" | "OTP">("INFO");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const { sendRegisterOtp, verifyRegisterOtp, registerUser, loginUser } =
+    useAuthActions();
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -43,7 +45,7 @@ const Register: React.FC<{
     toast.loading("Sending OTP code...", { id: "reg" });
     setLoading(true);
     try {
-      await apiService.auth.sendRegisterOtp(email);
+      await sendRegisterOtp(email);
       toast.success("OTP sent to your inbox", { id: "reg" });
       setStep("OTP");
     } catch (err: any) {
@@ -60,31 +62,18 @@ const Register: React.FC<{
     setLoading(true);
     try {
       const data = form.getValues();
-      await apiService.auth.verifyRegisterOtp({ email: data.email, code: otp });
+      await verifyRegisterOtp({ email: data.email, code: otp });
       const fullName = `${data.firstName} ${data.lastName}`.trim();
       // Backend only accepts email, password, full_name (+optional role)
-      const regRes = await apiService.auth.register({
+      await registerUser({
         email: data.email,
         password: data.password,
         full_name: fullName,
       });
-      console.debug("[Register] register response:", regRes);
-      const loginRes: any = await apiService.auth.login({
+      const { token, role } = await loginUser({
         email: data.email,
         password: data.password,
       });
-      console.debug("[Register] login response:", loginRes);
-      const token =
-        loginRes?.data?.access_token ||
-        loginRes?.access_token ||
-        loginRes?.accessToken ||
-        loginRes?.data?.token ||
-        loginRes?.token;
-      const role =
-        loginRes?.data?.user?.role ||
-        loginRes?.user?.role ||
-        loginRes?.data?.role ||
-        loginRes?.role;
       if (!token)
         return toast.error("No token returned from backend", { id: "reg" });
       toast.success("Welcome aboard!", { id: "reg" });

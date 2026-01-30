@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "@/components/ui/Button";
 import { Plus } from "lucide-react";
-import { useInventory } from "@/hooks/useInventory";
+import { useInventory } from "@/features/admin/hooks/useInventory";
 import { useBranches } from "@/hooks/useBranches";
 import InventoryTable from "@/pages/inventory/InventoryTable";
 import InventoryHighlights from "@/pages/inventory/InventoryHighlights";

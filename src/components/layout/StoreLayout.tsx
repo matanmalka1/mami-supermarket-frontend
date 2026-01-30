@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router";
 import StoreHeader from "./StoreHeader";
 import PageWrapper from "../shared/PageWrapper";
 import Breadcrumbs from "../ui/Breadcrumbs";
-import { useCatalogCategories } from "@/hooks/useCatalogCategories";
+import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import { BranchProvider } from "@/context/BranchContext";
 import StoreFooter from "./StoreFooter";
 import StoreInfoModal from "./StoreInfoModal";

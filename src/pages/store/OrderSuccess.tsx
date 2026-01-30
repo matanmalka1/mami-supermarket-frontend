@@ -5,7 +5,7 @@ import Button from "@/components/ui/Button";
 import OrderSummaryCard from "@/components/store/OrderSummaryCard";
 import OrderProgressTimeline from "@/components/store/OrderProgressTimeline";
 import { OrderSuccessSnapshot } from "@/types/order-success";
-import { useAddresses } from "@/hooks/useAddresses";
+import { useAddresses } from "@/features/store/hooks/useAddresses";
 import { loadOrderSnapshot } from "@/utils/order";
 
 type OrderSuccessState = {

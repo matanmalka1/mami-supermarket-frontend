@@ -1,22 +1,22 @@
 import { useState, useEffect, useCallback } from "react";
-import { apiService } from "@/services/api";
-import { extractArrayPayload } from "@/utils/api-response";
+import { catalogService } from "@/domains/catalog/service";
+import type { Category, Product } from "@/domains/catalog/types";
 
 const useStorefront = () => {
   const [isFarmModalOpen, setIsFarmModalOpen] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [featured, setFeatured] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [featured, setFeatured] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
       try {
         const [cats, feats] = await Promise.all([
-          apiService.catalog.getCategories(),
-          apiService.catalog.getFeatured(),
+          catalogService.listCategories(),
+          catalogService.listFeaturedProducts(),
         ]);
-        setCategories(extractArrayPayload<any>(cats));
-        setFeatured(extractArrayPayload<any>(feats));
+        setCategories(cats.items ?? []);
+        setFeatured(feats);
       } finally {
         setLoading(false);
       }

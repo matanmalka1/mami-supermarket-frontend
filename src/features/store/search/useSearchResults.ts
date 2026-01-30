@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
-import { extractArrayPayload } from "@/utils/api-response";
-import type { Product } from "@/types/domain";
+import { catalogService } from "@/domains/catalog/service";
+import type { Product } from "@/domains/catalog/types";
 
 const useSearchResults = (query: string) => {
   const [results, setResults] = useState<Product[]>([]);
@@ -16,12 +15,11 @@ const useSearchResults = (query: string) => {
     const fetchResults = async () => {
       setLoading(true);
       try {
-        const response = await apiService.catalog.getProducts({
+        const { items = [] } = await catalogService.getProducts({
           q: query,
           limit: 24,
           offset: 0,
         });
-        const items = extractArrayPayload<Product>(response);
         if (active) setResults(items);
       } catch (err: unknown) {
         if (active) {

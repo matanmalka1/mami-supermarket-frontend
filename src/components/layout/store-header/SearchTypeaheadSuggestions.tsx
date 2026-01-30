@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { currencyILS } from "@/utils/format";
-import type { Product } from "@/types/domain";
+import type { Product } from "@/domains/catalog/types";
 
 type SearchTypeaheadSuggestionsProps = {
   suggestions: Product[];

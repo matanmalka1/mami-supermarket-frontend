@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { ShieldCheck } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
 import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -16,6 +16,7 @@ const ResetPassword: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const navigate = useNavigate();
+  const { resetPassword } = useAuthActions();
 
   useEffect(() => {
     const qpToken = searchParams.get("token") || "";
@@ -27,7 +28,7 @@ const ResetPassword: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      await apiService.auth.resetPassword({
+      await resetPassword({
         email,
         token,
         new_password: newPassword,

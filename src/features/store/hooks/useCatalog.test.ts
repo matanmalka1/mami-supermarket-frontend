@@ -1,9 +1,13 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { useCatalog } from "./useCatalog";
-import { apiService } from "@/services/api";
+import { catalogService } from "@/domains/catalog/service";
 import * as productsUtils from "@/utils/products";
 
-vi.mock("@/services/api");
+vi.mock("@/domains/catalog/service", () => ({
+  catalogService: {
+    getProducts: vi.fn(),
+  },
+}));
 
 const mockProducts = [
   { id: 1, name: "P1", category: "Produce" },
@@ -20,7 +24,7 @@ describe("useCatalog", () => {
   });
 
   it("should fetch all products by default", async () => {
-    (apiService.catalog.getProducts as any) = vi
+    (catalogService.getProducts as any) = vi
       .fn()
       .mockResolvedValue(mockProducts);
     const { result } = renderHook(() => useCatalog());
@@ -31,7 +35,7 @@ describe("useCatalog", () => {
   });
 
   it("should filter by category name", async () => {
-    (apiService.catalog.getProducts as any) = vi
+    (catalogService.getProducts as any) = vi
       .fn()
       .mockResolvedValue(mockProducts);
     const { result } = renderHook(() => useCatalog(1));
@@ -44,20 +48,20 @@ describe("useCatalog", () => {
 
   it("should fetch by query", async () => {
     const queryResponse = [{ id: 3, name: "P3" }];
-    (apiService.catalog.getProducts as any) = vi
+    (catalogService.getProducts as any) = vi
       .fn()
       .mockResolvedValue(queryResponse);
     const { result } = renderHook(() => useCatalog(undefined, "milk"));
     await waitFor(() => {
       expect(result.current.products).toEqual(queryResponse);
-      expect(apiService.catalog.getProducts).toHaveBeenCalledWith({
+      expect(catalogService.getProducts).toHaveBeenCalledWith({
         q: "milk",
       });
     });
   });
 
   it("should handle error gracefully", async () => {
-    (apiService.catalog.getProducts as any) = vi
+    (catalogService.getProducts as any) = vi
       .fn()
       .mockRejectedValue(new Error("fail"));
     const { result } = renderHook(() => useCatalog());

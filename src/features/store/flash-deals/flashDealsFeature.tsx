@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { apiService } from "@/services/api";
-import { extractArrayPayload } from "@/utils/api-response";
+import { catalogService } from "@/domains/catalog/service";
+import type { Product } from "@/domains/catalog/types";
 
 export function useFlashDeals() {
   // Countdown timer
   const [secondsLeft, setSecondsLeft] = useState(2 * 3600 + 45 * 60 + 12);
-  const [deals, setDeals] = useState<any[]>([]);
+  const [deals, setDeals] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,9 +21,7 @@ export function useFlashDeals() {
       setLoading(true);
       setError(null);
       try {
-        const items = await apiService.catalog.listFeaturedProducts({
-          limit: 4,
-        });
+        const items = await catalogService.listFeaturedProducts({ limit: 4 });
         setDeals(items);
       } catch (err: any) {
         setError(err.message || "Unable to load flash deals");

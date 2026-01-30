@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { apiService } from "../services/api";
-import { Order } from "../types/domain";
-import { useAsyncResource } from "./useAsyncResource";
+import { opsService } from "@/domains/ops/service";
+import { Order } from "@/types/domain";
+import { useAsyncResource } from "@/hooks/useAsyncResource";
 
 type RawOrder = Order & { orderId?: number };
 
@@ -20,7 +20,7 @@ export const useOrders = () => {
   );
 
   const fetchOrders = useCallback(async () => {
-    const data = await apiService.ops.getOrders();
+    const data = await opsService.getOrders();
     const incoming = Array.isArray(data) ? data : [];
     return normalizeOrders(incoming);
   }, [normalizeOrders]);

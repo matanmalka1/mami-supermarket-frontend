@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Mail, ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { apiService } from "@/services/api";
 import { toast } from "react-hot-toast";
 import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 
 type Stage = "REQUEST" | "RESET" | "DONE";
 
@@ -18,12 +18,13 @@ const ForgotPassword: React.FC = () => {
   const [newPassword, setNewPassword] = useState("");
   const [stage, setStage] = useState<Stage>("REQUEST");
   const [loading, setLoading] = useState(false);
+  const { requestPasswordReset, resetPassword } = useAuthActions();
 
   const handleRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const resp: any = await apiService.auth.forgotPassword(email);
+      const resp: any = await requestPasswordReset(email);
       const devToken = resp?.reset_token;
       if (devToken) setToken(devToken);
       toast.success("Reset link sent to your email");
@@ -39,7 +40,7 @@ const ForgotPassword: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await apiService.auth.resetPassword({
+      await resetPassword({
         email,
         token,
         new_password: newPassword,

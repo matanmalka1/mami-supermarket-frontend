@@ -1,33 +1,22 @@
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
 import ForgotPassword from "./ForgotPassword";
 import renderWithRouter from "@/test/render";
-
-const { mockForgot, mockReset } = vi.hoisted(() => ({
-  mockForgot: vi.fn(),
-  mockReset: vi.fn(),
-}));
-
-vi.mock("@/services/api", () => ({
-  apiService: {
-    auth: {
-      forgotPassword: mockForgot,
-      resetPassword: mockReset,
-    },
-  },
-}));
+import {
+  mockRequestPasswordReset,
+  mockResetPassword,
+} from "./testUtils";
 
 describe("ForgotPassword", () => {
   beforeEach(() => {
-    mockForgot.mockReset();
-    mockReset.mockReset();
+    mockRequestPasswordReset.mockReset();
+    mockResetPassword.mockReset();
   });
 
   it("lets user enter token manually when none returned", async () => {
-    mockForgot.mockResolvedValue({});
-    mockReset.mockResolvedValue({});
+    mockRequestPasswordReset.mockResolvedValue({});
+    mockResetPassword.mockResolvedValue({});
 
     renderWithRouter();
 
@@ -40,7 +29,7 @@ describe("ForgotPassword", () => {
     );
 
     await waitFor(() =>
-      expect(mockForgot).toHaveBeenCalledWith("user@example.com"),
+      expect(mockRequestPasswordReset).toHaveBeenCalledWith("user@example.com"),
     );
     const tokenInput = await screen.findByPlaceholderText(/Paste token/i);
 
@@ -54,7 +43,7 @@ describe("ForgotPassword", () => {
     );
 
     await waitFor(() =>
-      expect(mockReset).toHaveBeenCalledWith({
+      expect(mockResetPassword).toHaveBeenCalledWith({
         email: "user@example.com",
         token: "manual-token",
         new_password: "Newpass123!",

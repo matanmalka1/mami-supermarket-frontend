@@ -2,10 +2,12 @@
 // Removed duplicate minimal stub. Only the full-featured hook below remains.
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useBranchSelection } from "@/context/branch-context-core";
 import { DeliverySlotOption, DeliverySlotResponse } from "@/types/branch";
+import { cartService } from "@/domains/cart/service";
+import { checkoutService } from "@/domains/checkout/service";
+import { branchService } from "@/domains/branch/service";
 
 const formatSlotLabel = (slot: DeliverySlotResponse): string | null => {
   if (!slot.startTime || !slot.endTime) return null;
@@ -31,6 +33,12 @@ const buildUniqueSlotOptions = (
 
 type Method = "DELIVERY" | "PICKUP";
 
+type BranchSlotsClient = {
+  listSlots: (params: { branchId: string }) => Promise<DeliverySlotResponse[]>;
+};
+
+const branchSlotsService = branchService as BranchSlotsClient;
+
 export const useCheckoutFlow = () => {
   const { isAuthenticated } = useAuth();
   const { selectedBranch } = useBranchSelection();
@@ -51,7 +59,7 @@ export const useCheckoutFlow = () => {
     let active = true;
     const loadCart = async () => {
       try {
-        const data = await apiService.cart.get();
+        const data = await cartService.get();
         if (active) {
           setServerCartId(data?.id ?? null);
         }
@@ -77,7 +85,7 @@ export const useCheckoutFlow = () => {
     let active = true;
     const loadSlots = async () => {
       try {
-        const data = await apiService.branches.listSlots({
+        const data = await branchSlotsService.listSlots({
           branchId: String(selectedBranch.id),
         });
         if (!active) return;
@@ -105,11 +113,11 @@ export const useCheckoutFlow = () => {
 
     const loadPreview = async () => {
       try {
-        const data = await apiService.checkout.preview({
-          cart_id: serverCartId,
-          fulfillment_type: method,
-          branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
-          delivery_slot_id: slotId ?? undefined,
+        const data = await checkoutService.preview({
+          cartId: serverCartId,
+          fulfillmentType: method,
+          branchId: method === "PICKUP" ? selectedBranch?.id : undefined,
+          deliverySlotId: slotId ?? undefined,
         });
         setPreview(data);
       } catch (err: any) {

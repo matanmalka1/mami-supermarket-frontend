@@ -1,29 +1,17 @@
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
 import ResetPassword from "./ResetPassword";
 import renderWithRouter from "@/test/render";
-
-const { mockReset } = vi.hoisted(() => ({
-  mockReset: vi.fn(),
-}));
-
-vi.mock("@/services/api", () => ({
-  apiService: {
-    auth: {
-      resetPassword: mockReset,
-    },
-  },
-}));
+import { mockResetPassword } from "./testUtils";
 
 describe("ResetPassword", () => {
   beforeEach(() => {
-    mockReset.mockReset();
+    mockResetPassword.mockReset();
   });
 
   it("prefills token from query and submits reset", async () => {
-    mockReset.mockResolvedValue({});
+    mockResetPassword.mockResolvedValue({});
     renderWithRouter();
 
     expect(screen.getByPlaceholderText(/token/)).toHaveValue("abc123");
@@ -40,7 +28,7 @@ describe("ResetPassword", () => {
     );
 
     await waitFor(() =>
-      expect(mockReset).toHaveBeenCalledWith({
+      expect(mockResetPassword).toHaveBeenCalledWith({
         email: "user@example.com",
         token: "abc123",
         new_password: "Secure123!",
@@ -52,7 +40,7 @@ describe("ResetPassword", () => {
   });
 
   it("shows error when backend rejects token", async () => {
-    mockReset.mockRejectedValue(new Error("Invalid token"));
+    mockResetPassword.mockRejectedValue(new Error("Invalid token"));
     renderWithRouter();
 
     await userEvent.type(

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type FC } from "react";
 import { useNavigate } from "react-router";
 import SearchInput from "@/components/ui/SearchInput";
-import { useCatalogAutocomplete } from "@/hooks/useCatalogAutocomplete";
-import type { Product } from "@/types/domain";
+import { useCatalogAutocomplete } from "@/features/store/hooks/useCatalogAutocomplete";
+import type { Product } from "@/domains/catalog/types";
 import SearchTypeaheadSuggestions from "./SearchTypeaheadSuggestions";
 
 export type SearchTypeaheadProps = {

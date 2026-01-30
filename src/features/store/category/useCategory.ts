@@ -1,8 +1,8 @@
 import { useState, useMemo, useCallback } from "react";
 import { toast } from "react-hot-toast";
-import { useCatalog } from "@/hooks/useCatalog";
-import { useCatalogCategories } from "@/hooks/useCatalogCategories";
-import type { Product } from "@/types/domain";
+import { useCatalog } from "@/features/store/hooks/useCatalog";
+import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
+import type { Product } from "@/domains/catalog/types";
 
 type UseCategoryProps = {
   categoryId?: number;

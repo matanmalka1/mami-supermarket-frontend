@@ -4,21 +4,21 @@ import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import GlobalSettings from "./GlobalSettings";
 
-const { mockGetSettings, mockUpdateSettings, mockToast } = vi.hoisted(() => ({
-  mockGetSettings: vi.fn(),
-  mockUpdateSettings: vi.fn(),
-  mockToast: { success: vi.fn(), error: vi.fn() },
+const mockToast = { success: vi.fn(), error: vi.fn() };
+const {
+  mockUseGlobalSettings,
+  mockHandleChange,
+  mockSaveSettings,
+} = vi.hoisted(() => ({
+  mockUseGlobalSettings: vi.fn(),
+  mockHandleChange: vi.fn(),
+  mockSaveSettings: vi.fn(),
 }));
 
 vi.mock("react-hot-toast", () => ({ toast: mockToast }));
 
-vi.mock("@/services/api", () => ({
-  apiService: {
-    admin: {
-      getSettings: mockGetSettings,
-      updateSettings: mockUpdateSettings,
-    },
-  },
+vi.mock("@/features/admin/hooks/useGlobalSettings", () => ({
+  useGlobalSettings: () => mockUseGlobalSettings(),
 }));
 
 vi.mock("@/components/ui/Button", () => ({
@@ -57,14 +57,15 @@ vi.mock("@/components/ui/ConfirmDialog", () => ({ default: () => null }));
 
 describe("GlobalSettings", () => {
   beforeEach(() => {
-    mockGetSettings.mockResolvedValue({
-      delivery_min: 120,
-      delivery_fee: 15,
-      slots: "07:00-20:00",
+    mockUseGlobalSettings.mockReturnValue({
+      form: { delivery_min: 120, delivery_fee: 15, slots: "07:00-20:00" },
+      loading: false,
+      handleChange: mockHandleChange,
+      saveSettings: mockSaveSettings,
+      loadSettings: vi.fn(),
     });
-    mockUpdateSettings.mockResolvedValue({});
-    mockGetSettings.mockClear();
-    mockUpdateSettings.mockClear();
+    mockHandleChange.mockClear();
+    mockSaveSettings.mockClear();
   });
 
   it("loads settings and updates with only allowed keys", async () => {
@@ -83,8 +84,9 @@ describe("GlobalSettings", () => {
 
     await userEvent.click(screen.getByText(/publish global changes/i));
 
-    expect(mockUpdateSettings).toHaveBeenCalledTimes(1);
-    expect(mockUpdateSettings).toHaveBeenCalledWith({
+    await waitFor(() => expect(mockSaveSettings).toHaveBeenCalled());
+    expect(mockSaveSettings).toHaveBeenCalledTimes(1);
+    expect(mockSaveSettings).toHaveBeenCalledWith({
       delivery_min: 180,
       delivery_fee: 25,
       slots: "08:00-22:00",

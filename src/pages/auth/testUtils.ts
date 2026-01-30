@@ -1,20 +1,22 @@
 import { vi } from "vitest";
 
-export const mockLogin = vi.fn();
-export const mockRegister = vi.fn();
+export const mockLoginUser = vi.fn();
+export const mockRegisterUser = vi.fn();
 export const mockSendRegisterOtp = vi.fn();
 export const mockVerifyRegisterOtp = vi.fn();
+export const mockRequestPasswordReset = vi.fn();
+export const mockResetPassword = vi.fn();
 export const mockNavigate = vi.fn();
 
-vi.mock("@/services/api", () => ({
-  apiService: {
-    auth: {
-      login: mockLogin,
-      register: mockRegister,
-      sendRegisterOtp: mockSendRegisterOtp,
-      verifyRegisterOtp: mockVerifyRegisterOtp,
-    },
-  },
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+  useAuthActions: () => ({
+    loginUser: mockLoginUser,
+    registerUser: mockRegisterUser,
+    sendRegisterOtp: mockSendRegisterOtp,
+    verifyRegisterOtp: mockVerifyRegisterOtp,
+    requestPasswordReset: mockRequestPasswordReset,
+    resetPassword: mockResetPassword,
+  }),
 }));
 
 vi.mock("react-router", async (importActual) => {

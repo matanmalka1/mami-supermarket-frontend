@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Info, RefreshCcw } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import StatCard from '@/components/ui/StatCard';
 import LoadingState from '@/components/shared/LoadingState';
 import EmptyState from '@/components/shared/EmptyState';
-import { apiService } from '@/services/api';
-import { OpsPerformanceMetrics } from '@/types/ops';
+import { useOpsPerformance } from '@/features/ops/hooks/useOpsPerformance';
 
 const formatPercent = (value?: number) =>
   typeof value === 'number' ? `${value.toFixed(2)}%` : '—';
@@ -14,34 +13,7 @@ const formatNumber = (value?: number) =>
   typeof value === 'number' ? value : '—';
 
 const StaffPerformance: React.FC = () => {
-  const [metrics, setMetrics] = useState<OpsPerformanceMetrics | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const isMounted = useRef(true);
-
-  const fetchMetrics = useCallback(async () => {
-    setError(null);
-    setLoading(true);
-    try {
-      const response = await apiService.ops.getPerformance();
-      if (!isMounted.current) return;
-      setMetrics(response as OpsPerformanceMetrics);
-    } catch (err: any) {
-      if (!isMounted.current) return;
-      setError(err?.message || 'Unable to load performance metrics');
-    } finally {
-      if (isMounted.current) setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    isMounted.current = true;
-    fetchMetrics();
-    return () => {
-      isMounted.current = false;
-    };
-  }, [fetchMetrics]);
-
+  const { metrics, loading, error, refresh } = useOpsPerformance();
   const showFallback = !metrics && (loading || error);
 
   const summaryCards = [
@@ -78,7 +50,7 @@ const StaffPerformance: React.FC = () => {
         </div>
         <Button
           variant="ghost"
-          onClick={fetchMetrics}
+          onClick={refresh}
           disabled={loading}
           className="text-[11px] tracking-widest uppercase"
         >
@@ -91,7 +63,7 @@ const StaffPerformance: React.FC = () => {
           title="Performance metrics unavailable"
           description={error}
           action={
-            <Button onClick={fetchMetrics} variant="emerald" disabled={loading}>
+            <Button onClick={refresh} variant="emerald" disabled={loading}>
               Retry
             </Button>
           }

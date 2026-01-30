@@ -12,7 +12,7 @@ import SearchTypeahead from "./store-header/SearchTypeahead";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../hooks/useAuth";
 import DeptMegaMenu from "./store-header/DeptMegaMenu";
-import { useCatalogCategories } from "@/hooks/useCatalogCategories";
+import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import HeaderActions from "./store-header/HeaderActions";
 import BranchSelector from "./store-header/BranchSelector";
 import PageWrapper from "../shared/PageWrapper";

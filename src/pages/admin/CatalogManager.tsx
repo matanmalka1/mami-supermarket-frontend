@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Plus, Search, Trash2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "react-hot-toast";
-import { useCatalogManager } from "@/hooks/useCatalogManager";
-import { apiService } from "@/services/api";
+import { useCatalogManager } from "@/features/admin/hooks/useCatalogManager";
 import CatalogProductTable from "./CatalogProductTable";
 import { CatalogProductForm } from "./CatalogProductForm";
-import { extractArrayPayload } from "@/utils/api-response";
 const CatalogManager: React.FC = () => {
   const {
     products,
@@ -21,19 +19,12 @@ const CatalogManager: React.FC = () => {
     setEditingProduct,
     refresh,
     deactivateProduct,
+    categories,
+    createProduct,
+    updateProduct,
   } = useCatalogManager();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [targetProduct, setTargetProduct] = useState<any>(null);
-  const [categories, setCategories] = useState<any[]>([]);
-
-  useEffect(() => {
-    apiService.catalog
-      .getCategories()
-      .then((cats: any) => {
-        setCategories(extractArrayPayload<any>(cats));
-      })
-      .catch(() => {});
-  }, []);
 
   const categoryFilters = useMemo(() => [{ id: "all", name: "All" }, ...categories], [categories]);
 
@@ -49,7 +40,7 @@ const CatalogManager: React.FC = () => {
     }
     try {
       if (editingProduct?.id) {
-        await apiService.admin.updateProduct(editingProduct.id, {
+        await updateProduct(editingProduct.id, {
           name: values.name,
           sku: values.sku,
           price: Number(values.price),
@@ -58,7 +49,7 @@ const CatalogManager: React.FC = () => {
         });
         toast.success("Product updated");
       } else {
-        await apiService.admin.createProduct({
+        await createProduct({
           name: values.name,
           sku: values.sku,
           price: Number(values.price),

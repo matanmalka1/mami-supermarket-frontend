@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { apiService } from "../services/api";
 import { toast } from "react-hot-toast";
-import { useAsyncResource } from "./useAsyncResource";
+import { useAsyncResource } from "@/hooks/useAsyncResource";
+import { adminService } from "@/domains/admin/service";
 import { InventoryRow } from "@/domains/inventory/types";
 import type { InventoryResponse } from "@/types/admin-service";
 import { extractArrayPayload } from "@/utils/api-response";
@@ -23,7 +23,7 @@ export const useInventory = () => {
   });
 
   const fetchInventory = useCallback(async () => {
-    const data = await apiService.admin.getInventory();
+    const data = await adminService.getInventory();
     const rows = extractArrayPayload<InventoryResponse>(data);
     return rows.map(toInventoryRow);
   }, []);
@@ -47,7 +47,7 @@ export const useInventory = () => {
     const reserved =
       current?.reservedQuantity ?? current?.reserved_quantity ?? 0;
     try {
-      await apiService.admin.updateStock(id, {
+      await adminService.updateStock(id, {
         availableQuantity: newQty,
         reservedQuantity: reserved,
       });

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { catalogService } from "@/domains/catalog/service";
 import { useOptionalBranchSelection } from "@/context/branch-context-core";
-import type { Product } from "@/types/domain";
+import type { Product } from "@/domains/catalog/types";
 import { normalizeProductList } from "@/utils/products";
 
 type UseCatalogAutocompleteOptions = {

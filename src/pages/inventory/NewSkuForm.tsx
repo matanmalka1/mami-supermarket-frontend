@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { adminService } from "@/domains/admin/service";
-import { useCatalogCategories } from "@/hooks/useCatalogCategories";
+import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import { useBranches } from "@/hooks/useBranches";
 import { generateSku } from "@/utils/generateSku";
 import NewSkuIdentity from "@/pages/inventory/components/NewSkuIdentity";

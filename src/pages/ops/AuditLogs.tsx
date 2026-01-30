@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Badge from "@/components/ui/Badge";
 import { History, Shield, UserCheck } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
-import { apiService } from "@/services/api";
-import { extractArrayPayload } from "@/utils/api-response";
+import { useAuditLogs } from "@/features/ops/hooks/useAuditLogs";
 
 type AuditLog = {
   id: number;
@@ -23,34 +22,7 @@ const formatTime = (value?: string) => {
 };
 
 const AuditLogs: React.FC = () => {
-  const [logs, setLogs] = useState<AuditLog[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(true);
-
-  const fetchLogs = async (append = false) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await apiService.admin.getAuditLogs({
-        limit: 20,
-        offset: append ? logs.length : 0,
-      });
-      const items = extractArrayPayload<AuditLog>(data);
-      setLogs((prev) => (append ? [...prev, ...items] : items));
-      setHasMore(items.length === 20);
-    } catch (err: any) {
-      setError(err.message || "Failed to load audit logs");
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchLogs(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { logs, loading, error, hasMore, fetchLogs } = useAuditLogs();
 
   return (
     <div className="space-y-8">

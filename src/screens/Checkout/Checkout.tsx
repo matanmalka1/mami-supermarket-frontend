@@ -7,7 +7,7 @@ import FulfillmentStep from "./components/FulfillmentStep";
 import ScheduleStep from "./components/ScheduleStep";
 import PaymentStep from "./components/PaymentStep";
 import Button from "@/components/ui/Button";
-import { useCheckoutFlow } from "@/hooks/useCheckoutFlow";
+import { useCheckoutFlow } from "@/features/store/hooks/useCheckoutFlow";
 import { OrderSuccessSnapshot } from "./order-success";
 import { saveOrderSnapshot } from "./order";
 
