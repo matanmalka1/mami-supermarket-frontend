@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import Button from '../ui/Button';
 import { currencyILS } from '../../utils/format';
 
-const FREE_DELIVERY_THRESHOLD = 250;
+const FREE_DELIVERY_THRESHOLD = 150;
 
 const CartDrawer: React.FC = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } = useCart();
@@ -53,7 +53,17 @@ const CartDrawer: React.FC = () => {
             <div className="space-y-6">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-4 group animate-in slide-in-from-right-4">
-                  <img src={item.image} className="w-20 h-20 rounded-xl object-cover border shadow-sm group-hover:scale-105 transition-transform" alt={item.name} />
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      className="w-20 h-20 rounded-xl object-cover border shadow-sm group-hover:scale-105 transition-transform"
+                      alt={item.name}
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-black text-xl">
+                      {item.name?.[0]?.toUpperCase() ?? "?"}
+                    </div>
+                  )}
                   <div className="flex-1 space-y-1">
                     <h4 className="font-bold text-gray-900 leading-tight group-hover:text-[#008A45] transition-colors">{item.name}</h4>
                     <p className="text-[#008A45] font-black text-sm">{currencyILS(item.price)}</p>

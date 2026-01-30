@@ -87,10 +87,16 @@ const Checkout: React.FC = () => {
   }
 
   const subtotal = preview?.cart_total ? Number(preview.cart_total) : total;
+  const DELIVERY_THRESHOLD = 150;
+  const DELIVERY_FEE_UNDER_THRESHOLD = 30;
+  const fallbackDeliveryFee =
+    method === "DELIVERY" && subtotal < DELIVERY_THRESHOLD
+      ? DELIVERY_FEE_UNDER_THRESHOLD
+      : 0;
   const deliveryFee =
     preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
       ? Number(preview.delivery_fee)
-      : 0;
+      : fallbackDeliveryFee;
   const finalTotal = subtotal + deliveryFee;
 
   return (

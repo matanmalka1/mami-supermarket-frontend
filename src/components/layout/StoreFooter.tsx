@@ -14,7 +14,7 @@ const StoreFooter: React.FC<StoreFooterProps> = ({ categories, loading, onStatic
       <div className="grid gap-10 md:grid-cols-[2fr,1fr,1fr]">
         <div className="space-y-4">
           <p className="text-xs uppercase tracking-[0.4em] text-emerald-500 font-black">
-            FreshMarket HQ
+            Mami Supermaket HQ
           </p>
           <h4 className="text-2xl font-black text-slate-900">Natural, local, ready.</h4>
           <p className="text-sm text-slate-500 font-medium max-w-2xl">

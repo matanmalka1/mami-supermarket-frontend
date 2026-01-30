@@ -121,7 +121,13 @@ export const AppRouter: React.FC<RouterProps> = ({
           <Route path="/403" element={<ForbiddenPage />} />
 
           {/* Customer Store Branch */}
-          <Route element={<StoreLayout />}>
+          <Route
+            element={
+              <RequireAuth>
+                <StoreLayout />
+              </RequireAuth>
+            }
+          >
             <Route path="/store" element={<Storefront />} />
             <Route path="/store/category/:id" element={<CategoryView />} />
             <Route path="/store/search" element={<SearchResults />} />

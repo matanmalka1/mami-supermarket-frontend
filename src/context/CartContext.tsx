@@ -1,17 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { CartContext, CartItem } from "./cart-context";
 
+const STORAGE_PREFIX = "mami_cart";
+const GUEST_STORAGE_KEY = `${STORAGE_PREFIX}_guest`;
+
+const resolveCartKey = (): string => {
+  if (typeof window === "undefined") return GUEST_STORAGE_KEY;
+  const token =
+    sessionStorage.getItem("mami_token") ||
+    localStorage.getItem("mami_token") ||
+    "";
+  if (!token) return GUEST_STORAGE_KEY;
+  const userId = extractUserId(token);
+  const suffix = userId || token.slice(0, 8);
+  return `${STORAGE_PREFIX}_user_${encodeURIComponent(suffix)}`;
+};
+
+const extractUserId = (token: string): string | null => {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1] || ""));
+    return (
+      String(payload.sub || payload.user_id || payload.userId || payload.id || "")
+    ).trim() || null;
+  } catch {
+    return null;
+  }
+};
+
+const readCartFromStorage = (key: string): CartItem[] => {
+  if (typeof window === "undefined") return [];
+  const saved = localStorage.getItem(key);
+  if (!saved) return [];
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+};
+
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem("mami_cart");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { isAuthenticated } = useAuth();
+  const storageKey = useMemo(resolveCartKey, [isAuthenticated]);
+  const prevKeyRef = useRef<string>(storageKey);
+  const [items, setItems] = useState<CartItem[]>(() => readCartFromStorage(storageKey));
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("mami_cart", JSON.stringify(items));
-  }, [items]);
+    if (prevKeyRef.current !== storageKey) {
+      setItems(readCartFromStorage(storageKey));
+      prevKeyRef.current = storageKey;
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(items));
+  }, [items, storageKey]);
 
   const addItem = (product: any) => {
     setItems((prev) => {

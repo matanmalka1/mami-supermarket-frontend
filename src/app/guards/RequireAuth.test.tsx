@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import RequireAuth from "./RequireAuth";
@@ -30,13 +29,13 @@ describe("RequireAuth + RoleGuard", () => {
               </RoleGuard>
             }
           />
-          <Route path="/store" element={<div>Storefront Page</div>} />
+          <Route path="/403" element={<div>Forbidden Page</div>} />
         </Routes>
       </MemoryRouter>,
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/storefront page/i)).toBeInTheDocument();
+      expect(screen.getByText(/forbidden page/i)).toBeInTheDocument();
     });
   });
 });

@@ -69,5 +69,15 @@ export const useWishlist = () => {
     );
   }, []);
 
-  return { items, toggleWishlist, isWishlisted, updateWishlistItem };
+  const removeWishlistItem = useCallback((productId: number) => {
+    setItems((prev) => prev.filter((item) => item.id !== productId));
+  }, []);
+
+  return {
+    items,
+    toggleWishlist,
+    isWishlisted,
+    updateWishlistItem,
+    removeWishlistItem,
+  };
 };

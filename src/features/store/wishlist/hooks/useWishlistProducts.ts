@@ -7,7 +7,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import type { WishlistItem } from "@/hooks/useWishlist";
 
 export const useWishlistProducts = () => {
-  const { items } = useWishlist();
+  const { items, removeWishlistItem } = useWishlist();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -31,8 +31,25 @@ export const useWishlistProducts = () => {
               result.status === "fulfilled",
           )
           .map((result) => result.value);
+        const invalidIds: number[] = [];
+        let otherError = false;
+        results.forEach((result, index) => {
+          if (result.status === "rejected") {
+            const code = (result.reason as any)?.code;
+            if (code === "HTTP_404") {
+              invalidIds.push(ids[index]);
+            } else {
+              otherError = true;
+            }
+          }
+        });
         setProducts(fulfilled);
-        if (results.some((result) => result.status === "rejected")) {
+        if (invalidIds.length) {
+          invalidIds.forEach((id) => removeWishlistItem(id));
+        }
+        if (invalidIds.length) {
+          toast.error(`Removed ${invalidIds.length} unavailable wishlist item${invalidIds.length > 1 ? "s" : ""}`);
+        } else if (otherError) {
           toast.error("Some wishlist items could not be loaded");
         }
       })
@@ -46,7 +63,7 @@ export const useWishlistProducts = () => {
     return () => {
       active = false;
     };
-  }, [items]);
+  }, [items, removeWishlistItem]);
 
   return {
     products,
