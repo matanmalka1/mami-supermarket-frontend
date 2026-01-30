@@ -43,14 +43,18 @@ const SearchTypeaheadSuggestions: FC<SearchTypeaheadSuggestionsProps> = ({
               type="button"
               onClick={() => onSelect(product)}
               className={`w-full text-left px-4 py-3 transition-colors ${
-                isActive ? "bg-emerald-50 text-[#008A45]" : "text-gray-700 hover:bg-gray-50"
+                isActive
+                  ? "bg-emerald-50 text-[#008A45]"
+                  : "text-gray-700 hover:bg-gray-50"
               }`}
               aria-selected={isActive}
               id={`search-suggestion-${product.id}`}
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="text-sm font-bold truncate">{product.name}</span>
-                <span className="text-xs font-black uppercase tracking-[0.4em] text-gray-400">
+                <span className="text-sm font-bold truncate">
+                  {product.name}
+                </span>
+                <span className="text-xs uppercase tracking-[0.4em] text-gray-400">
                   {currencyILS(product.price)}
                 </span>
               </div>

@@ -47,9 +47,7 @@ const InventoryHighlights: React.FC<{ rows: InventoryRow[] }> = ({ rows }) => {
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">
             {stat.label}
           </p>
-          <p className="text-3xl font-black  text-gray-900">
-            {formatNumber(stat.value)}
-          </p>
+          <p className="text-3xl  text-gray-900">{formatNumber(stat.value)}</p>
           <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
             {stat.sub}
           </p>

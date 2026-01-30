@@ -1,16 +1,38 @@
-import { Link } from 'react-router';
-import { ChevronDown } from 'lucide-react';
+import { Link } from "react-router";
+import { ChevronDown } from "lucide-react";
 
-type DeptMegaMenuProps = { items: any[]; loading?: boolean; onClose: () => void };
+type DeptMegaMenuProps = {
+  items: any[];
+  loading?: boolean;
+  onClose: () => void;
+};
 
-const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, loading, onClose }) => (
+const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({
+  items,
+  loading,
+  onClose,
+}) => (
   <div className="absolute top-full left-0 right-0 bg-white border-b shadow-2xl animate-in slide-in-from-top-4 duration-300">
     <div className="max-w-7xl mx-auto p-12 grid grid-cols-4 gap-12">
       <div className="col-span-1 space-y-6">
-        <h3 className="text-2xl font-black  tracking-tight">Grocery<br/>Departments</h3>
-        <p className="text-sm font-medium text-gray-400 leading-relaxed">Browse our carefully curated selection of local and organic products.</p>
-        <Link to="/store" onClick={onClose} className="inline-flex items-center gap-2 text-xs font-black text-[#008A45] uppercase tracking-widest group">
-          View All Products <ChevronDown size={14} className="-rotate-90 group-hover:translate-x-1 transition-transform" />
+        <h3 className="text-2xl  tracking-tight">
+          Grocery
+          <br />
+          Departments
+        </h3>
+        <p className="text-sm font-medium text-gray-400 leading-relaxed">
+          Browse our carefully curated selection of local and organic products.
+        </p>
+        <Link
+          to="/store"
+          onClick={onClose}
+          className="inline-flex items-center gap-2 text-xs text-[#008A45] uppercase tracking-widest group"
+        >
+          View All Products{" "}
+          <ChevronDown
+            size={14}
+            className="-rotate-90 group-hover:translate-x-1 transition-transform"
+          />
         </Link>
       </div>
       <div className="col-span-3 grid grid-cols-3 gap-6">
@@ -20,7 +42,7 @@ const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, loading, onClose }) 
           </p>
         ) : items.length === 0 ? (
           <p className="text-sm text-gray-400 font-bold col-span-3">
-            Departments unavailable (backend feed missing)
+            Departments unavailable 
           </p>
         ) : (
           items.map((cat) => (
@@ -34,7 +56,7 @@ const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, loading, onClose }) 
                 {cat.icon || "🛒"}
               </span>
               <div>
-                <p className="font-black text-sm text-gray-900 group-hover:text-[#008A45]">
+                <p className="text-sm text-gray-900 group-hover:text-[#008A45]">
                   {cat.name}
                 </p>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
@@ -47,7 +69,9 @@ const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({ items, loading, onClose }) 
       </div>
     </div>
     <div className="bg-emerald-900 py-3 text-center">
-      <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em]">Free 1-hour delivery for premium members on orders over ₪150</p>
+      <p className="text-[10px] text-emerald-400 uppercase tracking-[0.3em]">
+        Free 1-hour delivery for premium members on orders over ₪150
+      </p>
     </div>
   </div>
 );

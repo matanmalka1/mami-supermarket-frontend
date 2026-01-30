@@ -54,28 +54,26 @@ const InventoryRelocationPanel: React.FC<Props> = ({
             <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
               Relocation
             </p>
-            <h2 className="text-2xl font-black  text-gray-900">
-              {productName}
-            </h2>
+            <h2 className="text-2xl  text-gray-900">{productName}</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-xs font-black uppercase tracking-[0.4em] text-gray-400"
+            className="text-xs uppercase tracking-[0.4em] text-gray-400"
           >
             Cancel
           </button>
         </div>
 
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+          <label className="text-[10px] uppercase tracking-widest text-gray-400">
             Current branch
           </label>
-          <p className="text-lg font-black">{currentBranch}</p>
+          <p className="text-lg">{currentBranch}</p>
         </div>
 
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+          <label className="text-[10px] uppercase tracking-widest text-gray-400">
             Destination branch
           </label>
           <select
@@ -94,7 +92,7 @@ const InventoryRelocationPanel: React.FC<Props> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+          <label className="text-[10px] uppercase tracking-widest text-gray-400">
             Quantity to relocate
           </label>
           <input

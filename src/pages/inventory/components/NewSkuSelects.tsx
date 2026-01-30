@@ -25,7 +25,7 @@ const NewSkuSelects: React.FC<Props> = ({
 }) => (
   <div className="grid grid-cols-2 gap-4">
     <div className="space-y-2">
-      <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
+      <label className="text-[10px] uppercase text-gray-400 tracking-widest">
         Category
       </label>
       <select
@@ -46,7 +46,7 @@ const NewSkuSelects: React.FC<Props> = ({
       </select>
     </div>
     <div className="space-y-2">
-      <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
+      <label className="text-[10px] uppercase text-gray-400 tracking-widest">
         Branch
       </label>
       <select

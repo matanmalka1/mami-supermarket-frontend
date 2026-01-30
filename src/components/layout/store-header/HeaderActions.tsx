@@ -30,7 +30,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
       <Link
         to="/"
         onClick={() => sessionStorage.removeItem("mami_manual_store_visit")}
-        className="hidden md:flex items-center gap-2 bg-[#006666] text-white px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-teal-900/20 hover:bg-[#005555] transition-all  border border-teal-400/20"
+        className="hidden md:flex items-center gap-2 bg-[#006666] text-white px-5 py-2.5 rounded-xl text-[11px] uppercase tracking-widest shadow-lg shadow-teal-900/20 hover:bg-[#005555] transition-all  border border-teal-400/20"
       >
         <Lock size={14} /> OPS PORTAL
       </Link>
@@ -40,7 +40,9 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
       <button
         onClick={() => setActiveMenu(activeMenu === "notif" ? null : "notif")}
         className={`p-2.5 transition-all rounded-xl hover:bg-gray-50 ${
-          activeMenu === "notif" ? "text-[#008A45] bg-emerald-50" : "text-gray-400"
+          activeMenu === "notif"
+            ? "text-[#008A45] bg-emerald-50"
+            : "text-gray-400"
         }`}
       >
         <Bell size={22} />
@@ -49,7 +51,10 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
         )}
       </button>
       {activeMenu === "notif" && (
-        <NotifDropdown items={notifications} onClose={() => setActiveMenu(null)} />
+        <NotifDropdown
+          items={notifications}
+          onClose={() => setActiveMenu(null)}
+        />
       )}
     </div>
 
@@ -62,7 +67,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
     >
       <ShoppingCart size={22} />
       {itemsCount > 0 && (
-        <span className="absolute top-1.5 right-1.5 bg-[#008A45] text-white text-[9px] font-black w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-md">
+        <span className="absolute top-1.5 right-1.5 bg-[#008A45] text-white text-[9px] w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-md">
           {itemsCount}
         </span>
       )}
@@ -70,17 +75,27 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
 
     <div className="relative ml-2">
       <div
-        onClick={() => setActiveMenu(activeMenu === "account" ? null : "account")}
+        onClick={() =>
+          setActiveMenu(activeMenu === "account" ? null : "account")
+        }
         className={`w-10 h-10 rounded-xl bg-gray-50 border-2 overflow-hidden cursor-pointer transition-all shadow-sm flex items-center justify-center ${
           activeMenu === "account"
             ? "border-[#008A45] ring-4 ring-emerald-50"
             : "border-transparent hover:border-emerald-100"
         }`}
       >
-        <AvatarBadge name={isActuallyAdmin ? "Admin User" : "Customer"} size={36} className="border-0" />
+        <AvatarBadge
+          name={isActuallyAdmin ? "Admin User" : "Customer"}
+          size={36}
+          className="border-0"
+        />
       </div>
       {activeMenu === "account" && (
-        <AccountDropdown onClose={() => setActiveMenu(null)} userRole={userRole} onLogout={logout} />
+        <AccountDropdown
+          onClose={() => setActiveMenu(null)}
+          userRole={userRole}
+          onLogout={logout}
+        />
       )}
     </div>
   </div>

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import DashboardHero from "@/components/ops/DashboardHero";
@@ -13,15 +12,25 @@ import { OrderStatus } from "@/domains/orders/types";
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
-  const pendingCount = orders.filter((o) => o.status === OrderStatus.PENDING).length;
+  const pendingCount = orders.filter(
+    (o) => o.status === OrderStatus.PENDING,
+  ).length;
   const expressDue = orders.filter((o) => o.urgency === "critical").length;
-  const urgentOrders = useMemo(() => orders.filter((o) => o.urgency === "critical"), [orders]);
-  const { metrics: performance, loading: perfLoading, error: perfError, refresh: refreshPerf } =
-    useOpsPerformance();
+  const urgentOrders = useMemo(
+    () => orders.filter((o) => o.urgency === "critical"),
+    [orders],
+  );
+  const {
+    metrics: performance,
+    loading: perfLoading,
+    error: perfError,
+    refresh: refreshPerf,
+  } = useOpsPerformance();
   const { createBatch } = useOpsBatchActions();
 
   const startBatch = async () => {
-    if (selectedIds.length < 2) return toast.error("Select at least 2 orders for a batch");
+    if (selectedIds.length < 2)
+      return toast.error("Select at least 2 orders for a batch");
     toast.loading("Submitting batch for picking...", { id: "batch" });
     try {
       await createBatch(selectedIds);
@@ -67,7 +76,7 @@ const Dashboard: React.FC = () => {
       />
 
       {perfError && !perfLoading && (
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-red-600">
+        <p className="text-xs uppercase tracking-[0.2em] text-red-600">
           {perfError}
         </p>
       )}
@@ -78,12 +87,22 @@ const Dashboard: React.FC = () => {
             Order Status Workflow
           </p>
           <p className="mt-2 text-[13px] text-gray-700">
-            Admins can update any order’s status from the <span className="font-black">Process</span> column.
-            Progress orders through <span className="font-semibold">IN_PROGRESS → READY → OUT_FOR_DELIVERY → DELIVERED</span> (missing picks become <span className="font-semibold">MISSING</span>),
-            and the allowed transitions mirror the pick status rules—only orders where every item is <span className="font-semibold">PICKED</span> can move to READY.
+            Admins can update any order’s status from the{" "}
+            <span className="">Process</span> column. Progress orders through{" "}
+            <span className="font-semibold">
+              IN_PROGRESS → READY → OUT_FOR_DELIVERY → DELIVERED
+            </span>{" "}
+            (missing picks become <span className="font-semibold">MISSING</span>
+            ), and the allowed transitions mirror the pick status rules—only
+            orders where every item is{" "}
+            <span className="font-semibold">PICKED</span> can move to READY.
           </p>
         </div>
-        <OrderTable orders={orders} selectedIds={selectedIds} onToggleSelect={toggleSelect} />
+        <OrderTable
+          orders={orders}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+        />
       </div>
     </div>
   );

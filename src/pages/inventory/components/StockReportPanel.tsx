@@ -23,8 +23,7 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
       const query = search.trim().toLowerCase();
       const textMatch =
         !query || product.includes(query) || sku.includes(query);
-      const inStockMatch =
-        !inStockOnly || (row.availableQuantity ?? 0) > 0;
+      const inStockMatch = !inStockOnly || (row.availableQuantity ?? 0) > 0;
       return branchMatch && textMatch && inStockMatch;
     });
   }, [branchFilter, rows, search, inStockOnly]);
@@ -79,9 +78,7 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
           <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
             Stock report
           </p>
-          <h3 className="text-2xl font-black  text-gray-900">
-            Active inventory snapshot
-          </h3>
+          <h3 className="text-2xl  text-gray-900">Active inventory snapshot</h3>
         </div>
         <div className="flex gap-3 flex-wrap">
           <Button variant="ghost" size="sm" onClick={printReport}>
@@ -115,7 +112,7 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
           <button
             type="button"
             onClick={toggleInStock}
-            className={`px-4 py-3 rounded-xl border font-black uppercase tracking-[0.3em] text-sm ${
+            className={`px-4 py-3 rounded-xl border uppercase tracking-[0.3em] text-sm ${
               inStockOnly
                 ? "border-[#008A45] bg-[#008A45]/10 text-[#008A45]"
                 : "border-gray-100 text-gray-600"
@@ -138,7 +135,7 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
 };
 
 const Card: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm font-black uppercase tracking-[0.3em] text-gray-500">
+  <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm uppercase tracking-[0.3em] text-gray-500">
     <p className="text-3xl text-gray-900">{value}</p>
     <p className="text-[10px]">{label}</p>
   </div>

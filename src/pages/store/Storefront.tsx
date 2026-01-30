@@ -87,7 +87,6 @@ const Storefront: React.FC = () => {
       </div>
 
       <FlashDeals
-        secondsLeft={secondsLeft}
         deals={deals}
         loading={flashLoading}
         error={flashError}

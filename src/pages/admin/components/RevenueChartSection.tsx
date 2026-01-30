@@ -51,7 +51,7 @@ const RevenueChartSection: React.FC<Props> = ({
     <div className="col-span-12 lg:col-span-4 space-y-6">
       <Card variant="emerald" className="p-10 space-y-6">
         <DollarSign size={40} className="opacity-40" />
-        <h3 className="text-3xl font-black ">Momentum</h3>
+        <h3 className="text-3xl ">Momentum</h3>
         <h3 className="text-3xl ">Momentum</h3>
         <p className="font-bold opacity-80 ">{momentumText}</p>
         <div className="h-3 bg-white/20 rounded-full overflow-hidden">
@@ -63,7 +63,7 @@ const RevenueChartSection: React.FC<Props> = ({
       </Card>
       <Card className="p-10">
         <TrendingUp size={40} className="opacity-40" />
-        <h4 className="font-black text-xl  text-slate-800">Scope</h4>
+        <h4 className="text-xl  text-slate-800">Scope</h4>
         <h4 className="text-xl  text-slate-800">Scope</h4>
         <p className="text-sm font-bold text-slate-600 leading-relaxed mt-2 ">
           {scopeText}

@@ -206,7 +206,7 @@ const FleetTracker: React.FC = () => {
 
           {/* Floating Legend */}
           <div className="absolute bottom-8 right-8 bg-white/90 backdrop-blur p-6 rounded-3xl border border-white shadow-2xl space-y-4 w-64">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+            <h4 className="text-[10px] uppercase tracking-widest text-gray-400">
               Cluster Status
             </h4>
             <div className="space-y-2">

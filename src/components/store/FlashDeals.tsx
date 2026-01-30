@@ -6,7 +6,6 @@ type FlashDealsProps = {
   loading: boolean;
   error: string | null;
   timeLeft: string;
-  secondsLeft: number;
 };
 
 const FlashDeals: React.FC<FlashDealsProps> = ({
@@ -14,52 +13,48 @@ const FlashDeals: React.FC<FlashDealsProps> = ({
   loading,
   error,
   timeLeft,
-  secondsLeft,
 }) => {
   return (
-    <section className="bg-orange-50 rounded-[3rem] p-12 space-y-10 border border-orange-100">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-orange-600 uppercase text-xs tracking-widest">
-            <Zap size={16} fill="currentColor" /> Flash Deals
-          </div>
-          <h2 className="text-3xl text-gray-900 tracking-tight ">
+    <section className="bg-[#fdf1e6] border border-[#ffd7b3] rounded-[3rem] p-10 shadow-xl space-y-8">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-[#ff6f1e]">
+            <Zap size={16} aria-hidden /> Flash Deals
+          </p>
+          <h2 className="text-4xl text-gray-900 tracking-tight">
             Ending Soon
           </h2>
         </div>
-        <div className="bg-white px-8 py-4 rounded-3xl border border-orange-200 shadow-sm flex items-center gap-4">
+        <div className="flex items-center gap-4 rounded-3xl border border-[#ffd7b3] bg-white/90 px-6 py-3 shadow-sm">
           <Timer size={24} className="text-orange-500" />
-          <div className="flex items-baseline gap-1">
+          <div className="flex flex-col leading-none">
             <span className="text-2xl text-gray-900 tabular-nums">
               {timeLeft}
             </span>
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400">
               Remaining
             </span>
           </div>
-          {secondsLeft >= 0 && (
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
-              ({secondsLeft}s)
-            </span>
-          )}
         </div>
       </div>
 
-      <div className="flex items-center gap-2 text-orange-600 uppercase text-xs tracking-widest">
+      <div className="space-y-4">
         {loading ? (
-          <h2 className="text-3xl text-gray-900 tracking-tight col-span-4 text-center text-orange-700 font-bold">
-            Loading...
-          </h2>
+          <div className="text-orange-600 uppercase tracking-[0.4em] text-sm">
+            Loading flash deals...
+          </div>
         ) : error ? (
-          <p className="col-span-4 text-center text-orange-700 font-bold">
-            {error}
-          </p>
+          <div className="text-center text-orange-700 font-bold">{error}</div>
         ) : deals.length === 0 ? (
-          <span className="text-2xl text-gray-900 tabular-nums">
+          <div className="text-orange-700 uppercase tracking-widest text-sm">
             No deals available right now.
-          </span>
+          </div>
         ) : (
-          deals.map((item) => <ProductCard key={item.id} item={item} />)
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {deals.map((item) => (
+              <ProductCard key={item.id} item={item} />
+            ))}
+          </div>
         )}
       </div>
     </section>

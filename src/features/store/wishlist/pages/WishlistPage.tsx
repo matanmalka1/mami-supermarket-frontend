@@ -79,7 +79,7 @@ const WishlistPage: React.FC = () => {
           action={
             <Link
               to="/store"
-              className="text-xs font-black uppercase tracking-widest text-[#008A45]"
+              className="text-xs uppercase tracking-widest text-[#008A45]"
             >
               Continue shopping
             </Link>
@@ -98,7 +98,7 @@ const WishlistPage: React.FC = () => {
           action={
             <Link
               to="/store"
-              className="text-xs font-black uppercase tracking-widest text-[#008A45]"
+              className="text-xs uppercase tracking-widest text-[#008A45]"
             >
               Browse the store
             </Link>
@@ -116,14 +116,14 @@ const WishlistPage: React.FC = () => {
     <div className="space-y-8 max-w-6xl mx-auto">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400 font-black">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
             Favorites
           </p>
-          <h1 className="text-3xl font-black tracking-tighter">My Wishlist</h1>
+          <h1 className="text-3xl tracking-tighter">My Wishlist</h1>
         </div>
         <Link
           to="/store"
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-gray-200 text-sm font-black uppercase tracking-[0.3em] text-gray-600 hover:border-[#008A45] hover:text-[#008A45] transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-gray-200 text-sm uppercase tracking-[0.3em] text-gray-600 hover:border-[#008A45] hover:text-[#008A45] transition-all"
         >
           Continue shopping
         </Link>

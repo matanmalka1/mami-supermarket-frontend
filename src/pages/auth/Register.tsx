@@ -95,13 +95,13 @@ const Register: React.FC<{
       <header className="px-12 py-8 flex items-center justify-between bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <Link
           to="/store"
-          className="flex items-center gap-3 text-[#008A45] font-black text-2xl  tracking-tighter"
+          className="flex items-center gap-3 text-[#008A45] text-2xl  tracking-tighter"
         >
           <ShoppingBag size={28} /> Mami Supermarket
         </Link>
         <Link
           to="/login"
-          className="bg-[#008A45] text-white px-8 py-2.5 rounded-xl text-sm font-black shadow-lg"
+          className="bg-[#008A45] text-white px-8 py-2.5 rounded-xl text-sm shadow-lg"
         >
           Log In
         </Link>
@@ -110,7 +110,7 @@ const Register: React.FC<{
       <main className="flex-1 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 p-8 lg:p-24">
         <div className="space-y-12">
           <div className="space-y-3">
-            <h1 className="text-7xl font-black text-gray-900 tracking-tight  leading-tight">
+            <h1 className="text-7xl text-gray-900 tracking-tight  leading-tight">
               {step === "INFO" ? "Join Us" : "Verify"}
             </h1>
             <p className="text-gray-400 text-xl font-medium tracking-tight">
@@ -134,7 +134,7 @@ const Register: React.FC<{
                   <input
                     key={i}
                     maxLength={1}
-                    className="w-16 h-20 bg-white border-2 border-gray-100 rounded-2xl text-center text-3xl font-black text-[#008A45] outline-none focus:border-[#008A45] shadow-sm"
+                    className="w-16 h-20 bg-white border-2 border-gray-100 rounded-2xl text-center text-3xl text-[#008A45] outline-none focus:border-[#008A45] shadow-sm"
                     onChange={(e) =>
                       setOtp((prev) => (prev + e.target.value).slice(0, 4))
                     }
@@ -142,7 +142,7 @@ const Register: React.FC<{
                 ))}
               </div>
               <button
-                className="w-full bg-[#16A34A] text-white h-20 rounded-[1.5rem] font-black text-2xl shadow-xl active:scale-95"
+                className="w-full bg-[#16A34A] text-white h-20 rounded-[1.5rem] text-2xl shadow-xl active:scale-95"
                 disabled={loading}
               >
                 Complete Setup
@@ -150,7 +150,7 @@ const Register: React.FC<{
               <button
                 type="button"
                 onClick={() => setStep("INFO")}
-                className="w-full text-sm font-black text-gray-400 uppercase tracking-widest hover:text-gray-900"
+                className="w-full text-sm text-gray-400 uppercase tracking-widest hover:text-gray-900"
               >
                 Go Back
               </button>

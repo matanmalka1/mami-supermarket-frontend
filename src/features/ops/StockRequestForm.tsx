@@ -85,7 +85,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
               type="number"
               {...register("quantity")}
               placeholder="0"
-              className={`w-full bg-gray-50 border ${errors.quantity ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none font-black text-lg`}
+              className={`w-full bg-gray-50 border ${errors.quantity ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none text-lg`}
             />
           }
         />
@@ -137,7 +137,7 @@ const Field: React.FC<{ label: string; input: React.ReactNode; error?: string }>
   error,
 }) => (
   <div className="space-y-2">
-    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">{label}</label>
+    <label className="text-[10px] uppercase tracking-[0.2em] text-gray-400">{label}</label>
     {input}
     {error && <p className="text-xs text-red-500 font-bold">{error}</p>}
   </div>

@@ -52,7 +52,7 @@ const InventoryAnalyticsPanel: React.FC<Props> = ({ data, onClose }) => {
             <p className="uppercase tracking-[0.4em] text-xs text-gray-400">
               Branch
             </p>
-            <p className="font-black text-lg">{branchLabel}</p>
+            <p className="text-lg">{branchLabel}</p>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-6 text-sm">
@@ -60,16 +60,16 @@ const InventoryAnalyticsPanel: React.FC<Props> = ({ data, onClose }) => {
             <p className="uppercase tracking-[0.4em] text-[10px] text-gray-400">
               Available
             </p>
-            <p className="text-3xl font-black text-[#008A45]">{available}</p>
+            <p className="text-3xl text-[#008A45]">{available}</p>
           </div>
           <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
             <p className="uppercase tracking-[0.4em] text-[10px] text-gray-400">
               Reserved
             </p>
-            <p className="text-3xl font-black text-orange-500">{reserved}</p>
+            <p className="text-3xl text-orange-500">{reserved}</p>
           </div>
         </div>
-        <p className="text-xs font-black uppercase tracking-[0.4em] text-gray-400">
+        <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
           Based on the selected SKU, open the full analytics board to review
           trends and performance.
         </p>

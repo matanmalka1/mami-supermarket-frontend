@@ -19,7 +19,7 @@ const StockRequestManager: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-black  tracking-tighter">
+          <h1 className="text-4xl  tracking-tighter">
             Replenishment Queue
           </h1>
           <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">
@@ -46,7 +46,7 @@ const StockRequestManager: React.FC = () => {
 
       <div className="space-y-4">
         {loading ? (
-          <div className="p-16 text-center text-gray-300 font-black uppercase tracking-[0.3em]">
+          <div className="p-16 text-center text-gray-300 uppercase tracking-[0.3em]">
             Loading requests...
           </div>
         ) : requests.length === 0 ? (

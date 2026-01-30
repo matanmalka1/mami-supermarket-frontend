@@ -3,13 +3,17 @@ import { ChevronDown, MapPin } from "lucide-react";
 import { useBranchSelection } from "@/context/branch-context-core";
 
 const BranchSelector: FC = () => {
-  const { branches, selectedBranch, loading, error, selectBranch } = useBranchSelection();
+  const { branches, selectedBranch, loading, error, selectBranch } =
+    useBranchSelection();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -31,7 +35,7 @@ const BranchSelector: FC = () => {
       >
         <MapPin size={16} className="text-[#008A45]" />
         <div className="text-left leading-tight">
-          <span className="text-[8px] font-black tracking-[0.5em] text-gray block">
+          <span className="text-[8px] tracking-[0.5em] text-gray block">
             Deliver from
           </span>
           <span className="text-[11px] font-bold text-gray-900">{label}</span>
@@ -75,7 +79,7 @@ const BranchSelector: FC = () => {
                     isActive ? "bg-emerald-50 text-[#008A45]" : "text-gray-600"
                   }`}
                 >
-                  <div className="font-black text-sm">{branch.name}</div>
+                  <div className="text-sm">{branch.name}</div>
                   <div className="text-[10px] uppercase tracking-[0.3em] text-gray-400">
                     {branch.address}
                   </div>

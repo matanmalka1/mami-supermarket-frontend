@@ -31,9 +31,7 @@ const Inventory: React.FC = () => {
     <div className="space-y-8 pb-12 animate-in fade-in duration-500 relative">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-black  tracking-tight">
-            Inventory Control
-          </h1>
+          <h1 className="text-4xl  tracking-tight">Inventory Control</h1>
           <p className="text-sm text-gray-500 mt-1 font-bold uppercase tracking-widest">
             Global Stock Monitoring • Phase 2 Nodes
           </p>

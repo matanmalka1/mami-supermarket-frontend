@@ -54,7 +54,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
                     className="w-5 h-5 rounded-md accent-emerald-600 border-gray-200 cursor-pointer"
                   />
                 </TD>
-                <TD className="font-black  text-[#006666]">
+                <TD className=" text-[#006666]">
                   {formatOrderLabel(order)}
                 </TD>
                 <TD>
@@ -81,7 +81,7 @@ const OrderTable: React.FC<OrderTableProps> = ({
                 <TD className="text-right">
                   <Link
                     to={`/picking/${order.id}`}
-                    className="inline-flex items-center gap-2 bg-white border border-gray-100 px-5 py-2.5 rounded-xl hover:bg-[#006666] hover:text-white hover:border-[#006666] transition-all text-[10px] font-black uppercase tracking-widest shadow-sm"
+                    className="inline-flex items-center gap-2 bg-white border border-gray-100 px-5 py-2.5 rounded-xl hover:bg-[#006666] hover:text-white hover:border-[#006666] transition-all text-[10px] uppercase tracking-widest shadow-sm"
                   >
                     Process
                   </Link>

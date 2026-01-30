@@ -2,8 +2,18 @@ import React from "react";
 import { X, Check } from "lucide-react";
 import Button from "@/components/ui/Button";
 
-const sortOptions = ["Relevance", "Price: Low to High", "Price: High to Low", "Newest Arrivals"];
-const preferenceOptions = ["Organic Only", "Gluten Free", "Vegan friendly", "On Flash Sale"];
+const sortOptions = [
+  "Relevance",
+  "Price: Low to High",
+  "Price: High to Low",
+  "Newest Arrivals",
+];
+const preferenceOptions = [
+  "Organic Only",
+  "Gluten Free",
+  "Vegan friendly",
+  "On Flash Sale",
+];
 
 type SearchFiltersDrawerProps = {
   isOpen: boolean;
@@ -36,7 +46,7 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
       />
       <aside className="relative w-full max-w-sm bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-500">
         <div className="p-8 border-b flex items-center justify-between">
-          <h2 className="text-2xl font-black ">Refine Search</h2>
+          <h2 className="text-2xl ">Refine Search</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -59,14 +69,21 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
           </FilterGroup>
           <FilterGroup title="Dietary & Preferences">
             {preferenceOptions.map((option) => (
-              <label key={option} className="flex items-center gap-3 cursor-pointer group">
+              <label
+                key={option}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
                 <div
                   onClick={() => onTogglePref(option)}
                   className={`w-6 h-6 rounded-lg border-2 transition-all flex items-center justify-center ${activePrefs.includes(option) ? "border-emerald-500 bg-emerald-50" : "border-gray-200 group-hover:border-emerald-500"}`}
                 >
-                  <div className={`w-2 h-2 rounded-sm bg-emerald-500 transition-transform ${activePrefs.includes(option) ? "scale-100" : "scale-0"}`} />
+                  <div
+                    className={`w-2 h-2 rounded-sm bg-emerald-500 transition-transform ${activePrefs.includes(option) ? "scale-100" : "scale-0"}`}
+                  />
                 </div>
-                <span className={`text-sm font-bold ${activePrefs.includes(option) ? "text-gray-900" : "text-gray-600"}`}>
+                <span
+                  className={`text-sm font-bold ${activePrefs.includes(option) ? "text-gray-900" : "text-gray-600"}`}
+                >
                   {option}
                 </span>
               </label>
@@ -77,7 +94,11 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
           <Button variant="ghost" className="flex-1" onClick={onClear}>
             Clear All
           </Button>
-          <Button variant="emerald" className="flex-[2] rounded-2xl font-black " onClick={onApply}>
+          <Button
+            variant="emerald"
+            className="flex-[2] rounded-2xl "
+            onClick={onApply}
+          >
             Apply Filters
           </Button>
         </div>
@@ -86,9 +107,14 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
   );
 };
 
-const FilterGroup: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+const FilterGroup: React.FC<{ title: string; children: React.ReactNode }> = ({
+  title,
+  children,
+}) => (
   <div className="space-y-4">
-    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">{title}</h4>
+    <h4 className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
+      {title}
+    </h4>
     <div className="space-y-3">{children}</div>
   </div>
 );

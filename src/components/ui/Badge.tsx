@@ -1,6 +1,14 @@
-import React from 'react';
+import React from "react";
 
-export type BadgeVariant = 'emerald' | 'orange' | 'blue' | 'red' | 'gray' | 'teal' | 'indigo' | 'purple';
+export type BadgeVariant =
+  | "emerald"
+  | "orange"
+  | "blue"
+  | "red"
+  | "gray"
+  | "teal"
+  | "indigo"
+  | "purple";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
@@ -18,10 +26,15 @@ const variantStyles: Record<BadgeVariant, string> = {
   purple: "bg-purple-50 text-purple-600 border-purple-100",
 };
 
-const Badge: React.FC<BadgeProps> = ({ children, variant = 'gray', className = '', ...props }) => {
+const Badge: React.FC<BadgeProps> = ({
+  children,
+  variant = "gray",
+  className = "",
+  ...props
+}) => {
   return (
-    <span 
-      className={`inline-flex items-center text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest border ${variantStyles[variant]} ${className}`}
+    <span
+      className={`inline-flex items-center text-[10px] px-2.5 py-1 rounded-full uppercase tracking-widest border ${variantStyles[variant]} ${className}`}
       {...props}
     >
       {children}

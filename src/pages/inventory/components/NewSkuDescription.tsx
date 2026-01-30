@@ -5,9 +5,12 @@ type Props = {
   setDescription: (value: string) => void;
 };
 
-const NewSkuDescription: React.FC<Props> = ({ description, setDescription }) => (
+const NewSkuDescription: React.FC<Props> = ({
+  description,
+  setDescription,
+}) => (
   <div className="space-y-2">
-    <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
+    <label className="text-[10px] uppercase text-gray-400 tracking-widest">
       Description (optional)
     </label>
     <textarea

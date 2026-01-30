@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef } from "react";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
@@ -9,11 +9,22 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, leftIcon, rightIcon, containerClassName = '', className = '', ...props }, ref) => {
+  (
+    {
+      label,
+      error,
+      leftIcon,
+      rightIcon,
+      containerClassName = "",
+      className = "",
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <div className={`space-y-2 w-full ${containerClassName}`}>
         {label && (
-          <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block px-1">
+          <label className="text-[10px] uppercase text-gray-400 tracking-widest block px-1">
             {label}
           </label>
         )}
@@ -31,9 +42,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
                outline-none 
               transition-all focus:ring-4 focus:ring-emerald-500/5 focus:bg-white focus:border-[#006666]
-              ${leftIcon ? 'pl-12' : ''}
-              ${rightIcon ? 'pr-12' : ''}
-              ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/5' : ''}
+              ${leftIcon ? "pl-12" : ""}
+              ${rightIcon ? "pr-12" : ""}
+              ${error ? "border-red-500 focus:border-red-500 focus:ring-red-500/5" : ""}
               ${className}
             `}
             {...props}
@@ -44,12 +55,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-        {error && <p className="text-[10px] text-red-500 font-bold px-1">{error}</p>}
+        {error && (
+          <p className="text-[10px] text-red-500 font-bold px-1">{error}</p>
+        )}
       </div>
     );
-  }
+  },
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 export default Input;

@@ -13,16 +13,24 @@ const getInitials = (name?: string | null, email?: string | null) => {
   if (parts.length === 0 && email) {
     return email.slice(0, 2).toUpperCase();
   }
-  const initials = parts.slice(0, 2).map((p) => p.charAt(0).toUpperCase()).join("");
+  const initials = parts
+    .slice(0, 2)
+    .map((p) => p.charAt(0).toUpperCase())
+    .join("");
   return initials || source.slice(0, 2).toUpperCase();
 };
 
-export const AvatarBadge: React.FC<AvatarBadgeProps> = ({ name, email, size = 40, className = "" }) => {
+export const AvatarBadge: React.FC<AvatarBadgeProps> = ({
+  name,
+  email,
+  size = 40,
+  className = "",
+}) => {
   const initials = getInitials(name, email);
   return (
     <div
       style={{ width: size, height: size }}
-      className={`rounded-full bg-gray-100 border flex items-center justify-center text-gray-500 font-black text-xs ${className}`}
+      className={`rounded-full bg-gray-100 border flex items-center justify-center text-gray-500 text-xs ${className}`}
       aria-label={name || email || "avatar"}
     >
       {initials}

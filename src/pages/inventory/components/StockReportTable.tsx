@@ -28,16 +28,16 @@ const StockReportTable: React.FC<Props> = ({ rows }) => (
         available <= 0 ? "out" : available <= 25 ? "low" : "healthy";
       return (
         <tr className="border-b border-gray-50">
-          <td className="py-3 font-black uppercase tracking-[0.2em]">
+          <td className="py-3 uppercase tracking-[0.2em]">
             {row.product?.sku || "n/a"}
           </td>
           <td className="py-3">{row.product?.name}</td>
           <td className="py-3">{row.branch?.name || "Central Hub"}</td>
-          <td className="py-3 text-center font-black">{available}</td>
+          <td className="py-3 text-center">{available}</td>
           <td className="py-3 text-center text-orange-500">{reserved}</td>
           <td className="py-3 text-center">
             <span
-              className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.3em] ${
+              className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.3em] ${
                 status === "healthy"
                   ? "bg-emerald-50 text-[#008A45]"
                   : status === "low"

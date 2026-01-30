@@ -26,7 +26,7 @@ const NotifDropdown: React.FC<NotifDropdownProps> = ({ items, onClose }) => {
         </h4>
         <button
           onClick={onClose}
-          className="text-[9px] font-black uppercase text-[#008A45] hover:underline"
+          className="text-[9px] uppercase text-[#008A45] hover:underline"
         >
           Close
         </button>
@@ -62,7 +62,7 @@ const NotifDropdown: React.FC<NotifDropdownProps> = ({ items, onClose }) => {
               </div>
               <div className="space-y-0.5">
                 <p className="text-xs font-bold text-gray-900">{n.text}</p>
-                <p className="text-[9px] font-black text-gray-400 uppercase">
+                <p className="text-[9px] text-gray-400 uppercase">
                   {formatTime(n)}
                 </p>
               </div>
