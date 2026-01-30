@@ -38,19 +38,19 @@ const FlashDeals: React.FC<FlashDealsProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="flex items-center gap-2 text-orange-600 uppercase text-xs tracking-widest">
         {loading ? (
-          <p className="col-span-4 text-center text-orange-700 font-bold">
-            Loading flash deals...
-          </p>
+          <h2 className="text-3xl text-gray-900 tracking-tight col-span-4 text-center text-orange-700 font-bold">
+            Loading...
+          </h2>
         ) : error ? (
           <p className="col-span-4 text-center text-orange-700 font-bold">
             {error}
           </p>
         ) : deals.length === 0 ? (
-          <p className="col-span-4 text-center text-orange-700 font-bold">
+          <span className="text-2xl text-gray-900 tabular-nums">
             No deals available right now.
-          </p>
+          </span>
         ) : (
           deals.map((item) => <ProductCard key={item.id} item={item} />)
         )}

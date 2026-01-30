@@ -7,7 +7,10 @@ type StoreInfoModalProps = {
   onClose: () => void;
 };
 
-const StoreInfoModal: React.FC<StoreInfoModalProps> = ({ infoModal, onClose }) => (
+const StoreInfoModal: React.FC<StoreInfoModalProps> = ({
+  infoModal,
+  onClose,
+}) => (
   <Modal
     isOpen={!!infoModal}
     onClose={onClose}
@@ -17,24 +20,28 @@ const StoreInfoModal: React.FC<StoreInfoModalProps> = ({ infoModal, onClose }) =
       {infoModal?.title === "Our Mission" ? (
         <>
           <p className="text-gray-500 text-base leading-relaxed">
-            Mami Supermarket's mission is to deliver a premium, high-fidelity grocery
-            experience rooted in transparency, sustainability, and human care.
+            Mami Supermarket's mission is to deliver a premium, high-fidelity
+            grocery experience rooted in transparency, sustainability, and human
+            care.
           </p>
           <p className="text-base text-gray-500 font-bold">
             We keep Israeli homes stocked by:
           </p>
           <ul className="text-sm text-gray-600 space-y-2">
             <li className="flex gap-2">
-              <span className="font-black text-[#008A45]">•</span>
-              Partnering with verified farms to source seasonal, traceable goods.
+              <span className="text-[#008A45]">•</span>
+              Partnering with verified farms to source seasonal, traceable
+              goods.
             </li>
             <li className="flex gap-2">
-              <span className="font-black text-[#008A45]">•</span>
-              Designing ops tooling so every picker, driver, and CSR can act fast with confidence.
+              <span className="text-[#008A45]">•</span>
+              Designing ops tooling so every picker, driver, and CSR can act
+              fast with confidence.
             </li>
             <li className="flex gap-2">
-              <span className="font-black text-[#008A45]">•</span>
-              Treating every customer interaction with empathy and measurable accountability.
+              <span className="text-[#008A45]">•</span>
+              Treating every customer interaction with empathy and measurable
+              accountability.
             </li>
           </ul>
         </>

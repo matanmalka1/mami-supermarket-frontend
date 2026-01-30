@@ -32,7 +32,7 @@ const StoreLayout: React.FC = () => {
               </p>
               <Link
                 to="/store/wishlist"
-                className="text-xs font-black uppercase tracking-[0.3em] text-[#008A45] border-b border-[#008A45]/0 hover:border-b hover:border-[#008A45] transition-all"
+                className="text-xs uppercase tracking-[0.3em] text-[#008A45] border-b border-[#008A45]/0 hover:border-b hover:border-[#008A45] transition-all"
               >
                 View wishlist
               </Link>
@@ -46,7 +46,10 @@ const StoreLayout: React.FC = () => {
           onStaticLink={handleStaticLink}
         />
       </div>
-      <StoreInfoModal infoModal={infoModal} onClose={() => setInfoModal(null)} />
+      <StoreInfoModal
+        infoModal={infoModal}
+        onClose={() => setInfoModal(null)}
+      />
     </BranchProvider>
   );
 };

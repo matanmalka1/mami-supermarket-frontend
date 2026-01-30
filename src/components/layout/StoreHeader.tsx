@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router";
 import {
@@ -18,13 +17,15 @@ import BranchSelector from "./store-header/BranchSelector";
 import PageWrapper from "../shared/PageWrapper";
 
 const StoreHeader: React.FC = () => {
-  const [activeMenu, setActiveMenu] = useState<"notif" | "account" | "dept" | null>(null);
+  const [activeMenu, setActiveMenu] = useState<
+    "notif" | "account" | "dept" | null
+  >(null);
   const { setIsOpen, items } = useCart();
   const { userRole, logout } = useAuth();
   const { categories, loading: categoriesLoading } = useCatalogCategories();
   const notifications: any[] = [];
 
-  const isActuallyAdmin = userRole === 'ADMIN';
+  const isActuallyAdmin = userRole === "ADMIN";
 
   return (
     <div className="flex flex-col sticky top-0 z-50">
@@ -35,15 +36,22 @@ const StoreHeader: React.FC = () => {
               <ShieldCheck size={16} className="text-teal-400" />
             </div>
             <p className="text-[10px] uppercase tracking-[0.2em]">
-              System Admin Session <span className="text-teal-400 ml-2 opacity-60">• Operational Override Active</span>
+              System Admin Session{" "}
+              <span className="text-teal-400 ml-2 opacity-60">
+                • Operational Override Active
+              </span>
             </p>
           </div>
-          <Link 
-            to="/" 
-            onClick={() => sessionStorage.removeItem('mami_manual_store_visit')}
+          <Link
+            to="/"
+            onClick={() => sessionStorage.removeItem("mami_manual_store_visit")}
             className="flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-[#003333] px-5 py-1.5 rounded-full text-[10px] uppercase tracking-widest transition-all shadow-xl group"
           >
-            Switch to Ops Portal <LayoutDashboard size={14} className="group-hover:rotate-12 transition-transform" />
+            Switch to Ops Portal{" "}
+            <LayoutDashboard
+              size={14}
+              className="group-hover:rotate-12 transition-transform"
+            />
           </Link>
         </div>
       )}
@@ -65,7 +73,9 @@ const StoreHeader: React.FC = () => {
             <nav className="hidden lg:flex items-center gap-1">
               <button
                 type="button"
-                onClick={() => setActiveMenu(activeMenu === "dept" ? null : "dept")}
+                onClick={() =>
+                  setActiveMenu(activeMenu === "dept" ? null : "dept")
+                }
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs uppercase tracking-widest transition-all `}
               >
                 <GridIcon size={16} /> Departments{" "}

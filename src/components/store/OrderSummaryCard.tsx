@@ -27,7 +27,7 @@ const OrderSummaryCard: React.FC<Props> = ({
         <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           Delivery Address
         </p>
-        <p className="font-bold text-sm text-gray-700">{addressLabel}</p>
+        <p className="text-sm text-gray-700">{addressLabel}</p>
       </div>
     </div>
 

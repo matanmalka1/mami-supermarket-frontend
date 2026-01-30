@@ -21,13 +21,10 @@ const getInitials = (text?: string) =>
 const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
   const { addItem } = useCart();
   const { toggleWishlist, isWishlisted } = useWishlist();
+  
   const isLiked = isWishlisted(item.id);
-  const availableQuantity =
-    typeof item.availableQuantity === "number"
-      ? Math.max(0, item.availableQuantity)
-      : undefined;
-  const isOutOfStock =
-    availableQuantity !== undefined ? availableQuantity <= 0 : false;
+  const availableQuantity = typeof item.availableQuantity === "number" ? Math.max(0, item.availableQuantity) : undefined;
+  const isOutOfStock = availableQuantity !== undefined ? availableQuantity <= 0 : false;
 
   const handleWishlistToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

@@ -50,7 +50,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
 
   const renderNavGroup = (title: string, items: any[]) => (
     <div className="space-y-2">
-      <p className="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+      <p className="px-4 text-[10px] text-gray-400 uppercase tracking-[0.2em]">
         {title}
       </p>
       <nav className="space-y-1">
@@ -92,7 +92,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
             <GripVertical size={24} />
           </div>
           <div>
-            <h1 className="font-black text-lg leading-tight tracking-tight text-gray-900 ">
+            <h1 className="text-lg leading-tight tracking-tight text-gray-900 ">
               Ops Portal
             </h1>
             <p className="text-[10px] text-gray-400 font-bold tracking-widest uppercase">
@@ -121,20 +121,20 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
             <p className="text-sm font-bold text-gray-900 truncate">
               Sarah Jenkins
             </p>
-            <p className="text-[10px] text-gray-400 font-black uppercase tracking-tight">
+            <p className="text-[10px] text-gray-400 uppercase tracking-tight">
               Admin Role
             </p>
           </div>
         </div>
         <button
           onClick={() => navigate("/admin/settings")}
-          className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
+          className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl text-[10px] uppercase tracking-widest hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
         >
           <Settings size={14} /> Account Settings
         </button>
         <button
           onClick={handleGoToStore}
-          className="w-full flex items-center justify-center gap-2 mt-4 text-[10px] text-[#006666] font-black uppercase tracking-[0.2em] hover:underline"
+          className="w-full flex items-center justify-center gap-2 mt-4 text-[10px] text-[#006666] uppercase tracking-[0.2em] hover:underline"
         >
           <Store size={14} /> Customer Hub
         </button>
