@@ -1,10 +1,12 @@
-import type { MoneyILS } from '@/types/api';
+type MoneyILS = number;
 
 export interface Category {
   id: number;
   name: string;
   icon?: string;
   description?: string;
+  iconSlug?: string;
+  icon_slug?: string;
 }
 
 export interface Product {

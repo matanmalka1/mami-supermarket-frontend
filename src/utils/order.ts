@@ -1,4 +1,4 @@
-import { OrderSuccessSnapshot } from "@/types/order-success";
+import { OrderSuccessSnapshot } from "@/domains/orders/types";
 
 const STORAGE_PREFIX = "mami_order_success";
 

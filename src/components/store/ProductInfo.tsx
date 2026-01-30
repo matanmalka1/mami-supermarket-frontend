@@ -3,7 +3,7 @@ import { Minus, Plus, ShoppingCart, Share2, Truck, ShieldCheck } from "lucide-re
 import Button from "../ui/Button";
 import { toast } from "react-hot-toast";
 import { useCart } from "../../context/CartContext";
-import { Product } from "../../types/domain";
+import { Product } from "@/domains/catalog/types";
 
 interface ProductInfoProps {
   product?: Product | null;

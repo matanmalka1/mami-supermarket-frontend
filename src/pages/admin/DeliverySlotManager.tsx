@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import DeliverySlotCard from "./DeliverySlotCard";
 import DeliverySlotEditor from "./DeliverySlotEditor";
@@ -13,7 +13,7 @@ const DeliverySlotManager: React.FC = () => {
   const [editingSlot, setEditingSlot] = useState<any | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<string>("");
   const [selectedDay, setSelectedDay] = useState<string>("");
-  const { slots, branches, loading, error, refreshSlots } = useDeliverySlots();
+  const { slots, setSlots, branches, loading, error, refreshSlots } = useDeliverySlots();
 
   const handleSave = async () => {
     await refreshSlots();

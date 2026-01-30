@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../ui/Button";
 import { CheckoutStep } from "./CheckoutStepper";
-import { DeliverySlotOption } from "@/types/branch";
+import { DeliverySlotOption } from "@/domains/branch/types";
 
 type Props = {
   slots: DeliverySlotOption[];

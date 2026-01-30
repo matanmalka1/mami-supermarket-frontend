@@ -69,14 +69,14 @@ const NewSkuForm: React.FC<NewSkuFormProps> = ({ isOpen, onSuccess }) => {
         name: trimmedName,
         sku: skuPreview,
         price,
-        category_id: Number(selectedCategory),
+        categoryId: Number(selectedCategory),
         description: description.trim() || undefined,
       });
       await adminService.createInventory({
-        product_id: product.id,
-        branch_id: Number(selectedBranch),
-        available_quantity: initialStock,
-        reserved_quantity: 0,
+        productId: product.id,
+        branchId: Number(selectedBranch),
+        availableQuantity: initialStock,
+        reservedQuantity: 0,
       });
       toast.success("SKU registered and stocked");
       onSuccess();

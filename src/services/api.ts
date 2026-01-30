@@ -1,12 +1,12 @@
 import { authService } from "@/domains/auth/service";
-import { opsService } from "./ops-service";
+import { opsService } from "@/domains/ops/service";
 import { adminService } from "@/domains/admin/service";
 import { catalogService } from "@/domains/catalog/service";
 import { checkoutService } from "@/domains/checkout/service";
 import { cartService } from "@/domains/cart/service";
 import { branchService } from "@/domains/branch/service";
 import { apiClient } from "./api-client";
-import { Order } from "../types/domain";
+import { Order } from "@/domains/orders/types";
 
 export const apiService = {
   auth: authService,

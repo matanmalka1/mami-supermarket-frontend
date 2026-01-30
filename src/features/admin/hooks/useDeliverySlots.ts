@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { adminService } from "@/domains/admin/service";
 import { branchService } from "@/domains/branch/service";
 import { extractArrayPayload } from "@/utils/api-response";
-import type { BranchResponse } from "@/types/branch";
+import type { BranchResponse } from "@/domains/branch/types";
 
 export const useDeliverySlots = () => {
   const [slots, setSlots] = useState<any[]>([]);
@@ -44,5 +44,5 @@ export const useDeliverySlots = () => {
     };
   }, []);
 
-  return { slots, branches, loading, error, refreshSlots: loadSlots };
+  return { slots, setSlots, branches, loading, error, refreshSlots: loadSlots };
 };

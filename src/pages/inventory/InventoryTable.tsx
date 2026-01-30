@@ -3,11 +3,11 @@ import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/Table";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { MoreVertical, Move, Archive, BarChart2 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { InventoryRow } from "@/domains/inventory/types";
 import {
+  InventoryRow,
   getAvailableQuantity,
   getReservedQuantity,
-} from "@/types/inventory";
+} from "@/domains/inventory/types";
 
 type InventoryTableProps = {
   rows: InventoryRow[];

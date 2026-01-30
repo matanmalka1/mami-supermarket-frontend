@@ -1,14 +1,13 @@
 import { Link } from "react-router";
 import EmptyState from "@/components/shared/EmptyState";
 import LoadingState from "@/components/shared/LoadingState";
-import ProductCard from "@/screens/Storefront/components/ProductCard";
+import ProductCard from "@/components/store/ProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
-
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { catalogService } from "@/domains/catalog/service";
-import { Product } from "@/types/domain";
-
+import { Product } from "@/domains/catalog/types";
+import type { WishlistItem } from "@/hooks/useWishlist";
 
 const useWishlistProducts = () => {
   const { items } = useWishlist();
@@ -57,8 +56,6 @@ const useWishlistProducts = () => {
     loading,
   };
 };
-
-import type { WishlistItem } from "@/hooks/useWishlist";
 
 const WishlistPage: React.FC = () => {
   const { items, updateWishlistItem } = useWishlist();

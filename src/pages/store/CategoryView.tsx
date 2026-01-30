@@ -8,11 +8,11 @@ import {
   Check,
   Box,
 } from "lucide-react";
-import ProductCard from "@/screens/Storefront/components/ProductCard";
+import ProductCard from "@/components/store/ProductCard";
 import ProductGrid from "@/components/store/ProductGrid";
 import FilterSection from "@/features/store/category/components/FilterSection";
 import useCategory from "@/features/store/category/useCategory";
-import { Product } from "@/types/domain";
+import { Product } from "@/domains/catalog/types";
 
 const CategoryView: React.FC = () => {
   const { id } = useParams();

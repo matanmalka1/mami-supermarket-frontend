@@ -4,13 +4,13 @@ const { patch } = vi.hoisted(() => ({
   patch: vi.fn(),
 }));
 
-vi.mock("./api-client", () => ({
+vi.mock("@/services/api-client", () => ({
   apiClient: {
     patch,
   },
 }));
 
-import { adminService } from "./admin-service";
+import { adminService } from "@/domains/admin/service";
 
 describe("adminService.updateStock", () => {
   it("sends snake_case quantities", async () => {

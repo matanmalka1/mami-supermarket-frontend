@@ -21,6 +21,23 @@ const ADMIN_ENDPOINTS = {
   audit: "/admin/audit",
 };
 
+const parseNumber = (value: any, fallback: number) =>
+  value === undefined || value === null || value === "" ? fallback : Number(value);
+
+const normalizeSettings = (payload: any): AdminSettings => ({
+  deliveryMin: parseNumber(payload.delivery_min ?? payload.deliveryMin, 150),
+  deliveryFee: parseNumber(payload.delivery_fee ?? payload.deliveryFee, 30),
+  slots: payload.slots ?? "06:00-22:00",
+});
+
+const buildSettingsPayload = (settings: Partial<AdminSettings>) => {
+  const payload: Record<string, any> = {};
+  if (settings.deliveryMin !== undefined) payload.delivery_min = settings.deliveryMin;
+  if (settings.deliveryFee !== undefined) payload.delivery_fee = settings.deliveryFee;
+  if (settings.slots !== undefined) payload.slots = settings.slots;
+  return payload;
+};
+
 export const adminService = {
   getInventory: () =>
     apiClient.get<AdminInventoryResponse[], AdminInventoryResponse[]>(
@@ -87,13 +104,15 @@ export const adminService = {
       ADMIN_ENDPOINTS.adminBulkStockRequests,
       { items },
     ),
-  getSettings: () =>
-    apiClient.get<AdminSettings, AdminSettings>(ADMIN_ENDPOINTS.settings),
-  updateSettings: (data: Partial<AdminSettings>) =>
-    apiClient.put<Partial<AdminSettings>, AdminSettings>(
-      ADMIN_ENDPOINTS.settings,
-      data,
-    ),
+  getSettings: async () => {
+    const data = await apiClient.get<any, any>(ADMIN_ENDPOINTS.settings);
+    return normalizeSettings(data);
+  },
+  updateSettings: async (data: Partial<AdminSettings>) => {
+    const payload = buildSettingsPayload(data);
+    const response = await apiClient.put<any, any>(ADMIN_ENDPOINTS.settings, payload);
+    return normalizeSettings(response);
+  },
   getRevenueAnalytics: () =>
     apiClient.get<any, any>(ADMIN_ENDPOINTS.analyticsRevenue),
   getDeliverySlots: () =>

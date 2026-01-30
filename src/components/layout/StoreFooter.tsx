@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Category } from "@/types/domain";
+import { Category } from "@/domains/catalog/types";
 import PageWrapper from "../shared/PageWrapper";
 
 type StoreFooterProps = {

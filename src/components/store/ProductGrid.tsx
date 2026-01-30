@@ -1,7 +1,7 @@
 import React, { type FC } from "react";
-import ProductCard from "@/screens/Storefront/components/ProductCard";
+import ProductCard from "@/components/store/ProductCard";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
-import type { Product } from "@/types/domain";
+import type { Product } from "@/domains/catalog/types";
 
 type ProductGridProps = {
   products: Product[];

@@ -4,7 +4,7 @@ import { ArrowLeft, Filter } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
 import ProductGrid from "@/components/store/ProductGrid";
 import SearchFiltersDrawer from "@/features/store/search/components/SearchFiltersDrawer";
-import { Product } from "@/types/domain";
+import { Product } from "@/domains/catalog/types";
 import useSearchResults from "@/features/store/search/useSearchResults";
 
 const SearchResults: React.FC = () => {

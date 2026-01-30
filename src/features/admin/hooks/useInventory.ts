@@ -3,8 +3,18 @@ import { toast } from "react-hot-toast";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
 import { adminService } from "@/domains/admin/service";
 import { InventoryRow } from "@/domains/inventory/types";
-import type { InventoryResponse } from "@/types/admin-service";
 import { extractArrayPayload } from "@/utils/api-response";
+
+type InventoryResponse = {
+  id: number;
+  branch_id: number;
+  branch_name: string;
+  product_id: number;
+  product_name: string;
+  available_quantity: number;
+  reserved_quantity: number;
+  productSku: string;
+};
 
 export const useInventory = () => {
   const toInventoryRow = (payload: InventoryResponse): InventoryRow => ({

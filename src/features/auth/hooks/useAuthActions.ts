@@ -5,7 +5,7 @@ import type {
   AuthRegisterRequest,
   AuthRegisterVerifyOtpRequest,
   AuthResetPasswordRequest,
-} from "@/types/auth-service";
+} from "@/domains/auth/types";
 
 type AuthPayload = {
   token: string;

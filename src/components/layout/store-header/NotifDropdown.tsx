@@ -1,6 +1,6 @@
 import { CheckCircle2 } from 'lucide-react';
-import useOpsAlerts from '@/hooks/useOpsAlerts';
-import { OpsAlert } from "@/types/ops";
+import { useOpsAlerts } from "@/features/ops/hooks/useOpsAlerts";
+import type { OpsAlert } from "@/domains/notifications/types";
 
 interface NotifDropdownProps {
   items?: OpsAlert[];

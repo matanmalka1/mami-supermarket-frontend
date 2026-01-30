@@ -8,6 +8,7 @@ import ScheduleStep from "@/components/checkout/ScheduleStep";
 import PaymentStep from "@/components/checkout/PaymentStep";
 import Button from "@/components/ui/Button";
 import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
+import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
 
 const Checkout: React.FC = () => {

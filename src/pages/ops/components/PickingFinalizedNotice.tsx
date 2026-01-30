@@ -1,16 +1,16 @@
 import React from "react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import { OrderStatus } from "@/types/domain";
+import { OrderStatus } from "@/domains/orders/types";
 
 const STATUS_COPY: Record<OrderStatus, string> = {
-  IN_PROGRESS: "In Progress",
-  PICKING: "Picking",
-  PENDING: "Pending",
-  RECEIVED: "Received",
-  DELAYED: "Delayed",
-  COMPLETED: "Completed",
-  CANCELLED: "Cancelled",
+  [OrderStatus.IN_PROGRESS]: "In Progress",
+  [OrderStatus.PICKING]: "Picking",
+  [OrderStatus.PENDING]: "Pending",
+  [OrderStatus.RECEIVED]: "Received",
+  [OrderStatus.DELAYED]: "Delayed",
+  [OrderStatus.COMPLETED]: "Completed",
+  [OrderStatus.CANCELLED]: "Cancelled",
 };
 
 interface Props {

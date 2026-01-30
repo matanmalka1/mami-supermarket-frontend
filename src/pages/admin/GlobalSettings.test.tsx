@@ -58,7 +58,7 @@ vi.mock("@/components/ui/ConfirmDialog", () => ({ default: () => null }));
 describe("GlobalSettings", () => {
   beforeEach(() => {
     mockUseGlobalSettings.mockReturnValue({
-      form: { delivery_min: 120, delivery_fee: 15, slots: "07:00-20:00" },
+      form: { deliveryMin: 120, deliveryFee: 15, slots: "07:00-20:00" },
       loading: false,
       handleChange: mockHandleChange,
       saveSettings: mockSaveSettings,
@@ -87,8 +87,8 @@ describe("GlobalSettings", () => {
     await waitFor(() => expect(mockSaveSettings).toHaveBeenCalled());
     expect(mockSaveSettings).toHaveBeenCalledTimes(1);
     expect(mockSaveSettings).toHaveBeenCalledWith({
-      delivery_min: 180,
-      delivery_fee: 25,
+      deliveryMin: 180,
+      deliveryFee: 25,
       slots: "08:00-22:00",
     });
   });

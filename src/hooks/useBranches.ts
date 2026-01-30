@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { branchService } from "@/domains/branch/service";
-import type { BranchResponse } from "@/types/branch";
+import type { BranchResponse } from "@/domains/branch/types";
 import { extractArrayPayload } from "@/utils/api-response";
 
 type BranchState = {

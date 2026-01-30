@@ -14,14 +14,32 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
 
 export type OrderUrgency = "critical" | "dueSoon" | "onTrack" | "scheduled";
 
+export type OrderProductInfo = {
+  id?: number | string;
+  name: string;
+  category?: string;
+  image?: string;
+};
+
+export type PickedStatus =
+  | "pending"
+  | "picked"
+  | "missing"
+  | "replaced"
+  | "PENDING"
+  | "PICKED"
+  | "MISSING"
+  | "REPLACED";
+
 export type OrderItem = {
   id: number | string;
   name: string;
   sku?: string;
   price: number;
   quantity: number;
-  pickedStatus?: "pending" | "picked" | "missing" | "replaced";
+  pickedStatus?: PickedStatus;
   imageUrl?: string;
+  product?: OrderProductInfo;
   unit?: string;
   replacementName?: string;
 };
@@ -33,15 +51,23 @@ export type OrderDeliverySlot = {
   date?: string;
 };
 
+export type OrderCustomer = {
+  id?: number | string;
+  fullName: string;
+  phone?: string;
+};
+
 export type Order = {
   id: number | string;
   orderNumber: string;
   customerName: string;
+  customer?: OrderCustomer;
   customerPhone?: string;
   status: OrderStatus;
   urgency: OrderUrgency;
   total: number;
   itemsCount: number;
+  itemsSummary?: string;
   items: OrderItem[];
   deliverySlot?: OrderDeliverySlot;
   createdAt: string;
@@ -53,6 +79,7 @@ export type OrderSuccessItem = {
   id: number | string;
   name: string;
   imageUrl?: string;
+  image?: string;
   unit?: string;
   price: number;
   quantity: number;

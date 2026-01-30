@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { apiService } from "../services/api";
-import { Order, OrderItem, OrderStatus } from "../types/domain";
+import { opsService } from "@/domains/ops/service";
+import {
+  Order,
+  OrderItem,
+  OrderStatus,
+} from "@/domains/orders/types";
 import { toast } from "react-hot-toast";
 
 const FINALIZED_STATUSES = new Set<OrderStatus>([
@@ -26,7 +30,7 @@ export const usePicking = (orderId?: string) => {
       return;
     }
     try {
-      const data = await apiService.ops.getOrder(parsedOrderId);
+      const data = await opsService.getOrder(parsedOrderId);
       setOrder(data);
       setItems(data.items || []);
     } catch (err: any) {
@@ -69,7 +73,7 @@ export const usePicking = (orderId?: string) => {
       if (Number.isNaN(parsedOrderId)) {
         throw new Error("Invalid order identifier");
       }
-      const updated = await apiService.ops.updateItemStatus(
+      const updated = await opsService.updateItemStatus(
         parsedOrderId,
         itemId,
         {

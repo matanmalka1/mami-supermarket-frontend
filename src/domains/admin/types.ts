@@ -20,6 +20,9 @@ export type AdminProduct = {
   binLocation?: string;
   description?: string;
   unit?: string;
+  category_id?: number | string;
+  image_url?: string;
+  categoryId?: number | string;
 };
 
 export type AdminStockRequestStatus = "PENDING" | "APPROVED" | "REJECTED";

@@ -10,7 +10,7 @@ import {
   AuthRegisterOtpRequest,
   AuthRegisterVerifyOtpRequest,
   AuthRegisterOtpResponse,
-} from "@/types/auth-service";
+} from "@/domains/auth/types";
 
 export const authService = {
   login: async (cred: AuthLoginRequest): Promise<AuthLoginResponse> => {

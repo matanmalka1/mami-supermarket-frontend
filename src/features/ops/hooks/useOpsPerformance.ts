@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { opsService } from "@/domains/ops/service";
-import type { OpsPerformanceMetrics } from "@/types/ops";
+import type { OpsPerformanceMetrics } from "@/domains/ops/types";
 
 export const useOpsPerformance = () => {
   const [metrics, setMetrics] = useState<OpsPerformanceMetrics | null>(null);

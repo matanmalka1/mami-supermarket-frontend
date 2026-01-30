@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { usePicking } from "@/hooks/usePicking";
+import { usePicking } from "@/features/ops/hooks/usePicking";
 import { useWeightScale } from "@/hooks/useWeightScale";
 import { useParams, useNavigate } from "react-router";
 import Button from "@/components/ui/Button";

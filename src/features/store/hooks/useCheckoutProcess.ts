@@ -2,7 +2,10 @@ import { useCallback, useState } from "react";
 import { useCheckoutFlow } from "@/features/store/hooks/useCheckoutFlow";
 import { checkoutService } from "@/domains/checkout/service";
 import { useCart } from "@/context/CartContext";
-import type { OrderSuccessSnapshot } from "@/types/order-success";
+import type {
+  OrderSuccessSnapshot,
+  OrderSuccessFulfillment,
+} from "@/domains/orders/types";
 
 export const useCheckoutProcess = () => {
   const {
@@ -73,7 +76,7 @@ export const useCheckoutProcess = () => {
         orderNumber: String(
           data?.order_number || data?.orderNumber || resolvedOrderId,
         ),
-        fulfillmentType: method,
+        fulfillmentType: method.toLowerCase() as OrderSuccessFulfillment,
         items: items.map((item) => ({
           id: item.id,
           name: item.name,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ShieldCheck, Truck, RefreshCcw } from "lucide-react";
-import { Product } from "@/types/domain";
+import { Product } from "@/domains/catalog/types";
 
 const ProductTabs: React.FC<{ product?: Product | null }> = ({ product }) => {
   const [activeTab, setActiveTab] = useState("Specifications");

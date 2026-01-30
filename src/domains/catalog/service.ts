@@ -1,6 +1,6 @@
 import { apiClient } from "@/services/api-client";
 import type { Category, Product } from "./types";
-import type { Pagination } from "@/types/api";
+import type { Pagination } from "@/domains/pagination/types";
 
 // --- DTO Types ---
 export interface CategoryDTO {

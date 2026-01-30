@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { catalogService } from "@/domains/catalog/service";
-import { Product } from "@/types/domain";
+import { Product } from "@/domains/catalog/types";
 import { useWishlist } from "@/hooks/useWishlist";
 
 import type { WishlistItem } from "@/hooks/useWishlist";

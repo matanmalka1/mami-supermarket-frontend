@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Save, Coins } from "lucide-react";
 import Button from "@/components/ui/Button";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -71,13 +71,13 @@ const GlobalSettings: React.FC = () => {
           <div className="space-y-4">
             <SettingsField
               label="Delivery Minimum (₪)"
-              value={form.delivery_min}
-              onChange={(v) => handleChange("delivery_min", v)}
+              value={form.deliveryMin}
+              onChange={(v) => handleChange("deliveryMin", v)}
             />
             <SettingsField
               label="Delivery Fee Under Min (₪)"
-              value={form.delivery_fee}
-              onChange={(v) => handleChange("delivery_fee", v)}
+              value={form.deliveryFee}
+              onChange={(v) => handleChange("deliveryFee", v)}
             />
             <SettingsField
               label="Slots Window"

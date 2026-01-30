@@ -1,5 +1,5 @@
 import React from "react";
-import { OrderSuccessSnapshot } from "@/types/order-success";
+import { OrderSuccessSnapshot } from "@/domains/orders/types";
 import { currencyILS } from "@/utils/format";
 
 type Props = {

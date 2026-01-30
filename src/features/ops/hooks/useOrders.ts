@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { opsService } from "@/domains/ops/service";
-import { Order } from "@/types/domain";
+import type { Order } from "@/domains/orders/types";
 import { useAsyncResource } from "@/hooks/useAsyncResource";
 
 type RawOrder = Order & { orderId?: number };

@@ -1,7 +1,7 @@
 import { User, Clock, Printer } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
-import { Order } from '@/types/domain';
+import { Order } from '@/domains/orders/types';
 import { formatOrderLabel } from '@/utils/orderLabel';
 
 interface PickingHeaderProps {

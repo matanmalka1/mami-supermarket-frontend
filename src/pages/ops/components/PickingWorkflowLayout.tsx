@@ -8,7 +8,7 @@ import PickingGuidanceCard from "@/pages/ops/components/PickingGuidanceCard";
 import PickingItemsTable from "@/pages/ops/components/PickingItemsTable";
 import PickingScaleModal from "@/pages/ops/components/PickingScaleModal";
 import PickingProgressPanel from "@/pages/ops/components/PickingProgressPanel";
-import { Order, OrderItem } from "@/types/domain";
+import { Order, OrderItem } from "@/domains/orders/types";
 
 interface Props {
   order: Order;

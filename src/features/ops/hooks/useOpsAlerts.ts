@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { apiService } from "@/services/api";
-import { OpsAlert } from "@/types/ops";
+import { opsService } from "@/domains/ops/service";
+import type { OpsAlert } from "@/domains/notifications/types";
 
-const useOpsAlerts = (initialAlerts?: OpsAlert[]) => {
+export const useOpsAlerts = (initialAlerts?: OpsAlert[]) => {
   const [alerts, setAlerts] = useState<OpsAlert[]>(initialAlerts ?? []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ const useOpsAlerts = (initialAlerts?: OpsAlert[]) => {
       setLoading(true);
       setError(null);
       try {
-        const data = await apiService.ops.getAlerts();
+        const data = await opsService.getAlerts();
         if (!isMounted) return;
         setAlerts(Array.isArray(data) ? data : []);
       } catch (err: any) {
@@ -33,5 +33,3 @@ const useOpsAlerts = (initialAlerts?: OpsAlert[]) => {
 
   return { alerts, loading, error } as const;
 };
-
-export default useOpsAlerts;

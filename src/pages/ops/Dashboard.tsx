@@ -8,13 +8,14 @@ import OrderTable from "@/features/ops/components/OrderTable";
 import { useOrders } from "@/features/ops/hooks/useOrders";
 import { useOpsBatchActions } from "@/features/ops/hooks/useOpsBatchActions";
 import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
+import { OrderStatus } from "@/domains/orders/types";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
-  const pendingCount = orders.filter((o) => o.status === "PENDING").length;
-  const expressDue = orders.filter((o) => o.urgency === "CRITICAL").length;
-  const urgentOrders = useMemo(() => orders.filter((o) => o.urgency === "CRITICAL"), [orders]);
+  const pendingCount = orders.filter((o) => o.status === OrderStatus.PENDING).length;
+  const expressDue = orders.filter((o) => o.urgency === "critical").length;
+  const urgentOrders = useMemo(() => orders.filter((o) => o.urgency === "critical"), [orders]);
   const { metrics: performance, loading: perfLoading, error: perfError, refresh: refreshPerf } =
     useOpsPerformance();
   const { createBatch } = useOpsBatchActions();

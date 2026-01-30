@@ -1,12 +1,14 @@
 import { apiClient } from "@/services/api-client";
-import { Order, OrderItem } from "@/types/domain";
-import { StockRequest } from "@/types/ops";
+import type { Order, OrderItem } from "@/domains/orders/types";
+import type {
+  StockRequest,
+  StockRequestCreate,
+} from "@/domains/stock-requests/types";
 import type {
   UpdateItemStatusRequest,
   UpdateOrderStatusRequest,
   GetOrdersParams,
 } from "@/domains/ops/types";
-import type { CreateStockRequest } from "@/domains/stock-requests/types";
 import type { OpsAlert } from "@/domains/notifications/types";
 
 export const opsService = {
@@ -46,8 +48,8 @@ export const opsService = {
   getStockRequests: () =>
     apiClient.get<StockRequest[], StockRequest[]>("/ops/stock-requests"),
 
-  createStockRequest: (data: CreateStockRequest) =>
-    apiClient.post<CreateStockRequest, StockRequest>(
+  createStockRequest: (data: StockRequestCreate) =>
+    apiClient.post<StockRequestCreate, StockRequest>(
       "/ops/stock-requests",
       data,
     ),

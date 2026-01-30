@@ -14,7 +14,7 @@ type Props = {
   onConfirm: (paymentTokenId: number) => void;
   onCreatePaymentToken?: (
     cardDetails: any,
-  ) => Promise<{ payment_token_id: number }>;
+  ) => Promise<{ paymentTokenId: number }>;
   cartItems?: CartItem[];
 };
 
@@ -72,7 +72,7 @@ export const PaymentStep: React.FC<Props> = ({
           expiry,
           cvv,
         });
-        paymentTokenId = result.payment_token_id;
+        paymentTokenId = result.paymentTokenId;
       }
       onConfirm(paymentTokenId);
     } catch (e: any) {

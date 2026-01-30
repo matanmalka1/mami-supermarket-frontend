@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC, type ReactNode } from "react";
 import { apiService } from "@/services/api";
-import { BranchResponse } from "@/types/branch";
+import { BranchResponse } from "@/domains/branch/types";
 import { BranchContext, STORAGE_KEY } from "./branch-context-core";
 
 export const BranchProvider: FC<{ children: ReactNode }> = ({ children }) => {

@@ -4,7 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import OrderSummaryCard from "@/components/store/OrderSummaryCard";
 import OrderProgressTimeline from "@/components/store/OrderProgressTimeline";
-import { OrderSuccessSnapshot } from "@/types/order-success";
+import { OrderSuccessSnapshot } from "@/domains/orders/types";
 import { useAddresses } from "@/features/store/hooks/useAddresses";
 import { loadOrderSnapshot } from "@/utils/order";
 
@@ -50,7 +50,7 @@ const OrderSuccess: React.FC = () => {
   const estimatedDelivery =
     snapshot?.estimatedDelivery || "Delivery window will be confirmed shortly.";
   const fulfillmentLabel =
-    snapshot?.fulfillmentType === "PICKUP" ? "Pickup" : "Delivery";
+    snapshot?.fulfillmentType === "pickup" ? "Pickup" : "Delivery";
   const addressLabel =
     preferredAddress ||
     "Delivery address will be confirmed once your courier is en route.";

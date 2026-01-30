@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useBranchSelection } from "@/context/branch-context-core";
-import { DeliverySlotOption, DeliverySlotResponse } from "@/types/branch";
+import {
+  DeliverySlotOption,
+  DeliverySlotResponse,
+} from "@/domains/branch/types";
 import { cartService } from "@/domains/cart/service";
 import { checkoutService } from "@/domains/checkout/service";
 import { branchService } from "@/domains/branch/service";
@@ -34,7 +37,7 @@ const buildUniqueSlotOptions = (
 type Method = "DELIVERY" | "PICKUP";
 
 type BranchSlotsClient = {
-  listSlots: (params: { branchId: string }) => Promise<DeliverySlotResponse[]>;
+  listSlots: (params: { branchId: string | number }) => Promise<DeliverySlotResponse[]>;
 };
 
 const branchSlotsService = branchService as BranchSlotsClient;

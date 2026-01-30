@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle2, Clock, Loader2 } from 'lucide-react';
-import { OrderItem } from '@/types/domain';
+import { OrderItem } from '@/domains/orders/types';
 
 interface Props {
   items: OrderItem[];

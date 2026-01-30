@@ -96,11 +96,11 @@ const StaffPerformance: React.FC = () => {
           </div>
           <Button
             variant="emerald"
-            onClick={fetchMetrics}
+            onClick={refresh}
             disabled={loading}
             className="uppercase text-[10px] tracking-[0.3em]"
           >
-            {loading ? 'Refreshing...' : 'Sync Now'}
+            {loading ? "Refreshing..." : "Sync Now"}
           </Button>
         </div>
 

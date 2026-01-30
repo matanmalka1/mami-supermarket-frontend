@@ -52,9 +52,13 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
       if (!token)
         return toast.error("No token returned from backend", { id: "auth" });
 
-      onLogin({ token, role, remember: data.rememberMe });
+      const validRoles: UserRole[] = ["ADMIN", "MANAGER", "EMPLOYEE", "CUSTOMER"];
+      const normalizedRole =
+        role && validRoles.includes(role as UserRole) ? (role as UserRole) : null;
 
-      if (role === "ADMIN") {
+      onLogin({ token, role: normalizedRole, remember: data.rememberMe });
+
+      if (normalizedRole === "ADMIN") {
         toast.success("Administrator access granted. Entering Ops Portal...", {
           id: "auth",
           icon: <ShieldCheck className="text-teal-600" />,

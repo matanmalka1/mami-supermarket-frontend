@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { vi } from "vitest";
 import Checkout from "./Checkout";
-import type { OrderSuccessSnapshot } from "@/types/order-success";
+import type { OrderSuccessSnapshot } from "@/domains/orders/types";
 
 const {
   mockUseCheckoutProcess,
@@ -54,7 +54,7 @@ describe("Checkout", () => {
   const snapshot = {
     orderId: "order-9",
     orderNumber: "order-9",
-    fulfillmentType: "DELIVERY",
+    fulfillmentType: "delivery",
     items: [
       { id: 1, name: "A", image: "", unit: "", price: 10, quantity: 1 },
     ],

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Bell, Settings2, AlertTriangle, Info } from 'lucide-react';
 import SearchInput from '../ui/SearchInput';
 import { Link } from 'react-router';
-import useOpsAlerts from '@/hooks/useOpsAlerts';
-import { OpsAlert } from "@/types/ops";
+import { useOpsAlerts } from "@/features/ops/hooks/useOpsAlerts";
+import type { OpsAlert } from "@/domains/notifications/types";
 
 const OpsHeader: React.FC = () => {
   const [showNotifs, setShowNotifs] = useState(false);

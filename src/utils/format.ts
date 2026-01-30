@@ -1,4 +1,5 @@
-import { MoneyILS, ISODateTime } from '../types/api';
+type MoneyILS = number;
+type ISODateTime = string;
 
 /**
  * Formats a number as ILS currency (₪)

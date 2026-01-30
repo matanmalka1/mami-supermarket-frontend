@@ -1,4 +1,4 @@
-import { Order } from "@/types/domain";
+import type { Order } from "@/domains/orders/types";
 
 export const formatOrderLabel = (order: Order) => {
   if (order.orderNumber) return `#${order.orderNumber}`;
