@@ -1,122 +1,12 @@
-import { apiClient } from "@/services/api-client";
 import type { Category, Product } from "./types";
 import type { Pagination } from "@/domains/pagination/types";
-
-// --- DTO Types ---
-export interface CategoryDTO {
-  id: number;
-  name: string;
-  icon_slug?: string | null;
-  description?: string | null;
-  is_active?: boolean;
-}
-
-export interface ProductDTO {
-  id: number;
-  name: string;
-  sku: string;
-  price: number;
-  oldPrice?: number | null;
-  unit?: string | null;
-  nutritionalInfo?: Record<string, unknown> | null;
-  isOrganic?: boolean;
-  binLocation?: string | null;
-  imageUrl?: string | null;
-  description?: string | null;
-  categoryId: number;
-  isActive: boolean;
-  inStockAnywhere: boolean;
-  inStockForBranch?: boolean | null;
-  availableQuantity?: number | null;
-}
-
-export interface PaginationDTO {
-  total: number;
-  limit: number;
-  offset: number;
-  has_next?: boolean;
-}
-
-// --- Mapping Functions ---
-
-const mapCategory = (dto: CategoryDTO): Category => ({
-  id: dto.id,
-  name: dto.name,
-  icon: dto.icon_slug ?? undefined,
-  description: dto.description ?? undefined,
-});
-
-const mapProduct = (dto: ProductDTO): Product => ({
-  id: dto.id,
-  name: dto.name,
-  sku: dto.sku,
-  category: String(dto.categoryId),
-  price: dto.price,
-  oldPrice: dto.oldPrice ?? undefined,
-  availableQuantity:
-    typeof dto.availableQuantity === "number"
-      ? Math.max(0, dto.availableQuantity)
-      : dto.inStockAnywhere
-      ? 1
-      : 0,
-  reservedQuantity: 0,
-  status: dto.isActive ? "active" : "inactive",
-  imageUrl: dto.imageUrl ?? "",
-  binLocation: dto.binLocation ?? undefined,
-  description: dto.description ?? undefined,
-  unit: dto.unit ?? undefined,
-});
-
-const catalogPrefix = "/catalog";
-
-const buildCategoryResponse = async (params?: {
-  limit?: number;
-  offset?: number;
-}) => {
-  const { limit = 50, offset = 0 } = params || {};
-  const data = await apiClient.get<CategoryDTO[]>(
-    `${catalogPrefix}/categories`,
-    {
-      params: { limit, offset },
-    },
-  );
-  const items = Array.isArray(data) ? data.map(mapCategory) : [];
-  const effectiveTotal = offset + items.length;
-  const hasNext = items.length === limit;
-  return {
-    items,
-    pagination: { total: effectiveTotal, limit, offset, hasNext },
-  };
-};
-
-const buildProductPagination = (
-  data: ProductDTO[] | undefined,
-  limit: number,
-  offset: number,
-): { items: Product[]; pagination: Pagination } => {
-  const items = Array.isArray(data) ? data.map(mapProduct) : [];
-  const effectiveTotal = offset + items.length;
-  const hasNext = items.length === limit;
-  return {
-    items,
-    pagination: { total: effectiveTotal, limit, offset, hasNext },
-  };
-};
-
-const buildFeaturedResponse = async (params?: {
-  branchId?: number;
-  limit?: number;
-}) => {
-  const { branchId, limit = 10 } = params || {};
-  const data = await apiClient.get<ProductDTO[]>(
-    `${catalogPrefix}/products/featured`,
-    {
-      params: { branchId, limit },
-    },
-  );
-  const items = Array.isArray(data) ? data.map(mapProduct) : [];
-  return items;
-};
+import type { CategoryDTO, ProductDTO } from "./service-dto";
+import { mapCategory, mapProduct } from "./service-mappers";
+import {
+  buildCategoryResponse,
+  buildProductPagination,
+  buildFeaturedResponse,
+} from "./service-helpers";
 
 export const catalogService = {
   /**
