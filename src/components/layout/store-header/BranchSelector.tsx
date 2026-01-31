@@ -24,7 +24,6 @@ const BranchSelector: FC = () => {
   }, [open]);
 
   const label = selectedBranch?.name || "Select branch";
-  const subtitle = selectedBranch?.address;
 
   return (
     <div ref={containerRef} className="relative">
@@ -39,11 +38,6 @@ const BranchSelector: FC = () => {
             Deliver from
           </span>
           <span className="text-[11px] font-bold text-gray-900">{label}</span>
-          {subtitle && (
-            <span className="text-[9px] font-medium text-gray-500 block">
-              {subtitle}
-            </span>
-          )}
         </div>
         <ChevronDown
           size={14}
