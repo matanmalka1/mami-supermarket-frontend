@@ -12,29 +12,15 @@ import ProductCard, { CardProduct } from "@/components/store/ProductCard";
 import ProductGrid from "@/components/store/ProductGrid";
 import ProductListItem from "@/components/store/ProductListItem";
 import ProductListItemSkeleton from "@/components/store/ProductListItemSkeleton";
-import FilterSection from "@/features/store/category/components/FilterSection";
+import SidebarFilters from "./SidebarFilters";
+import PaginationControls from "./PaginationControls";
 import useCategory from "@/features/store/category/useCategory";
 import { Product } from "@/domains/catalog/types";
 
 // Pagination state
-const PAGE_SIZE = 12;
 
-const toCardProduct = (product: Product): CardProduct => ({
-  id: product.id,
-  name: product.name,
-  category: product.category,
-  price: product.price,
-  tag: product.status,
-  image: product.imageUrl,
-  oldPrice: product.oldPrice,
-  unit: product.unit,
-  description: product.description,
-  availableQuantity: product.availableQuantity,
-});
-
-const CategoryView: React.FC = () => {
-  const { id } = useParams();
-  const categoryId = id ? Number(id) : undefined;
+function CategoryView() {
+  const { categoryParam } = useParams();
   const {
     categoryLabel,
     products,
@@ -44,222 +30,140 @@ const CategoryView: React.FC = () => {
     preferences,
     togglePreference,
     handlePriceSelection,
-  } = useCategory({ categoryId, categoryParam: id });
+  } = useCategory({ categoryParam });
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
-  
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const pageSize = 12;
+  const totalPages = Math.ceil(filteredProducts.length / pageSize);
   const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
   );
+
+  // Convert product to card format if needed
+  const toCardProduct = (product: Product): CardProduct => ({
+    ...product,
+    // Add/transform fields as needed for ProductCard
+  });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 mb-8">
-        <Link to="/store" className="hover:text-[#008A45]">
-          Home
-        </Link>
-        <ChevronRight size={12} />
-        <span className="text-[#008A45]">Categories</span>
-        <ChevronRight size={12} />
-        <span className="text-gray-900 capitalize">{categoryLabel}</span>
-      </div>
-
-      <div className="grid grid-cols-12 gap-12">
-        {/* Sidebar Filters */}
-        <aside className="col-span-12 lg:col-span-3 space-y-10">
-          <div className="space-y-6">
-            <h3 className="text-xl flex items-center gap-3">
-              <SlidersHorizontal size={20} className="text-[#008A45]" /> Filter
-              Results
-            </h3>
-            <div className="space-y-4">
-              <FilterSection title="Price Range">
-                <div className="space-y-3">
-                  {["Under ₪20", "₪20 - ₪50", "Over ₪50"].map((p) => (
-                    <label
-                      key={p}
-                      className="flex items-center gap-3 cursor-pointer group"
-                    >
-                      <div
-                        onClick={() => handlePriceSelection(p)}
-                        className={`w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center ${selectedPrice === p ? "border-[#008A45] bg-emerald-50 text-[#008A45]" : "border-gray-200 group-hover:border-[#008A45]"}`}
-                      >
-                        {selectedPrice === p && (
-                          <Check size={12} strokeWidth={4} />
-                        )}
-                      </div>
-                      <span
-                        className={`text-sm font-bold transition-colors ${selectedPrice === p ? "text-gray-900" : "text-gray-500 group-hover:text-gray-900"}`}
-                      >
-                        {p}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </FilterSection>
-              <FilterSection title="Preferences">
-                <div className="space-y-3">
-                  {["Organic", "On Sale", "Gluten Free"].map((p) => (
-                    <label
-                      key={p}
-                      className="flex items-center gap-3 cursor-pointer group"
-                    >
-                      <div
-                        onClick={() => togglePreference(p)}
-                        className={`w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center ${preferences.includes(p) ? "border-[#008A45] bg-emerald-50 text-[#008A45]" : "border-gray-200 group-hover:border-[#008A45]"}`}
-                      >
-                        {preferences.includes(p) && (
-                          <Check size={12} strokeWidth={4} />
-                        )}
-                      </div>
-                      <span
-                        className={`text-sm font-bold transition-colors ${preferences.includes(p) ? "text-gray-900" : "text-gray-500 group-hover:text-gray-900"}`}
-                      >
-                        {p}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </FilterSection>
-            </div>
+    <div className="grid grid-cols-12 gap-8">
+      {/* Sidebar Filters */}
+      <aside className="col-span-12 lg:col-span-3">
+        <SidebarFilters
+          selectedPrice={selectedPrice}
+          preferences={preferences}
+          handlePriceSelection={handlePriceSelection}
+          togglePreference={togglePreference}
+        />
+      </aside>
+      {/* Product Grid */}
+      <main className="col-span-12 lg:col-span-9 space-y-8">
+        <div className="flex items-center justify-between border-b pb-6">
+          <div className="flex items-baseline gap-4">
+            <h1 className="text-4xl text-gray-900 capitalize">
+              {categoryLabel}
+            </h1>
+            {!loading && (
+              <span className="text-xs text-gray-300 uppercase tracking-widest">
+                {products.length} Items Found
+              </span>
+            )}
           </div>
-        </aside>
-
-        {/* Product Grid */}
-        <main className="col-span-12 lg:col-span-9 space-y-8">
-          <div className="flex items-center justify-between border-b pb-6">
-            <div className="flex items-baseline gap-4">
-              <h1 className="text-4xl text-gray-900 capitalize">
-                {categoryLabel}
-              </h1>
-              {!loading && (
-                <span className="text-xs text-gray-300 uppercase tracking-widest">
-                  {products.length} Items Found
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                aria-pressed={viewMode === "grid"}
-                onClick={() => setViewMode("grid")}
-                className={`p-3 rounded-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                  viewMode === "grid"
-                    ? "bg-white border border-gray-100 text-[#008A45] shadow-sm"
-                    : "bg-gray-50 border border-transparent text-gray-400 hover:border-gray-200 hover:text-gray-600"
-                }`}
-              >
-                <LayoutGrid size={20} />
-              </button>
-              <button
-                type="button"
-                aria-pressed={viewMode === "list"}
-                onClick={() => setViewMode("list")}
-                className={`p-3 rounded-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                  viewMode === "list"
-                    ? "bg-white border border-gray-100 text-[#008A45] shadow-sm"
-                    : "bg-gray-50 border border-transparent text-gray-400 hover:border-gray-200 hover:text-gray-600"
-                }`}
-              >
-                <List size={20} />
-              </button>
-            </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-pressed={viewMode === "grid"}
+              onClick={() => setViewMode("grid")}
+              className={`p-3 rounded-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                viewMode === "grid"
+                  ? "bg-white border border-gray-100 text-[#008A45] shadow-sm"
+                  : "bg-gray-50 border border-transparent text-gray-400 hover:border-gray-200 hover:text-gray-600"
+              }`}
+            >
+              <LayoutGrid size={20} />
+            </button>
+            <button
+              type="button"
+              aria-pressed={viewMode === "list"}
+              onClick={() => setViewMode("list")}
+              className={`p-3 rounded-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                viewMode === "list"
+                  ? "bg-white border border-gray-100 text-[#008A45] shadow-sm"
+                  : "bg-gray-50 border border-transparent text-gray-400 hover:border-gray-200 hover:text-gray-600"
+              }`}
+            >
+              <List size={20} />
+            </button>
           </div>
+        </div>
 
-          {viewMode === "list" && loading ? (
+        {viewMode === "list" && loading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <ProductListItemSkeleton key={`list-skeleton-${index}`} />
+            ))}
+          </div>
+        ) : viewMode === "list" ? (
+          <>
             <div className="space-y-4">
-              {Array.from({ length: 4 }).map((_, index) => (
-                <ProductListItemSkeleton key={`list-skeleton-${index}`} />
+              {paginatedProducts.map((product) => (
+                <ProductListItem
+                  key={product.id}
+                  item={toCardProduct(product)}
+                />
               ))}
             </div>
-          ) : viewMode === "list" ? (
-            <>
-              <div className="space-y-4">
-                {paginatedProducts.map((product) => (
-                  <ProductListItem
-                    key={product.id}
-                    item={toCardProduct(product)}
-                  />
-                ))}
-              </div>
-              {/* Pagination Controls for List View */}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-4 mt-8">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-base font-medium text-gray-700 px-2">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              <ProductGrid
-                loading={loading}
-                products={paginatedProducts}
-                gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in duration-700"
-                renderItem={(item: Product) => (
-                  <ProductCard item={toCardProduct(item)} />
-                )}
+            {/* Pagination Controls for List View */}
+            {totalPages > 1 && (
+              <PaginationControls
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPrev={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                onNext={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
               />
-              {/* Pagination Controls for Grid View */}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-4 mt-8">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-base font-medium text-gray-700 px-2">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    Next
-                  </button>
-                </div>
+            )}
+          </>
+        ) : (
+          <>
+            <ProductGrid
+              loading={loading}
+              products={paginatedProducts}
+              gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in duration-700"
+              renderItem={(item: Product) => (
+                <ProductCard item={toCardProduct(item)} />
               )}
-            </>
-          )}
-          {!loading && filteredProducts.length === 0 && (
-            <div className="py-20 text-center space-y-4">
-              <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mx-auto">
-                <Box size={32} />
-              </div>
-              <p className="text-gray-300 uppercase tracking-widest">
-                Aisle Empty in this Department
-              </p>
+            />
+            {/* Pagination Controls for Grid View */}
+            {totalPages > 1 && (
+              <PaginationControls
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPrev={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                onNext={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+              />
+            )}
+          </>
+        )}
+        {!loading && filteredProducts.length === 0 && (
+          <div className="py-20 text-center space-y-4">
+            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-200 mx-auto">
+              <Box size={32} />
             </div>
-          )}
-        </main>
-      </div>
+            <p className="text-gray-300 uppercase tracking-widest">
+              Aisle Empty in this Department
+            </p>
+          </div>
+        )}
+      </main>
     </div>
   );
-};
+}
 
 export default CategoryView;
