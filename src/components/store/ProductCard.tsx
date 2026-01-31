@@ -68,11 +68,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
             {initials(item.name)}
           </div>
         )}
-        {item.tag && (
-          <span className="absolute top-4 left-4 bg-[#008A45] text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest">
-            {item.tag}
-          </span>
-        )}
         <button
           onClick={toggleWishlistHandler}
           className={`absolute top-4 right-4 w-10 h-10 backdrop-blur rounded-full flex items-center justify-center transition-all shadow-md z-10 ${

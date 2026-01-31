@@ -23,7 +23,9 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
   const { toggleWishlist, isWishlisted } = useWishlist();
 
   const isLiked = isWishlisted(item.id);
-  const availableQuantity = typeof item.availableQuantity === "number" ? Math.max(0, item.availableQuantity) : undefined;
+  const availableQuantity = typeof item.availableQuantity === "number"
+      ? Math.max(0, item.availableQuantity)
+      : undefined;
   const isOutOfStock = availableQuantity !== undefined ? availableQuantity <= 0 : false;
 
   const handleWishlistToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,11 +62,6 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
             <div className="flex h-full w-full items-center justify-center text-3xl text-gray-300">
               {getInitials(item.name)}
             </div>
-          )}
-          {item.tag && (
-            <span className="absolute left-4 top-4 rounded-full bg-[#008A45] px-3 py-1 text-[10px] uppercase tracking-[0.4em] text-white">
-              {item.tag}
-            </span>
           )}
         </div>
         <div className="flex-1 space-y-3">

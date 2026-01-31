@@ -16,6 +16,9 @@ import FilterSection from "@/features/store/category/components/FilterSection";
 import useCategory from "@/features/store/category/useCategory";
 import { Product } from "@/domains/catalog/types";
 
+// Pagination state
+const PAGE_SIZE = 12;
+
 const toCardProduct = (product: Product): CardProduct => ({
   id: product.id,
   name: product.name,
@@ -42,7 +45,15 @@ const CategoryView: React.FC = () => {
     togglePreference,
     handlePriceSelection,
   } = useCategory({ categoryId, categoryParam: id });
+
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
+  
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
@@ -165,23 +176,75 @@ const CategoryView: React.FC = () => {
               ))}
             </div>
           ) : viewMode === "list" ? (
-            <div className="space-y-4">
-              {filteredProducts.map((product) => (
-                <ProductListItem
-                  key={product.id}
-                  item={toCardProduct(product)}
-                />
-              ))}
-            </div>
-          ) : (
-            <ProductGrid
-              loading={loading}
-              products={filteredProducts}
-              gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in duration-700"
-              renderItem={(item: Product) => (
-                <ProductCard item={toCardProduct(item)} />
+            <>
+              <div className="space-y-4">
+                {paginatedProducts.map((product) => (
+                  <ProductListItem
+                    key={product.id}
+                    item={toCardProduct(product)}
+                  />
+                ))}
+              </div>
+              {/* Pagination Controls for List View */}
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-8">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-base font-medium text-gray-700 px-2">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
               )}
-            />
+            </>
+          ) : (
+            <>
+              <ProductGrid
+                loading={loading}
+                products={paginatedProducts}
+                gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in duration-700"
+                renderItem={(item: Product) => (
+                  <ProductCard item={toCardProduct(item)} />
+                )}
+              />
+              {/* Pagination Controls for Grid View */}
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-8">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-base font-medium text-gray-700 px-2">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 font-semibold shadow-sm hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           )}
           {!loading && filteredProducts.length === 0 && (
             <div className="py-20 text-center space-y-4">
