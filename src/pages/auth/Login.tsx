@@ -5,7 +5,7 @@ import { ShieldCheck } from "lucide-react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
+import { useLogin } from "@/features/auth/hooks/useLogin";
 import { loginSchema, LoginInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
 import LoginHero from "./LoginHero";
@@ -22,7 +22,7 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
 }) => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const { loginUser } = useAuthActions();
+  const { handleLogin } = useLogin();
 
   const {
     register,
@@ -38,44 +38,20 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
   });
 
   const onSubmit = async (data: LoginInput) => {
-    toast.loading("Authenticating secure session...", {
-      id: "auth",
-    });
-    
-    try {
-      // Backend only accepts email/password; strip rememberMe before sending
-      const { token, role } = await loginUser({
-        email: data.email,
-        password: data.password,
+    const normalizedRole = await handleLogin(data, onLogin);
+    if (normalizedRole === "ADMIN") {
+      toast.success("Administrator access granted. Entering Ops Portal...", {
+        id: "auth",
+        icon: <ShieldCheck className="text-teal-600" />,
+        duration: 3000,
       });
-
-      if (!token)
-        return toast.error("No token returned from backend", { id: "auth" });
-
-      const validRoles: UserRole[] = ["ADMIN", "MANAGER", "EMPLOYEE", "CUSTOMER"];
-      const normalizedRole =
-        role && validRoles.includes(role as UserRole) ? (role as UserRole) : null;
-
-      onLogin({ token, role: normalizedRole, remember: data.rememberMe });
-
-      if (normalizedRole === "ADMIN") {
-        toast.success("Administrator access granted. Entering Ops Portal...", {
-          id: "auth",
-          icon: <ShieldCheck className="text-teal-600" />,
-          duration: 3000,
-        });
-        window.location.hash = "#/";
-        window.location.reload();
-      } else {
-        toast.success(`Welcome back! Discover fresh deals today.`, {
-          id: "auth",
-        });
-        navigate("/store");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Credential verification failed", {
+      window.location.hash = "#/";
+      window.location.reload();
+    } else if (normalizedRole) {
+      toast.success(`Welcome back! Discover fresh deals today.`, {
         id: "auth",
       });
+      navigate("/store");
     }
   };
 

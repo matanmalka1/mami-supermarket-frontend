@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingBag } from "lucide-react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { Link, useNavigate } from "react-router";
 import RegistrationBenefits from "@/components/auth/RegistrationBenefits";
 import RegistrationForm from "@/features/auth/components/RegistrationForm";
-import { toast } from "react-hot-toast";
-import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { registerSchema, RegisterInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
+import { useRegister } from "@/features/auth/hooks/useRegister";
 
 type RegisterPayload = {
   token: string;
@@ -22,11 +20,16 @@ const Register: React.FC<{
 }> = ({ onRegister }) => {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
-  const [step, setStep] = useState<"INFO" | "OTP">("INFO");
   const [otp, setOtp] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { sendRegisterOtp, verifyRegisterOtp, registerUser, loginUser } =
-    useAuthActions();
+  const {
+    loading,
+    step,
+    setStep,
+    handleSendOtp,
+    verifyRegisterOtp,
+    registerUser,
+    loginUser,
+  } = useRegister();
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -40,31 +43,15 @@ const Register: React.FC<{
     },
   });
 
-  const handleSendOtp = async (data: RegisterInput) => {
-    const { email } = data;
-    toast.loading("Sending OTP code...", { id: "reg" });
-    setLoading(true);
-    try {
-      await sendRegisterOtp(email);
-      toast.success("OTP sent to your inbox", { id: "reg" });
-      setStep("OTP");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to send OTP", { id: "reg" });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // handleSendOtp is now from useRegister
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp.length !== 4) return toast.error("Enter a valid 4-digit code");
-    toast.loading("Creating account...", { id: "reg" });
-    setLoading(true);
+    if (otp.length !== 4) return;
+    const data = form.getValues();
     try {
-      const data = form.getValues();
       await verifyRegisterOtp({ email: data.email, code: otp });
       const fullName = `${data.firstName} ${data.lastName}`.trim();
-      // Backend only accepts email, password, full_name (+optional role)
       await registerUser({
         email: data.email,
         password: data.password,
@@ -74,19 +61,15 @@ const Register: React.FC<{
         email: data.email,
         password: data.password,
       });
-      if (!token)
-        return toast.error("No token returned from backend", { id: "reg" });
-      toast.success("Welcome aboard!", { id: "reg" });
+      if (!token) return;
       onRegister({
         token,
         role: role as UserRole | undefined,
         remember: false,
       });
       navigate("/store");
-    } catch (err: any) {
-      toast.error(err.message || "Registration failed", { id: "reg" });
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      // Error handling is already in hooks
     }
   };
 

@@ -15,7 +15,7 @@ type ResetFormProps = {
   onTokenChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
   onConfirmPasswordChange: (value: string) => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const ResetForm: React.FC<ResetFormProps> = ({

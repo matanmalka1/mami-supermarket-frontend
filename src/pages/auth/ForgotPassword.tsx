@@ -1,13 +1,11 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Mail, ShieldCheck } from "lucide-react";
+import { Mail } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { toast } from "react-hot-toast";
 import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
-import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
+import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword";
 
 type Stage = "REQUEST" | "RESET" | "DONE";
 
@@ -16,42 +14,20 @@ const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [stage, setStage] = useState<Stage>("REQUEST");
-  const [loading, setLoading] = useState(false);
-  const { requestPasswordReset, resetPassword } = useAuthActions();
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { loading, stage, setStage, handleRequest, handleReset } =
+    useForgotPassword();
 
-  const handleRequest = async (e: React.FormEvent) => {
+
+  const onRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const resp: any = await requestPasswordReset(email);
-      const devToken = resp?.reset_token;
-      if (devToken) setToken(devToken);
-      toast.success("Reset link sent to your email");
-      setStage("RESET");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to send reset link");
-    } finally {
-      setLoading(false);
-    }
+    handleRequest(email, setToken);
   };
 
-  const handleReset = async (e: React.FormEvent) => {
+
+  const onReset = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      await resetPassword({
-        email,
-        token,
-        new_password: newPassword,
-      });
-      toast.success("Password updated", { icon: <ShieldCheck size={16} /> });
-      setStage("DONE");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to reset password");
-    } finally {
-      setLoading(false);
-    }
+    handleReset(email, token, newPassword, () => setStage("DONE"));
   };
 
   return (
@@ -67,7 +43,7 @@ const ForgotPassword: React.FC = () => {
         ) : (
           <>
             {stage === "REQUEST" ? (
-              <form onSubmit={handleRequest} className="space-y-6">
+              <form onSubmit={onRequest} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700">
                     Email Address
@@ -99,16 +75,19 @@ const ForgotPassword: React.FC = () => {
                   email={email}
                   token={token}
                   newPassword={newPassword}
+                  confirmPassword={confirmPassword}
                   loading={loading}
                   showError={false}
                   onEmailChange={setEmail}
                   onTokenChange={setToken}
                   onNewPasswordChange={setNewPassword}
-                  onSubmit={handleReset}
+                  onConfirmPasswordChange={setConfirmPassword}
+                  onSubmit={onReset}
                 />
                 {!token && (
                   <p className="text-xs text-gray-400 font-bold text-center">
-                    In production, check your email for the token. In dev, the token is returned in the response.
+                    In production, check your email for the token. In dev, the
+                    token is returned in the response.
                   </p>
                 )}
               </>

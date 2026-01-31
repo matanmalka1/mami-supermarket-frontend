@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
-import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
+import { useResetPassword } from "@/features/auth/hooks/useResetPassword";
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -17,37 +17,16 @@ const ResetPassword: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const navigate = useNavigate();
-  const { resetPassword } = useAuthActions();
+  const { loading, done, error, setError, handleReset } = useResetPassword();
 
   useEffect(() => {
     const qpToken = searchParams.get("token") || "";
     if (qpToken) setToken(qpToken);
   }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      const message = "New password and confirmation do not match";
-      setError(message);
-      toast.error(message);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      await resetPassword({
-        email,
-        token,
-        new_password: newPassword,
-      });
-      toast.success("Password updated", { icon: <ShieldCheck size={16} /> });
-      setDone(true);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to reset password");
-      setError(err.message || "Failed to reset password");
-    } finally {
-      setLoading(false);
-    }
+    handleReset(email, token, newPassword, confirmPassword);
   };
 
   return (
@@ -61,19 +40,19 @@ const ResetPassword: React.FC = () => {
         {done ? (
           <ForgotPasswordDone onNavigate={() => navigate("/login")} />
         ) : (
-        <ResetForm
-          email={email}
-          token={token}
-          newPassword={newPassword}
-          confirmPassword={confirmPassword}
-          loading={loading}
-          error={error}
-          onEmailChange={setEmail}
-          onTokenChange={setToken}
-          onNewPasswordChange={setNewPassword}
-          onConfirmPasswordChange={setConfirmPassword}
-          onSubmit={handleSubmit}
-        />
+          <ResetForm
+            email={email}
+            token={token}
+            newPassword={newPassword}
+            confirmPassword={confirmPassword}
+            loading={loading}
+            error={error}
+            onEmailChange={setEmail}
+            onTokenChange={setToken}
+            onNewPasswordChange={setNewPassword}
+            onConfirmPasswordChange={setConfirmPassword}
+            onSubmit={handleSubmit}
+          />
         )}
       </div>
     </div>
