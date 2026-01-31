@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Mail } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -6,25 +5,29 @@ import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
 import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword";
+import { usePasswordFormState } from "@/features/auth/hooks/usePasswordFormState";
 
 type Stage = "REQUEST" | "RESET" | "DONE";
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const {
+    email,
+    token,
+    newPassword,
+    confirmPassword,
+    setEmail,
+    setToken,
+    setNewPassword,
+    setConfirmPassword,
+  } = usePasswordFormState();
   const { loading, stage, setStage, handleRequest, handleReset } =
     useForgotPassword();
-
 
   const onRequest = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleRequest(email, setToken);
   };
-
-
   const onReset = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleReset(email, token, newPassword, () => setStage("DONE"));

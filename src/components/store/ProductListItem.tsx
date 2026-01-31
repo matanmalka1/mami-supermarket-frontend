@@ -3,8 +3,8 @@ import { toast } from "react-hot-toast";
 import { Link } from "react-router";
 import { useCart } from "@/context/cart-context";
 import { useWishlist } from "@/hooks/useWishlist";
-import { currencyILS } from "@/utils/format";
 import type { CardProduct } from "./ProductCard";
+import ProductPricing from "./ProductPricing";
 
 type ProductListItemProps = {
   item: CardProduct;
@@ -77,16 +77,12 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
           {item.description && (
             <p className="text-sm text-gray-500">{item.description}</p>
           )}
-          <div className="flex items-baseline gap-4">
-            <div className="text-2xl font-black text-[#008A45]">
-              {currencyILS(item.price)}
-            </div>
-            {item.oldPrice && item.oldPrice > 0 && (
-              <span className="text-sm text-gray-400 line-through">
-                {currencyILS(item.oldPrice)}
-              </span>
-            )}
-          </div>
+          <ProductPricing
+            price={item.price}
+            oldPrice={item.oldPrice}
+            containerClassName="flex items-baseline gap-4"
+            priceClassName="text-2xl font-black text-[#008A45]"
+          />
           {availableQuantity !== undefined && (
             <p
               className={`text-[10px] uppercase tracking-[0.4em] ${

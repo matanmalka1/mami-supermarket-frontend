@@ -89,6 +89,20 @@ const buildCategoryResponse = async (params?: {
   };
 };
 
+const buildProductPagination = (
+  data: ProductDTO[] | undefined,
+  limit: number,
+  offset: number,
+): { items: Product[]; pagination: Pagination } => {
+  const items = Array.isArray(data) ? data.map(mapProduct) : [];
+  const effectiveTotal = offset + items.length;
+  const hasNext = items.length === limit;
+  return {
+    items,
+    pagination: { total: effectiveTotal, limit, offset, hasNext },
+  };
+};
+
 const buildFeaturedResponse = async (params?: {
   branchId?: number;
   limit?: number;
@@ -135,13 +149,7 @@ export const catalogService = {
         params: { branchId, limit, offset },
       },
     );
-    const items = Array.isArray(data) ? data.map(mapProduct) : [];
-    const effectiveTotal = offset + items.length;
-    const hasNext = items.length === limit;
-    return {
-      items,
-      pagination: { total: effectiveTotal, limit, offset, hasNext },
-    };
+    return buildProductPagination(data, limit, offset);
   },
 
   /**
@@ -179,13 +187,7 @@ export const catalogService = {
         params: { q, limit, offset, minPrice, maxPrice, sort },
       },
     );
-    const items = Array.isArray(data) ? data.map(mapProduct) : [];
-    const effectiveTotal = offset + items.length;
-    const hasNext = items.length === limit;
-    return {
-      items,
-      pagination: { total: effectiveTotal, limit, offset, hasNext },
-    };
+    return buildProductPagination(data, limit, offset);
   },
   async getProducts(params?: {
     categoryId?: number;

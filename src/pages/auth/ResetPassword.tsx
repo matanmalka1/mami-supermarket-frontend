@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { ShieldCheck } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
+import { usePasswordFormState } from "@/features/auth/hooks/usePasswordFormState";
 import { useResetPassword } from "@/features/auth/hooks/useResetPassword";
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const {
+    email,
+    token,
+    newPassword,
+    confirmPassword,
+    setEmail,
+    setToken,
+    setNewPassword,
+    setConfirmPassword,
+  } = usePasswordFormState();
   // loading, error, and done are provided by useResetPassword
   const navigate = useNavigate();
   const { loading, done, error, setError, handleReset } = useResetPassword();

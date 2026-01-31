@@ -2,8 +2,8 @@ import { useCart } from "@/context/cart-context";
 import { ShoppingCart, Heart } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router";
-import { currencyILS } from "../../utils/format";
 import { useWishlist } from "@/hooks/useWishlist";
+import ProductPricing from "./ProductPricing";
 
 export type CardProduct = {
   id: number;
@@ -115,16 +115,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
         <h4 className="font-bold text-lg leading-tight truncate">
           {item.name}
         </h4>
-        <div className="flex items-baseline gap-3">
-          <div className="text-xl text-[#008A45]">
-            {currencyILS(item.price)}
-          </div>
-          {item.oldPrice && item.oldPrice > 0 && (
-            <span className="text-sm text-gray-400 line-through">
-              {currencyILS(item.oldPrice)}
-            </span>
-          )}
-        </div>
+        <ProductPricing price={item.price} oldPrice={item.oldPrice} />
       </div>
     </Link>
   );
