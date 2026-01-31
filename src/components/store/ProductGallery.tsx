@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
-import { Heart, Maximize2 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { Maximize2 } from "lucide-react";
+import WishlistButton from "./WishlistButton";
+import GalleryImage from "./GalleryImage";
+import GalleryThumbnails from "./GalleryThumbnails";
 import { useWishlist } from "@/hooks/useWishlist";
 
 interface ProductGalleryProps {
@@ -33,23 +35,8 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   const [activeIdx, setActiveIdx] = useState(0);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
   const [isZooming, setIsZooming] = useState(false);
-  const { toggleWishlist, isWishlisted } = useWishlist();
+  const { isWishlisted } = useWishlist();
   const isLiked = Boolean(productId !== undefined && isWishlisted(productId));
-
-  const handleWishlistToggle = () => {
-    if (productId === undefined) {
-      toast("Wishlist is not available for this product", {
-        icon: "⚠️",
-        style: { borderRadius: "1rem", fontWeight: "bold" },
-      });
-      return;
-    }
-    toggleWishlist(productId);
-    toast(isLiked ? "Removed from wishlist" : "Added to wishlist", {
-      icon: isLiked ? "🟣" : "🧡",
-      style: { borderRadius: "1rem", fontWeight: "bold" },
-    });
-  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
@@ -98,14 +85,11 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
         onTouchEnd={handleTouchEnd}
       >
         {hasImages ? (
-          <img
+          <GalleryImage
             src={displayImages[activeIdx]}
-            className="w-full h-full object-contain p-12 transition-transform duration-200 ease-out pointer-events-none"
-            alt="Product Detail"
-            style={{
-              transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-              transform: isZooming ? "scale(2.5)" : "scale(1)",
-            }}
+            alt={name}
+            isZooming={isZooming}
+            zoomPos={zoomPos}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-5xl text-gray-300">
@@ -167,16 +151,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
 
         {/* Overlay Controls */}
         <div className="absolute top-6 right-6 flex flex-col gap-3 z-10">
-          <button
-            onClick={handleWishlistToggle}
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md transition-all ${
-              isLiked
-                ? "bg-red-500 text-white"
-                : "bg-white/90 text-gray-400 hover:text-red-500"
-            }`}
-          >
-            <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
-          </button>
+          <WishlistButton productId={productId} isLiked={isLiked} />
           <button className="w-12 h-12 rounded-2xl bg-white/90 backdrop-blur-md flex items-center justify-center text-gray-400 hover:text-emerald-600 shadow-lg transition-all">
             <Maximize2 size={20} />
           </button>
@@ -193,25 +168,11 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
       </div>
 
       {hasImages && (
-        <div className="grid grid-cols-4 gap-4">
-          {displayImages.map((img, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveIdx(i)}
-              className={`aspect-square rounded-2xl bg-[#F9F9F9] overflow-hidden border-2 transition-all group ${
-                activeIdx === i
-                  ? "border-emerald-500 shadow-lg scale-[0.98]"
-                  : "border-transparent hover:border-gray-200"
-              } p-1`}
-            >
-              <img
-                src={img}
-                className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-110"
-                alt={`Thumbnail ${i + 1}`}
-              />
-            </button>
-          ))}
-        </div>
+        <GalleryThumbnails
+          images={displayImages}
+          activeIdx={activeIdx}
+          setActiveIdx={setActiveIdx}
+        />
       )}
     </div>
   );
