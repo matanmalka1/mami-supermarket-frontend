@@ -12,8 +12,7 @@ const RoleGuard: React.FC<RoleGuardProps> = ({
   userRole,
   children,
 }) => {
-  const effectiveRole =
-    userRole || (localStorage.getItem("mami_role") as UserRole | null);
+  const effectiveRole = userRole;
   if (!effectiveRole) return <Navigate to="/login" replace />;
   if (!allowedRoles.includes(effectiveRole))
     return <Navigate to="/403" replace />;

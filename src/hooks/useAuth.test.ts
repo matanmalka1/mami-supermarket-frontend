@@ -15,7 +15,6 @@ describe("useAuth", () => {
 
   it("should initialize as authenticated if token exists", () => {
     localStorage.setItem("mami_token", "token");
-    localStorage.setItem("mami_role", "admin");
     const { result } = renderHook(() => useAuth());
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.userRole).toBe("ADMIN");
@@ -28,7 +27,6 @@ describe("useAuth", () => {
     });
     expect(sessionStorage.getItem("mami_token")).toBe("abc.def.ghi");
     expect(localStorage.getItem("mami_token")).toBeNull();
-    expect(localStorage.getItem("mami_role")).toBe("CUSTOMER");
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.userRole).toBe("CUSTOMER");
   });
@@ -43,14 +41,12 @@ describe("useAuth", () => {
       });
     });
     expect(localStorage.getItem("mami_token")).toBe("abc.def.ghi");
-    expect(localStorage.getItem("mami_role")).toBe("ADMIN");
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.userRole).toBe("ADMIN");
   });
 
   it("should logout and clear tokens", () => {
     localStorage.setItem("mami_token", "token");
-    localStorage.setItem("mami_role", "admin");
     sessionStorage.setItem("mami_token", "token");
     sessionStorage.setItem("mami_manual_store_visit", "1");
     const { result } = renderHook(() => useAuth());
@@ -58,7 +54,6 @@ describe("useAuth", () => {
       result.current.logout();
     });
     expect(localStorage.getItem("mami_token")).toBeNull();
-    expect(localStorage.getItem("mami_role")).toBeNull();
     expect(sessionStorage.getItem("mami_token")).toBeNull();
     expect(sessionStorage.getItem("mami_manual_store_visit")).toBeNull();
     expect(result.current.isAuthenticated).toBe(false);

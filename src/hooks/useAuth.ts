@@ -29,20 +29,12 @@ export const useAuth = () => {
       ),
   );
 
-  const [userRole, setUserRole] = useState<UserRole | null>(
-    () => normalizeRole(localStorage.getItem("mami_role")) || null,
-  );
+  const [userRole, setUserRole] = useState<UserRole | null>(() => null);
 
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
       const resolvedRole = normalizeRole(role) || readRoleFromToken(token);
-      if (resolvedRole) {
-        localStorage.setItem("mami_role", resolvedRole);
-        setUserRole(resolvedRole);
-      } else {
-        localStorage.removeItem("mami_role");
-        setUserRole(null);
-      }
+      setUserRole(resolvedRole);
       sessionStorage.setItem("mami_token", token);
       if (remember) localStorage.setItem("mami_token", token);
       else localStorage.removeItem("mami_token");
@@ -53,7 +45,6 @@ export const useAuth = () => {
 
   const logout = useCallback(() => {
     localStorage.removeItem("mami_token");
-    localStorage.removeItem("mami_role");
     sessionStorage.removeItem("mami_token");
     sessionStorage.removeItem("mami_manual_store_visit");
     setIsAuthenticated(false);

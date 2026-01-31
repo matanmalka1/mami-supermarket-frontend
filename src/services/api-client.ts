@@ -132,7 +132,6 @@ apiClient.interceptors.response.use(
     }
     if (error.response?.status === 401) {
       localStorage.removeItem("mami_token");
-      localStorage.removeItem("mami_role");
       sessionStorage.removeItem("mami_token");
       window.location.hash = "#/login";
     }

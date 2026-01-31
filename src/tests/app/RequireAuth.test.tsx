@@ -16,7 +16,6 @@ describe("RequireAuth + RoleGuard", () => {
 
   it("redirects to store when role mismatch on admin route", async () => {
     localStorage.setItem("mami_token", "a.b.c");
-    localStorage.setItem("mami_role", "CUSTOMER");
 
     render(
       <MemoryRouter initialEntries={["/admin"]}>

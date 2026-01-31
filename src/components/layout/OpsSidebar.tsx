@@ -42,8 +42,7 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const effectiveRole =
-    userRole || normalizeRole(localStorage.getItem("mami_role"));
+  const effectiveRole = userRole;
   if (!isOpsRole(effectiveRole)) return null;
 
   const showManagementLinks = effectiveRole === "ADMIN";
