@@ -21,7 +21,23 @@
     },
     "types": ["vitest/globals"]
   },
-  "include": ["src", "**/*.d.ts"],
+  "include": [
+    "src",
+    "**/*.d.ts",
+    "tests/services/admin-updateStock.test.ts",
+    "tests/services/api-client.test.ts",
+    "tests/app",
+    "tests/context",
+    "tests/pages/admin",
+    "tests/pages/auth",
+    "tests/pages/store",
+    "tests/render.ts",
+    "tests/setup.ts",
+    "tests/hooks/useAsyncResource.test.ts",
+    "tests/hooks/useAuth.test.ts",
+    "tests/hooks/useCatalog.test.ts",
+    "tests/hooks/useCheckoutFlow.test.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",

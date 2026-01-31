@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useAsyncResource } from "./useAsyncResource";
+import { useAsyncResource } from "../../src/hooks/useAsyncResource";
 import { toast } from "react-hot-toast";
 
 vi.mock("react-hot-toast");

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CartProvider } from "../../context/CartContext";
-import { useCart } from "../../context/cart-context";
+import { CartProvider } from "../../src/context/CartContext";
+import { useCart } from "../../src/context/cart-context";
 import { vi } from "vitest";
 
 const { mockToast } = vi.hoisted(() => ({
@@ -67,7 +67,9 @@ describe("CartContext", () => {
   });
 
   it("rehydrates from localStorage on mount", async () => {
-    const snapshot = [{ id: "p2", name: "Banana", price: 2, image: "", quantity: 4 }];
+    const snapshot = [
+      { id: "p2", name: "Banana", price: 2, image: "", quantity: 4 },
+    ];
     localStorage.setItem("mami_cart", JSON.stringify(snapshot));
 
     const { unmount } = render(

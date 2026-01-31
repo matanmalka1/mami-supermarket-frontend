@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apiClient, AppError } from "./api-client";
+import { apiClient, AppError } from "../../src/services/api-client";
 
 const getReject = () => {
   const handlers = (apiClient.interceptors.response as any).handlers || [];

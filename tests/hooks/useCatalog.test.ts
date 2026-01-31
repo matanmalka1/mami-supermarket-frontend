@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { useCatalog } from "./useCatalog";
+import { useCatalog } from "../../src/features/store/hooks/useCatalog";
 import { catalogService } from "@/domains/catalog/service";
 import * as productsUtils from "@/utils/products";
 

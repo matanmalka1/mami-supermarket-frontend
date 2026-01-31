@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useCheckoutFlow } from "./useCheckoutFlow";
+import { useCheckoutFlow } from "../../src/features/store/hooks/useCheckoutFlow";
 import { useAuth } from "@/hooks/useAuth";
 import { useBranchSelection } from "@/context/branch-context-core";
 import { cartService } from "@/domains/cart/service";
@@ -16,7 +16,9 @@ describe("useCheckoutFlow", () => {
     (useBranchSelection as any).mockReturnValue({ selectedBranch: { id: 1 } });
     vi.spyOn(cartService, "get").mockResolvedValue({ id: 123 } as any);
     (branchService as any).listSlots = vi.fn().mockResolvedValue([]);
-    vi.spyOn(checkoutService, "preview").mockResolvedValue({ total: 100 } as any);
+    vi.spyOn(checkoutService, "preview").mockResolvedValue({
+      total: 100,
+    } as any);
   });
 
   it("should initialize with default values", () => {
