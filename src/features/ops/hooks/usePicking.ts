@@ -8,8 +8,11 @@ import {
 import { toast } from "react-hot-toast";
 
 const FINALIZED_STATUSES = new Set<OrderStatus>([
-  // Removed invalid statuses: DELIVERED, OUT_FOR_DELIVERY, and corrected CANCELED to CANCELLED if needed
-  OrderStatus.CANCELLED,
+  OrderStatus.CANCELED,
+  OrderStatus.READY,
+  OrderStatus.OUT_FOR_DELIVERY,
+  OrderStatus.DELIVERED,
+  OrderStatus.MISSING,
 ]);
 
 export const usePicking = (orderId?: string) => {

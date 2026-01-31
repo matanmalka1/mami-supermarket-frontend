@@ -2,18 +2,15 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
-import GlobalSettings from "./GlobalSettings";
+import GlobalSettings from "@/pages/admin/GlobalSettings";
 
 const mockToast = { success: vi.fn(), error: vi.fn() };
-const {
-  mockUseGlobalSettings,
-  mockHandleChange,
-  mockSaveSettings,
-} = vi.hoisted(() => ({
-  mockUseGlobalSettings: vi.fn(),
-  mockHandleChange: vi.fn(),
-  mockSaveSettings: vi.fn(),
-}));
+const { mockUseGlobalSettings, mockHandleChange, mockSaveSettings } =
+  vi.hoisted(() => ({
+    mockUseGlobalSettings: vi.fn(),
+    mockHandleChange: vi.fn(),
+    mockSaveSettings: vi.fn(),
+  }));
 
 vi.mock("react-hot-toast", () => ({ toast: mockToast }));
 
@@ -31,7 +28,7 @@ vi.mock("@/components/ui/Button", () => ({
   }) => <button onClick={onClick}>{children}</button>,
 }));
 
-vi.mock("./SettingsField", () => ({
+vi.mock("@/pages/admin/SettingsField", () => ({
   default: ({
     label,
     value,
@@ -52,7 +49,7 @@ vi.mock("./SettingsField", () => ({
   ),
 }));
 
-vi.mock("./DangerZone", () => ({ default: () => null }));
+vi.mock("@/pages/admin/DangerZone", () => ({ default: () => null }));
 vi.mock("@/components/ui/ConfirmDialog", () => ({ default: () => null }));
 
 describe("GlobalSettings", () => {

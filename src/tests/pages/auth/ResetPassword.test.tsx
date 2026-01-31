@@ -1,9 +1,9 @@
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ResetPassword from "./ResetPassword";
-import renderWithRouter from "@/test/render";
-import { mockResetPassword } from "./testUtils";
+import ResetPassword from "@/pages/auth/ResetPassword";
+import renderWithRouter from "../../render";
+import { mockResetPassword } from "@/pages/auth/testUtils";
 
 describe("ResetPassword", () => {
   beforeEach(() => {

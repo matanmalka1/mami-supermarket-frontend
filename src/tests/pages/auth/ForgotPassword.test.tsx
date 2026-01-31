@@ -1,12 +1,11 @@
-import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ForgotPassword from "./ForgotPassword";
-import renderWithRouter from "@/test/render";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import renderWithRouter from "../../render";
 import {
   mockRequestPasswordReset,
   mockResetPassword,
-} from "./testUtils";
+} from "@/pages/auth/testUtils";
 
 describe("ForgotPassword", () => {
   beforeEach(() => {

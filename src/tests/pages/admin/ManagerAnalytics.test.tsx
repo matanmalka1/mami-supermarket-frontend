@@ -1,8 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
-import ManagerAnalytics from "./ManagerAnalytics";
-import renderWithRouter from "@/test/render";
+import ManagerAnalytics from "@/pages/admin/ManagerAnalytics";
+import renderWithRouter from "../../render";
 
 const { mockUseManagerAnalytics } = vi.hoisted(() => ({
   mockUseManagerAnalytics: vi.fn(),

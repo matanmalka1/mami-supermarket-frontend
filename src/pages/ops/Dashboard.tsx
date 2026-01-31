@@ -1,20 +1,20 @@
-import React, { useEffect, useMemo } from "react";
-import { useNavigate } from "react-router";
+import React, { useCallback, useEffect, useMemo } from "react";
 import DashboardHero from "@/components/ops/DashboardHero";
 import LoadingState from "@/components/shared/LoadingState";
-import { toast } from "react-hot-toast";
 import OrderTable from "@/features/ops/components/OrderTable";
+import {
+  type OpsOrderStatus,
+} from "@/features/ops/components/OrderStatusSelect";
+import { toast } from "react-hot-toast";
+import { opsService } from "@/domains/ops/service";
 import { useOrders } from "@/features/ops/hooks/useOrders";
-import { useOpsBatchActions } from "@/features/ops/hooks/useOpsBatchActions";
 import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
 import { OrderStatus } from "@/domains/orders/types";
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
-  const pendingCount = orders.filter(
-    (o) => o.status === OrderStatus.PENDING,
-  ).length;
+  const pendingCount = orders.filter((o) => o.status === OrderStatus.CREATED)
+    .length;
   const expressDue = orders.filter((o) => o.urgency === "critical").length;
   const urgentOrders = useMemo(
     () => orders.filter((o) => o.urgency === "critical"),
@@ -26,21 +26,21 @@ const Dashboard: React.FC = () => {
     error: perfError,
     refresh: refreshPerf,
   } = useOpsPerformance();
-  const { createBatch } = useOpsBatchActions();
-
-  const startBatch = async () => {
-    if (selectedIds.length < 2)
-      return toast.error("Select at least 2 orders for a batch");
-    toast.loading("Submitting batch for picking...", { id: "batch" });
-    try {
-      await createBatch(selectedIds);
-      toast.success("Batch created", { id: "batch" });
-      navigate(`/picking/batch-${selectedIds.join("-")}`);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to create batch", { id: "batch" });
-    }
-  };
-
+  const handleStatusChange = useCallback(
+    async (orderId: number, status: OpsOrderStatus) => {
+      try {
+        await opsService.updateOrderStatus(orderId, { status });
+        toast.success("Order status updated.", { id: `order-status-${orderId}` });
+        refresh();
+      } catch (err: any) {
+        toast.error(
+          err?.message || "Failed to update the order status.",
+          { id: `order-status-${orderId}` },
+        );
+      }
+    },
+    [refresh],
+  );
   useEffect(() => {
     refreshPerf();
   }, [refreshPerf]);
@@ -65,9 +65,6 @@ const Dashboard: React.FC = () => {
         ordersCount={orders.length}
         pendingCount={pendingCount}
         expressDue={expressDue}
-        selectedCount={selectedIds.length}
-        onStartBatch={startBatch}
-        onViewBoard={() => navigate("/picking")}
         metricSubtitle={metricSubtitle}
         batchEfficiency={formatMetricValue(performance?.batchEfficiency)}
         livePickers={formatMetricValue(performance?.livePickers)}
@@ -102,6 +99,7 @@ const Dashboard: React.FC = () => {
           orders={orders}
           selectedIds={selectedIds}
           onToggleSelect={toggleSelect}
+          onStatusChange={handleStatusChange}
         />
       </div>
     </div>

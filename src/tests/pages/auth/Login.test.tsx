@@ -1,9 +1,9 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
-import Login from "./Login";
-import renderWithRouter from "@/test/render";
-import { mockLoginUser, mockNavigate } from "./testUtils";
+import Login from "@/pages/auth/Login";
+import renderWithRouter from "../../render";
+import { mockLoginUser, mockNavigate } from "@/pages/auth/testUtils";
 
 describe("Login", () => {
   beforeEach(() => {

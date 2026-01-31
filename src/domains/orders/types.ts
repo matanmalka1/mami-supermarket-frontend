@@ -1,13 +1,14 @@
 // Orders domain types (frontend only, type aliases, no imports, no backend/DTO naming)
 
 export const OrderStatus = {
-  PENDING: "pending",
-  IN_PROGRESS: "inProgress",
-  PICKING: "picking",
-  RECEIVED: "received",
-  DELAYED: "delayed",
-  COMPLETED: "completed",
-  CANCELLED: "cancelled",
+  CREATED: "CREATED",
+  IN_PROGRESS: "IN_PROGRESS",
+  READY: "READY",
+  OUT_FOR_DELIVERY: "OUT_FOR_DELIVERY",
+  DELIVERED: "DELIVERED",
+  CANCELED: "CANCELED",
+  DELAYED: "DELAYED",
+  MISSING: "MISSING",
 } as const;
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];

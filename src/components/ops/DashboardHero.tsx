@@ -1,15 +1,11 @@
 import React from "react";
 import DashboardMetricCard from "@/components/ops/DashboardMetricCard";
-import Button from "@/components/ui/Button";
-import { Layers, Play, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 type DashboardHeroProps = {
   ordersCount: number;
   pendingCount: number;
   expressDue: number;
-  selectedCount: number;
-  onStartBatch: () => void;
-  onViewBoard: () => void;
   metricSubtitle: string;
   batchEfficiency?: string | number;
   livePickers?: string | number;
@@ -21,9 +17,6 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
   ordersCount,
   pendingCount,
   expressDue,
-  selectedCount,
-  onStartBatch,
-  onViewBoard,
   metricSubtitle,
   batchEfficiency,
   livePickers,
@@ -31,35 +24,12 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
   urgentCount,
 }) => (
   <div className="rounded-[3rem] bg-white border border-gray-100 p-8 shadow-2xl space-y-6">
-    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h1 className="text-4xl  tracking-tight">Orders Management</h1>
-        <p className="text-xs uppercase tracking-[0.4em] text-gray-400 flex gap-2 items-center">
-          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-          {ordersCount} Active Orders • {pendingCount} Pending
-        </p>
-      </div>
-      <div className="flex flex-col gap-3 md:flex-row md:items-center">
-        {selectedCount > 0 ? (
-          <Button
-            variant="emerald"
-            className="rounded-2xl h-14 px-8 shadow-xl animate-in slide-in-from-right-4 flex items-center gap-3"
-            icon={<Layers size={20} />}
-            onClick={onStartBatch}
-          >
-            Start Batch Pick ({selectedCount})
-            <Play size={16} />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            className="rounded-2xl h-12 px-6 border border-gray-200 text-gray-700"
-            onClick={onViewBoard}
-          >
-            View Picking Board
-          </Button>
-        )}
-      </div>
+    <div className="space-y-2">
+      <h1 className="text-4xl  tracking-tight">Orders Management</h1>
+      <p className="text-xs uppercase tracking-[0.4em] text-gray-400 flex gap-2 items-center">
+        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+        {ordersCount} Active Orders • {pendingCount} Pending
+      </p>
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

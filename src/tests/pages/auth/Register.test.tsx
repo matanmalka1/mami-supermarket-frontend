@@ -7,9 +7,9 @@ import {
   mockRegisterUser,
   mockSendRegisterOtp,
   mockVerifyRegisterOtp,
-} from "./testUtils";
-import renderWithRouter from "@/test/render";
-import Register from "./Register";
+} from "@/pages/auth/testUtils";
+import renderWithRouter from "../../render";
+import Register from "@/pages/auth/Register";
 
 describe("Register", () => {
   beforeEach(() => {
@@ -33,9 +33,18 @@ describe("Register", () => {
 
     await userEvent.type(screen.getByPlaceholderText("John"), "Jane");
     await userEvent.type(screen.getByPlaceholderText("Doe"), "Smith");
-    await userEvent.type(screen.getByPlaceholderText("john@example.com"), "jane@example.com");
-    await userEvent.type(screen.getByPlaceholderText("05X-XXXXXXX"), "0501234567");
-    await userEvent.type(screen.getByPlaceholderText("Password"), "StrongPass1");
+    await userEvent.type(
+      screen.getByPlaceholderText("john@example.com"),
+      "jane@example.com",
+    );
+    await userEvent.type(
+      screen.getByPlaceholderText("05X-XXXXXXX"),
+      "0501234567",
+    );
+    await userEvent.type(
+      screen.getByPlaceholderText("Password"),
+      "StrongPass1",
+    );
     await userEvent.click(screen.getByLabelText(/i agree/i));
     await userEvent.click(screen.getByRole("button", { name: /continue/i }));
     await waitFor(() =>
@@ -52,7 +61,9 @@ describe("Register", () => {
     await userEvent.type(screen.getAllByRole("textbox")[1], "2");
     await userEvent.type(screen.getAllByRole("textbox")[2], "3");
     await userEvent.type(screen.getAllByRole("textbox")[3], "4");
-    await userEvent.click(screen.getByRole("button", { name: /complete setup/i }));
+    await userEvent.click(
+      screen.getByRole("button", { name: /complete setup/i }),
+    );
 
     await waitFor(() =>
       expect(mockVerifyRegisterOtp).toHaveBeenCalledWith({

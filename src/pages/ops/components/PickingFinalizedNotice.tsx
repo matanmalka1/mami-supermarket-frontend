@@ -4,13 +4,14 @@ import Button from "@/components/ui/Button";
 import { OrderStatus } from "@/domains/orders/types";
 
 const STATUS_COPY: Record<OrderStatus, string> = {
+  [OrderStatus.CREATED]: "Created",
   [OrderStatus.IN_PROGRESS]: "In Progress",
-  [OrderStatus.PICKING]: "Picking",
-  [OrderStatus.PENDING]: "Pending",
-  [OrderStatus.RECEIVED]: "Received",
+  [OrderStatus.READY]: "Ready",
+  [OrderStatus.OUT_FOR_DELIVERY]: "Out for Delivery",
+  [OrderStatus.DELIVERED]: "Delivered",
   [OrderStatus.DELAYED]: "Delayed",
-  [OrderStatus.COMPLETED]: "Completed",
-  [OrderStatus.CANCELLED]: "Cancelled",
+  [OrderStatus.CANCELED]: "Canceled",
+  [OrderStatus.MISSING]: "Missing",
 };
 
 interface Props {

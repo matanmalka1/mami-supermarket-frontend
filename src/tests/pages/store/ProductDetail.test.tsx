@@ -1,8 +1,8 @@
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
-import ProductDetail from "./ProductDetail";
-import renderWithRouter from "@/test/render";
+import ProductDetail from "@/pages/store/ProductDetail";
+import renderWithRouter from "../../render";
 
 const { mockUseProductDetail } = vi.hoisted(() => ({
   mockUseProductDetail: vi.fn(),

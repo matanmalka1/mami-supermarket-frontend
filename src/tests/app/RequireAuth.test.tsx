@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import RequireAuth from "./RequireAuth";
-import RoleGuard from "./RoleGuard";
+import RequireAuth from "../../app/guards/RequireAuth";
+import RoleGuard from "../../app/guards/RoleGuard";
 
 describe("RequireAuth + RoleGuard", () => {
   beforeEach(() => {

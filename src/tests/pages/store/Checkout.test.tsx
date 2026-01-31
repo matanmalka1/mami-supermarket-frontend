@@ -3,18 +3,16 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { vi } from "vitest";
-import Checkout from "./Checkout";
+import Checkout from "@/pages/store/Checkout";
 import type { OrderSuccessSnapshot } from "@/domains/orders/types";
 
-const {
-  mockUseCheckoutProcess,
-  mockNavigate,
-  mockClearCart,
-} = vi.hoisted(() => ({
-  mockUseCheckoutProcess: vi.fn(),
-  mockNavigate: vi.fn(),
-  mockClearCart: vi.fn(),
-}));
+const { mockUseCheckoutProcess, mockNavigate, mockClearCart } = vi.hoisted(
+  () => ({
+    mockUseCheckoutProcess: vi.fn(),
+    mockNavigate: vi.fn(),
+    mockClearCart: vi.fn(),
+  }),
+);
 
 vi.mock("@/features/store/hooks/useCheckoutProcess", () => ({
   useCheckoutProcess: () => mockUseCheckoutProcess(),
@@ -55,9 +53,7 @@ describe("Checkout", () => {
     orderId: "order-9",
     orderNumber: "order-9",
     fulfillmentType: "delivery",
-    items: [
-      { id: 1, name: "A", image: "", unit: "", price: 10, quantity: 1 },
-    ],
+    items: [{ id: 1, name: "A", image: "", unit: "", price: 10, quantity: 1 }],
     subtotal: 120,
     deliveryFee: 0,
     total: 120,
