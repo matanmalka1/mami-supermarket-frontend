@@ -10,6 +10,8 @@ const readRoleFromToken = (token: string): UserRole | null => {
     return (
       normalizeRole(payload.role) ||
       normalizeRole(payload.user_role) ||
+      normalizeRole(payload.userType) ||
+      normalizeRole(payload.type) ||
       normalizeRole(
         payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"],
       ) ||
@@ -29,7 +31,16 @@ export const useAuth = () => {
       ),
   );
 
-  const [userRole, setUserRole] = useState<UserRole | null>(() => null);
+  const [userRole, setUserRole] = useState<UserRole | null>(() => {
+    const token =
+      localStorage.getItem("mami_token") ||
+      sessionStorage.getItem("mami_token");
+    if (token) {
+      const role = readRoleFromToken(token);
+      return role;
+    }
+    return null;
+  });
 
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
