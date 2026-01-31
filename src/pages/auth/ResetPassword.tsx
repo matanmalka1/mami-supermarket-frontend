@@ -22,12 +22,12 @@ const ResetPassword: React.FC = () => {
   } = usePasswordFormState();
   // loading, error, and done are provided by useResetPassword
   const navigate = useNavigate();
-  const { loading, done, error, setError, handleReset } = useResetPassword();
+  const { loading, done, error, handleReset } = useResetPassword();
 
   useEffect(() => {
     const qpToken = searchParams.get("token") || "";
     if (qpToken) setToken(qpToken);
-  }, [searchParams]);
+  }, [searchParams, setToken]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

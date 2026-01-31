@@ -3,8 +3,8 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-// AppError is a runtime class, not migrated to types domain. Define locally if needed.
-class AppError extends Error {
+// AppError is a runtime class, not migrated to types domain. Exported for reuse where needed.
+export class AppError extends Error {
   code: string;
   details?: Record<string, any>;
   constructor(apiError: {

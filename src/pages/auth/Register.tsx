@@ -68,7 +68,7 @@ const Register: React.FC<{
         remember: false,
       });
       navigate("/store");
-    } catch (err) {
+    } catch {
       // Error handling is already in hooks
     }
   };

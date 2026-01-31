@@ -18,6 +18,7 @@ export const saveOrderSnapshot = (
   try {
     storage.setItem(storageKey(orderId), JSON.stringify(snapshot));
   } catch {
+    // Ignore storage errors (quota, serialization, etc.)
   }
 };
 
