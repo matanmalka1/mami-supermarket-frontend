@@ -13,9 +13,7 @@ const ResetPassword: React.FC = () => {
   const [token, setToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  // loading, error, and done are provided by useResetPassword
   const navigate = useNavigate();
   const { loading, done, error, setError, handleReset } = useResetPassword();
 
