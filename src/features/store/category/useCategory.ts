@@ -26,7 +26,9 @@ const useCategory = ({ categoryId, categoryParam }: UseCategoryProps) => {
 
   const togglePreference = useCallback((pref: string) => {
     setPreferences((prev) =>
-      prev.includes(pref) ? prev.filter((item) => item !== pref) : [...prev, pref],
+      prev.includes(pref)
+        ? prev.filter((item) => item !== pref)
+        : [...prev, pref],
     );
     toast.success(`Filter: ${pref} updated`, {
       style: { borderRadius: "1rem", fontWeight: "bold" },

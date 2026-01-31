@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { CreditCard } from "lucide-react";
-import Button from "../ui/Button";
-import { currencyILS } from "../../utils/format";
+import OrderSummary from "./OrderSummary";
+import CardForm from "./CardForm";
+import ErrorDisplay from "./ErrorDisplay";
+import PaymentActions from "./PaymentActions";
 import type { CartItem } from "@/context/cart-context";
 
 type Props = {
@@ -83,106 +84,29 @@ export const PaymentStep: React.FC<Props> = ({
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <h2 className="text-4xl ">Final Payment</h2>
-      <div className="p-8 bg-gray-50 rounded-3xl space-y-6 border border-gray-100">
-        <div className="flex justify-between items-center font-bold text-gray-500 uppercase text-xs tracking-widest border-b pb-6">
-          <span>Order Summary</span>
-          <span>{itemsCount} Items</span>
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between font-bold text-gray-900">
-            <span>Subtotal</span>
-            <span>{currencyILS(subtotal)}</span>
-          </div>
-          <div className="flex justify-between font-bold text-emerald-600">
-            <span>Delivery</span>
-            <span>{deliveryFee === 0 ? "FREE" : currencyILS(deliveryFee)}</span>
-          </div>
-          <div className="flex justify-between text-2xl  pt-4 border-t">
-            <span>Total</span>
-            <span>{currencyILS(total)}</span>
-          </div>
-        </div>
-      </div>
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <label className="text-xs uppercase text-gray-400 tracking-widest">
-            Card Number
-          </label>
-          <div className="relative">
-            <CreditCard
-              className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300"
-              size={24}
-            />
-            <input
-              type="text"
-              inputMode="numeric"
-              value={cardNumber}
-              onChange={handleCardNumberChange}
-              placeholder="XXXX-XXXX-XXXX-XXXX"
-              className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-6 pl-16 pr-6 font-mono text-lg focus:border-[#008A45] outline-none transition-all"
-            />
-          </div>
-        </div>
-        <div className="space-y-3">
-          <label className="text-xs uppercase text-gray-400 tracking-widest">
-            Card Holder Name
-          </label>
-          <input
-            type="text"
-            autoComplete="cc-name"
-            value={cardHolderName}
-            onChange={(event) => setCardHolderName(event.target.value)}
-            placeholder="Full Name"
-            className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 px-6 text-lg focus:border-[#008A45] outline-none transition-all"
-          />
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-3">
-            <label className="text-xs uppercase text-gray-400 tracking-widest">
-              Expiry Date
-            </label>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={expiry}
-              onChange={handleExpiryChange}
-              placeholder="MM/YY"
-              maxLength={5}
-              className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 px-6 text-lg focus:border-[#008A45] outline-none transition-all"
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-xs uppercase text-gray-400 tracking-widest">
-              CVV
-            </label>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={cvv}
-              onChange={handleCvvChange}
-              placeholder="CVV"
-              maxLength={4}
-              className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-4 px-6 text-lg focus:border-[#008A45] outline-none transition-all"
-            />
-          </div>
-        </div>
-      </div>
-      {error && (
-        <div className="text-red-600 font-bold text-center">{error}</div>
-      )}
-      <div className="flex gap-4">
-        <Button variant="ghost" className="flex-1 h-16" onClick={onBack}>
-          Back
-        </Button>
-        <Button
-          size="lg"
-          className="flex-[2] h-16 rounded-2xl"
-          loading={loading}
-          onClick={handleConfirmAndPay}
-        >
-          Confirm & Pay {currencyILS(total)}
-        </Button>
-      </div>
+      <OrderSummary
+        itemsCount={itemsCount}
+        subtotal={subtotal}
+        deliveryFee={deliveryFee}
+        total={total}
+      />
+      <CardForm
+        cardNumber={cardNumber}
+        cardHolderName={cardHolderName}
+        expiry={expiry}
+        cvv={cvv}
+        onCardNumberChange={handleCardNumberChange}
+        onCardHolderNameChange={(e) => setCardHolderName(e.target.value)}
+        onExpiryChange={handleExpiryChange}
+        onCvvChange={handleCvvChange}
+      />
+      <ErrorDisplay error={error} />
+      <PaymentActions
+        loading={loading}
+        onBack={onBack}
+        onConfirm={handleConfirmAndPay}
+        total={total}
+      />
     </div>
   );
 };

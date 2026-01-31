@@ -1,32 +1,19 @@
-import React, { useRef } from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
-import { Link, useNavigate } from "react-router";
-import {
-  TrendingUp,
-  Clock,
-  Leaf,
-  Sparkles,
-  MapPin,
-  ChevronRight,
-} from "lucide-react";
-import ProductCard from "@/components/store/ProductCard";
-import FlashDeals from "@/components/store/FlashDeals";
-import RecentlyViewed from "@/features/store/recently-viewed/components/RecentlyViewed";
-import Section from "@/components/ui/Section";
 import Grid from "@/components/ui/Grid";
-import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
-import {
-  HeroSection,
-  BenefitCard,
-} from "@/components/store/StorefrontComponents";
+import React, { useRef } from "react";
+import { useNavigate } from "react-router";
+import { Clock, Leaf, Sparkles } from "lucide-react";
+import RecentlyViewed from "@/features/store/recently-viewed/components/RecentlyViewed";
+import { BenefitCard } from "@/components/store/StorefrontComponents";
+import useStorefront from "@/features/store/storefront/useStorefront";
 import {
   useFlashDeals,
   formatSeconds,
 } from "@/features/store/flash-deals/flashDealsFeature";
-import useStorefront from "@/features/store/storefront/useStorefront";
+import StorefrontHeroSection from "./StorefrontHeroSection";
+import StorefrontCategories from "./StorefrontCategories";
+import StorefrontFeatured from "./StorefrontFeatured";
+import StorefrontModal from "./StorefrontModal";
+import FlashDeals from "@/components/store/FlashDeals";
 
 const Storefront: React.FC = () => {
   const navigate = useNavigate();
@@ -52,79 +39,21 @@ const Storefront: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-24">
-      <HeroSection onStart={scrollToCategories} onExplore={openFarmModal} />
-
+      <StorefrontHeroSection
+        onStart={scrollToCategories}
+        onExplore={openFarmModal}
+      />
       <div ref={categoryRef} className="scroll-mt-32">
-        {loading ? (
-          <div className="py-8">
-            <LoadingState label="Loading categories..." />
-          </div>
-        ) : categories.length === 0 ? (
-          <div className="py-8">
-            <EmptyState
-              title="No categories available"
-              description="Our catalog is syncing. Check back soon."
-            />
-          </div>
-        ) : (
-          <Grid cols={6} gap={6}>
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                to={`/store/category/${cat.id}`}
-                className="group flex flex-col items-center p-8 rounded-[2.5rem] bg-gray-50 border border-gray-100 hover:bg-white hover:border-[#008A45] hover:shadow-xl hover:shadow-emerald-900/5 transition-all text-center space-y-4"
-              >
-                <span className="text-4xl group-hover:scale-125 transition-transform">
-                  {cat.icon_slug || cat.icon || "🛒"}
-                </span>
-                <span className="text-xs uppercase tracking-widest text-gray-500 group-hover:text-[#008A45]">
-                  {cat.name}
-                </span>
-              </Link>
-            ))}
-          </Grid>
-        )}
+        <StorefrontCategories categories={categories} loading={loading} />
       </div>
-
       <FlashDeals
         deals={deals}
         loading={flashLoading}
         error={flashError}
         timeLeft={flashTimeLeft}
       />
-
-      <Section
-        title="Today's Selection"
-        subtitle={
-          <>
-            <TrendingUp size={16} className="text-[#008A45]" /> Trending in your
-            area
-          </>
-        }
-        linkTo="/store/search"
-      >
-        {loading ? (
-          <div className="py-8">
-            <LoadingState label="Loading featured products..." />
-          </div>
-        ) : featured.length === 0 ? (
-          <div className="py-8">
-            <EmptyState
-              title="No featured products"
-              description="We’ll refresh the spotlight soon."
-            />
-          </div>
-        ) : (
-          <Grid>
-            {featured.map((item: any) => (
-              <ProductCard key={item.id} item={item} />
-            ))}
-          </Grid>
-        )}
-      </Section>
-
+      <StorefrontFeatured featured={featured} loading={loading} />
       <RecentlyViewed />
-
       <Grid cols={3} gap={12}>
         <BenefitCard
           icon={<Clock />}
@@ -148,59 +77,7 @@ const Storefront: React.FC = () => {
           color="text-orange-500"
         />
       </Grid>
-
-      <Modal
-        isOpen={isFarmModalOpen}
-        onClose={closeFarmModal}
-        title="Verified Local Producers"
-        subtitle="Direct from Israeli soil"
-      >
-        <div className="py-6 space-y-4">
-          {[
-            {
-              name: "Kfar Azar Orchards",
-              location: "Central",
-              specialty: "Citrus",
-            },
-            {
-              name: "Golan Heights Artisans",
-              location: "Northern",
-              specialty: "Cheeses",
-            },
-          ].map((farm) => (
-            <div
-              key={farm.name}
-              className="p-6 bg-gray-50 rounded-3xl border border-gray-100 flex items-center justify-between group hover:bg-emerald-50 transition-all cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">{farm.name}</h4>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-                    {farm.location} • {farm.specialty}
-                  </p>
-                </div>
-              </div>
-              <ChevronRight
-                className="text-gray-300 group-hover:text-emerald-500 transition-all"
-                size={20}
-              />
-            </div>
-          ))}
-          <Button
-            fullWidth
-            onClick={() => {
-              closeFarmModal();
-              navigate("/store/category/produce");
-            }}
-            className="mt-4 rounded-2xl"
-          >
-            View All Local Produce
-          </Button>
-        </div>
-      </Modal>
+      <StorefrontModal isOpen={isFarmModalOpen} onClose={closeFarmModal} />
     </div>
   );
 };

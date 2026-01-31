@@ -24,7 +24,6 @@ type Props = {
 
 const columnDefinitions: ColumnDefinition<Product>[] = [
   { header: "Product Information" },
-  { header: "Bin Location", className: "text-center" },
   { header: "Status", className: "text-center" },
   { header: "Price", className: "text-right" },
   { header: "Actions", className: "text-right" },
@@ -67,9 +66,6 @@ const CatalogProductTable: React.FC<Props> = ({
               </p>
             </div>
           </div>
-        </td>
-        <td className="px-6 py-6 text-center">
-          <Badge color="blue">{product.binLocation || "A-00"}</Badge>
         </td>
         <td className="px-6 py-6 text-center">
           <Badge

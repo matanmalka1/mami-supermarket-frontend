@@ -4,7 +4,7 @@ import type { CategoryDTO, ProductDTO } from "./service-dto";
 import type { Category, Product } from "./types";
 import type { Pagination } from "@/domains/pagination/types";
 
-const catalogPrefix = "/catalog";
+export const catalogPrefix = "/catalog";
 
 export const buildCategoryResponse = async (params?: {
   limit?: number;

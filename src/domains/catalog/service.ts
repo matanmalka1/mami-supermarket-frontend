@@ -1,3 +1,4 @@
+import { apiClient } from "@/services/api-client";
 import type { Category, Product } from "./types";
 import type { Pagination } from "@/domains/pagination/types";
 import type { CategoryDTO, ProductDTO } from "./service-dto";
@@ -6,6 +7,7 @@ import {
   buildCategoryResponse,
   buildProductPagination,
   buildFeaturedResponse,
+  catalogPrefix,
 } from "./service-helpers";
 
 export const catalogService = {
