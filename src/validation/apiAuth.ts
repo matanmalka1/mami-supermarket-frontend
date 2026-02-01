@@ -18,6 +18,7 @@ export const authRegisterRequestSchema = z.object({
   email: z.string().email(),
   password: z.string(),
   full_name: z.string(),
+  phone: z.string(),
   role: z.string().optional(),
 });
 

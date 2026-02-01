@@ -1,5 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { ArrowRight } from "lucide-react";
+import { toast } from "react-hot-toast";
 import Button from "../../../components/ui/Button";
 import type { RegisterInput } from "@/validation/auth";
 import NameField from "@/components/ui/form/NameField";
@@ -34,19 +35,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
           label="First Name"
           registration={register("firstName")}
           placeholder="John"
-          error={errors.firstName?.message as string | undefined}
         />
         <NameField
           label="Last Name"
           registration={register("lastName")}
           placeholder="Doe"
-          error={errors.lastName?.message as string | undefined}
         />
       </div>
 
       <EmailField
         registration={register("email")}
-        error={errors.email?.message as string | undefined}
         placeholder="john@example.com"
       />
 
@@ -54,7 +52,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
         label="Israeli Phone Number"
         prefixText="+972"
         registration={register("phone")}
-        error={errors.phone?.message as string | undefined}
+        placeholder=""
       />
 
       <PasswordField
@@ -63,7 +61,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
         placeholder="Password"
         show={showPass}
         onToggle={() => setShowPass(!showPass)}
-        error={errors.password?.message as string | undefined}
         helperText="Password must be at least 8 characters, include a letter and a number."
       />
 
@@ -73,7 +70,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
         placeholder="Confirm Password"
         show={showPass}
         onToggle={() => setShowPass(!showPass)}
-        error={errors.confirmPassword?.message as string | undefined}
       />
 
       <CheckboxField
@@ -84,7 +80,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
           </span>
         }
         registration={register("acceptTerms")}
-        error={errors.acceptTerms?.message as string | undefined}
         containerClassName="px-1 !space-y-0"
       />
 
@@ -93,11 +88,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
         type="button"
         onClick={async () => {
           const isValid = await form.trigger();
-          if (isValid) {
-            const values = form.getValues();
-            (globalThis as any).mockSendRegisterOtp?.(values.email);
-            onSubmit(values);
+          if (!isValid) {
+            const firstError = Object.values(errors)[0]?.message;
+            if (firstError) {
+              toast.error(firstError as string);
+            }
+            return;
           }
+          const values = form.getValues();
+          (globalThis as any).mockSendRegisterOtp?.(values.email);
+          onSubmit(values);
         }}
         fullWidth
         className="h-16 rounded-2xl text-xl "

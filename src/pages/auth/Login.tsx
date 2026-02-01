@@ -27,6 +27,7 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { isSubmitting, errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -45,9 +46,6 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
         icon: <ShieldCheck className="text-teal-600" />,
         duration: 3000,
       });
-      // window.location.hash = "#/";
-      // window.location.reload();
-      // השורות למעלה הוסרו זמנית כדי לאפשר בדיקת לוגים בקונסול
     } else if (normalizedRole) {
       toast.success(`Welcome back! Discover fresh deals today.`, {
         id: "auth",
@@ -66,6 +64,7 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
         show={show}
         toggleShow={() => setShow(!show)}
         onSubmit={handleSubmit(onSubmit)}
+        trigger={trigger}
       />
     </div>
   );

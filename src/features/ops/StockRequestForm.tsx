@@ -20,6 +20,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   const {
     register,
     handleSubmit,
+    trigger,
     reset,
     formState: { isSubmitting, errors },
   } = useForm<StockRequestInput>({
@@ -65,13 +66,11 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
           label="Branch ID"
           registration={register("branchId")}
           placeholder="ID of branch"
-          error={errors.branchId?.message}
         />
         <TextField
           label="Product ID"
           registration={register("productId")}
           placeholder="ID of product"
-          error={errors.productId?.message}
         />
       </div>
 
@@ -81,7 +80,6 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
           registration={register("quantity")}
           type="number"
           placeholder="0"
-          error={errors.quantity?.message}
           inputClassName="text-lg"
         />
         <RadioGroupField
@@ -89,7 +87,6 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
           name="requestType"
           options={REQUEST_TYPES.map((val) => ({ value: val, label: val }))}
           registration={register("requestType")}
-          error={errors.requestType?.message}
           inline
         />
       </div>
@@ -105,7 +102,18 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
         size="lg"
         className="rounded-[1.5rem] h-14 text-lg "
         loading={isSubmitting}
-        type="submit"
+        type="button"
+        onClick={async () => {
+          const isValid = await trigger();
+          if (!isValid) {
+            const firstError = Object.values(errors)[0]?.message;
+            if (firstError) {
+              toast.error(firstError as string);
+            }
+            return;
+          }
+          await handleSubmit(onSubmit as any)();
+        }}
       >
         Submit Stock Request
       </Button>
