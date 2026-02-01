@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingBag } from "lucide-react";
@@ -9,6 +9,7 @@ import { registerSchema, RegisterInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
 import { useRegister } from "@/features/auth/hooks/useRegister";
 import OtpInputGroup from "@/components/ui/form/OtpInputGroup";
+import { toast } from "react-hot-toast";
 
 type RegisterPayload = {
   token: string;
@@ -32,6 +33,16 @@ const Register: React.FC<{
     loginUser,
   } = useRegister();
 
+  const [registrationValues, setRegistrationValues] = useState<RegisterInput | null>(null);
+
+  const handleSendOtpWithCache = useCallback(
+    async (data: RegisterInput) => {
+      setRegistrationValues(data);
+      await handleSendOtp(data);
+    },
+    [handleSendOtp],
+  );
+
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -50,18 +61,21 @@ const Register: React.FC<{
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length !== 4) return;
-    const data = form.getValues();
+    const formValues = form.getValues();
+    const currentValues = registrationValues ?? formValues;
     try {
-      await verifyRegisterOtp({ email: data.email, code: otp });
-      const fullName = `${data.firstName} ${data.lastName}`.trim();
+      await verifyRegisterOtp({ email: currentValues.email, code: otp });
+      const fullName = `${currentValues.firstName} ${currentValues.lastName}`.trim();
+      const normalizedPhone = (currentValues.phone ?? "").replace(/\D/g, "");
       await registerUser({
-        email: data.email,
-        password: data.password,
+        email: currentValues.email,
+        password: currentValues.password,
         full_name: fullName,
+        phone: normalizedPhone.length >= 9 ? normalizedPhone : undefined,
       });
       const { token, role } = await loginUser({
-        email: data.email,
-        password: data.password,
+        email: currentValues.email,
+        password: currentValues.password,
       });
       if (!token) return;
       onRegister({
@@ -71,7 +85,7 @@ const Register: React.FC<{
       });
       navigate("/store");
     } catch {
-      // Error handling is already in hooks
+      toast.error("Registration failed. Please try again.");
     }
   };
 
@@ -108,7 +122,7 @@ const Register: React.FC<{
           {step === "INFO" ? (
             <RegistrationForm
               form={form}
-              onSubmit={handleSendOtp}
+              onSubmit={handleSendOtpWithCache}
               showPass={showPass}
               setShowPass={setShowPass}
             />

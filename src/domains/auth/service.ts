@@ -32,6 +32,7 @@ export const authService = {
       email: data.email,
       password: data.password,
       full_name: data.full_name,
+      phone: data.phone,
       ...(data.role ? { role: data.role } : {}),
     };
   

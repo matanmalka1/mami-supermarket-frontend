@@ -21,7 +21,7 @@ const OtpInputGroup: React.FC<OtpInputGroupProps> = ({
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
 
   const handleChange = (index: number, next: string) => {
-    const sanitized = next.replace(/\\D/g, "").slice(-1);
+    const sanitized = next.replace(/\D/g, "").slice(-1);
     const chars = value.split("");
     chars[index] = sanitized;
     const nextValue = chars.join("").slice(0, length);

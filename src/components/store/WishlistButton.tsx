@@ -13,7 +13,7 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
 }) => {
   const { toggleWishlist } = useWishlist();
 
-  const handleWishlistToggle = () => {
+  const handleWishlistToggle = async () => {
     if (productId === undefined) {
       toast("Wishlist is not available for this product", {
         icon: "⚠️",
@@ -21,11 +21,16 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
       });
       return;
     }
-    toggleWishlist(productId);
-    toast(isLiked ? "Removed from wishlist" : "Added to wishlist", {
-      icon: isLiked ? "🟣" : "🧡",
-      style: { borderRadius: "1rem", fontWeight: "bold" },
-    });
+    
+    try {
+      await toggleWishlist(productId);
+      toast(isLiked ? "Removed from wishlist" : "Added to wishlist", {
+        icon: isLiked ? "🟣" : "🧡",
+        style: { borderRadius: "1rem", fontWeight: "bold" },
+      });
+    } catch {
+      // Error already handled by useWishlist
+    }
   };
 
   return (

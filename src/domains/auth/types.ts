@@ -6,6 +6,7 @@ export interface AuthRegisterRequest {
   email: string;
   password: string;
   full_name: string;
+  phone?: string;
   role?: string;
 }
 

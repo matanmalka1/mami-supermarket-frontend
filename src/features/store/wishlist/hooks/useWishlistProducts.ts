@@ -7,11 +7,17 @@ import { useWishlist } from "@/hooks/useWishlist";
 import type { WishlistItem } from "@/hooks/useWishlist";
 
 export const useWishlistProducts = () => {
-  const { items, removeWishlistItem } = useWishlist();
+  const { items, removeWishlistItem, isLoading: wishlistLoading } = useWishlist();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Wait for wishlist to load
+    if (wishlistLoading) {
+      setLoading(true);
+      return;
+    }
+
     const ids = Array.from(new Set(items.map((item: WishlistItem) => item.id)));
     if (!ids.length) {
       setProducts([]);
@@ -63,7 +69,7 @@ export const useWishlistProducts = () => {
     return () => {
       active = false;
     };
-  }, [items, removeWishlistItem]);
+  }, [items, removeWishlistItem, wishlistLoading]);
 
   return {
     products,
