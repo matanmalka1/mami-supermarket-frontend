@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type FC } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type FC,
+} from "react";
 import { useNavigate } from "react-router";
 import SearchInput from "@/components/ui/SearchInput";
 import { useCatalogAutocomplete } from "@/features/store/hooks/useCatalogAutocomplete";
@@ -23,27 +30,30 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
   const navigate = useNavigate();
   const listId = "search-suggestions-dropdown";
 
+  const resetAll = () => {
+    setOpen(false);
+    setHighlightedIndex(-1);
+    setQuery("");
+    resetSuggestions();
+  };
+
   useEffect(() => {
     if (!query.trim()) {
-      setOpen(false);
-      setHighlightedIndex(-1);
-      resetSuggestions();
+      resetAll();
       return;
     }
     setOpen(true);
-  }, [query, resetSuggestions]);
+  }, [query, resetAll]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setOpen(false);
-        setHighlightedIndex(-1);
-        resetSuggestions();
+        resetAll();
       }
     };
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
-  }, [resetSuggestions]);
+  }, [resetAll]);
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
@@ -53,19 +63,13 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
       return;
     }
     navigate(`/store/search?q=${encodeURIComponent(query.trim())}`);
-    setOpen(false);
-    setHighlightedIndex(-1);
-    setQuery("");
-    resetSuggestions();
+    resetAll();
     onNavigate?.();
   };
 
   const handleSelect = (product: Product) => {
     navigate(`/store/product/${product.id}`);
-    setOpen(false);
-    setHighlightedIndex(-1);
-    setQuery("");
-    resetSuggestions();
+    resetAll();
     onNavigate?.();
   };
 
@@ -93,9 +97,7 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
         handleSelect(suggestions[highlightedIndex]);
       }
     } else if (event.key === "Escape") {
-      setOpen(false);
-      setHighlightedIndex(-1);
-      resetSuggestions();
+      resetAll();
     }
   };
 

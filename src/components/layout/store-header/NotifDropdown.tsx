@@ -1,6 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import { useOpsAlerts } from "@/features/ops/hooks/useOpsAlerts";
 import type { OpsAlert } from "@/domains/notifications/types";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 interface NotifDropdownProps {
   items?: OpsAlert[];
@@ -37,9 +38,10 @@ const NotifDropdown: React.FC<NotifDropdownProps> = ({ items, onClose }) => {
             Loading notifications...
           </p>
         ) : error ? (
-          <p className="text-xs font-bold text-red-500 uppercase tracking-tight">
-            {error}
-          </p>
+          <ErrorMessage
+            message={error}
+            className="text-xs font-bold uppercase tracking-tight"
+          />
         ) : alerts.length === 0 ? (
           <p className="text-xs font-bold text-gray-400 uppercase tracking-tight">
             No new notifications at the moment.
