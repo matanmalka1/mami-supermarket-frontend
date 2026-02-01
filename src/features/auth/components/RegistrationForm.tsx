@@ -59,10 +59,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
       <PasswordField
         label="Password"
-        registration={register("password", {
-          onChange: (e) =>
-            setValue("confirmPassword", (e.target as HTMLInputElement).value),
-        })}
+        registration={register("password")}
         placeholder="Password"
         show={showPass}
         onToggle={() => setShowPass(!showPass)}
@@ -82,20 +79,25 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
       <CheckboxField
         label={
           <span className="text-sm font-bold text-gray-400">
-            I agree to the <span className="text-[#008A45] hover:underline">Terms</span>.
+            I agree to the{" "}
+            <span className="text-[#008A45] hover:underline">Terms</span>.
           </span>
         }
         registration={register("acceptTerms")}
+        error={errors.acceptTerms?.message as string | undefined}
         containerClassName="px-1 !space-y-0"
       />
 
       <Button
         disabled={isSubmitting}
         type="button"
-        onClick={() => {
-          const values = form.getValues();
-          (globalThis as any).mockSendRegisterOtp?.(values.email);
-          onSubmit(values);
+        onClick={async () => {
+          const isValid = await form.trigger();
+          if (isValid) {
+            const values = form.getValues();
+            (globalThis as any).mockSendRegisterOtp?.(values.email);
+            onSubmit(values);
+          }
         }}
         fullWidth
         className="h-16 rounded-2xl text-xl "

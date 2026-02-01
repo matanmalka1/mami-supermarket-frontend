@@ -34,16 +34,17 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         htmlFor={id}
         className="flex items-start gap-3 cursor-pointer select-none"
       >
-        <input
-          type="checkbox"
-          id={id}
-          {...(registration ?? {})}
-          {...rest}
-          checked={checked}
-          onChange={(e) => {
-            onCheckedChange?.(e.target.checked);
-            rest.onChange?.(e as any);
-          }}
+      <input
+        type="checkbox"
+        id={id}
+        {...(registration ?? {})}
+        {...rest}
+        checked={checked}
+        onChange={(e) => {
+          onCheckedChange?.(e.target.checked);
+          registration?.onChange?.(e as any);
+          rest.onChange?.(e as any);
+        }}
           className="mt-1 h-5 w-5 rounded border-2 border-gray-300 text-[#008A45] focus:ring-[#008A45]"
         />
         <div>

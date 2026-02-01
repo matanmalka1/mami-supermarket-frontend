@@ -31,7 +31,10 @@ const OtpInputGroup: React.FC<OtpInputGroupProps> = ({
     }
   };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (e.key === "Backspace" && !value[index] && index > 0) {
       inputs.current[index - 1]?.focus();
     }
@@ -50,7 +53,6 @@ const OtpInputGroup: React.FC<OtpInputGroupProps> = ({
               inputs.current[idx] = el;
             }}
             inputMode="numeric"
-            pattern="\\d*"
             maxLength={1}
             value={padded[idx].trim()}
             onChange={(e) => handleChange(idx, e.target.value)}
