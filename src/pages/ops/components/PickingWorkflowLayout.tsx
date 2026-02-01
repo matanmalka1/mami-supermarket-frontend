@@ -14,16 +14,16 @@ interface Props {
   order: Order;
   items: OrderItem[];
   expandedId: number | null;
-  missingItemId: number | null;
+  missingItemId: string | number | null;
   onToggleRow: (id: number) => void;
   onUpdateStatus: (
-    id: number,
+    id: string | number,
     status: string,
     reason?: string,
     replacement?: any,
   ) => void;
-  onReportMissing: (id: number) => void;
-  onReportDamage: (id: number) => Promise<void> | void;
+  onReportMissing: (id: string | number) => void;
+  onReportDamage: (id: string | number) => Promise<void> | void;
   onWeightConfirm: () => void;
   weighingItem: OrderItem | null;
   resetScale: () => void;
@@ -34,7 +34,7 @@ interface Props {
   onSync: () => Promise<void>;
   onComplete: () => void;
   onBack: () => void;
-  setMissingItemId: (id: number | null) => void;
+  setMissingItemId: (id: string | number | null) => void;
 }
 
 const PickingWorkflowLayout: React.FC<Props> = ({

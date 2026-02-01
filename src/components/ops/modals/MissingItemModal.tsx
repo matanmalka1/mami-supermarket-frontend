@@ -9,10 +9,10 @@ type ItemStatus = "MISSING" | "FOUND" | "REPLACED";
 type ReplacementProduct = { id: number; name: string };
 
 interface MissingItemModalProps {
-  itemId: number | null;
+  itemId: string | number | null;
   onClose: () => void;
   onUpdateStatus: (
-    itemId: number,
+    itemId: string | number,
     status: ItemStatus,
     reason: string,
     replacement?: ReplacementProduct,

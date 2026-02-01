@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import Button from "@/components/ui/Button";
 
 type PickingStatus = "PICKED" | "PENDING" | "MISSING";
-type PickingItem = { id: string | number; pickedStatus: PickingStatus };
+type PickingItem = { id: string | number; pickedStatus?: PickingStatus | string };
 
 interface PickingFooterProps {
   items: PickingItem[];

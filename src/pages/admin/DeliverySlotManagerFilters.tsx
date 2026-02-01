@@ -2,7 +2,7 @@ import React from "react";
 import SelectField from "@/components/ui/form/SelectField";
 
 interface Branch {
-  id: string;
+  id: number;
   name: string;
 }
 

@@ -1,10 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { opsService } from "@/domains/ops/service";
-import {
-  Order,
-  OrderItem,
-  OrderStatus,
-} from "@/domains/orders/types";
+import { Order, OrderItem, OrderStatus } from "@/domains/orders/types";
 import { toast } from "react-hot-toast";
 
 const FINALIZED_STATUSES = new Set<OrderStatus>([
@@ -65,7 +61,7 @@ export const usePicking = (orderId?: string) => {
   }, [fetchPickList, orderId, isBatchMode]);
 
   const updateItemStatus = async (
-    itemId: number,
+    itemId: string | number,
     status: string,
     reason?: string,
     replacementId?: number,
@@ -76,9 +72,13 @@ export const usePicking = (orderId?: string) => {
       if (Number.isNaN(parsedOrderId)) {
         throw new Error("Invalid order identifier");
       }
+      const parsedItemId = Number(itemId);
+      if (Number.isNaN(parsedItemId)) {
+        throw new Error("Invalid item identifier");
+      }
       const updated = await opsService.updateItemStatus(
         parsedOrderId,
-        itemId,
+        parsedItemId,
         {
           picked_status: status,
         },

@@ -29,13 +29,13 @@ const PickingInterface: React.FC = () => {
     isSimulated,
   } = useWeightScale();
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [missingItemId, setMissingItemId] = useState<number | null>(null);
+  const [missingItemId, setMissingItemId] = useState<string | number | null>(null);
 
   const handleToggleRow = (rowId: number) => {
     setExpandedId((prev) => (prev === rowId ? null : rowId));
   };
   const handleUpdateStatus = async (
-    itemId: number,
+    itemId: string | number,
     status: string,
     reason?: string,
     replacement?: any,
@@ -59,7 +59,7 @@ const PickingInterface: React.FC = () => {
       // Error handled in hook
     }
   };
-  const handleReportDamage = async (itemId: number) => {
+  const handleReportDamage = async (itemId: string | number) => {
     try {
       await updateItemStatus(itemId, "MISSING", "Damage reported");
       toast.success("Damage report submitted");

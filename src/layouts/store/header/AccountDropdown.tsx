@@ -1,9 +1,10 @@
 import { Link } from "react-router";
 import { User, Package, MapPin, LogOut, LayoutDashboard } from "lucide-react";
+import type { UserRole } from "@/domains/users/types";
 
 type AccountDropdownProps = {
   onClose: () => void;
-  userRole?: "ADMIN" | "CUSTOMER" | null;
+  userRole?: UserRole | null;
   onLogout: () => void;
 };
 
@@ -32,7 +33,9 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
         <div
           className={`text-[9px] uppercase tracking-widest flex items-center gap-1.5 mt-0.5 ${badgeColor}`}
         >
-          <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${badgeDot}`} />
+          <div
+            className={`w-1.5 h-1.5 rounded-full animate-pulse ${badgeDot}`}
+          />
           {sessionLabel}
         </div>
       </div>

@@ -22,18 +22,17 @@ const ORDER_STATUS_OPTIONS: { value: OpsOrderStatus; label: string }[] = [
   { value: "MISSING", label: "Missing" },
 ];
 
-const STATUS_LABELS: Record<OpsOrderStatus, string> = ORDER_STATUS_OPTIONS.reduce(
-  (acc, option) => ({ ...acc, [option.value]: option.label }),
-  {} as Record<OpsOrderStatus, string>,
-);
+const STATUS_LABELS: Record<OpsOrderStatus, string> =
+  ORDER_STATUS_OPTIONS.reduce(
+    (acc, option) => ({ ...acc, [option.value]: option.label }),
+    {} as Record<OpsOrderStatus, string>,
+  );
 
 const normalizeStatus = (value?: string) =>
   typeof value === "string" ? value.toUpperCase() : "";
 
 const humanizeStatus = (value: string) =>
-  value
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  value.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
 const getAllowedTransitions = (
   current: OpsOrderStatus,
@@ -67,7 +66,9 @@ const OrderStatusSelect: React.FC<Props> = ({ status, items, onChange }) => {
     );
   const hasAnyMissing =
     parsedItems.length > 0 &&
-    parsedItems.some((item) => normalizeStatus(item.pickedStatus) === "MISSING");
+    parsedItems.some(
+      (item) => normalizeStatus(item.pickedStatus) === "MISSING",
+    );
   const allowedTransitions = normalizedStatus
     ? getAllowedTransitions(
         normalizedStatus as OpsOrderStatus,
@@ -88,6 +89,7 @@ const OrderStatusSelect: React.FC<Props> = ({ status, items, onChange }) => {
     ...allowedTransitions.map((transition) => ({
       value: transition,
       label: STATUS_LABELS[transition],
+      disabled: false,
     })),
   ];
 

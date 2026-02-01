@@ -1,3 +1,4 @@
+import React from "react";
 import PickingItemRow from "@/components/ops/picking/PickingItemRow";
 import BaseTable from "@/components/ui/BaseTable";
 
@@ -5,9 +6,9 @@ interface PickingItemsTableProps {
   items: any[];
   expandedId: number | null;
   onToggle: (id: number) => void;
-  onUpdateStatus: (id: number, status: string) => void;
-  onReportMissing: (id: number) => void;
-  onReportDamage: (id: number) => Promise<void> | void;
+  onUpdateStatus: (id: string | number, status: string) => void;
+  onReportMissing: (id: string | number) => void;
+  onReportDamage: (id: string | number) => Promise<void> | void;
 }
 
 const PickingItemsTable: React.FC<PickingItemsTableProps> = ({

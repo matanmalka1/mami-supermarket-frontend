@@ -13,7 +13,7 @@ type PickingStatus = "PICKED" | "PENDING" | "MISSING";
 
 type PickingItem = {
   id: string | number;
-  pickedStatus: PickingStatus;
+  pickedStatus?: PickingStatus | string;
   product?: Product | null;
 };
 

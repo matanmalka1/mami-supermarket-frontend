@@ -3,6 +3,7 @@ import NotifDropdown from "./NotifDropdown";
 import AccountDropdown from "./AccountDropdown";
 import AvatarBadge from "@/components/ui/AvatarBadge";
 import type { OpsAlert } from "@/domains/notifications/types";
+import type { UserRole } from "@/domains/users/types";
 
 type HeaderActionsProps = {
   isActuallyAdmin: boolean;
@@ -11,7 +12,7 @@ type HeaderActionsProps = {
   itemsCount: number;
   setIsOpen: (open: boolean) => void;
   notifications: NotificationItem[];
-  userRole: "ADMIN" | "CUSTOMER" | null;
+  userRole: UserRole | null;
   logout: () => void;
 };
 
