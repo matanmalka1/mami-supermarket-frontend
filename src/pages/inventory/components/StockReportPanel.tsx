@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
+import Grid from "@/components/ui/Grid";
+import Card from "@/components/ui/Card";
 import StockReportTable from "@/pages/inventory/components/StockReportTable";
 import type { InventoryRow } from "@/domains/inventory/types";
 import type { BranchResponse } from "@/domains/branch/types";
@@ -89,12 +91,26 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-        <Card label="Rows" value={filtered.length.toString()} />
-        <Card label="Available units" value={totalAvailable.toString()} />
-        <Card label="Reserved units" value={totalReserved.toString()} />
-        <Card label="Low stock" value={lowStockRows.length.toString()} />
-      </div>
+      <Grid cols={4} gap={4}>
+        {[
+          { label: "Rows", value: filtered.length },
+          { label: "Available units", value: totalAvailable },
+          { label: "Reserved units", value: totalReserved },
+          { label: "Low stock", value: lowStockRows.length },
+        ].map((stat) => (
+          <Card
+            key={stat.label}
+            variant="glass"
+            padding="md"
+            className="flex flex-col items-center justify-center"
+          >
+            <p className="text-3xl text-gray-900">{stat.value}</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500">
+              {stat.label}
+            </p>
+          </Card>
+        ))}
+      </Grid>
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div className="flex gap-3 flex-wrap">
           <select
@@ -133,12 +149,5 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
     </section>
   );
 };
-
-const Card: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm uppercase tracking-[0.3em] text-gray-500">
-    <p className="text-3xl text-gray-900">{value}</p>
-    <p className="text-[10px]">{label}</p>
-  </div>
-);
 
 export default StockReportPanel;

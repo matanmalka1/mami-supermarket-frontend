@@ -1,7 +1,6 @@
 import { apiClient } from "@/services/api-client";
 import type { CheckoutCartItem, CheckoutOrderSummary } from "./types";
 
-// Types for payloads are now defined inline for frontend use only
 type CheckoutPreviewPayload = {
   cartId: number | string;
   fulfillmentType: "DELIVERY" | "PICKUP";

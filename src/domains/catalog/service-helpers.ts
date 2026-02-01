@@ -11,7 +11,7 @@ export const buildCategoryResponse = async (params?: {
   offset?: number;
 }) => {
   const { limit = 50, offset = 0 } = params || {};
-  const data = await apiClient.get<CategoryDTO[]>(
+  const data = await apiClient.get<CategoryDTO[], CategoryDTO[]>(
     `${catalogPrefix}/categories`,
     {
       params: { limit, offset },
@@ -45,7 +45,7 @@ export const buildFeaturedResponse = async (params?: {
   limit?: number;
 }) => {
   const { branchId, limit = 10 } = params || {};
-  const data = await apiClient.get<ProductDTO[]>(
+  const data = await apiClient.get<ProductDTO[], ProductDTO[]>(
     `${catalogPrefix}/products/featured`,
     {
       params: { branchId, limit },

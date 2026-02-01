@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "@/components/ui/form/TextField";
+import Grid from "@/components/ui/Grid";
 
 type Props = {
   price: number;
@@ -14,7 +15,7 @@ const NewSkuNumbers: React.FC<Props> = ({
   setPrice,
   setInitialStock,
 }) => (
-  <div className="grid grid-cols-2 gap-4">
+  <Grid cols={2} gap={4}>
     <TextField
       label="Price (₪)"
       type="number"
@@ -36,7 +37,7 @@ const NewSkuNumbers: React.FC<Props> = ({
         )
       }
     />
-  </div>
+  </Grid>
 );
 
 export default NewSkuNumbers;

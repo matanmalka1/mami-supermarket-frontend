@@ -1,5 +1,3 @@
-// Checkout domain types (frontend only, no DTOs, no backend naming)
-// Arrow functions only. No imports from other domains unless approved.
 
 export type CheckoutCartItem = {
   id: number;

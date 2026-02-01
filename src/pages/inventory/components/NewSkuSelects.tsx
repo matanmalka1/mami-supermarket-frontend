@@ -2,6 +2,7 @@ import React from "react";
 import type { Category } from "@/domains/catalog/types";
 import type { BranchResponse } from "@/domains/branch/types";
 import SelectField from "@/components/ui/form/SelectField";
+import Grid from "@/components/ui/Grid";
 
 type Props = {
   categories: Category[];
@@ -24,7 +25,7 @@ const NewSkuSelects: React.FC<Props> = ({
   categoriesLoading,
   branchesLoading,
 }) => (
-  <div className="grid grid-cols-2 gap-4">
+  <Grid cols={2} gap={4}>
     <SelectField
       label="Category"
       value={selectedCategory}
@@ -53,7 +54,7 @@ const NewSkuSelects: React.FC<Props> = ({
             }))
       }
     />
-  </div>
+  </Grid>
 );
 
 export default NewSkuSelects;

@@ -1,4 +1,6 @@
 import React from "react";
+import Card from "@/components/ui/Card";
+import Grid from "@/components/ui/Grid";
 import { useNavigate } from "react-router";
 import Button from "@/components/ui/Button";
 import { InventoryRow } from "@/domains/inventory/types";
@@ -41,34 +43,26 @@ const InventoryAnalyticsPanel: React.FC<Props> = ({ data, onClose }) => {
             Close
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-6 text-sm text-gray-600">
-          <div>
-            <p className="uppercase tracking-[0.4em] text-xs text-gray-400">
-              SKU
-            </p>
+        <Grid cols={2} gap={6} className="text-sm text-gray-600">
+          <Card variant="flat" padding="sm">
+            <p className="uppercase tracking-[0.4em] text-xs text-gray-400">SKU</p>
             <p className="text-lg">{sku}</p>
-          </div>
-          <div>
-            <p className="uppercase tracking-[0.4em] text-xs text-gray-400">
-              Branch
-            </p>
+          </Card>
+          <Card variant="flat" padding="sm">
+            <p className="uppercase tracking-[0.4em] text-xs text-gray-400">Branch</p>
             <p className="text-lg">{branchLabel}</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-6 text-sm">
-          <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
-            <p className="uppercase tracking-[0.4em] text-[10px] text-gray-400">
-              Available
-            </p>
+          </Card>
+        </Grid>
+        <Grid cols={2} gap={6} className="text-sm">
+          <Card variant="glass" padding="md">
+            <p className="uppercase tracking-[0.4em] text-[10px] text-gray-400">Available</p>
             <p className="text-3xl text-[#008A45]">{available}</p>
-          </div>
-          <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
-            <p className="uppercase tracking-[0.4em] text-[10px] text-gray-400">
-              Reserved
-            </p>
+          </Card>
+          <Card variant="glass" padding="md">
+            <p className="uppercase tracking-[0.4em] text-[10px] text-gray-400">Reserved</p>
             <p className="text-3xl text-orange-500">{reserved}</p>
-          </div>
-        </div>
+          </Card>
+        </Grid>
         <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
           Based on the selected SKU, open the full analytics board to review
           trends and performance.

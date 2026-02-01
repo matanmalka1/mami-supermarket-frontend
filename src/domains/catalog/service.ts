@@ -35,7 +35,7 @@ export const catalogService = {
     params?: { branchId?: number; limit?: number; offset?: number },
   ): Promise<{ items: Product[]; pagination: Pagination }> {
     const { branchId, limit = 50, offset = 0 } = params || {};
-    const data = await apiClient.get<ProductDTO[]>(
+    const data = await apiClient.get<ProductDTO[], ProductDTO[]>(
       `${catalogPrefix}/categories/${categoryId}/products`,
       {
         params: { branchId, limit, offset },
@@ -52,7 +52,7 @@ export const catalogService = {
     params?: { branchId?: number },
   ): Promise<Product> {
     const { branchId } = params || {};
-    const data = await apiClient.get<ProductDTO>(
+    const data = await apiClient.get<ProductDTO, ProductDTO>(
       `${catalogPrefix}/products/${productId}`,
       {
         params: { branchId },
@@ -73,7 +73,7 @@ export const catalogService = {
     sort?: string;
   }): Promise<{ items: Product[]; pagination: Pagination }> {
     const { q, limit = 50, offset = 0, minPrice, maxPrice, sort } = params;
-    const data = await apiClient.get<ProductDTO[]>(
+    const data = await apiClient.get<ProductDTO[], ProductDTO[]>(
       `${catalogPrefix}/products/search`,
       {
         params: { q, limit, offset, minPrice, maxPrice, sort },
@@ -127,9 +127,10 @@ export const catalogService = {
   }): Promise<Array<{ id: number; name: string }>> {
     const { q, limit = 10 } = params;
 
-    const { data } = await apiClient.get<{
-      items: Array<{ id: number; name: string }>;
-    }>(`${catalogPrefix}/products/autocomplete`, {
+    const data = await apiClient.get<
+      { items: Array<{ id: number; name: string }> },
+      { items: Array<{ id: number; name: string }> }
+    >(`${catalogPrefix}/products/autocomplete`, {
       params: { q, limit },
     });
     return Array.isArray(data.items) ? data.items : [];
@@ -139,7 +140,7 @@ export const catalogService = {
    * Get product reviews (always empty for now)
    */
   async getProductReviews(productId: number): Promise<{ items: any[] }> {
-    const { data } = await apiClient.get<any>(
+    const data = await apiClient.get<{ items?: any[] }, { items?: any[] }>(
       `${catalogPrefix}/products/${productId}/reviews`,
     );
     return { items: data.items ?? [] };
