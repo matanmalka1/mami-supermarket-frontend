@@ -1,8 +1,8 @@
 import { Bell, ShoppingCart, Lock } from "lucide-react";
-import { Link } from "react-router";
 import NotifDropdown from "../store-header/NotifDropdown";
 import AccountDropdown from "../store-header/AccountDropdown";
 import AvatarBadge from "../../ui/AvatarBadge";
+import type { OpsAlert } from "@/domains/notifications/types";
 
 type HeaderActionsProps = {
   isActuallyAdmin: boolean;
@@ -10,10 +10,12 @@ type HeaderActionsProps = {
   setActiveMenu: (value: "notif" | "account" | "dept" | null) => void;
   itemsCount: number;
   setIsOpen: (open: boolean) => void;
-  notifications: any[];
-  userRole: string | null;
+  notifications: NotificationItem[];
+  userRole: "ADMIN" | "CUSTOMER" | null;
   logout: () => void;
 };
+
+type NotificationItem = OpsAlert;
 
 const HeaderActions: React.FC<HeaderActionsProps> = ({
   isActuallyAdmin,
@@ -29,6 +31,8 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
     <div className="relative">
       <button
         onClick={() => setActiveMenu(activeMenu === "notif" ? null : "notif")}
+        aria-expanded={activeMenu === "notif"}
+        aria-label="Notifications"
         className={`p-2.5 transition-all rounded-xl hover:bg-gray-50 ${
           activeMenu === "notif"
             ? "text-[#008A45] bg-emerald-50"
@@ -53,6 +57,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
         setIsOpen(true);
         setActiveMenu(null);
       }}
+      aria-label="Open cart"
       className="p-2.5 text-gray-400 hover:text-[#008A45] hover:bg-gray-50 rounded-xl relative transition-all"
     >
       <ShoppingCart size={22} />
@@ -64,11 +69,14 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
     </button>
 
     <div className="relative ml-2">
-      <div
+      <button
+        type="button"
+        aria-expanded={activeMenu === "account"}
+        aria-label="Account menu"
         onClick={() =>
           setActiveMenu(activeMenu === "account" ? null : "account")
         }
-        className={`w-10 h-10 rounded-xl bg-gray-50 border-2 overflow-hidden cursor-pointer transition-all shadow-sm flex items-center justify-center ${
+        className={`w-10 h-10 rounded-xl bg-gray-50 border-2 overflow-hidden transition-all shadow-sm flex items-center justify-center ${
           activeMenu === "account"
             ? "border-[#008A45] ring-4 ring-emerald-50"
             : "border-transparent hover:border-emerald-100"
@@ -79,7 +87,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
           size={36}
           className="border-0"
         />
-      </div>
+      </button>
       {activeMenu === "account" && (
         <AccountDropdown
           onClose={() => setActiveMenu(null)}

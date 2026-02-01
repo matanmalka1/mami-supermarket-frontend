@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FC } from "react";
 import { ChevronDown, MapPin } from "lucide-react";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useBranchSelection } from "@/context/branch-context-core";
 
 const BranchSelector: FC = () => {
@@ -45,15 +46,20 @@ const BranchSelector: FC = () => {
         />
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden z-50">
+        <div
+          className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden z-50"
+          role="listbox"
+          aria-live="polite"
+        >
           {loading ? (
             <div className="p-4 text-sm text-gray-500 font-bold text-center">
               Loading branches...
             </div>
           ) : error ? (
-            <div className="p-4 text-sm text-red-500 font-bold text-center">
-              {error}
-            </div>
+            <ErrorMessage
+              message={error}
+              className="text-sm font-bold text-center"
+            />
           ) : branches.length === 0 ? (
             <div className="p-4 text-sm text-gray-500 font-bold text-center">
               No active branches
@@ -65,6 +71,8 @@ const BranchSelector: FC = () => {
                 <button
                   key={branch.id}
                   type="button"
+                  role="option"
+                  aria-selected={isActive}
                   onClick={() => {
                     selectBranch(branch);
                     setOpen(false);

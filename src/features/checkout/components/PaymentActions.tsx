@@ -6,6 +6,7 @@ interface PaymentActionsProps {
   onBack: () => void;
   onConfirm: () => void;
   total: number;
+  confirmDisabled?: boolean;
 }
 
 const PaymentActions: React.FC<PaymentActionsProps> = ({
@@ -22,6 +23,7 @@ const PaymentActions: React.FC<PaymentActionsProps> = ({
       size="lg"
       className="flex-[2] h-16 rounded-2xl"
       loading={loading}
+      disabled={confirmDisabled || loading}
       onClick={onConfirm}
     >
       Confirm & Pay {currencyILS(total)}

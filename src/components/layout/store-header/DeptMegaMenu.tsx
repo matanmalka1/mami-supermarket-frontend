@@ -1,8 +1,14 @@
 import { Link } from "react-router";
 import { ChevronDown } from "lucide-react";
 
+type DepartmentItem = {
+  id: number | string;
+  name: string;
+  icon?: string | React.ReactNode;
+};
+
 type DeptMegaMenuProps = {
-  items: any[];
+  items: DepartmentItem[];
   loading?: boolean;
   onClose: () => void;
 };
@@ -42,7 +48,7 @@ const DeptMegaMenu: React.FC<DeptMegaMenuProps> = ({
           </p>
         ) : items.length === 0 ? (
           <p className="text-sm text-gray-400 font-bold col-span-3">
-            Departments unavailable 
+            Departments unavailable
           </p>
         ) : (
           items.map((cat) => (
