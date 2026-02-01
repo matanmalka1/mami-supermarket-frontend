@@ -1,7 +1,7 @@
 import React from "react";
 
 type ErrorMessageProps = {
-  message?: React.ReactNode | null;
+  message?: React.ReactNode;
   className?: string;
   icon?: React.ReactNode;
 };
