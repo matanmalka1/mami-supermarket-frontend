@@ -67,6 +67,7 @@ const ResetForm: React.FC<ResetFormProps> = ({
         onChange={(e) => onNewPasswordChange((e.target as HTMLInputElement).value)}
         show={showNewPassword}
         onToggle={() => setShowNewPassword((prev) => !prev)}
+        placeholder="strong password"
         helperText="At least 8 chars, one letter and one digit. Allowed: ! @ # $ % ^ & * ( ) _ + = -"
       />
 

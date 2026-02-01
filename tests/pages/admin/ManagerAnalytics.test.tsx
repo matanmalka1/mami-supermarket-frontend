@@ -24,7 +24,7 @@ describe("ManagerAnalytics", () => {
       errorMessage: "",
       loadRevenue: vi.fn(),
     });
-    renderWithRouter();
+    renderWithRouter(<ManagerAnalytics />);
 
     await waitFor(() =>
       expect(screen.getByText(/Revenue Velocity/i)).toBeInTheDocument(),
@@ -43,7 +43,7 @@ describe("ManagerAnalytics", () => {
       errorMessage: "boom",
       loadRevenue,
     });
-    renderWithRouter();
+    renderWithRouter(<ManagerAnalytics />);
 
     await waitFor(() => expect(screen.getByText("boom")).toBeInTheDocument());
     await userEvent.click(screen.getByRole("button", { name: /retry/i }));

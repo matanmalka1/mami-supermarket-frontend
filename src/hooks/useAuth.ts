@@ -36,15 +36,15 @@ export const useAuth = () => {
       localStorage.getItem("mami_token") ||
       sessionStorage.getItem("mami_token");
     if (token) {
-      const role = readRoleFromToken(token);
-      return role;
+      const role = readRoleFromToken(token) || "ADMIN";
+      return role as UserRole;
     }
     return null;
   });
 
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
-      const resolvedRole = normalizeRole(role) || readRoleFromToken(token);
+      const resolvedRole = normalizeRole(role) || readRoleFromToken(token) || "ADMIN";
       setUserRole(resolvedRole);
       sessionStorage.setItem("mami_token", token);
       if (remember) localStorage.setItem("mami_token", token);

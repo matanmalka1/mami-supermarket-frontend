@@ -2,6 +2,7 @@ import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import ProductDetail from "@/pages/store/ProductDetail";
+import { Routes, Route } from "react-router";
 import renderWithRouter from "../../render";
 
 const { mockUseProductDetail } = vi.hoisted(() => ({
@@ -44,7 +45,12 @@ describe("ProductDetail", () => {
       error: null,
     });
 
-    renderWithRouter();
+    renderWithRouter(
+      <Routes>
+        <Route path="/store/product/:id" element={<ProductDetail />} />
+      </Routes>,
+      { route: "/store/product/123" },
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Test Product")).toBeInTheDocument();

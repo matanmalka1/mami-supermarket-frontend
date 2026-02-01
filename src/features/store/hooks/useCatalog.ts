@@ -11,7 +11,8 @@ export const useCatalog = (categoryId?: number, query?: string) => {
       : query
       ? await catalogService.getProducts({ q: query })
       : await catalogService.getProducts({});
-    return normalizeProductList(payload);
+    const products = normalizeProductList(payload);
+    return categoryId ? products.filter((p: any) => Number(p.id) === Number(categoryId) || Number(p.categoryId) === Number(categoryId)) : products;
   }, [categoryId, query]);
 
   const { data: products, loading, refresh } = useAsyncResource<Product[]>(

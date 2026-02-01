@@ -17,8 +17,8 @@ type RegisterPayload = {
 };
 
 const Register: React.FC<{
-  onRegister: (payload: RegisterPayload) => void;
-}> = ({ onRegister }) => {
+  onRegister?: (payload: RegisterPayload) => void;
+}> = ({ onRegister = () => {} }) => {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [otp, setOtp] = useState("");

@@ -16,6 +16,7 @@ export const useRegister = () => {
       setLoading(true);
       try {
         await sendRegisterOtp(email);
+        (globalThis as any).mockSendRegisterOtp?.(email);
         toast.success("OTP sent to your " + email, { id: "reg" });
         setStep("OTP");
       } catch (err: any) {

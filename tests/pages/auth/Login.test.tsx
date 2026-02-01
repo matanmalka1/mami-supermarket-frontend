@@ -16,7 +16,7 @@ describe("Login", () => {
       data: { access_token: "a.b.c", user: { role: "CUSTOMER" } },
     });
     const onLogin = vi.fn();
-    renderWithRouter();
+    renderWithRouter(<Login />);
 
     await userEvent.type(
       screen.getByPlaceholderText(/name@example/),

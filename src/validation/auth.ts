@@ -20,9 +20,9 @@ export const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().regex(/^05\d-?\d{7}$/, 'Invalid Israeli phone format (05X-XXXXXXX)'),
   password: passwordRules,
-  confirmPassword: passwordRules,
+  confirmPassword: passwordRules.optional(),
   acceptTerms: z.boolean().refine((val) => val === true, { message: 'You must accept the terms' }),
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data) => !data.confirmPassword || data.password === data.confirmPassword, {
   path: ['confirmPassword'],
   message: 'Passwords must match',
 });

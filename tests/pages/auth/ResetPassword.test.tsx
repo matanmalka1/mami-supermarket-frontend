@@ -11,7 +11,7 @@ describe("ResetPassword", () => {
 
   it("prefills token from query and submits reset", async () => {
     mockResetPassword.mockResolvedValue({});
-    renderWithRouter();
+    renderWithRouter(<ResetPassword />, { route: "/reset-password?token=abc123" });
 
     expect(screen.getByPlaceholderText(/token/)).toHaveValue("abc123");
     await userEvent.type(
@@ -40,7 +40,7 @@ describe("ResetPassword", () => {
 
   it("shows error when backend rejects token", async () => {
     mockResetPassword.mockRejectedValue(new Error("Invalid token"));
-    renderWithRouter();
+    renderWithRouter(<ResetPassword />, { route: "/reset-password" });
 
     await userEvent.type(
       screen.getByPlaceholderText(/name@example/),

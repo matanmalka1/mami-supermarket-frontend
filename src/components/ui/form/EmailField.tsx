@@ -6,7 +6,7 @@ type EmailFieldProps = Omit<BaseFieldProps, "label"> & { label?: string };
 
 const EmailField: React.FC<EmailFieldProps> = ({
   label = "Email Address",
-  placeholder = "john@example.com",
+  placeholder = "name@example.com",
   type = "email",
   autoComplete = "email",
   ...rest

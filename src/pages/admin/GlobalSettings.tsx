@@ -12,12 +12,25 @@ type SettingsPayload = Partial<AdminSettings>;
 
 const GlobalSettings: React.FC = () => {
   const { form, loading, handleChange, saveSettings } = useGlobalSettings();
+  const [draft, setDraft] = useState(form);
+
+  React.useEffect(() => {
+    setDraft(form);
+  }, [form]);
+
+  const updateField = (key: keyof AdminSettings, value: string) => {
+    handleChange(key, value);
+    setDraft((prev) => ({
+      ...prev,
+      [key]: key === "slots" ? value : Math.max(0, Number(value) || 0),
+    }));
+  };
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await saveSettings();
+      await saveSettings(draft);
       toast.success("Settings updated");
     } catch {
       toast.error("Settings push failed");
@@ -69,18 +82,18 @@ const GlobalSettings: React.FC = () => {
           <div className="space-y-4">
             <SettingsField
               label="Delivery Minimum (₪)"
-              value={form.deliveryMin}
-              onChange={(v) => handleChange("deliveryMin", v)}
+              value={draft.deliveryMin}
+              onChange={(v) => updateField("deliveryMin", v)}
             />
             <SettingsField
               label="Delivery Fee Under Min (₪)"
-              value={form.deliveryFee}
-              onChange={(v) => handleChange("deliveryFee", v)}
+              value={draft.deliveryFee}
+              onChange={(v) => updateField("deliveryFee", v)}
             />
             <SettingsField
               label="Slots Window"
-              value={form.slots}
-              onChange={(v) => handleChange("slots", v)}
+              value={draft.slots}
+              onChange={(v) => updateField("slots", v)}
             />
           </div>
         </section>

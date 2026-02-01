@@ -11,9 +11,9 @@ export type PasswordFormState = {
   setConfirmPassword: Dispatch<SetStateAction<string>>;
 };
 
-export const usePasswordFormState = (): PasswordFormState => {
-  const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
+export const usePasswordFormState = (initialToken = "", initialEmail = ""): PasswordFormState => {
+  const [email, setEmail] = useState(initialEmail);
+  const [token, setToken] = useState(initialToken);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 

@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { useCatalogCategories } from "./useCatalogCategories";
+import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import { catalogService } from "@/domains/catalog/service";
 
 vi.mock("@/domains/catalog/service", () => ({

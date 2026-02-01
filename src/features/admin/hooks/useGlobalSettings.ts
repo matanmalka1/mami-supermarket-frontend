@@ -10,6 +10,7 @@ const defaultForm: AdminSettings = {
 
 export const useGlobalSettings = () => {
   const [form, setForm] = useState<AdminSettings>(defaultForm);
+  const [draft, setDraft] = useState<AdminSettings>(defaultForm);
   const [loading, setLoading] = useState(false);
 
   const loadSettings = useCallback(async () => {
@@ -17,11 +18,13 @@ export const useGlobalSettings = () => {
     try {
       const data = await adminService.getSettings?.();
       if (data) {
-        setForm({
+        const normalized = {
           deliveryMin: Number(data.deliveryMin) || 150,
           deliveryFee: Number(data.deliveryFee) || 30,
           slots: data.slots || "06:00-22:00",
-        });
+        };
+        setForm(normalized);
+        setDraft(normalized);
       }
     } catch {
       // keep defaults
@@ -35,20 +38,20 @@ export const useGlobalSettings = () => {
   }, [loadSettings]);
 
   const handleChange = useCallback((key: keyof AdminSettings, value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      [key]: key === "slots" ? value : Math.max(0, Number(value) || 0),
-    }));
+    const nextValue = key === "slots" ? value : Math.max(0, Number(value) || 0);
+    setDraft((prev) => ({ ...prev, [key]: nextValue }));
+    setForm((prev) => ({ ...prev, [key]: nextValue }));
   }, []);
 
-  const saveSettings = useCallback(async () => {
+  const saveSettings = useCallback(async (payload?: Partial<AdminSettings>) => {
     setLoading(true);
     try {
-      await adminService.updateSettings(form);
+      const toSave = payload ?? draft;
+      await adminService.updateSettings(toSave);
     } finally {
       setLoading(false);
     }
-  }, [form]);
+  }, [draft]);
 
-  return { form, loading, loadSettings, handleChange, saveSettings };
+  return { form: draft, loading, loadSettings, handleChange, saveSettings };
 };

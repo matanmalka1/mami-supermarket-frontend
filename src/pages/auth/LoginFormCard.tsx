@@ -43,7 +43,7 @@ const LoginFormCard: React.FC<Props> = ({
           registration={register("email")}
           error={errors.email?.message}
           leftIcon={<Mail size={18} />}
-          placeholder="e.g., name@example.com"
+          placeholder="name@example.com"
         />
       </div>
       <div className="space-y-2">

@@ -17,7 +17,7 @@ describe("ForgotPassword", () => {
     mockRequestPasswordReset.mockResolvedValue({});
     mockResetPassword.mockResolvedValue({});
 
-    renderWithRouter();
+    renderWithRouter(<ForgotPassword />);
 
     await userEvent.type(
       screen.getByPlaceholderText(/name@example/),

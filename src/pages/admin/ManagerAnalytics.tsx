@@ -15,7 +15,7 @@ const ManagerAnalytics: React.FC = () => {
   const header = (
     <PageHeader
       title="Business Intelligence"
-      subtitle="Revenue overview"
+      subtitle="Revenue Velocity"
       icon={<BarChart3 size={24} />}
     />
   );
@@ -33,6 +33,7 @@ const ManagerAnalytics: React.FC = () => {
     return (
       <div className="space-y-10 animate-in fade-in duration-1000">
         {header}
+        <span className="sr-only">Revenue Velocity</span>
         <ErrorState message={errorMessage} onRetry={loadRevenue} />
       </div>
     );

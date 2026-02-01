@@ -22,7 +22,7 @@ const RevenueChartSection: React.FC<Props> = ({
   <div className="grid grid-cols-12 gap-10">
     <Card className="col-span-12 lg:col-span-8 p-10 space-y-8">
       <div className="flex justify-between items-center">
-        <h3 className="text-2xl ">Revenue Velocity</h3>
+        <h3 className="text-2xl ">Revenue Performance</h3>
         <TrendingUp size={20} className="text-emerald-500" />
       </div>
       {hasData ? (

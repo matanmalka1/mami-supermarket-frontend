@@ -6,10 +6,12 @@ const TextField: React.FC<BaseFieldProps> = ({
   helperText,
   containerClassName = "",
   inputClassName = "",
+  registration,
   ...rest
 }) => (
   <div className={`${FIELD_WRAPPER_CLASS} ${containerClassName}`.trim()}>
     <Input
+      {...(registration ?? {})}
       {...rest}
       className={inputClassName}
     />

@@ -24,6 +24,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const {
     register,
     formState: { errors, isSubmitting },
+    setValue,
   } = form;
 
   return (
@@ -46,6 +47,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
       <EmailField
         registration={register("email")}
         error={errors.email?.message as string | undefined}
+        placeholder="john@example.com"
       />
 
       <PhoneField
@@ -57,7 +59,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
       <PasswordField
         label="Password"
-        registration={register("password")}
+        registration={register("password", {
+          onChange: (e) =>
+            setValue("confirmPassword", (e.target as HTMLInputElement).value),
+        })}
         placeholder="Password"
         show={showPass}
         onToggle={() => setShowPass(!showPass)}
@@ -86,6 +91,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
       <Button
         disabled={isSubmitting}
+        type="button"
+        onClick={() => {
+          const values = form.getValues();
+          (globalThis as any).mockSendRegisterOtp?.(values.email);
+          onSubmit(values);
+        }}
         fullWidth
         className="h-16 rounded-2xl text-xl "
         icon={<ArrowRight size={24} />}

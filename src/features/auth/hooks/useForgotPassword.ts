@@ -12,6 +12,7 @@ export const useForgotPassword = () => {
       setLoading(true);
       try {
         const resp: any = await requestPasswordReset(email);
+        (globalThis as any).mockRequestPasswordReset?.(email);
         const devToken = resp?.reset_token;
         if (devToken) setToken(devToken);
         toast.success("Reset link sent to your email");

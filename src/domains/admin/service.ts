@@ -47,7 +47,7 @@ export const adminService = {
     id: number,
     data: { availableQuantity: number; reservedQuantity: number },
   ) =>
-    apiClient.patch<{ availableQuantity: number; reservedQuantity: number },void>(`${ADMIN_ENDPOINTS.inventory}/${id}`, {
+    apiClient.patch<{ availableQuantity: number; reservedQuantity: number },void>(`${ADMIN_ENDPOINTS.inventory}/item-${id}`, {
       available_quantity: data.availableQuantity,
       reserved_quantity: data.reservedQuantity,
     }),

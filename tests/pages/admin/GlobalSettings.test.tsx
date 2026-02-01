@@ -4,12 +4,12 @@ import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import GlobalSettings from "@/pages/admin/GlobalSettings";
 
-const mockToast = { success: vi.fn(), error: vi.fn() };
-const { mockUseGlobalSettings, mockHandleChange, mockSaveSettings } =
+const { mockUseGlobalSettings, mockHandleChange, mockSaveSettings, mockToast } =
   vi.hoisted(() => ({
     mockUseGlobalSettings: vi.fn(),
     mockHandleChange: vi.fn(),
     mockSaveSettings: vi.fn(),
+    mockToast: { success: vi.fn(), error: vi.fn() },
   }));
 
 vi.mock("react-hot-toast", () => ({ toast: mockToast }));

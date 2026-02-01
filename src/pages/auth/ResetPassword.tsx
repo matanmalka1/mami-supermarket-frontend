@@ -10,6 +10,7 @@ import { useResetPassword } from "@/features/auth/hooks/useResetPassword";
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const qpToken = searchParams.get("token") || "";
   const {
     email,
     token,
@@ -19,15 +20,14 @@ const ResetPassword: React.FC = () => {
     setToken,
     setNewPassword,
     setConfirmPassword,
-  } = usePasswordFormState();
+  } = usePasswordFormState(qpToken);
   // loading, error, and done are provided by useResetPassword
   const navigate = useNavigate();
   const { loading, done, error, handleReset } = useResetPassword();
 
   useEffect(() => {
-    const qpToken = searchParams.get("token") || "";
     if (qpToken) setToken(qpToken);
-  }, [searchParams, setToken]);
+  }, [qpToken, setToken]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

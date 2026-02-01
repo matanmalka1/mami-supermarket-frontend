@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useInventory } from "./useInventory";
+import { useInventory } from "@/features/admin/hooks/useInventory";
 import { adminService } from "@/domains/admin/service";
 import { toast } from "react-hot-toast";
 
