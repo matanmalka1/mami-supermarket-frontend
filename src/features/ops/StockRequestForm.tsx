@@ -64,10 +64,10 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
     toast.loading("Submitting stock request...", { id: "stock-req" });
     try {
       await stockRequestsService.create({
-        branch: String(data.branchId),
-        product: String(data.productId),
+        branchId: data.branchId,
+        productId: data.productId,
         quantity: data.quantity,
-        type: data.requestType,
+        requestType: data.requestType,
       });
       toast.success("Stock request submitted successfully!", {
         id: "stock-req",

@@ -21,8 +21,8 @@ export type StockRequest = {
 };
 
 export type StockRequestCreate = {
-  branch: string;
-  product: string;
+  branchId: number;
+  productId: number;
   quantity: number;
-  type: string;
+  requestType: string;
 };
