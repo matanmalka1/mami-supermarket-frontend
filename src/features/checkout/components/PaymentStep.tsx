@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import OrderSummary from "./OrderSummary";
 import CardForm from "./CardForm";
-import ErrorDisplay from "./ErrorDisplay";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import PaymentActions from "./PaymentActions";
 import type { CartItem } from "@/context/cart-context";
 
@@ -100,7 +100,7 @@ export const PaymentStep: React.FC<Props> = ({
         onExpiryChange={handleExpiryChange}
         onCvvChange={handleCvvChange}
       />
-      <ErrorDisplay error={error} />
+      <ErrorMessage message={error} />
       <PaymentActions
         loading={loading}
         onBack={onBack}

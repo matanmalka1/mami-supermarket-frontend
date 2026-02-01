@@ -1,14 +1,16 @@
 import { Truck, Store, ChevronRight } from "lucide-react";
 import Button from "../ui/Button";
 import { CheckoutStep } from "./CheckoutStepper";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type Props = {
   method: "DELIVERY" | "PICKUP";
   onSelect: (m: "DELIVERY" | "PICKUP") => void;
   onNext: (step: CheckoutStep) => void;
+  error?: string | null;
 };
 
-export const FulfillmentStep: React.FC<Props> = ({ method, onSelect, onNext }) => (
+export const FulfillmentStep: React.FC<Props> = ({ method, onSelect, onNext, error }) => (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
     <h2 className="text-4xl ">How would you like your groceries?</h2>
     <div className="grid grid-cols-2 gap-6">
@@ -37,6 +39,7 @@ export const FulfillmentStep: React.FC<Props> = ({ method, onSelect, onNext }) =
         </div>
       </button>
     </div>
+    <ErrorMessage message={error} className="text-center" />
     <Button size="lg" className="w-full h-20 rounded-[1.5rem]" onClick={() => onNext("SCHEDULE")}>
       Continue to Schedule <ChevronRight className="ml-2" />
     </Button>

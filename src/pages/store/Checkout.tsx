@@ -7,6 +7,7 @@ import FulfillmentStep from "@/features/checkout/components/FulfillmentStep";
 import ScheduleStep from "@/features/checkout/components/ScheduleStep";
 import PaymentStep from "@/features/checkout/components/PaymentStep";
 import Button from "@/components/ui/Button";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
@@ -69,7 +70,7 @@ const Checkout: React.FC = () => {
           <p className="text-2xl text-red-700 uppercase tracking-[0.2em]">
             Checkout Error
           </p>
-          <p className="text-red-600 font-bold">{error}</p>
+          <ErrorMessage message={error} className="text-center" />
           <Button
             variant="emerald"
             onClick={() => {
@@ -122,6 +123,7 @@ const Checkout: React.FC = () => {
             method={method}
             onSelect={setMethod}
             onNext={setStep}
+            error={!selectedBranch && method === "PICKUP" ? "Select a pickup branch" : null}
           />
         )}
 

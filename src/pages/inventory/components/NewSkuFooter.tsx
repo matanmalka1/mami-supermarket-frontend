@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@/components/ui/Button";
 import { ShieldCheck } from "lucide-react";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type Props = {
   summaryLabel: string;
@@ -28,9 +29,10 @@ const NewSkuFooter: React.FC<Props> = ({
       </p>
     </div>
 
-    {error && (
-      <p className="text-xs uppercase tracking-[0.5em] text-red-500">{error}</p>
-    )}
+    <ErrorMessage
+      message={error}
+      className="text-xs uppercase tracking-[0.5em] text-red-500 text-left"
+    />
 
     <Button
       fullWidth

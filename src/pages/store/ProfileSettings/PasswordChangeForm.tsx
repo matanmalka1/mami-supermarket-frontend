@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
 import PasswordField from "@/components/ui/form/PasswordField";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type PasswordFormShape = {
   currentPassword: string;
@@ -87,11 +88,10 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
             }
           />
         </div>
-        {passwordError && (
-          <p className="text-xs uppercase tracking-[0.3em] text-red-500">
-            {passwordError}
-          </p>
-        )}
+        <ErrorMessage
+          message={passwordError}
+          className="text-xs uppercase tracking-[0.3em] text-red-500"
+        />
         <Button
           fullWidth
           size="lg"

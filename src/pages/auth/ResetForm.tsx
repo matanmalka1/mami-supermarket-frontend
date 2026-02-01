@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import EmailField from "@/components/ui/form/EmailField";
 import TextField from "@/components/ui/form/TextField";
 import PasswordField from "@/components/ui/form/PasswordField";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type ResetFormProps = {
   email: string;
@@ -78,9 +79,7 @@ const ResetForm: React.FC<ResetFormProps> = ({
         onToggle={() => setShowConfirmPassword((prev) => !prev)}
       />
 
-      {showError && error && (
-        <p className="text-sm font-bold text-red-500 text-center">{error}</p>
-      )}
+      {showError && error && <ErrorMessage message={error} className="text-sm text-red-500" />}
 
       <Button fullWidth size="lg" loading={loading} type="submit">
         {buttonLabel}
