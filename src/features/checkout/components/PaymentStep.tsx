@@ -37,6 +37,26 @@ const formatExpiry = (value: string) => {
   return `${digits.slice(0, 2)}/${digits.slice(2)}`;
 };
 
+const validateExpiry = (value: string): boolean => {
+  if (!value || !value.includes("/")) return false;
+  const [month, year] = value.split("/");
+  if (!month || !year || month.length !== 2 || year.length !== 2) return false;
+
+  const expMonth = parseInt(month, 10);
+  const expYear = parseInt(year, 10);
+
+  if (expMonth < 1 || expMonth > 12) return false;
+
+  const now = new Date();
+  const currentYear = now.getFullYear() % 100;
+  const currentMonth = now.getMonth() + 1;
+
+  if (expYear < currentYear) return false;
+  if (expYear === currentYear && expMonth < currentMonth) return false;
+
+  return true;
+};
+
 export const PaymentStep: React.FC<Props> = ({
   itemsCount,
   subtotal,
@@ -65,8 +85,8 @@ export const PaymentStep: React.FC<Props> = ({
 
   const cardComplete = useMemo(
     () =>
-      [cardNumber, cardHolderName, expiry, cvv].every((value) =>
-        value.trim().length > 0,
+      [cardNumber, cardHolderName, expiry, cvv].every(
+        (value) => value.trim().length > 0,
       ),
     [cardNumber, cardHolderName, expiry, cvv],
   );
@@ -84,7 +104,7 @@ export const PaymentStep: React.FC<Props> = ({
   };
 
   const handleCvvChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCvv(event.target.value.replace(/\D/g, "").slice(0, 4));
+    setCvv(event.target.value.replace(/\D/g, "").slice(0, 3));
     setError(null);
   };
 
@@ -92,6 +112,10 @@ export const PaymentStep: React.FC<Props> = ({
     setError(null);
     if (!cardComplete) {
       setError("Please complete all card fields");
+      return;
+    }
+    if (!validateExpiry(expiry)) {
+      setError("Card has expired or invalid expiry date");
       return;
     }
     try {

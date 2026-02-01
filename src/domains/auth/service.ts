@@ -18,7 +18,7 @@ export const authService = {
       email: cred.email,
       password: cred.password,
     };
-   
+
     const res = await apiClient.post<AuthLoginRequest, AuthLoginResponse>(
       "/auth/login",
       payload,
@@ -35,12 +35,12 @@ export const authService = {
       phone: data.phone,
       ...(data.role ? { role: data.role } : {}),
     };
-  
+
     const res = await apiClient.post<AuthRegisterRequest, AuthRegisterResponse>(
       "/auth/register",
       payload,
     );
-    
+
     return res;
   },
   forgotPassword: (email: string) =>
@@ -69,7 +69,10 @@ export const authService = {
   updateProfile: (data: Partial<User>) =>
     apiClient.patch<any, User>("/me", data),
   getAddresses: () => apiClient.get<any[], any[]>("/me/addresses"),
-  addAddress: (data: any) => apiClient.post("/me/addresses", data),
+  addAddress: (data: any): Promise<any> =>
+    apiClient.post("/me/addresses", data),
+  updateAddress: (id: number, data: any): Promise<any> =>
+    apiClient.put(`/me/addresses/${id}`, data),
   deleteAddress: (id: number) => apiClient.delete(`/me/addresses/${id}`),
   setDefaultAddress: (id: number) =>
     apiClient.patch(`/me/addresses/${id}/default`, {}),

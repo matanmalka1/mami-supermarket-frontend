@@ -2,8 +2,21 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import { authService } from "@/domains/auth/service";
 
+export interface AddressWithLocation {
+  id: number;
+  label?: string;
+  address_line: string;
+  city: string;
+  postal_code: string;
+  country: string;
+  is_default?: boolean;
+  isDefault?: boolean;
+  lat?: number | null;
+  lng?: number | null;
+}
+
 export const useAddresses = () => {
-  const [addresses, setAddresses] = useState<any[]>([]);
+  const [addresses, setAddresses] = useState<AddressWithLocation[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAddresses = useCallback(async () => {
@@ -29,19 +42,25 @@ export const useAddresses = () => {
     country: string;
     is_default: boolean;
   }) => {
-    if (!address.address_line || !address.city || !address.postal_code || !address.country) {
+    if (
+      !address.address_line ||
+      !address.city ||
+      !address.postal_code ||
+      !address.country
+    ) {
       toast.error("All address fields are required");
       return;
     }
     try {
       const saved = await authService.addAddress(address);
-      setAddresses((prev) => [
-        ...prev,
-        saved || { ...address, id: Date.now() },
-      ]);
+      if (!saved || !saved.id) {
+        throw new Error("Invalid response from server");
+      }
+      setAddresses((prev) => [...prev, saved]);
       toast.success("Address added");
-    } catch {
-      toast.error("Failed to save");
+    } catch (error: any) {
+      console.error("Failed to save address:", error);
+      toast.error(error.message || "Failed to save");
     }
   };
 
@@ -55,12 +74,26 @@ export const useAddresses = () => {
     }
   };
 
-  const tagCurrentLocation = () => {
-    toast.loading("Accessing device location...", { id: "gps" });
-    navigator.geolocation.getCurrentPosition(
-      () => toast("Location captured locally (not saved yet).", { id: "gps" }),
-      () => toast.error("Location unavailable", { id: "gps" }),
-    );
+  const updateAddress = async (
+    id: number,
+    address: {
+      address_line?: string;
+      city?: string;
+      postal_code?: string;
+      country?: string;
+    },
+  ) => {
+    try {
+      const updated = await authService.updateAddress(id, address);
+      if (!updated || !updated.id) {
+        throw new Error("Invalid response from server");
+      }
+      setAddresses((prev) => prev.map((a) => (a.id === id ? updated : a)));
+      toast.success("Address updated");
+    } catch (error: any) {
+      console.error("Failed to update address:", error);
+      toast.error(error.message || "Failed to update");
+    }
   };
 
   const setDefault = async (id: number) => {
@@ -83,8 +116,8 @@ export const useAddresses = () => {
     addresses,
     loading,
     addAddress,
+    updateAddress,
     deleteAddress,
-    tagCurrentLocation,
     setDefault,
     refresh: fetchAddresses,
   };

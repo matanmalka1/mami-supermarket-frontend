@@ -27,11 +27,24 @@ export function useSimilarProducts({
           branchId: deliveryBranchId,
         });
         const normalizedCategory = category?.trim().toLowerCase();
-        const filtered = list.filter((p) => {
+
+        // Filter by category match, excluding current product
+        let filtered = list.filter((p) => {
           if (excludeId && p.id === excludeId) return false;
           if (!normalizedCategory) return true;
-          return p.category?.toLowerCase() === normalizedCategory;
+          const productCategory = p.category?.toLowerCase();
+          return (
+            productCategory && productCategory.includes(normalizedCategory)
+          );
         });
+
+        // If no matches found and we have a category, try broader search
+        if (filtered.length === 0 && normalizedCategory) {
+          filtered = list.filter((p) =>
+            excludeId ? p.id !== excludeId : true,
+          );
+        }
+
         setItems(filtered);
         setOffset(nextOffset);
       } catch (err: any) {

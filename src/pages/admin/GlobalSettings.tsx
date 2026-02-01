@@ -15,28 +15,20 @@ type SettingsPayload = Partial<AdminSettings>;
 
 const GlobalSettings: React.FC = () => {
   const { form, loading, handleChange, saveSettings } = useGlobalSettings();
-  const [draft, setDraft] = useState(form);
-
-  React.useEffect(() => {
-    setDraft(form);
-  }, [form]);
 
   const updateField = (key: keyof AdminSettings, value: string) => {
     handleChange(key, value);
-    setDraft((prev) => ({
-      ...prev,
-      [key]: key === "slots" ? value : Math.max(0, Number(value) || 0),
-    }));
   };
+
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await saveSettings(draft);
-      toast.success("Settings updated");
+      await saveSettings();
+      toast.success("Settings updated successfully");
     } catch {
-      toast.error("Settings push failed");
+      toast.error("Failed to update settings");
     }
   };
 
@@ -83,22 +75,26 @@ const GlobalSettings: React.FC = () => {
           <div className="space-y-4">
             <SettingsField
               label="Delivery Minimum (₪)"
-              value={draft.deliveryMin}
+              value={form.deliveryMin}
               onChange={(v) => updateField("deliveryMin", v)}
             />
             <SettingsField
               label="Delivery Fee Under Min (₪)"
-              value={draft.deliveryFee}
+              value={form.deliveryFee}
               onChange={(v) => updateField("deliveryFee", v)}
             />
             <SettingsField
               label="Slots Window"
-              value={draft.slots}
+              value={form.slots}
               onChange={(v) => updateField("slots", v)}
             />
           </div>
         </Card>
-        <Card variant="default" padding="lg" className="flex flex-col justify-between">
+        <Card
+          variant="default"
+          padding="lg"
+          className="flex flex-col justify-between"
+        >
           <DangerZone
             onSuspend={() => setIsSuspendDialogOpen(true)}
             onFlush={flushCache}

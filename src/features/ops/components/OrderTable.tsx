@@ -19,7 +19,8 @@ const OrderTable: React.FC<OrderTableProps> = ({
   selectedIds,
   onToggleSelect,
   onStatusChange,
-}) => (
+}) => {
+  return (
   <Table>
     <THead>
       <TR isHoverable={false}>
@@ -105,18 +106,22 @@ const OrderTable: React.FC<OrderTableProps> = ({
                 />
               </TD>
               <TD className="text-right">
-                <Link
-                  to={`/picking/${order.id}`}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-0 px-6 py-2.5 rounded-xl hover:from-emerald-700 hover:to-teal-700 hover:shadow-lg transition-all text-[10px] font-bold uppercase tracking-widest shadow-md"
-                >
-                  Process
-                </Link>
+                <div className="flex items-center justify-end gap-2">
+                  <Link
+                    to={`/picking/${order.id}`}
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-0 px-6 py-2.5 rounded-xl hover:from-emerald-700 hover:to-teal-700 hover:shadow-lg transition-all text-[10px] font-bold uppercase tracking-widest shadow-md"
+                  >
+                    Process
+                  </Link>
+                </div>
               </TD>
             </TR>
           );
         })}
     </TBody>
   </Table>
-);
+  );
+};
 
 export default OrderTable;
+

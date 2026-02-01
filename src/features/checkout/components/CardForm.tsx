@@ -63,7 +63,7 @@ const CardForm: React.FC<CardFormProps> = ({
         value={cvv}
         onChange={onCvvChange}
         placeholder="CVV"
-        maxLength={4}
+        maxLength={3}
         inputClassName="text-lg"
       />
     </div>

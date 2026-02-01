@@ -14,11 +14,13 @@ import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
 import { calculateDeliveryFee } from "./checkout/pricing";
+import { useGlobalSettings } from "@/features/admin/hooks/useGlobalSettings";
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
   const [orderCompleted, setOrderCompleted] = useState(false);
+  const { settings } = useGlobalSettings();
   const {
     cartItems,
     isAuthenticated,
@@ -114,6 +116,8 @@ const Checkout: React.FC = () => {
     method,
     subtotal,
     preview?.delivery_fee,
+    settings.deliveryMin,
+    settings.deliveryFee,
   );
   const finalTotal = subtotal + deliveryFee;
 

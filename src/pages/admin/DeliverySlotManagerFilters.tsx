@@ -32,7 +32,11 @@ const DeliverySlotManagerFilters: React.FC<DeliverySlotManagerFiltersProps> = ({
         value: branch.id,
         label: branch.name,
       }))}
-      placeholderOption="No branch"
+      placeholderOption={
+        availableBranches.length === 0
+          ? "No branches available"
+          : "All Branches"
+      }
       disabled={availableBranches.length === 0}
       containerClassName="min-w-[200px]"
       className="shadow-sm"

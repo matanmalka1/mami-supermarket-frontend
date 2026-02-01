@@ -18,13 +18,8 @@ export type SearchTypeaheadProps = {
 };
 
 const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
-  const {
-    query,
-    setQuery,
-    suggestions,
-    loading,
-    resetSuggestions,
-  } = useCatalogAutocomplete({ limit: 6 });
+  const { query, setQuery, suggestions, loading, resetSuggestions } =
+    useCatalogAutocomplete({ limit: 6 });
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -48,7 +43,10 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
         resetAll();
       }
     };
@@ -70,6 +68,13 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
 
   const handleSelect = (product: Product) => {
     navigate(`/store/product/${product.id}`);
+    resetAll();
+    onNavigate?.();
+  };
+
+  const handleViewAll = () => {
+    if (!query.trim()) return;
+    navigate(`/store/search?q=${encodeURIComponent(query.trim())}`);
     resetAll();
     onNavigate?.();
   };
@@ -127,7 +132,9 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
             highlightedIndex={highlightedIndex}
             loading={loading}
             listId={listId}
+            query={query}
             onSelect={handleSelect}
+            onViewAll={handleViewAll}
           />
         </div>
       )}

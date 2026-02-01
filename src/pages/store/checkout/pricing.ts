@@ -1,5 +1,5 @@
 /**
- * Checkout configuration constants
+ * Checkout configuration constants (defaults, overridden by global settings)
  */
 export const CHECKOUT_CONFIG = {
   DELIVERY_THRESHOLD: 150,
@@ -13,13 +13,18 @@ export const calculateDeliveryFee = (
   method: "DELIVERY" | "PICKUP",
   subtotal: number,
   previewFee?: number | null,
+  deliveryMin?: number,
+  deliveryFee?: number,
 ): number => {
   if (previewFee !== undefined && previewFee !== null) {
     return Number(previewFee);
   }
 
-  if (method === "DELIVERY" && subtotal < CHECKOUT_CONFIG.DELIVERY_THRESHOLD) {
-    return CHECKOUT_CONFIG.DELIVERY_FEE_UNDER_THRESHOLD;
+  const threshold = deliveryMin ?? CHECKOUT_CONFIG.DELIVERY_THRESHOLD;
+  const fee = deliveryFee ?? CHECKOUT_CONFIG.DELIVERY_FEE_UNDER_THRESHOLD;
+
+  if (method === "DELIVERY" && subtotal < threshold) {
+    return fee;
   }
 
   return 0;

@@ -20,9 +20,9 @@ export const mapBackendItems = (
 
     return {
       id: productId,
-      name: cachedProduct?.name || `Product ${item.productId}`,
+      name: item.productName || cachedProduct?.name || `Product ${item.productId}`,
       price: item.unitPrice,
-      image: cachedProduct?.imageUrl || cachedProduct?.image || "",
+      image: item.productImage || cachedProduct?.imageUrl || cachedProduct?.image || "",
       quantity: item.quantity,
       unit: cachedProduct?.unit,
       availableQuantity: cachedProduct?.availableQuantity,

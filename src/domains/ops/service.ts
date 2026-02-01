@@ -58,4 +58,14 @@ export const opsService = {
     apiClient.post<number[], { id: number }[]>("/ops/batches", {
       orderIds,
     }),
+
+  reportDamage: (
+    orderId: number,
+    itemId: number,
+    data: { reason: string; notes?: string },
+  ) =>
+    apiClient.post<{ reason: string; notes?: string }, { reported: boolean }>(
+      `/ops/orders/${orderId}/items/${itemId}/report-damage`,
+      data,
+    ),
 };

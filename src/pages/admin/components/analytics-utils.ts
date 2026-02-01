@@ -15,22 +15,26 @@ export type AnalyticsMetrics = {
   hasData: boolean;
 };
 
-export const buildAnalyticsMetrics = (revenue: RevenueData): AnalyticsMetrics => {
+export const buildAnalyticsMetrics = (
+  revenue: RevenueData,
+): AnalyticsMetrics => {
   const hasData = revenue.values.length > 0;
   const dataPoints = revenue.values.length;
-  const totalRevenue = hasData ? revenue.values.at(-1) ?? 0 : 0;
+  const totalRevenue = hasData ? (revenue.values.at(-1) ?? 0) : 0;
   const averageRevenue = hasData
     ? revenue.values.reduce((sum, value) => sum + value, 0) / dataPoints
     : 0;
   const priorRevenue =
-    hasData && dataPoints > 1 ? revenue.values.at(-2) ?? 0 : null;
-  const firstRevenue = hasData ? revenue.values[0] ?? 0 : 0;
+    hasData && dataPoints > 1 ? (revenue.values.at(-2) ?? 0) : null;
+  const firstRevenue = hasData ? (revenue.values[0] ?? 0) : 0;
   const changePercent =
     priorRevenue && priorRevenue > 0
       ? ((totalRevenue - priorRevenue) / priorRevenue) * 100
       : null;
   const changeFromStart =
-    firstRevenue > 0 ? ((totalRevenue - firstRevenue) / firstRevenue) * 100 : null;
+    firstRevenue > 0
+      ? ((totalRevenue - firstRevenue) / firstRevenue) * 100
+      : null;
   const maxValue = hasData ? Math.max(...revenue.values) : 0;
   const lastLabel = hasData ? revenue.labels.at(-1) : null;
   const firstLabel = hasData ? revenue.labels[0] : null;
@@ -38,37 +42,40 @@ export const buildAnalyticsMetrics = (revenue: RevenueData): AnalyticsMetrics =>
     changePercent !== null
       ? `${changePercent >= 0 ? "+" : ""}${changePercent.toFixed(1)}% vs prior`
       : hasData
-        ? "Awaiting comparison"
-        : "Awaiting data";
+        ? "Needs comparison data"
+        : "No data yet";
   const heroDetail = hasData
     ? `${lastLabel ?? "Latest"} · ${formatCurrency(totalRevenue)}`
-    : "Awaiting revenue metrics...";
+    : "No revenue data available for selected period";
   const stats: StatItem[] = [
     {
       label: "Total Revenue",
-      value: hasData ? formatCurrency(totalRevenue) : "Awaiting data",
+      value: hasData ? formatCurrency(totalRevenue) : "No data yet",
       trend: trendText,
       sub: lastLabel ? `${lastLabel} period` : "Latest period",
     },
     {
       label: "Average Period",
-      value: hasData ? formatCurrency(averageRevenue) : "Awaiting data",
+      value: hasData ? formatCurrency(averageRevenue) : "No data yet",
       trend: `${dataPoints} data points`,
       sub: "Period average",
     },
     {
-      label: "Tracked Periods",
+      label: "Time Periods",
       value: dataPoints ? dataPoints.toString() : "0",
-      trend: firstLabel && lastLabel ? `${firstLabel} → ${lastLabel}` : "Awaiting data",
-      sub: "Chart span",
+      trend:
+        firstLabel && lastLabel
+          ? `${firstLabel} → ${lastLabel}`
+          : "No data yet",
+      sub: "Days/Months analyzed",
     },
     {
       label: "Change vs Start",
       value:
         changeFromStart !== null
           ? `${changeFromStart >= 0 ? "+" : ""}${changeFromStart.toFixed(1)}%`
-          : "Awaiting data",
-      trend: hasData ? "Since first point" : "Awaiting data",
+          : "No data yet",
+      trend: hasData ? "Since first point" : "No data yet",
       sub: firstLabel ? `Start: ${firstLabel}` : "Start point",
     },
   ];
@@ -85,14 +92,14 @@ export const buildAnalyticsMetrics = (revenue: RevenueData): AnalyticsMetrics =>
   const scopeText =
     hasData && firstLabel && lastLabel
       ? `${firstLabel} → ${lastLabel} (${dataPoints} points)`
-      : "Data will appear once the report runs.";
+      : "No orders in selected period. Revenue data will appear once orders are delivered.";
   const momentumText = hasData
     ? changeFromStart !== null
       ? `Revenue has ${changeFromStart >= 0 ? "grown" : "declined"} ${Math.abs(
           changeFromStart,
         ).toFixed(1)}% since ${firstLabel ?? "the start"}.`
-      : "Awaiting enough data."
-    : "Awaiting revenue data.";
+      : "Not enough data for comparison."
+    : "No delivered orders yet. Only completed (DELIVERED) orders count as revenue.";
   const momentumWidth =
     hasData && changeFromStart !== null
       ? Math.min(100, Math.abs(changeFromStart))

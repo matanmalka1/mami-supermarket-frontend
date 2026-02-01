@@ -43,8 +43,14 @@ const SearchResults: React.FC = () => {
               Search Results
             </h1>
             <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">
-              Showing results for:{" "}
-              <span className="text-[#008A45]">"{query}"</span>
+              {query.trim() ? (
+                <>
+                  Showing results for:{" "}
+                  <span className="text-[#008A45]">"{query}"</span>
+                </>
+              ) : (
+                "Please enter a search term"
+              )}
             </p>
           </div>
         </div>

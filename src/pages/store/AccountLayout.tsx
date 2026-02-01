@@ -6,7 +6,6 @@ import {
   User,
   LogOut,
   ChevronRight,
-  Star,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import AvatarBadge from "@/components/ui/AvatarBadge";
@@ -18,7 +17,6 @@ interface AccountLayoutProps {
 
 const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
   const navigate = useNavigate();
-  const [isPremium, setIsPremium] = useState(true);
   const { user } = useUserProfile();
 
   const profileName =
@@ -32,44 +30,18 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
     { label: "Profile Settings", icon: User, path: "settings" },
   ];
 
-  const togglePremium = () => {
-    setIsPremium(!isPremium);
-    toast.success(
-      isPremium
-        ? "Membership downgraded to Standard"
-        : "Welcome to Premium Membership!",
-      {
-        icon: isPremium ? "⚪" : "💎",
-        style: { borderRadius: "1rem", fontWeight: "bold" },
-      },
-    );
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-12 gap-12">
       <aside className="col-span-12 lg:col-span-3 space-y-8">
         <div className="bg-gray-50/50 rounded-[2.5rem] p-8 space-y-6 border border-gray-100">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <AvatarBadge
-                name={profileName}
-                size={64}
-                className="rounded-2xl border-4 border-white shadow-md"
-              />
-              {isPremium && (
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#008A45] rounded-full flex items-center justify-center text-white border-2 border-white shadow-sm">
-                  <Star size={12} fill="currentColor" />
-                </div>
-              )}
-            </div>
+            <AvatarBadge
+              name={profileName}
+              size={64}
+              className="rounded-2xl border-4 border-white shadow-md"
+            />
             <div>
               <h2 className="text-xl  tracking-tight">{profileName}</h2>
-              <button
-                onClick={togglePremium}
-                className={`text-[10px] uppercase tracking-widest transition-all ${isPremium ? "text-[#008A45] hover:underline" : "text-gray-400 hover:text-emerald-600"}`}
-              >
-                {isPremium ? "Premium Member" : "Standard Account"}
-              </button>
             </div>
           </div>
 
@@ -106,21 +78,6 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
             <span className="text-sm">Sign Out</span>
           </button>
         </div>
-
-        {isPremium && (
-          <div className="p-8 bg-emerald-900 text-white rounded-[2.5rem] shadow-xl space-y-4 relative overflow-hidden group">
-            <Star
-              size={120}
-              className="absolute -right-10 -bottom-10 opacity-5 group-hover:scale-110 transition-transform"
-            />
-            <h4 className="text-[10px] uppercase tracking-[0.2em] text-emerald-400">
-              Premium Perk
-            </h4>
-            <p className="text-sm font-bold  leading-relaxed">
-              You're currently saving ₪45.00 on delivery fees this month.
-            </p>
-          </div>
-        )}
       </aside>
 
       <main className="col-span-12 lg:col-span-9 animate-in fade-in duration-700">
