@@ -5,37 +5,44 @@ const ORDERS_ENDPOINT = "/orders";
 
 const toOrder = (payload: any): Order => ({
   id: payload.id,
-  orderNumber: payload.order_number || payload.orderNumber,
-  customerName: payload.customer_name || payload.customerName,
-  customerPhone: payload.customer_phone || payload.customerPhone,
+  orderNumber: payload.orderNumber || payload.order_number,
+  customerName: payload.customerName || payload.customer_name,
+  customerPhone: payload.customerPhone || payload.customer_phone,
   status: payload.status,
   urgency: payload.urgency,
-  total: payload.total,
-  itemsCount: payload.items_count || payload.itemsCount,
+  total: payload.totalAmount || payload.total_amount || payload.total || 0,
+  itemsCount:
+    payload.itemsCount ||
+    payload.items_count ||
+    (Array.isArray(payload.items)
+      ? payload.items.reduce(
+          (sum: number, item: any) => sum + (item.quantity || 0),
+          0,
+        )
+      : 0),
   items: Array.isArray(payload.items)
     ? payload.items.map((item: any) => ({
         id: item.id,
         name: item.name,
         sku: item.sku,
-        price: item.price,
+        price: item.unitPrice || item.unit_price || item.price,
         quantity: item.quantity,
-        pickedStatus: item.picked_status || item.pickedStatus,
-        imageUrl: item.image_url || item.imageUrl,
+        pickedStatus: item.pickedStatus || item.picked_status,
+        imageUrl: item.imageUrl || item.image_url,
         unit: item.unit,
-        replacementName: item.replacement_name || item.replacementName,
+        replacementName: item.replacementName || item.replacement_name,
       }))
     : [],
-  deliverySlot: payload.delivery_slot
-    ? {
-        id: payload.delivery_slot.id,
-        startTime:
-          payload.delivery_slot.start_time || payload.delivery_slot.startTime,
-        endTime:
-          payload.delivery_slot.end_time || payload.delivery_slot.endTime,
-        date: payload.delivery_slot.date,
-      }
-    : undefined,
-  createdAt: payload.created_at || payload.createdAt,
+  deliverySlot:
+    payload.deliverySlot || payload.delivery_slot
+      ? {
+          id: (payload.deliverySlot || payload.delivery_slot).id,
+          startTime: (payload.deliverySlot || payload.delivery_slot).start_time,
+          endTime: (payload.deliverySlot || payload.delivery_slot).end_time,
+          date: (payload.deliverySlot || payload.delivery_slot).date,
+        }
+      : undefined,
+  createdAt: payload.createdAt || payload.created_at,
 });
 
 export const ordersService = {

@@ -24,36 +24,49 @@ type NavItem = { label: string; icon: LucideIcon; path: string };
 type NavGroup = { title: string; items: NavItem[]; roles?: UserRole[] };
 
 const navGroups: NavGroup[] = [
-  { title: "Operations", items: [
-    { label: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { label: "Inventory", icon: Box, path: "/inventory" },
-    { label: "Stock Reports", icon: PackagePlus, path: "/stock-requests" },
-    { label: "Performance", icon: Activity, path: "/performance" },
-  ]},
-  { title: "Management", roles: ["ADMIN"], items: [
-    { label: "Catalog Manager", icon: Tag, path: "/admin/catalog" },
-    { label: "Approve Stock", icon: CheckSquare, path: "/admin/requests" },
-    { label: "Delivery Slots", icon: CalendarClock, path: "/admin/delivery" },
-    { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
-    { label: "Global Settings", icon: Settings2, path: "/admin/settings" },
-    { label: "Audit Logs", icon: ClipboardList, path: "/audit" },
-  ]},
+  {
+    title: "Operations",
+    items: [
+      { label: "Dashboard", icon: LayoutDashboard, path: "/" },
+      { label: "Inventory", icon: Box, path: "/inventory" },
+      { label: "Stock Reports", icon: PackagePlus, path: "/stock-requests" },
+      { label: "Performance", icon: Activity, path: "/performance" },
+    ],
+  },
+  {
+    title: "Management",
+    roles: ["ADMIN"],
+    items: [
+      { label: "Catalog Manager", icon: Tag, path: "/admin/catalog" },
+      { label: "Approve Stock", icon: CheckSquare, path: "/admin/requests" },
+      { label: "Delivery Slots", icon: CalendarClock, path: "/admin/delivery" },
+      { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
+      { label: "Global Settings", icon: Settings2, path: "/admin/settings" },
+      { label: "Audit Logs", icon: ClipboardList, path: "/audit" },
+    ],
+  },
 ];
 
 interface OpsSidebarProps {
   userRole?: UserRole | null;
+  userName?: string | null;
 }
 
-const OpsSidebar: FC<OpsSidebarProps> = ({ userRole }) => {
+const OpsSidebar: FC<OpsSidebarProps> = ({ userRole, userName }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const effectiveRole = normalizeRole(userRole);
   if (!effectiveRole || !isOpsRole(effectiveRole)) return null;
 
   const isActive = (path: string) => location.pathname === path;
-  const visibleGroups = navGroups.filter(({ roles }) => !roles || roles.includes(effectiveRole));
+  const visibleGroups = navGroups.filter(
+    ({ roles }) => !roles || roles.includes(effectiveRole),
+  );
 
-  const handleGoToStore = () => { sessionStorage.setItem("mami_manual_store_visit", "true"); navigate("/store"); };
+  const handleGoToStore = () => {
+    sessionStorage.setItem("mami_manual_store_visit", "true");
+    navigate("/store");
+  };
 
   return (
     <aside className="w-64 bg-white border-r flex flex-col fixed inset-y-0 z-50">
@@ -113,7 +126,7 @@ const OpsSidebar: FC<OpsSidebarProps> = ({ userRole }) => {
         <div className="flex items-center gap-3 mb-6">
           <div className="relative">
             <AvatarBadge
-              name="Sarah Jenkins"
+              name={userName || "Admin User"}
               size={40}
               className="shadow-sm border-2 border-white"
             />
@@ -121,10 +134,7 @@ const OpsSidebar: FC<OpsSidebarProps> = ({ userRole }) => {
           </div>
           <div className="min-w-0">
             <p className="text-sm font-bold text-gray-900 truncate">
-              Sarah Jenkins
-            </p>
-            <p className="text-[10px] text-gray-400 uppercase tracking-tight">
-              Admin Role
+              {userName || "Admin User"}
             </p>
           </div>
         </div>

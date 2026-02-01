@@ -13,6 +13,7 @@ type HeaderActionsProps = {
   setIsOpen: (open: boolean) => void;
   notifications: NotificationItem[];
   userRole: UserRole | null;
+  userName: string | null;
   logout: () => void;
 };
 
@@ -26,6 +27,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
   setIsOpen,
   notifications,
   userRole,
+  userName,
   logout,
 }) => (
   <div className="flex items-center gap-3">
@@ -93,6 +95,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
         <AccountDropdown
           onClose={() => setActiveMenu(null)}
           userRole={userRole}
+          userName={userName}
           onLogout={logout}
         />
       )}

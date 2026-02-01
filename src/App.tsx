@@ -8,7 +8,7 @@ import { AppRouter } from "./app/router";
 
 
 const App: React.FC = () => {
-  const { isAuthenticated, userRole, login, logout } = useAuth();
+  const { isAuthenticated, userRole, userName, login, logout } = useAuth();
 
   return (
     <CartProvider>
@@ -30,6 +30,7 @@ const App: React.FC = () => {
         <AppRouter
           isAuthenticated={isAuthenticated}
           userRole={userRole}
+          userName={userName}
           login={login}
           logout={logout}
         />

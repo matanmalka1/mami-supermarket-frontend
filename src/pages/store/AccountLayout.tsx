@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import AvatarBadge from "@/components/ui/AvatarBadge";
+import { useUserProfile } from "@/features/auth/hooks/useUserProfile";
 
 interface AccountLayoutProps {
   onLogout: () => void;
@@ -18,6 +19,12 @@ interface AccountLayoutProps {
 const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
   const navigate = useNavigate();
   const [isPremium, setIsPremium] = useState(true);
+  const { user } = useUserProfile();
+
+  const profileName =
+    user?.fullName ||
+    `${user?.firstName ?? ""} ${user?.lastName ?? ""}`.trim() ||
+    "Customer";
 
   const menuItems = [
     { label: "My Orders", icon: Package, path: "orders" },
@@ -45,7 +52,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
           <div className="flex items-center gap-4">
             <div className="relative">
               <AvatarBadge
-                name="John Doe"
+                name={profileName}
                 size={64}
                 className="rounded-2xl border-4 border-white shadow-md"
               />
@@ -56,7 +63,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ onLogout }) => {
               )}
             </div>
             <div>
-              <h2 className="text-xl  tracking-tight">John Doe</h2>
+              <h2 className="text-xl  tracking-tight">{profileName}</h2>
               <button
                 onClick={togglePremium}
                 className={`text-[10px] uppercase tracking-widest transition-all ${isPremium ? "text-[#008A45] hover:underline" : "text-gray-400 hover:text-emerald-600"}`}

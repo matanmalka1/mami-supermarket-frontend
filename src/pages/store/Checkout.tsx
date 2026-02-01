@@ -16,6 +16,7 @@ import { saveOrderSnapshot } from "@/utils/order";
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
+  const [orderCompleted, setOrderCompleted] = useState(false);
   const {
     items,
     total,
@@ -46,24 +47,23 @@ const Checkout: React.FC = () => {
     const payload = await confirmOrder(tokenId, idempotencyKey);
     if (!payload) return;
     saveOrderSnapshot(payload.orderId, payload.snapshot);
-    clearCart();
+    setOrderCompleted(true);
     navigate(`/store/order-success/${payload.orderId}`, {
       state: { snapshot: payload.snapshot },
+      replace: true,
     });
   };
 
-  // Avoid calling navigate during render: useEffect for redirect
   useEffect(() => {
-    if (items.length === 0 && !loading) {
+    if (items.length === 0 && !loading && !orderCompleted) {
       navigate("/store");
     }
-  }, [items.length, loading, navigate]);
+  }, [items.length, loading, navigate, orderCompleted]);
 
-  if (items.length === 0 && !loading) {
+  if (items.length === 0 && !loading && !orderCompleted) {
     return null;
   }
 
-  // Inline error state UI for checkout errors
   if (error) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-6">
@@ -87,6 +87,7 @@ const Checkout: React.FC = () => {
 
   const subtotal = preview?.cart_total ? Number(preview.cart_total) : total;
   const DELIVERY_THRESHOLD = 150;
+
   const DELIVERY_FEE_UNDER_THRESHOLD = 30;
   const fallbackDeliveryFee =
     method === "DELIVERY" && subtotal < DELIVERY_THRESHOLD
@@ -119,7 +120,11 @@ const Checkout: React.FC = () => {
             method={method}
             onSelect={setMethod}
             onNext={setStep}
-            error={!selectedBranch && method === "PICKUP" ? "Select a pickup branch" : null}
+            error={
+              !selectedBranch && method === "PICKUP"
+                ? "Select a pickup branch"
+                : null
+            }
           />
         )}
 

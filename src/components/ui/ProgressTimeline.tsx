@@ -39,15 +39,15 @@ const ProgressTimeline = <T extends TimelineStep>({
   return (
     <div className={`relative ${className}`}>
       <div
-        className={`absolute top-1/2 left-0 right-0 h-1 ${connectorClassName} -z-20`}
+        className={`absolute top-6 left-12 right-12 h-1 ${connectorClassName} -z-20 rounded-full`}
       />
       {normalizedProgress && (
         <div
-          className="absolute top-1/2 left-0 h-1 bg-emerald-500 -z-10 transition-[width]"
+          className="absolute top-6 left-12 h-1 bg-emerald-500 -z-10 transition-all duration-500 rounded-full"
           style={{ width: normalizedProgress }}
         />
       )}
-      <div className="flex justify-between items-center relative z-10">
+      <div className="flex justify-between items-start relative z-10">
         {steps.map((step, index) => {
           const isActive = activeStepId === step.id;
           const isComplete = step.done ?? isActive;
@@ -55,13 +55,13 @@ const ProgressTimeline = <T extends TimelineStep>({
           return (
             <div
               key={step.id}
-              className="flex flex-col items-center gap-3 text-center"
+              className="flex flex-col items-center gap-4 text-center flex-1"
             >
               <div
-                className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 shadow-sm transition-colors ${
+                className={`w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-lg transition-all duration-300 ${
                   isComplete
-                    ? "bg-emerald-500 text-white border-emerald-500"
-                    : "bg-white text-gray-300 border-gray-100"
+                    ? "bg-emerald-500 text-white border-emerald-500 scale-110"
+                    : "bg-white text-gray-400 border-gray-200"
                 }`}
               >
                 {renderStepIcon
@@ -69,8 +69,8 @@ const ProgressTimeline = <T extends TimelineStep>({
                   : defaultIcon}
               </div>
               <div
-                className={`text-[10px] uppercase tracking-widest ${
-                  isComplete ? "text-emerald-600" : "text-gray-300"
+                className={`text-xs font-semibold uppercase tracking-wide transition-colors duration-300 px-2 ${
+                  isComplete ? "text-emerald-600" : "text-gray-400"
                 }`}
               >
                 {renderStepLabel

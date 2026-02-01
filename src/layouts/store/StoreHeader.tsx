@@ -21,7 +21,7 @@ const StoreHeader: React.FC = () => {
     "notif" | "account" | "dept" | null
   >(null);
   const { setIsOpen, items } = useCart();
-  const { userRole, logout } = useAuth();
+  const { userRole, userName, logout } = useAuth();
   const { categories, loading: categoriesLoading } = useCatalogCategories();
   const notifications: any[] = [];
 
@@ -104,6 +104,7 @@ const StoreHeader: React.FC = () => {
               setIsOpen={setIsOpen}
               notifications={notifications}
               userRole={userRole}
+              userName={userName}
               logout={logout}
             />
           </div>

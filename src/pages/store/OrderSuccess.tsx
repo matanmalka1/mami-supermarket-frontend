@@ -4,9 +4,11 @@ import { CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import OrderSummaryCard from "@/components/store/OrderSummaryCard";
 import OrderProgressTimeline from "@/components/store/OrderProgressTimeline";
-import { OrderSuccessSnapshot } from "@/domains/orders/types";
+import { OrderSuccessSnapshot, OrderStatus } from "@/domains/orders/types";
 import { useAddresses } from "@/features/store/hooks/useAddresses";
 import { loadOrderSnapshot } from "@/utils/order";
+import { ordersService } from "@/domains/orders/service";
+import { useCart } from "@/context/cart-context";
 
 type OrderSuccessState = {
   snapshot?: OrderSuccessSnapshot;
@@ -29,7 +31,15 @@ const OrderSuccess: React.FC = () => {
   const [snapshot, setSnapshot] = useState<OrderSuccessSnapshot | null>(
     location.state?.snapshot ?? null,
   );
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>(
+    OrderStatus.CREATED,
+  );
   const { addresses } = useAddresses();
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  }, []);
 
   useEffect(() => {
     if (snapshot || !id) return;
@@ -38,6 +48,24 @@ const OrderSuccess: React.FC = () => {
       setSnapshot(stored);
     }
   }, [id, snapshot]);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchOrderStatus = async () => {
+      try {
+        const order = await ordersService.get(id);
+        setOrderStatus(order.status);
+      } catch (error) {
+        console.error("Failed to fetch order status:", error);
+      }
+    };
+    fetchOrderStatus();
+
+    const interval = setInterval(fetchOrderStatus, 30000);
+
+    return () => clearInterval(interval);
+  }, [id]);
 
   const preferredAddress =
     snapshot?.deliveryAddress ||
@@ -53,7 +81,30 @@ const OrderSuccess: React.FC = () => {
     snapshot?.fulfillmentType === "pickup" ? "Pickup" : "Delivery";
   const addressLabel =
     preferredAddress ||
-    "Delivery address will be confirmed once your courier is en route.";
+    "Delivery address will be confirmed once your courier is on route.";
+
+  const getStatusMessage = () => {
+    switch (orderStatus) {
+      case OrderStatus.CREATED:
+        return "Your items are now being routed to our optimized picking queue. We'll notify you when they are out for delivery.";
+      case OrderStatus.IN_PROGRESS:
+        return "Your order is being picked by our team. We'll notify you when it's ready for delivery.";
+      case OrderStatus.READY:
+        return "Your order is packed and ready! It will be out for delivery soon.";
+      case OrderStatus.OUT_FOR_DELIVERY:
+        return "Your order is on its way! Track your delivery in real-time.";
+      case OrderStatus.DELIVERED:
+        return "Your order has been delivered. Thank you for shopping with us!";
+      case OrderStatus.CANCELED:
+        return "This order has been canceled. If you have questions, please contact support.";
+      case OrderStatus.DELAYED:
+        return "Your order is experiencing a delay. We're working to get it to you as soon as possible.";
+      case OrderStatus.MISSING:
+        return "There's an issue with your order. Our team is investigating. We'll contact you shortly.";
+      default:
+        return "Your order is being processed.";
+    }
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-12">
@@ -73,12 +124,12 @@ const OrderSuccess: React.FC = () => {
           </span>
         </p>
         <p className="text-gray-400 max-w-md mx-auto leading-relaxed">
-          Your items are now being routed to our optimized picking queue. We'll
-          notify you when they are out for delivery.
+          Your items are now being routed to our optimized picking queue. We'll{" "}
+          {getStatusMessage()}
         </p>
       </div>
 
-      <OrderProgressTimeline />
+      <OrderProgressTimeline currentStatus={orderStatus} />
 
       {snapshot ? (
         <OrderSummaryCard
@@ -90,8 +141,7 @@ const OrderSuccess: React.FC = () => {
       ) : (
         <div className="bg-white border rounded-[3rem] p-12 shadow-xl">
           <p className="text-sm text-gray-500">
-            We’re still preparing your summary. Check your order history if you
-            className="w-full h-16 rounded-2xl "
+            We’re still preparing your summary
           </p>
         </div>
       )}
@@ -101,9 +151,6 @@ const OrderSuccess: React.FC = () => {
           <Button variant="outline" className="w-full h-16 rounded-2xl ">
             Keep Shopping
           </Button>
-        </Link>
-        <Link to="/" className="flex-1">
-          <Button className="w-full h-16 rounded-2xl ">Track Order</Button>
         </Link>
       </div>
     </div>

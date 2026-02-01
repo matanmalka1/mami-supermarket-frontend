@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useCheckoutFlow } from "@/features/store/hooks/useCheckoutFlow";
 import { checkoutService } from "@/domains/checkout/service";
-import { useCart } from "@/context/cart-context";
+import { cartService } from "@/domains/cart/service";
 import type {
   OrderSuccessSnapshot,
   OrderSuccessFulfillment,
@@ -19,105 +19,122 @@ export const useCheckoutProcess = () => {
     preview,
     selectedBranch,
   } = useCheckoutFlow();
-  const { items, total, clearCart } = useCart();
+
+  const [cartItems, setCartItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const confirmOrder = useCallback(async (tokenId: number, idempotencyKey: string) => {
-    setError(null);
-    if (!isAuthenticated) {
-      const message = "Sign in to complete the order";
-      setError(message);
-      return null;
-    }
-    if (!serverCartId) {
-      const message = "Cart is syncing, please wait";
-      setError(message);
-      return null;
-    }
-    if (method === "PICKUP" && !selectedBranch) {
-      const message = "Pickup branch is loading, please wait";
-      setError(message);
-      return null;
+  useEffect(() => {
+    if (!isAuthenticated || !serverCartId) {
+      setCartItems([]);
+      return;
     }
 
-    setLoading(true);
-    try {
-      const data: any = await checkoutService.confirm(
-        {
-          cartId: serverCartId,
-          paymentTokenId: tokenId,
-          fulfillmentType: method,
-          branchId: method === "PICKUP" ? selectedBranch?.id : undefined,
-          deliverySlotId: slotId ?? undefined,
-        },
-        idempotencyKey,
-      );
-      const orderId = data?.order_id ?? data?.orderId ?? data?.id ?? "order";
-      const resolvedOrderId = String(orderId);
-      const subtotalBefore = preview?.cart_total
-        ? Number(preview.cart_total)
-        : total;
-      const deliveryFeeBefore =
-        preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
-          ? Number(preview.delivery_fee)
-          : 0;
-      const slotLabel = deliverySlots.find((slot) => slot.id === slotId)?.label;
-      const estimatedDelivery =
-        method === "DELIVERY"
-          ? slotLabel
-            ? `Delivery window ${slotLabel}`
-            : "Delivery window pending"
-          : selectedBranch
-            ? `Pickup ready at ${selectedBranch.name}`
-            : "Pickup time pending";
-      const orderSnapshot: OrderSuccessSnapshot = {
-        orderId: resolvedOrderId,
-        orderNumber: String(
-          data?.order_number || data?.orderNumber || resolvedOrderId,
-        ),
-        fulfillmentType: method.toLowerCase() as OrderSuccessFulfillment,
-        items: items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-          unit: item.unit,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        subtotal: subtotalBefore,
-        deliveryFee: deliveryFeeBefore,
-        total: subtotalBefore + deliveryFeeBefore,
-        estimatedDelivery,
-        deliverySlot: slotLabel,
-        pickupBranch: method === "PICKUP" ? selectedBranch?.name : undefined,
-        deliveryAddress:
-          method === "PICKUP" ? selectedBranch?.address : undefined,
-      };
-      return { orderId: resolvedOrderId, snapshot: orderSnapshot };
-    } catch (err: any) {
-      const message = err.message || "Checkout failed. Please try again.";
-      setError(message);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    isAuthenticated,
-    serverCartId,
-    method,
-    selectedBranch,
-    slotId,
-    preview,
-    deliverySlots,
-    items,
-    total,
-  ]);
+    const loadCartItems = async () => {
+      try {
+        const cart = await cartService.get();
+        setCartItems(cart.items || []);
+      } catch (error) {
+        console.error("Failed to load cart items:", error);
+        setCartItems([]);
+      }
+    };
+
+    loadCartItems();
+  }, [isAuthenticated, serverCartId]);
+
+  const confirmOrder = useCallback(
+    async (tokenId: number, idempotencyKey: string) => {
+      setError(null);
+      if (!isAuthenticated) {
+        setError("Sign in to complete the order");
+        return null;
+      }
+      if (!serverCartId) {
+        setError("Cart is syncing, please wait");
+        return null;
+      }
+      if (method === "PICKUP" && !selectedBranch) {
+        const message = "Pickup branch is loading, please wait";
+        setError(message);
+        return null;
+      }
+
+      setLoading(true);
+      try {
+        const data: any = await checkoutService.confirm(
+          {
+            cartId: serverCartId,
+            paymentTokenId: tokenId,
+            fulfillmentType: method,
+            branchId: method === "PICKUP" ? selectedBranch?.id : undefined,
+            deliverySlotId: slotId ?? undefined,
+          },
+          idempotencyKey,
+        );
+        const orderId = data?.order_id ?? data?.orderId ?? data?.id ?? "order";
+        const resolvedOrderId = String(orderId);
+
+        const totalPaid = data?.totalPaid || data?.total_paid || 0;
+        const cartTotal = preview?.cartTotal || preview?.cart_total || 0;
+        const deliveryFee = preview?.deliveryFee ?? preview?.delivery_fee ?? 0;
+
+        const slotLabel = deliverySlots.find(
+          (slot) => slot.id === slotId,
+        )?.label;
+        const estimatedDelivery =
+          method === "DELIVERY"
+            ? slotLabel
+              ? `Delivery window ${slotLabel}`
+              : "Delivery window pending"
+            : selectedBranch
+              ? `Pickup ready at ${selectedBranch.name}`
+              : "Pickup time pending";
+
+        const orderSnapshot: OrderSuccessSnapshot = {
+          orderId: resolvedOrderId,
+          orderNumber: String(
+            data?.order_number || data?.orderNumber || resolvedOrderId,
+          ),
+          fulfillmentType: method.toLowerCase() as OrderSuccessFulfillment,
+          items: cartItems.map((item) => ({
+            id: item.productId || item.id,
+            name: item.name || `Product ${item.productId || item.id}`,
+            image: item.image || "",
+            unit: item.unit,
+            price: item.unitPrice || item.price || 0,
+            quantity: item.quantity,
+          })),
+          subtotal: Number(cartTotal),
+          deliveryFee: Number(deliveryFee),
+          total: Number(totalPaid),
+          estimatedDelivery,
+          deliverySlot: slotLabel,
+          pickupBranch: method === "PICKUP" ? selectedBranch?.name : undefined,
+          deliveryAddress:
+            method === "PICKUP" ? selectedBranch?.address : undefined,
+        };
+        return { orderId: resolvedOrderId, snapshot: orderSnapshot };
+      } catch (err: any) {
+        setError(err.message || "Checkout failed. Please try again.");
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      isAuthenticated,
+      serverCartId,
+      method,
+      selectedBranch,
+      slotId,
+      preview,
+      deliverySlots,
+    ],
+  );
 
   return {
-    items,
-    total,
-    clearCart,
+    cartItems,
     isAuthenticated,
     method,
     setMethod,

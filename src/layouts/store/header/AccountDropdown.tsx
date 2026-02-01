@@ -5,6 +5,7 @@ import type { UserRole } from "@/domains/users/types";
 type AccountDropdownProps = {
   onClose: () => void;
   userRole?: UserRole | null;
+  userName?: string | null;
   onLogout: () => void;
 };
 
@@ -17,27 +18,20 @@ const menuLinks = [
 const AccountDropdown: React.FC<AccountDropdownProps> = ({
   onClose,
   userRole,
+  userName,
   onLogout,
 }) => {
   const isAdmin = userRole === "ADMIN";
   const badgeColor = isAdmin ? "text-teal-600" : "text-emerald-600";
   const badgeDot = isAdmin ? "bg-teal-500" : "bg-emerald-500";
   const headerBackground = isAdmin ? "bg-teal-50/30" : "bg-gray-50/50";
-  const subtitle = isAdmin ? "Administrator" : "Customer Account";
+  const displayName = userName || (isAdmin ? "Administrator" : "Customer");
   const sessionLabel = isAdmin ? "Active Admin Session" : "Active Session";
 
   return (
     <div className="absolute top-full right-0 mt-4 w-64 bg-white border border-gray-100 rounded-3xl shadow-2xl p-2 animate-in slide-in-from-top-2 overflow-hidden">
       <div className={`px-4 py-4 border-b mb-1 ${headerBackground}`}>
-        <p className="text-sm ">{subtitle}</p>
-        <div
-          className={`text-[9px] uppercase tracking-widest flex items-center gap-1.5 mt-0.5 ${badgeColor}`}
-        >
-          <div
-            className={`w-1.5 h-1.5 rounded-full animate-pulse ${badgeDot}`}
-          />
-          {sessionLabel}
-        </div>
+        <p className="text-sm font-semibold text-gray-800">{displayName}</p>
       </div>
 
       {isAdmin && (

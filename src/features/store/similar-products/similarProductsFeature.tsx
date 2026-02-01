@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { catalogService } from "@/domains/catalog/service";
+import { useDeliveryBranch } from "@/features/store/hooks/useDeliveryBranch";
 import type { Product } from "@/domains/catalog/types";
 
 type UseSimilarProductsOptions = { category?: string; excludeId?: number };
@@ -12,6 +13,7 @@ export function useSimilarProducts({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
+  const { deliveryBranchId } = useDeliveryBranch();
 
   const fetchSimilar = useCallback(
     async (nextOffset = 0) => {
@@ -22,6 +24,7 @@ export function useSimilarProducts({
           limit: 8,
           offset: nextOffset,
           q: category?.trim() || undefined,
+          branchId: deliveryBranchId,
         });
         const normalizedCategory = category?.trim().toLowerCase();
         const filtered = list.filter((p) => {
@@ -38,7 +41,7 @@ export function useSimilarProducts({
         setLoading(false);
       }
     },
-    [category, excludeId],
+    [category, excludeId, deliveryBranchId],
   );
 
   useEffect(() => {

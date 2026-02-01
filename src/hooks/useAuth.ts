@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { UserRole } from "@/domains/users/types";
 import { normalizeRole } from "../utils/roles";
+import { usersService } from "@/domains/users/service";
 
 type LoginPayload = { token: string; role?: string | null; remember?: boolean };
 
@@ -42,9 +43,30 @@ export const useAuth = () => {
     return null;
   });
 
+  const [userName, setUserName] = useState<string | null>(null);
+
+  // Fetch user profile when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      usersService
+        .getCurrentUser()
+        .then((user) => {
+          const fullName =
+            `${user.firstName || ""} ${user.lastName || ""}`.trim();
+          setUserName(fullName || null);
+        })
+        .catch((error) => {
+          console.error("[useAuth] Failed to fetch user profile:", error);
+        });
+    } else {
+      setUserName(null);
+    }
+  }, [isAuthenticated]);
+
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
-      const resolvedRole = normalizeRole(role) || readRoleFromToken(token) || "ADMIN";
+      const resolvedRole =
+        normalizeRole(role) || readRoleFromToken(token) || "ADMIN";
       setUserRole(resolvedRole);
       sessionStorage.setItem("mami_token", token);
       if (remember) localStorage.setItem("mami_token", token);
@@ -60,7 +82,8 @@ export const useAuth = () => {
     sessionStorage.removeItem("mami_manual_store_visit");
     setIsAuthenticated(false);
     setUserRole(null);
+    setUserName(null);
   }, []);
 
-  return { isAuthenticated, userRole, login, logout };
+  return { isAuthenticated, userRole, userName, login, logout };
 };

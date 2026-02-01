@@ -65,12 +65,21 @@ export const catalogService = {
     minPrice?: number;
     maxPrice?: number;
     sort?: string;
+    branchId?: number;
   }): Promise<{ items: Product[]; pagination: Pagination }> {
-    const { q, limit = 50, offset = 0, minPrice, maxPrice, sort } = params;
+    const {
+      q,
+      limit = 50,
+      offset = 0,
+      minPrice,
+      maxPrice,
+      sort,
+      branchId,
+    } = params;
     const data = await apiClient.get<ProductDTO[], ProductDTO[]>(
       `${catalogPrefix}/products/search`,
       {
-        params: { q, limit, offset, minPrice, maxPrice, sort },
+        params: { q, limit, offset, minPrice, maxPrice, sort, branchId },
       },
     );
     return buildProductPagination(data, limit, offset);
@@ -100,6 +109,7 @@ export const catalogService = {
       minPrice: params?.minPrice,
       maxPrice: params?.maxPrice,
       sort: params?.sort,
+      branchId: params?.branchId,
     });
   },
   async listFeaturedProducts(params?: {

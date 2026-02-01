@@ -37,6 +37,7 @@ import { OPS_ROLES } from "../utils/roles";
 interface RouterProps {
   isAuthenticated: boolean;
   userRole: UserRole | null;
+  userName: string | null;
   login: (payload: {
     token: string; role?: UserRole | null; remember?: boolean;
   }) => void;
@@ -46,6 +47,7 @@ interface RouterProps {
 export const AppRouter: React.FC<RouterProps> = ({
   isAuthenticated,
   userRole,
+  userName,
   login,
   logout,
 }) => {
@@ -73,7 +75,7 @@ export const AppRouter: React.FC<RouterProps> = ({
           <ProtectedRoutes>
             <RequireAuth>
               <RoleGuard allowedRoles={OPS_ROLES} userRole={userRole}>
-                <OpsLayout userRole={userRole} />
+                <OpsLayout userRole={userRole} userName={userName} />
               </RoleGuard>
             </RequireAuth>
           </ProtectedRoutes>

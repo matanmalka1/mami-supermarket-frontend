@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import { catalogService } from "@/domains/catalog/service";
+import { useDeliveryBranch } from "@/features/store/hooks/useDeliveryBranch";
 import type { Product } from "@/domains/catalog/types";
 
 const useSearchResults = (query: string) => {
@@ -9,6 +10,7 @@ const useSearchResults = (query: string) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeSort, setActiveSort] = useState("Relevance");
   const [activePrefs, setActivePrefs] = useState<string[]>([]);
+  const { deliveryBranchId } = useDeliveryBranch();
 
   useEffect(() => {
     let active = true;
@@ -19,6 +21,7 @@ const useSearchResults = (query: string) => {
           q: query,
           limit: 24,
           offset: 0,
+          branchId: deliveryBranchId,
         });
         if (active) setResults(items);
       } catch (err: unknown) {
@@ -35,7 +38,7 @@ const useSearchResults = (query: string) => {
     return () => {
       active = false;
     };
-  }, [query, activeSort, activePrefs]);
+  }, [query, activeSort, activePrefs, deliveryBranchId]);
 
   const openFilters = useCallback(() => setIsFilterOpen(true), []);
   const closeFilters = useCallback(() => setIsFilterOpen(false), []);
@@ -50,7 +53,9 @@ const useSearchResults = (query: string) => {
   }, []);
   const togglePref = useCallback((pref: string) => {
     setActivePrefs((prev) =>
-      prev.includes(pref) ? prev.filter((item) => item !== pref) : [...prev, pref],
+      prev.includes(pref)
+        ? prev.filter((item) => item !== pref)
+        : [...prev, pref],
     );
   }, []);
 
