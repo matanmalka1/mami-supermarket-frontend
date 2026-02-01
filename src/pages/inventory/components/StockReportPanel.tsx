@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import Grid from "@/components/ui/Grid";
 import Card from "@/components/ui/Card";
+import Pagination from "@/components/ui/Pagination";
 import StockReportTable from "@/pages/inventory/components/StockReportTable";
 import type { InventoryRow } from "@/domains/inventory/types";
 import type { BranchResponse } from "@/domains/branch/types";
@@ -15,9 +16,11 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
   const [branchFilter, setBranchFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
 
   const filtered = useMemo(() => {
-    return rows.filter((row) => {
+    const result = rows.filter((row) => {
       const branchMatch =
         branchFilter === "all" || String(row.branch?.id) === branchFilter;
       const product = row.product?.name?.toLowerCase() || "";
@@ -28,7 +31,14 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
       const inStockMatch = !inStockOnly || (row.availableQuantity ?? 0) > 0;
       return branchMatch && textMatch && inStockMatch;
     });
+    setCurrentPage(1); // Reset to first page when filters change
+    return result;
   }, [branchFilter, rows, search, inStockOnly]);
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedRows = filtered.slice(startIndex, endIndex);
 
   const totalAvailable = filtered.reduce(
     (sum, row) => sum + (row.availableQuantity ?? 0),
@@ -111,14 +121,14 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
           </Card>
         ))}
       </Grid>
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div className="flex gap-3 flex-wrap">
+      <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
+        <div className="flex flex-wrap gap-3">
           <select
             value={branchFilter}
             onChange={(event) => setBranchFilter(event.target.value)}
-            className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-sm font-bold uppercase tracking-[0.3em]"
+            className="bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold uppercase tracking-wider hover:border-teal-600 transition-colors focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
           >
-            <option value="all">All branches</option>
+            <option value="all">🏪 All Branches</option>
             {branches.map((branch) => (
               <option key={branch.id} value={branch.id}>
                 {branch.name}
@@ -128,24 +138,40 @@ const StockReportPanel: React.FC<Props> = ({ rows, branches }) => {
           <button
             type="button"
             onClick={toggleInStock}
-            className={`px-4 py-3 rounded-xl border uppercase tracking-[0.3em] text-sm ${
+            className={`px-5 py-3 rounded-xl border-2 uppercase tracking-wider text-sm font-semibold transition-all ${
               inStockOnly
-                ? "border-[#008A45] bg-[#008A45]/10 text-[#008A45]"
-                : "border-gray-100 text-gray-600"
+                ? "border-[#008A45] bg-[#008A45]/10 text-[#008A45] shadow-sm"
+                : "border-gray-200 text-gray-600 hover:border-gray-300"
             }`}
           >
-            {inStockOnly ? "In stock only" : "Include zeros"}
+            {inStockOnly ? "✓ In Stock" : "Include Zeros"}
           </button>
         </div>
         <input
           type="search"
-          placeholder="Search SKU / product"
+          placeholder="🔍 Search SKU or Product Name..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          className="w-full max-w-xs rounded-xl border border-gray-100 bg-gray-50 p-3 text-sm font-bold uppercase tracking-[0.2em]"
+          className="w-full lg:max-w-md rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-sm font-medium tracking-wide placeholder:text-gray-400 hover:border-teal-600 transition-colors focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
         />
       </div>
-      <StockReportTable rows={filtered} />
+      <div className="space-y-4">
+        <StockReportTable rows={paginatedRows} />
+        {filtered.length > 0 && (
+          <div className="flex items-center justify-between text-xs text-gray-500 px-2">
+            <span className="uppercase tracking-wider">
+              Showing {startIndex + 1}-{Math.min(endIndex, filtered.length)} of{" "}
+              {filtered.length} items
+            </span>
+          </div>
+        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filtered.length}
+        />
+      </div>
     </section>
   );
 };

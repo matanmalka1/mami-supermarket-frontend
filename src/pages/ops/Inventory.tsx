@@ -28,26 +28,26 @@ const Inventory: React.FC = () => {
   const rows = inventory;
 
   return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-500 relative">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 pb-12 animate-in fade-in duration-500 relative max-w-[1600px] mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-br from-gray-50 to-white p-6 rounded-3xl border border-gray-100">
         <div>
-          <h1 className="text-4xl  tracking-tight">Inventory Control</h1>
-          <p className="text-sm text-gray-500 mt-1 font-bold uppercase tracking-widest">
-            Global Stock Monitoring • Phase 2 Nodes
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            Inventory Control
+          </h1>
+          <p className="text-sm text-gray-500 mt-2 font-medium uppercase tracking-wider">
+            Multi-Branch Stock Management System
           </p>
         </div>
         <Button
           variant="primary"
-          className="rounded-2xl h-14 px-8"
+          className="rounded-2xl h-14 px-8 shadow-lg shadow-teal-900/10"
           icon={<Plus size={20} />}
           onClick={() => setIsNewModalOpen(true)}
         >
-          New SKU
+          Add New SKU
         </Button>
       </div>
-
-      <InventoryHighlights rows={rows} />
-      <StockReportPanel rows={rows} branches={branches} />
 
       {loading ? (
         <LoadingState label="Loading global inventory..." />
@@ -57,14 +57,13 @@ const Inventory: React.FC = () => {
           description="All branches are currently empty."
         />
       ) : (
-        <InventoryTable
-          rows={rows}
-          activeMenuId={activeMenuId}
-          onMenuToggle={(id) => setActiveMenuId(id)}
-          onUpdateStock={updateStock}
-          onViewAnalytics={(row) => setAnalyticsFocus(row)}
-          onViewRelocation={(row) => setRelocationFocus(row)}
-        />
+        <>
+          {/* Stats Overview */}
+          <InventoryHighlights rows={rows} />
+
+          {/* Main Inventory Table with Filters */}
+          <StockReportPanel rows={rows} branches={branches} />
+        </>
       )}
 
       <NewSkuModal

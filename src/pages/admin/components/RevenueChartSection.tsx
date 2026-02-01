@@ -63,7 +63,6 @@ const RevenueChartSection: React.FC<Props> = ({
       <Card className="p-10">
         <TrendingUp size={40} className="opacity-40" />
         <h4 className="text-xl  text-slate-800">Scope</h4>
-        <h4 className="text-xl  text-slate-800">Scope</h4>
         <p className="text-sm font-bold text-slate-600 leading-relaxed mt-2 ">
           {scopeText}
         </p>

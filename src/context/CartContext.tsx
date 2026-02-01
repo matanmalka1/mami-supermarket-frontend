@@ -56,7 +56,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     );
     if (success) {
       await fetchCart();
-      setIsOpen(true);
     }
   };
 

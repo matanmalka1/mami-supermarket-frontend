@@ -24,13 +24,19 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
   perfLoading,
   urgentCount,
 }) => (
-  <Card padding="md" className="rounded-[3rem] shadow-2xl space-y-6">
-    <div className="space-y-2">
-      <h1 className="text-4xl  tracking-tight">Orders Management</h1>
-      <p className="text-xs uppercase tracking-[0.4em] text-gray-400 flex gap-2 items-center">
-        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-        {ordersCount} Active Orders • {pendingCount} Pending
-      </p>
+  <Card padding="md" className="rounded-3xl shadow-xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 space-y-6">
+    <div className="space-y-3">
+      <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Orders Management</h1>
+      <div className="flex items-center gap-4 flex-wrap">
+        <p className="text-xs uppercase tracking-[0.3em] text-gray-500 flex gap-2 items-center font-semibold">
+          <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></span>
+          {ordersCount} Active Orders
+        </p>
+        <span className="text-gray-300">•</span>
+        <p className="text-xs uppercase tracking-[0.3em] text-amber-600 font-semibold">
+          {pendingCount} Pending
+        </p>
+      </div>
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

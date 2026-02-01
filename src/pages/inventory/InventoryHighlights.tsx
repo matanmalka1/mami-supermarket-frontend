@@ -41,17 +41,27 @@ const InventoryHighlights: React.FC<{ rows: InventoryRow[] }> = ({ rows }) => {
 
   return (
     <Grid cols={4} gap={4}>
-      {stats.map((stat) => (
+      {stats.map((stat, index) => (
         <Card
           key={stat.label}
           variant="glass"
           padding="md"
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-3 hover:shadow-lg transition-all duration-300 border border-gray-100"
         >
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">
             {stat.label}
           </p>
-          <p className="text-3xl  text-gray-900">{formatNumber(stat.value)}</p>
+          <p
+            className={`text-4xl font-bold ${
+              index === 3 && stat.value > 0
+                ? "text-amber-600"
+                : index === 1
+                  ? "text-emerald-600"
+                  : "text-gray-900"
+            }`}
+          >
+            {formatNumber(stat.value)}
+          </p>
           <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
             {stat.sub}
           </p>

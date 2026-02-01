@@ -17,18 +17,18 @@ type InventoryResponse = {
 };
 
 export const useInventory = () => {
-  const toInventoryRow = (payload: InventoryResponse): InventoryRow => ({
+  const toInventoryRow = (payload: any): InventoryRow => ({
     id: payload.id,
-    availableQuantity: payload.available_quantity,
-    reservedQuantity: payload.reserved_quantity,
+    availableQuantity: payload.availableQuantity ?? payload.available_quantity,
+    reservedQuantity: payload.reservedQuantity ?? payload.reserved_quantity,
     branch: {
-      id: payload.branch_id,
-      name: payload.branch_name,
+      id: payload.branchId ?? payload.branch_id,
+      name: payload.branchName ?? payload.branch_name,
     },
     product: {
-      id: payload.product_id,
-      name: payload.product_name,
-      sku: payload.productSku,
+      id: payload.productId ?? payload.product_id,
+      name: payload.productName ?? payload.product_name,
+      sku: payload.productSku ?? payload.product_sku,
     },
   });
 

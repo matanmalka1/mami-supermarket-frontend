@@ -42,6 +42,7 @@ export const adminService = {
   getInventory: () =>
     apiClient.get<AdminInventoryResponse[], AdminInventoryResponse[]>(
       ADMIN_ENDPOINTS.inventory,
+      { params: { limit: 10000 } },
     ),
   updateStock: (
     id: number,

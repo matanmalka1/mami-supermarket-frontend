@@ -65,8 +65,9 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
     >
       <ShoppingCart size={22} />
       {itemsCount > 0 && (
-        <span className="absolute top-1.5 right-1.5 bg-[#008A45] text-white text-[9px] w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-md">
+        <span className="absolute top-1.5 right-1.5 bg-[#008A45] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md">
           {itemsCount}
+          <span className="sr-only">{itemsCount} items in cart</span>
         </span>
       )}
     </button>

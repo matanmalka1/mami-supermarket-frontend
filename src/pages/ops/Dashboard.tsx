@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import DashboardHero from "@/components/ops/dashboard/DashboardHero";
 import LoadingState from "@/components/ui/LoadingState";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import Pagination from "@/components/ui/Pagination";
 import OrderTable from "@/features/ops/components/OrderTable";
 import { type OpsOrderStatus } from "@/features/ops/components/OrderStatusSelect";
 import { toast } from "react-hot-toast";
@@ -12,6 +13,34 @@ import { OrderStatus } from "@/domains/orders/types";
 
 const Dashboard: React.FC = () => {
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [urgencyFilter, setUrgencyFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const itemsPerPage = 20;
+
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const statusMatch =
+        statusFilter === "all" || order.status === statusFilter;
+      const urgencyMatch =
+        urgencyFilter === "all" || order.urgency === urgencyFilter;
+      const searchMatch =
+        !searchQuery ||
+        order.orderNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.customer?.fullName
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase());
+      return statusMatch && urgencyMatch && searchMatch;
+    });
+  }, [orders, statusFilter, urgencyFilter, searchQuery]);
+
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
+
   const pendingCount = orders.filter(
     (o) => o.status === OrderStatus.CREATED,
   ).length;
@@ -20,6 +49,11 @@ const Dashboard: React.FC = () => {
     () => orders.filter((o) => o.urgency === "critical"),
     [orders],
   );
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, urgencyFilter, searchQuery]);
   const {
     metrics: performance,
     loading: perfLoading,
@@ -98,7 +132,7 @@ const Dashboard: React.FC = () => {
           </p>
         </div>
         <OrderTable
-          orders={orders}
+          orders={paginatedOrders}
           selectedIds={selectedIds}
           onToggleSelect={toggleSelect}
           onStatusChange={handleStatusChange}
