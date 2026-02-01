@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import DashboardHero from "@/components/ops/DashboardHero";
 import LoadingState from "@/components/shared/LoadingState";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import OrderTable from "@/features/ops/components/OrderTable";
-import {
-  type OpsOrderStatus,
-} from "@/features/ops/components/OrderStatusSelect";
+import { type OpsOrderStatus } from "@/features/ops/components/OrderStatusSelect";
 import { toast } from "react-hot-toast";
 import { opsService } from "@/domains/ops/service";
 import { useOrders } from "@/features/ops/hooks/useOrders";
@@ -73,9 +72,10 @@ const Dashboard: React.FC = () => {
       />
 
       {perfError && !perfLoading && (
-        <p className="text-xs uppercase tracking-[0.2em] text-red-600">
-          {perfError}
-        </p>
+        <ErrorMessage
+          message={perfError}
+          className="text-xs uppercase tracking-[0.2em] text-red-600"
+        />
       )}
 
       <div className="rounded-[2.5rem] border border-gray-100 bg-white shadow-2xl overflow-hidden">

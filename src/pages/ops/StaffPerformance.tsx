@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import StatCard from "@/components/ui/StatCard";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
 
 const formatPercent = (value?: number) =>

@@ -1,5 +1,5 @@
-import Button from "../ui/Button";
-import { currencyILS } from "../../utils/format";
+import Button from "@/components/ui/Button";
+import { currencyILS } from "@/utils/format";
 
 interface PaymentActionsProps {
   loading: boolean;

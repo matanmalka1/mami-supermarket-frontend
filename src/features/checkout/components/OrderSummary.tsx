@@ -1,5 +1,5 @@
 import React from "react";
-import { currencyILS } from "../../utils/format";
+import { currencyILS } from "@/utils/format";
 
 interface OrderSummaryProps {
   itemsCount: number;

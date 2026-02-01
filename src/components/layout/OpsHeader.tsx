@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Bell, Settings2, AlertTriangle, Info } from "lucide-react";
 import SearchInput from "../ui/SearchInput";
 import { Link } from "react-router";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useOpsAlerts } from "@/features/ops/hooks/useOpsAlerts";
 import type { OpsAlert } from "@/domains/notifications/types";
 
@@ -49,9 +50,10 @@ const OpsHeader: React.FC = () => {
                     Loading alerts...
                   </p>
                 ) : alertsError ? (
-                  <p className="text-xs font-bold text-red-500 uppercase tracking-tight">
-                    {alertsError}
-                  </p>
+                  <ErrorMessage
+                    message={alertsError}
+                    className="text-xs font-bold text-red-500 uppercase tracking-tight"
+                  />
                 ) : alerts.length === 0 ? (
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-tight">
                     No alerts available.
