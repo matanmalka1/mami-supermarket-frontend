@@ -16,7 +16,6 @@ import StorefrontModal from "./StorefrontModal";
 import FlashDeals from "@/components/store/FlashDeals";
 
 const Storefront: React.FC = () => {
-  const navigate = useNavigate();
   const categoryRef = useRef<HTMLDivElement>(null);
   const {
     categories,

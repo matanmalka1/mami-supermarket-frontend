@@ -16,7 +16,7 @@ export const useRegister = () => {
       setLoading(true);
       try {
         await sendRegisterOtp(email);
-        toast.success("OTP sent to your inbox", { id: "reg" });
+        toast.success("OTP sent to your " + email, { id: "reg" });
         setStep("OTP");
       } catch (err: any) {
         toast.error(err.message || "Failed to send OTP", { id: "reg" });

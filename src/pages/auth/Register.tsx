@@ -39,6 +39,7 @@ const Register: React.FC<{
       email: "",
       phone: "",
       password: "",
+      confirmPassword: "",
       acceptTerms: false,
     },
   });

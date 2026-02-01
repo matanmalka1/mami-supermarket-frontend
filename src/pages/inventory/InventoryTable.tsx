@@ -26,10 +26,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   onViewAnalytics,
   onViewRelocation,
 }) => {
-  const handleAction = (action: string, name: string) => {
-    toast.success(`${action} initiated for ${name}`);
-    onMenuToggle(null);
-  };
+  // Removed unused handleAction function
 
   return (
     <Table>

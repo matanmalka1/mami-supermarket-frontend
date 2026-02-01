@@ -130,7 +130,6 @@ Database (PostgreSQL) + Cache (Redis)
 
 4. **Global State Providers** (`src/app/providers/`)
    - `AuthProvider` — User session, token, role
-   - `CartProvider` — Cart state and guest cart merge logic
 
 5. **Shared Components** (`src/components/`)
    - Reusable UI: inputs, buttons, loading/empty/error states, pagination
@@ -317,8 +316,7 @@ npm run test:coverage
 
 **Manual QA Checklist (Minimum):**
 
-- Guest cart → localStorage
-- Login merges guest cart
+
 - Catalog search/autocomplete
 - Cart CRUD operations
 - Checkout preview updates

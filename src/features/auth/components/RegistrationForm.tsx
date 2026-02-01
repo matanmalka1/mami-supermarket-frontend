@@ -1,9 +1,10 @@
 import { UseFormReturn } from "react-hook-form";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import Button from "../../../components/ui/Button";
+import type { RegisterInput } from "@/validation/auth";
 
 interface RegistrationFormProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<RegisterInput>;
   onSubmit: (data: any) => void;
   showPass: boolean;
   setShowPass: (val: boolean) => void;
@@ -111,6 +112,32 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
         {errors.password && (
           <p className="text-[10px] text-red-500 font-bold px-1">
             {String(errors.password.message)}
+          </p>
+        )}
+        <p className="text-[10px] text-gray-400 font-bold px-1">
+          Password must be at least 8 characters, include a letter and a number.
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        <div className="relative group">
+          <input
+            {...register("confirmPassword")}
+            type={showPass ? "text" : "password"}
+            className="w-full bg-white border border-gray-100 rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/5 focus:border-[#008A45] outline-none font-bold"
+            placeholder="Confirm Password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPass(!showPass)}
+            className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-300 hover:text-[#008A45]"
+          >
+            {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+        {errors.confirmPassword && (
+          <p className="text-[10px] text-red-500 font-bold px-1">
+            {String(errors.confirmPassword.message)}
           </p>
         )}
       </div>

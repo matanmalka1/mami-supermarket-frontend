@@ -1,8 +1,14 @@
 import * as z from 'zod';
 
+const passwordRules = z
+  .string()
+  .min(8, 'Password must be at least 8 characters')
+  .regex(/[A-Za-z]/, 'Password must contain at least one letter')
+  .regex(/\d/, 'Password must contain at least one number');
+
 export const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(6, 'Password must be at least 8 characters'),
   rememberMe: z.boolean().optional(),
 });
 
@@ -13,8 +19,12 @@ export const registerSchema = z.object({
   lastName: z.string().min(2, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().regex(/^05\d-?\d{7}$/, 'Invalid Israeli phone format (05X-XXXXXXX)'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: passwordRules,
+  confirmPassword: passwordRules,
   acceptTerms: z.boolean().refine((val) => val === true, { message: 'You must accept the terms' }),
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: 'Passwords must match',
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

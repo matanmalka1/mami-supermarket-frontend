@@ -26,8 +26,6 @@ const ProfileSettings: React.FC = () => {
     [user],
   );
   const {
-    register,
-    handleSubmit,
     formState: { isSubmitting },
     reset,
   } = useForm({
