@@ -19,6 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   icon, 
   loading, 
   fullWidth,
+  type = 'button',
   className = '', 
   ...props 
 }) => {
@@ -50,6 +51,7 @@ const Button: React.FC<ButtonProps> = ({
         ${className}
       `}
       disabled={loading || props.disabled}
+      type={type}
       {...props}
     >
       {loading ? (

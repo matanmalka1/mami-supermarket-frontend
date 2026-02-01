@@ -14,6 +14,7 @@ const PaymentActions: React.FC<PaymentActionsProps> = ({
   onBack,
   onConfirm,
   total,
+  confirmDisabled = false,
 }) => (
   <div className="flex gap-4">
     <Button variant="ghost" className="flex-1 h-16" onClick={onBack}>

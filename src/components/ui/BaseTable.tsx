@@ -43,7 +43,10 @@ const BaseTable = <T extends unknown>({
     <div
       className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
     >
-      <table className={`w-full text-left border-collapse ${className}`}>
+      <table
+        role="table"
+        className={`w-full text-left border-collapse ${className}`}
+      >
         {renderHeader ??
           (columns && (
             <thead className="bg-gray-50/50 text-[10px] text-gray-400 uppercase tracking-widest border-b">
@@ -51,6 +54,7 @@ const BaseTable = <T extends unknown>({
                 {columns.map((column, index) => (
                   <th
                     key={index}
+                    scope="col"
                     className={`px-8 py-6 ${column.className ?? ""}`}
                   >
                     {column.header}

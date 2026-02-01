@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -30,12 +31,12 @@ const SearchTypeahead: FC<SearchTypeaheadProps> = ({ onNavigate }) => {
   const navigate = useNavigate();
   const listId = "search-suggestions-dropdown";
 
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
     setOpen(false);
     setHighlightedIndex(-1);
     setQuery("");
     resetSuggestions();
-  };
+  }, [resetSuggestions, setQuery]);
 
   useEffect(() => {
     if (!query.trim()) {

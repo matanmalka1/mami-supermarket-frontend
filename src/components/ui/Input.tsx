@@ -21,6 +21,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
+    const describedBy =
+      error && props.id ? `${props.id}-error` : undefined;
+
     return (
       <div className={`space-y-2 w-full ${containerClassName}`}>
         {label && (
@@ -47,6 +50,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ${error ? "border-red-500 focus:border-red-500 focus:ring-red-500/5" : ""}
               ${className}
             `}
+            aria-invalid={!!error}
+            aria-describedby={describedBy}
             {...props}
           />
           {rightIcon && (
@@ -56,7 +61,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error && (
-          <p className="text-[10px] text-red-500 font-bold px-1">{error}</p>
+          <p
+            id={describedBy}
+            className="text-[10px] text-red-500 font-bold px-1"
+          >
+            {error}
+          </p>
         )}
       </div>
     );

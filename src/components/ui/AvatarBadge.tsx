@@ -31,6 +31,7 @@ export const AvatarBadge: React.FC<AvatarBadgeProps> = ({
       style={{ width: size, height: size }}
       className={`rounded-full bg-gray-100 border flex items-center justify-center text-gray-500 text-xs ${className}`}
       aria-label={name || email || "avatar"}
+      title={name || email || "avatar"}
     >
       {initials}
     </div>

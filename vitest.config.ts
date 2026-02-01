@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -15,7 +15,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    setupFiles: ['./src/tests/setup.ts'],
+    setupFiles: ['./tests/setup.ts'],
     globals: true,
     coverage: {
       provider: 'v8',
