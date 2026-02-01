@@ -1,4 +1,6 @@
+import type { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard,
   Box,
@@ -18,70 +20,40 @@ import AvatarBadge from "../ui/AvatarBadge";
 import type { UserRole } from "@/domains/users/types";
 import { normalizeRole, isOpsRole } from "@/utils/roles";
 
-const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, path: "/" },
-  { label: "Inventory", icon: Box, path: "/inventory" },
-  { label: "Stock Reports", icon: PackagePlus, path: "/stock-requests" },
-  { label: "Performance", icon: Activity, path: "/performance" },
-];
+type NavItem = { label: string; icon: LucideIcon; path: string };
+type NavGroup = { title: string; items: NavItem[]; roles?: UserRole[] };
 
-const adminItems = [
-  { label: "Catalog Manager", icon: Tag, path: "/admin/catalog" },
-  { label: "Approve Stock", icon: CheckSquare, path: "/admin/requests" },
-  { label: "Delivery Slots", icon: CalendarClock, path: "/admin/delivery" },
-  { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
-  { label: "Global Settings", icon: Settings2, path: "/admin/settings" },
-  { label: "Audit Logs", icon: ClipboardList, path: "/audit" },
+const navGroups: NavGroup[] = [
+  { title: "Operations", items: [
+    { label: "Dashboard", icon: LayoutDashboard, path: "/" },
+    { label: "Inventory", icon: Box, path: "/inventory" },
+    { label: "Stock Reports", icon: PackagePlus, path: "/stock-requests" },
+    { label: "Performance", icon: Activity, path: "/performance" },
+  ]},
+  { title: "Management", roles: ["ADMIN"], items: [
+    { label: "Catalog Manager", icon: Tag, path: "/admin/catalog" },
+    { label: "Approve Stock", icon: CheckSquare, path: "/admin/requests" },
+    { label: "Delivery Slots", icon: CalendarClock, path: "/admin/delivery" },
+    { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
+    { label: "Global Settings", icon: Settings2, path: "/admin/settings" },
+    { label: "Audit Logs", icon: ClipboardList, path: "/audit" },
+  ]},
 ];
 
 interface OpsSidebarProps {
   userRole?: UserRole | null;
 }
 
-const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
+const OpsSidebar: FC<OpsSidebarProps> = ({ userRole }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const effectiveRole = normalizeRole(userRole);
+  if (!effectiveRole || !isOpsRole(effectiveRole)) return null;
 
-  const effectiveRole = userRole;
-  if (!isOpsRole(effectiveRole)) return null;
+  const isActive = (path: string) => location.pathname === path;
+  const visibleGroups = navGroups.filter(({ roles }) => !roles || roles.includes(effectiveRole));
 
-  const showManagementLinks = effectiveRole === "ADMIN";
-
-  const renderNavGroup = (title: string, items: any[]) => (
-    <div className="space-y-2">
-      <p className="px-4 text-[10px] text-gray-400 uppercase tracking-[0.2em]">
-        {title}
-      </p>
-      <nav className="space-y-1">
-        {items.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-              location.pathname === item.path
-                ? "bg-emerald-50 text-[#006666] font-bold shadow-sm"
-                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            <item.icon
-              size={20}
-              className={
-                location.pathname === item.path
-                  ? "text-[#006666]"
-                  : "text-gray-400 group-hover:text-gray-600"
-              }
-            />
-            <span className="text-sm">{item.label}</span>
-          </Link>
-        ))}
-      </nav>
-    </div>
-  );
-
-  const handleGoToStore = () => {
-    sessionStorage.setItem("mami_manual_store_visit", "true");
-    navigate("/store");
-  };
+  const handleGoToStore = () => { sessionStorage.setItem("mami_manual_store_visit", "true"); navigate("/store"); };
 
   return (
     <aside className="w-64 bg-white border-r flex flex-col fixed inset-y-0 z-50">
@@ -102,8 +74,39 @@ const OpsSidebar: React.FC<OpsSidebarProps> = ({ userRole }) => {
       </div>
 
       <div className="flex-1 px-4 space-y-8 py-4 overflow-y-auto no-scrollbar">
-        {renderNavGroup("Operations", navItems)}
-        {showManagementLinks && renderNavGroup("Management", adminItems)}
+        {visibleGroups.map(({ title, items }) => (
+          <div key={title} className="space-y-2">
+            <p className="px-4 text-[10px] text-gray-400 uppercase tracking-[0.2em]">
+              {title}
+            </p>
+            <nav className="space-y-1">
+              {items.map((item) => {
+                const active = isActive(item.path);
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      active
+                        ? "bg-emerald-50 text-[#006666] font-bold shadow-sm"
+                        : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                    }`}
+                  >
+                    <item.icon
+                      size={20}
+                      className={
+                        active
+                          ? "text-[#006666]"
+                          : "text-gray-400 group-hover:text-gray-600"
+                      }
+                    />
+                    <span className="text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        ))}
       </div>
 
       <div className="p-6 border-t bg-gray-50/50">
