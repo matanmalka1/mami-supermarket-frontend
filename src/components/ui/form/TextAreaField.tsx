@@ -1,14 +1,17 @@
 import React from "react";
-import {
-  LABEL_CLASS,
-  ERROR_CLASS,
-  FIELD_WRAPPER_CLASS,
-  BaseFieldProps,
-} from "./base";
+import {LABEL_CLASS,ERROR_CLASS,FIELD_WRAPPER_CLASS,} from "./base";
+import type { TextareaHTMLAttributes } from "react";
+import type { UseFormRegisterReturn } from "react-hook-form";
 
-type TextAreaFieldProps = Omit<BaseFieldProps, "type" | "prefix" | "leftIcon" | "rightIcon"> & {
+type TextAreaFieldProps = {
+  label: React.ReactNode;
+  registration?: UseFormRegisterReturn;
+  error?: string;
+  helperText?: string;
+  containerClassName?: string;
+  inputClassName?: string;
   rows?: number;
-};
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const TextAreaField: React.FC<TextAreaFieldProps> = ({
   label,

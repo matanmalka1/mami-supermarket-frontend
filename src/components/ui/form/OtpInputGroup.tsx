@@ -46,7 +46,9 @@ const OtpInputGroup: React.FC<OtpInputGroupProps> = ({
         {Array.from({ length }).map((_, idx) => (
           <input
             key={idx}
-            ref={(el) => (inputs.current[idx] = el)}
+            ref={(el) => {
+              inputs.current[idx] = el;
+            }}
             inputMode="numeric"
             pattern="\\d*"
             maxLength={1}

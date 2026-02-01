@@ -1,17 +1,23 @@
 import React from "react";
+import type { SelectHTMLAttributes } from "react";
 import {
   LABEL_CLASS,
   ERROR_CLASS,
   FIELD_WRAPPER_CLASS,
-  BaseFieldProps,
 } from "./base";
 
 type Option = { value: string | number; label: string };
 
-type SelectFieldProps = Omit<BaseFieldProps, "prefix" | "leftIcon" | "rightIcon"> & {
+type SelectFieldProps = {
+  label: React.ReactNode;
+  registration?: any;
+  error?: string;
+  helperText?: string;
   options: Option[];
   placeholderOption?: string;
-};
+  containerClassName?: string;
+  className?: string;
+} & SelectHTMLAttributes<HTMLSelectElement>;
 
 const SelectField: React.FC<SelectFieldProps> = ({
   label,
