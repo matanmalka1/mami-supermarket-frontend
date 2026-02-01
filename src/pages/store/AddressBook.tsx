@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MapPin, Plus, Trash2, Navigation, Info } from "lucide-react";
 import Button from "@/components/ui/Button";
+import PageHeader from "@/components/ui/PageHeader";
 import Modal from "@/components/ui/Modal";
 import { useAddresses } from "@/features/store/hooks/useAddresses";
 import LoadingState from "@/components/ui/LoadingState";
@@ -41,24 +42,20 @@ const AddressBook: React.FC = () => {
 
   return (
     <div className="space-y-10">
-      <div className="flex justify-between items-end">
-        <div className="space-y-1">
-          <h1 className="text-5xl  text-gray-900 tracking-tighter">
-            Addresses
-          </h1>
-          <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em]">
-            Manage your shipping nodes
-          </p>
-        </div>
-        <Button
-          variant="brand"
-          icon={<Plus size={18} />}
-          className="rounded-2xl h-14 px-8"
-          onClick={() => setIsModalOpen(true)}
-        >
-          Add New
-        </Button>
-      </div>
+      <PageHeader
+        title="Addresses"
+        subtitle="Manage your shipping nodes"
+        actions={
+          <Button
+            variant="brand"
+            icon={<Plus size={18} />}
+            className="rounded-2xl h-14 px-8"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Add New
+          </Button>
+        }
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <button

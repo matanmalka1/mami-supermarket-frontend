@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/Table";
+import BaseTable, { type ColumnDefinition } from "@/components/ui/BaseTable";
 import { toast } from "react-hot-toast";
 import {
   InventoryRow,
@@ -7,7 +7,6 @@ import {
   getReservedQuantity,
 } from "@/domains/inventory/types";
 import InventoryTableRow from "./InventoryTableRow";
-import InventoryTableEmptyRow from "./InventoryTableEmptyRow";
 
 type InventoryTableProps = {
   rows: InventoryRow[];
@@ -18,6 +17,20 @@ type InventoryTableProps = {
   onViewRelocation: (row: InventoryRow) => void;
 };
 
+const columns: ColumnDefinition<InventoryRow>[] = [
+  { header: "Product Details" },
+  { header: "Branch" },
+  {
+    header: <span className="text-center w-full block">Stock Level</span>,
+    className: "text-center",
+  },
+  { header: "Reserved" },
+  {
+    header: <span className="text-right w-full block">Actions</span>,
+    className: "text-right",
+  },
+];
+
 const InventoryTable: React.FC<InventoryTableProps> = ({
   rows,
   activeMenuId,
@@ -26,51 +39,38 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
   onViewAnalytics,
   onViewRelocation,
 }) => {
-  // Removed unused handleAction function
-
   return (
-    <Table>
-      <THead>
-        <TR isHoverable={false}>
-          <TH>Product Details</TH>
-          <TH>Branch</TH>
-          <TH className="text-center">Stock Level</TH>
-          <TH>Reserved</TH>
-          <TH className="text-right">Actions</TH>
-        </TR>
-      </THead>
-      <TBody>
-        {rows.length === 0 ? (
-          <InventoryTableEmptyRow />
-        ) : (
-          rows.map((inv) => {
-            const available = getAvailableQuantity(inv);
-            const reserved = getReservedQuantity(inv);
-            const branchName = inv.branch?.name || "Central Hub";
-            const isLowStock = available <= 25;
-            const statusLabel = isLowStock ? "LOW_STOCK" : "OPTIMAL";
-            const statusVariant = isLowStock ? "orange" : "emerald";
-            return (
-              <InventoryTableRow
-                key={inv.id}
-                inv={inv}
-                available={available}
-                reserved={reserved}
-                branchName={branchName}
-                statusLabel={statusLabel}
-                statusVariant={statusVariant}
-                isLowStock={isLowStock}
-                activeMenuId={activeMenuId}
-                onMenuToggle={onMenuToggle}
-                onUpdateStock={onUpdateStock}
-                onViewAnalytics={onViewAnalytics}
-                onViewRelocation={onViewRelocation}
-              />
-            );
-          })
-        )}
-      </TBody>
-    </Table>
+    <BaseTable
+      data={rows}
+      columns={columns}
+      emptyLabel="No inventory found."
+      rowKey={(inv) => inv.id}
+      renderRow={(inv) => {
+        const available = getAvailableQuantity(inv);
+        const reserved = getReservedQuantity(inv);
+        const branchName = inv.branch?.name || "Central Hub";
+        const isLowStock = available <= 25;
+        const statusLabel = isLowStock ? "LOW_STOCK" : "OPTIMAL";
+        const statusVariant = isLowStock ? "orange" : "emerald";
+        return (
+          <InventoryTableRow
+            key={inv.id}
+            inv={inv}
+            available={available}
+            reserved={reserved}
+            branchName={branchName}
+            statusLabel={statusLabel}
+            statusVariant={statusVariant}
+            isLowStock={isLowStock}
+            activeMenuId={activeMenuId}
+            onMenuToggle={onMenuToggle}
+            onUpdateStock={onUpdateStock}
+            onViewAnalytics={onViewAnalytics}
+            onViewRelocation={onViewRelocation}
+          />
+        );
+      }}
+    />
   );
 };
 

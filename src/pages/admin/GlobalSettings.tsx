@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Save, Coins } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Grid from "@/components/ui/Grid";
+import Card from "@/components/ui/Card";
+import PageHeader from "@/components/ui/PageHeader";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "react-hot-toast";
 import SettingsField from "./SettingsField";
@@ -56,27 +59,25 @@ const GlobalSettings: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in duration-500 pb-20">
-      <div className="flex justify-between items-end border-b pb-8">
-        <div>
-          <h1 className="text-5xl  tracking-tighter">System Config</h1>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">
-            Business Logic • Master Settings
-          </p>
-        </div>
-        <Button
-          variant="brand"
-          icon={<Save size={18} />}
-          className="rounded-2xl h-14 px-10 shadow-xl"
-          onClick={handleSave}
-          loading={loading}
-        >
-          Publish Global Changes
-        </Button>
-      </div>
+      <PageHeader
+        title="System Config"
+        subtitle="Business Logic 2 Master Settings"
+        actions={
+          <Button
+            variant="brand"
+            icon={<Save size={18} />}
+            className="rounded-2xl h-14 px-10 shadow-xl"
+            onClick={handleSave}
+            loading={loading}
+          >
+            Publish Global Changes
+          </Button>
+        }
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <section className="bg-white border border-gray-100 rounded-[2.5rem] p-10 space-y-6 shadow-sm">
-          <h3 className="text-xl  flex items-center gap-3 text-[#006666]">
+      <Grid cols={2} gap={8}>
+        <Card variant="default" padding="lg">
+          <h3 className="text-xl flex items-center gap-3 text-[#006666]">
             <Coins size={22} /> Delivery Settings
           </h3>
           <div className="space-y-4">
@@ -96,13 +97,14 @@ const GlobalSettings: React.FC = () => {
               onChange={(v) => updateField("slots", v)}
             />
           </div>
-        </section>
-
-        <DangerZone
-          onSuspend={() => setIsSuspendDialogOpen(true)}
-          onFlush={flushCache}
-        />
-      </div>
+        </Card>
+        <Card variant="default" padding="lg" className="flex flex-col justify-between">
+          <DangerZone
+            onSuspend={() => setIsSuspendDialogOpen(true)}
+            onFlush={flushCache}
+          />
+        </Card>
+      </Grid>
 
       <ConfirmDialog
         isOpen={isSuspendDialogOpen}

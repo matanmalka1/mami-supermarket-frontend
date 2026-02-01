@@ -1,4 +1,6 @@
 import React from "react";
+import Grid from "@/components/ui/Grid";
+import Card from "@/components/ui/Card";
 import { InventoryRow } from "@/domains/inventory/types";
 
 // Local helpers for feature use only
@@ -38,11 +40,13 @@ const InventoryHighlights: React.FC<{ rows: InventoryRow[] }> = ({ rows }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <Grid cols={4} gap={4}>
       {stats.map((stat) => (
-        <div
+        <Card
           key={stat.label}
-          className="rounded-[2rem] border border-gray-100 bg-white/70 p-5 shadow-xl flex flex-col gap-2"
+          variant="glass"
+          padding="md"
+          className="flex flex-col gap-2"
         >
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">
             {stat.label}
@@ -51,9 +55,9 @@ const InventoryHighlights: React.FC<{ rows: InventoryRow[] }> = ({ rows }) => {
           <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
             {stat.sub}
           </p>
-        </div>
+        </Card>
       ))}
-    </div>
+    </Grid>
   );
 };
 
