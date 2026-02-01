@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import { stockRequestsService } from "@/domains/stock-requests/service";
 import { stockRequestSchema, StockRequestInput } from "@/validation/ops";
 import { useBranches } from "@/hooks/useBranches";
-import { useCatalog } from "@/features/store/hooks/useCatalog";
+import { useAllProducts } from "./hooks/useAllProducts";
 import { FormHeader } from "./components/FormHeader";
 import { BranchSelector } from "./components/BranchSelector";
 import { ProductSelector } from "./components/ProductSelector";
@@ -25,7 +25,7 @@ const REQUEST_TYPES: StockRequestInput["requestType"][] = [
 
 const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   const { branches, loading: branchesLoading } = useBranches();
-  const { products, loading: productsLoading } = useCatalog();
+  const { products, loading: productsLoading } = useAllProducts();
   const [searchProduct, setSearchProduct] = useState("");
 
   const {

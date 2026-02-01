@@ -62,11 +62,25 @@ export const catalogService = {
     params: ProductSearchParams,
   ): Promise<{ items: Product[]; pagination: Pagination }> {
     const { limit = 50, offset = 0 } = params;
+
+    // Clean params object - only include defined values to avoid backend validation issues
+    const cleanParams: Record<string, any> = {};
+    if (params.q !== undefined && params.q !== null && params.q !== "")
+      cleanParams.q = params.q;
+    if (params.limit !== undefined) cleanParams.limit = params.limit;
+    if (params.offset !== undefined) cleanParams.offset = params.offset;
+    if (params.minPrice !== undefined) cleanParams.min_price = params.minPrice;
+    if (params.maxPrice !== undefined) cleanParams.max_price = params.maxPrice;
+    if (params.sort !== undefined) cleanParams.sort = params.sort;
+
     const data = await apiClient.get<ProductDTO[], ProductDTO[]>(
       `${catalogPrefix}/products/search`,
-      { params },
+      { params: cleanParams },
     );
-    return buildProductPagination(data, limit, offset);
+
+    const result = buildProductPagination(data, limit, offset);
+
+    return result;
   },
   async getProducts(
     params?: ProductSearchParams & { categoryId?: number },

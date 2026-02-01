@@ -39,7 +39,9 @@
     "tests/hooks/useAsyncResource.test.ts",
     "tests/hooks/useAuth.test.ts",
     "tests/hooks/useCatalog.test.ts",
-    "tests/hooks/useCheckoutFlow.test.ts"
+    "tests/hooks/useCheckoutFlow.test.ts",
+    "tests/hooks/useAllProducts.test.ts",
+    "tests/hooks/useBranches.test.ts"
   ],
   "exclude": [
     "node_modules",

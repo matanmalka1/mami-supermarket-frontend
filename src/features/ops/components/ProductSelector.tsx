@@ -64,7 +64,7 @@ export const ProductSelector: React.FC<ProductSelectorProps> = ({
                     {product.name}
                   </div>
                   <div className="text-xs text-gray-400">
-                    ₪{product.price} • ID: {product.id}
+                    {product.sku} • ₪{product.price}
                   </div>
                 </div>
               </button>
