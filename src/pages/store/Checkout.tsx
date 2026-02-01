@@ -7,7 +7,7 @@ import FulfillmentStep from "@/features/checkout/components/FulfillmentStep";
 import ScheduleStep from "@/features/checkout/components/ScheduleStep";
 import PaymentStep from "@/features/checkout/components/PaymentStep";
 import Button from "@/components/ui/Button";
-import ErrorMessage from "@/components/ui/ErrorMessage";
+import ErrorState from "@/components/ui/ErrorState";
 import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
@@ -65,21 +65,18 @@ const Checkout: React.FC = () => {
   // Inline error state UI for checkout errors
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-8">
-        <div className="bg-red-50 border border-red-200 rounded-3xl p-8 text-center space-y-4">
-          <p className="text-2xl text-red-700 uppercase tracking-[0.2em]">
-            Checkout Error
-          </p>
-          <ErrorMessage message={error} className="text-center" />
-          <Button
-            variant="emerald"
-            onClick={() => {
-              setError(null);
-            }}
-          >
-            Retry
-          </Button>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-6">
+        <ErrorState
+          message={
+            <div className="space-y-2 text-center">
+              <p className="text-xl uppercase tracking-[0.2em]">
+                Checkout Error
+              </p>
+              <span>{error}</span>
+            </div>
+          }
+          onRetry={() => setError(null)}
+        />
         <Button variant="outline" onClick={() => navigate("/store")}>
           Back to Store
         </Button>

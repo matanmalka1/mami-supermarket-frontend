@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Category } from "@/domains/catalog/types";
-import PageWrapper from "@/components/shared/PageWrapper";
+import PageWrapper from "@/components/ui/PageWrapper";
 
 type StoreFooterProps = {
   categories: Category[];

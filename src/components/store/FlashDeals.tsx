@@ -1,5 +1,8 @@
 import { Timer, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
+import ErrorState from "@/components/ui/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 
 type FlashDealsProps = {
   deals: any[];
@@ -38,15 +41,11 @@ const FlashDeals: React.FC<FlashDealsProps> = ({
 
       <div className="space-y-4">
         {loading ? (
-          <div className="text-orange-600 uppercase tracking-[0.4em] text-sm">
-            Loading flash deals...
-          </div>
+          <LoadingState label="Loading flash deals..." />
         ) : error ? (
-          <div className="text-center text-orange-700 font-bold">{error}</div>
+          <ErrorState message={error} />
         ) : deals.length === 0 ? (
-          <div className="text-orange-700 uppercase tracking-widest text-sm">
-            No deals available right now.
-          </div>
+          <EmptyState title="No deals available right now." />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {deals.map((item) => (

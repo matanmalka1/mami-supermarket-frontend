@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import DashboardHero from "@/components/ops/dashboard/DashboardHero";
-import LoadingState from "@/components/shared/LoadingState";
+import LoadingState from "@/components/ui/LoadingState";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import OrderTable from "@/features/ops/components/OrderTable";
 import { type OpsOrderStatus } from "@/features/ops/components/OrderStatusSelect";
@@ -12,8 +12,9 @@ import { OrderStatus } from "@/domains/orders/types";
 
 const Dashboard: React.FC = () => {
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
-  const pendingCount = orders.filter((o) => o.status === OrderStatus.CREATED)
-    .length;
+  const pendingCount = orders.filter(
+    (o) => o.status === OrderStatus.CREATED,
+  ).length;
   const expressDue = orders.filter((o) => o.urgency === "critical").length;
   const urgentOrders = useMemo(
     () => orders.filter((o) => o.urgency === "critical"),
@@ -29,13 +30,14 @@ const Dashboard: React.FC = () => {
     async (orderId: number, status: OpsOrderStatus) => {
       try {
         await opsService.updateOrderStatus(orderId, { status });
-        toast.success("Order status updated.", { id: `order-status-${orderId}` });
+        toast.success("Order status updated.", {
+          id: `order-status-${orderId}`,
+        });
         refresh();
       } catch (err: any) {
-        toast.error(
-          err?.message || "Failed to update the order status.",
-          { id: `order-status-${orderId}` },
-        );
+        toast.error(err?.message || "Failed to update the order status.", {
+          id: `order-status-${orderId}`,
+        });
       }
     },
     [refresh],

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router";
 import StoreHeader from "./store/StoreHeader";
-import PageWrapper from "@/components/shared/PageWrapper";
+import PageWrapper from "@/components/ui/PageWrapper";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import { BranchProvider } from "@/context/BranchContext";

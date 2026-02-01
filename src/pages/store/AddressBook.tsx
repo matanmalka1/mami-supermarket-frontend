@@ -3,8 +3,8 @@ import { MapPin, Plus, Trash2, Navigation, Info } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { useAddresses } from "@/features/store/hooks/useAddresses";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import AddressCard from "@/pages/store/AddressCard";
 import TextField from "@/components/ui/form/TextField";
 
@@ -99,7 +99,12 @@ const AddressBook: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <TextField name="postalCode" label="Postal Code" required />
-            <TextField name="country" label="Country" defaultValue="Israel" required />
+            <TextField
+              name="country"
+              label="Country"
+              defaultValue="Israel"
+              required
+            />
           </div>
           <Button fullWidth size="lg" className="rounded-2xl" type="submit">
             Save Address

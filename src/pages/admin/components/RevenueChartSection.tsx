@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "@/components/ui/Card";
-import EmptyState from "@/components/shared/EmptyState";
+import EmptyState from "@/components/ui/EmptyState";
 import { TrendingUp, DollarSign } from "lucide-react";
 import { ChartEntry } from "./types";
 

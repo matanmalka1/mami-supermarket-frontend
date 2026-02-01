@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import EmptyState from "@/components/shared/EmptyState";
+import EmptyState from "@/components/ui/EmptyState";
 
 const WishlistUnavailableState = () => (
   <div className="max-w-4xl mx-auto py-20">

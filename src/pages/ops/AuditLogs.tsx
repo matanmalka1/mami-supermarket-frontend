@@ -1,8 +1,8 @@
 import React from "react";
 import Badge from "@/components/ui/Badge";
 import { History, Shield, UserCheck } from "lucide-react";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { useAuditLogs } from "@/features/ops/hooks/useAuditLogs";
 
 type AuditLog = {

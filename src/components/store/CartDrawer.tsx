@@ -2,6 +2,7 @@ import { X, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { Link } from "react-router";
 import Button from "../ui/Button";
+import EmptyState from "../ui/EmptyState";
 import { currencyILS } from "../../utils/format";
 
 const FREE_DELIVERY_THRESHOLD = 150;
@@ -57,14 +58,7 @@ const CartDrawer: React.FC = () => {
           </div>
 
           {items.length === 0 ? (
-            <div className="py-20 text-center space-y-4">
-              <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-300 mx-auto">
-                <ShoppingBag size={40} />
-              </div>
-              <p className="font-bold text-gray-400 ">
-                Your cart is feeling light...
-              </p>
-            </div>
+            <EmptyState title="Your cart is feeling light..." />
           ) : (
             <div className="space-y-6">
               {items.map((item) => (

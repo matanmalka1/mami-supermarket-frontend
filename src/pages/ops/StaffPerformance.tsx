@@ -2,8 +2,8 @@ import React from "react";
 import { Info, RefreshCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import StatCard from "@/components/ui/StatCard";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
 

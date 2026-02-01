@@ -1,7 +1,7 @@
 import React from "react";
 import PageHeader from "@/components/ui/PageHeader";
-import LoadingState from "@/components/shared/LoadingState";
-import ErrorState from "@/components/shared/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import ErrorState from "@/components/ui/ErrorState";
 import { BarChart3 } from "lucide-react";
 import RevenueHero from "./components/RevenueHero";
 import RevenueStats from "./components/RevenueStats";

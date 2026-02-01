@@ -1,8 +1,8 @@
 import Section from "@/components/ui/Section";
 import Grid from "@/components/ui/Grid";
 import ProductCard from "@/components/store/ProductCard";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { TrendingUp } from "lucide-react";
 
 type Product = any;
@@ -12,12 +12,16 @@ interface StorefrontFeaturedProps {
   loading: boolean;
 }
 
-const StorefrontFeatured: React.FC<StorefrontFeaturedProps> = ({ featured, loading }) => (
+const StorefrontFeatured: React.FC<StorefrontFeaturedProps> = ({
+  featured,
+  loading,
+}) => (
   <Section
     title="Today's Selection"
     subtitle={
       <>
-        <TrendingUp size={16} className="text-[#008A45]" /> Trending in your area
+        <TrendingUp size={16} className="text-[#008A45]" /> Trending in your
+        area
       </>
     }
     linkTo="/store/search"

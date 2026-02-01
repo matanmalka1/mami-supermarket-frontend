@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ShieldCheck, Truck, RefreshCcw } from "lucide-react";
 import { Product } from "@/domains/catalog/types";
+import EmptyState from "@/components/ui/EmptyState";
 
 const ProductTabs: React.FC<{ product?: Product | null }> = ({ product }) => {
   const [activeTab, setActiveTab] = useState("Specifications");
@@ -20,9 +21,7 @@ const ProductTabs: React.FC<{ product?: Product | null }> = ({ product }) => {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-24 animate-in fade-in slide-in-from-bottom-2 duration-300">
             {specs.length === 0 ? (
-              <p className="text-sm text-gray-500 font-bold">
-                No specs available.
-              </p>
+              <EmptyState title="No specs available." />
             ) : (
               specs.map((spec, idx) => (
                 <div

@@ -4,8 +4,8 @@ import { useParams } from "react-router";
 import ProductGallery from "@/components/store/ProductGallery";
 import ProductInfo from "@/components/store/ProductInfo";
 import ProductTabs from "@/components/store/ProductTabs";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import SimilarProducts from "@/components/store/SimilarProducts";
 import { useProductDetail } from "@/features/store/hooks/useProductDetail";
 
@@ -13,7 +13,9 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const parsedId = id ? Number(id) : undefined;
   const isIdInvalid = Boolean(id && Number.isNaN(Number(id)));
-  const { product, loading, error } = useProductDetail(isIdInvalid ? undefined : parsedId);
+  const { product, loading, error } = useProductDetail(
+    isIdInvalid ? undefined : parsedId,
+  );
 
   if (isIdInvalid) {
     return (
@@ -38,7 +40,9 @@ const ProductDetail: React.FC = () => {
       <div className="py-20">
         <EmptyState
           title="Product unavailable"
-          description={error || "This product could not be loaded from the catalog."}
+          description={
+            error || "This product could not be loaded from the catalog."
+          }
         />
       </div>
     );

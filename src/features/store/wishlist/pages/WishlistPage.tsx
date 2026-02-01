@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import EmptyState from "@/components/shared/EmptyState";
-import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
 import WishlistEmptyState from "../components/WishlistEmptyState";
 import WishlistUnavailableState from "../components/WishlistUnavailableState";
 import WishlistHeader from "../components/WishlistHeader";

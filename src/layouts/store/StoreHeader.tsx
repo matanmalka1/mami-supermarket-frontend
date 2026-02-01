@@ -14,7 +14,7 @@ import DeptMegaMenu from "./header/DeptMegaMenu";
 import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import HeaderActions from "./header/HeaderActions";
 import BranchSelector from "./header/BranchSelector";
-import PageWrapper from "@/components/shared/PageWrapper";
+import PageWrapper from "@/components/ui/PageWrapper";
 
 const StoreHeader: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<

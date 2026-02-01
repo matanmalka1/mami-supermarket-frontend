@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
 import Grid from "@/components/ui/Grid";
-import EmptyState from "@/components/shared/EmptyState";
-import LoadingState from "@/components/shared/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
 
 type Category = {
   id: number;

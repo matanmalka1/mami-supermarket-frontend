@@ -1,8 +1,8 @@
 import React from "react";
 import DeliverySlotCard from "./DeliverySlotCard";
-import LoadingState from "@/components/shared/LoadingState";
-import EmptyState from "@/components/shared/EmptyState";
-import ErrorState from "@/components/shared/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
+import ErrorState from "@/components/ui/ErrorState";
 
 interface DeliverySlotListProps {
   loading: boolean;

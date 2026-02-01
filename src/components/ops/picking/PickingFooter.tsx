@@ -4,8 +4,11 @@ import { Clock, CheckCircle2, XCircle, RotateCcw, Timer } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Button from "@/components/ui/Button";
 
+type PickingStatus = "PICKED" | "PENDING" | "MISSING";
+type PickingItem = { id: string | number; pickedStatus: PickingStatus };
+
 interface PickingFooterProps {
-  items: any[];
+  items: PickingItem[];
   progress: number;
   onComplete: () => void;
   onSync: () => Promise<void>;
@@ -17,11 +20,10 @@ const PickingFooter: React.FC<PickingFooterProps> = ({
   onComplete,
   onSync,
 }) => {
-  const pickedCount = items.filter(i => i.pickedStatus === 'PICKED').length;
+  const pickedCount = items.filter((item) => item.pickedStatus === "PICKED").length;
   const pendingCount = items.length - pickedCount;
-  
   // Simple estimation logic: 1.5 minutes per pending item
-  const estMinutes = Math.max(1, pendingCount * 1.5);
+  const estimatedMinutes = Math.max(1, pendingCount * 1.5);
   const [syncing, setSyncing] = useState(false);
   const handleSync = async () => {
     if (syncing) return;
@@ -29,8 +31,9 @@ const PickingFooter: React.FC<PickingFooterProps> = ({
     try {
       await onSync();
       toast.success("Picking data synced");
-    } catch (err: any) {
-      toast.error(err?.message || "Sync failed");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Sync failed";
+      toast.error(message);
     } finally {
       setSyncing(false);
     }
@@ -69,7 +72,7 @@ const PickingFooter: React.FC<PickingFooterProps> = ({
             <span className="text-[10px] text-gray-400 uppercase tracking-widest">Time Remaining</span>
             <div className="flex items-center gap-2 text-sm text-gray-600 uppercase">
               <Timer size={16} className="text-gray-400" />
-              Est. {Math.floor(estMinutes)}m
+              Est. {Math.floor(estimatedMinutes)}m
             </div>
           </div>
         </div>

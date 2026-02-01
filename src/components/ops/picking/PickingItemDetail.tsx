@@ -7,9 +7,18 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import type { Product } from "@/domains/catalog/types";
+
+type PickingStatus = "PICKED" | "PENDING" | "MISSING";
+
+type PickingItem = {
+  id: string | number;
+  pickedStatus: PickingStatus;
+  product?: Product | null;
+};
 
 interface PickingItemDetailProps {
-  item: any;
+  item: PickingItem;
   onToggle: () => void;
   onReportDamage: () => Promise<void> | void;
 }
@@ -31,6 +40,12 @@ const PickingItemDetail: React.FC<PickingItemDetailProps> = ({
     }
   };
 
+  const product = item.product;
+  const productName = product?.name ?? "Product";
+  const productDescription =
+    product?.description ||
+    "Locally sourced organic produce, picked daily for maximum freshness.";
+
   return (
     <div className="grid grid-cols-12 gap-10 p-10 bg-white rounded-[2.5rem] border border-emerald-100 shadow-2xl animate-in zoom-in-95 duration-500 overflow-hidden relative">
       <div className="absolute top-0 right-0 p-12 opacity-[0.03] text-[#006666] pointer-events-none">
@@ -38,9 +53,9 @@ const PickingItemDetail: React.FC<PickingItemDetailProps> = ({
       </div>
       <div className="col-span-4 space-y-6">
         <img
-          src={item.product?.imageUrl}
+          src={product?.imageUrl}
           className="w-full aspect-square rounded-[2rem] object-cover border-8 border-gray-50 shadow-2xl"
-          alt={item.product?.name}
+          alt={productName}
         />
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-gray-50 p-5 rounded-3xl border border-gray-100 flex flex-col items-center">
@@ -64,8 +79,7 @@ const PickingItemDetail: React.FC<PickingItemDetailProps> = ({
               <Info size={14} /> Profile
             </h5>
             <p className="text-gray-600 text-2xl font-bold  pr-12">
-              {item.product?.description ||
-                "Locally sourced organic produce, picked daily for maximum freshness."}
+              {productDescription}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-10">

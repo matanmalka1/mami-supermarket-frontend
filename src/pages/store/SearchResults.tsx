@@ -1,7 +1,7 @@
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useSearchParams, Link } from "react-router";
 import { ArrowLeft, Filter } from "lucide-react";
-import EmptyState from "@/components/shared/EmptyState";
+import EmptyState from "@/components/ui/EmptyState";
 import ProductGrid from "@/components/store/ProductGrid";
 import SearchFiltersDrawer from "@/features/store/search/components/SearchFiltersDrawer";
 import { Product } from "@/domains/catalog/types";

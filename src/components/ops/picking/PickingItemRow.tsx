@@ -4,14 +4,24 @@ import { ChevronDown } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import PickingItemDetail from "./PickingItemDetail";
+import type { Product } from "@/domains/catalog/types";
+
+type PickingStatus = "PICKED" | "PENDING" | "MISSING";
+
+type PickingItem = {
+  id: string | number;
+  pickedStatus: PickingStatus;
+  quantity: number;
+  product?: Product | null;
+};
 
 interface PickingItemRowProps {
-  item: any;
+  item: PickingItem;
   isExpanded: boolean;
   onToggle: () => void;
-  onUpdateStatus: (itemId: number, status: string) => void;
-  onReportMissing: (itemId: number) => void;
-  onReportDamage: (itemId: number) => Promise<void> | void;
+  onUpdateStatus: (itemId: string | number, status: PickingStatus) => void;
+  onReportMissing: (itemId: string | number) => void;
+  onReportDamage: (itemId: string | number) => Promise<void> | void;
 }
 
 const PickingItemRow: React.FC<PickingItemRowProps> = ({ 
@@ -22,8 +32,8 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
   onReportMissing,
   onReportDamage,
 }) => {
-  const isPicked = item.pickedStatus === 'PICKED';
-  const isMissing = item.pickedStatus === 'MISSING';
+  const isPicked = item.pickedStatus === "PICKED";
+  const isMissing = item.pickedStatus === "MISSING";
 
   return (
     <React.Fragment>

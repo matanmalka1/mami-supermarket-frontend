@@ -37,6 +37,9 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
     );
   }
 
+  const customerName = order.customer?.fullName ?? "";
+  const deliveryLabel = order.deliverySlot?.startTime || "Immediate";
+
   return (
     <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 flex items-center justify-between shadow-sm relative overflow-hidden group print:hidden">
       <div className="absolute top-0 right-0 w-64 h-64 bg-[#006666] opacity-[0.02] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-1000"></div>
@@ -50,10 +53,10 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
           </div>
           <div className="flex gap-6 text-sm text-gray-400 font-bold">
             <span className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full">
-              <User size={14} /> {order.customer?.fullName}
+              <User size={14} /> {customerName}
             </span>
             <span className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full">
-              <Clock size={14} /> {order.deliverySlot?.startTime || 'Immediate'}
+              <Clock size={14} /> {deliveryLabel}
             </span>
             <span className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full">
               <i className="fa-solid fa-box text-[10px]"></i> {itemsCount} units
