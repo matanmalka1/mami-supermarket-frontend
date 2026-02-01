@@ -1,26 +1,38 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react";
 import { toast } from "react-hot-toast";
-import Button from "../../components/ui/Button";
+import Button from "@/components/ui/Button";
 import { stockRequestsService } from "@/domains/stock-requests/service";
-import { stockRequestSchema, StockRequestInput } from "../../validation/ops";
-import TextField from "@/components/ui/form/TextField";
-import RadioGroupField from "@/components/ui/form/RadioGroupField";
+import { stockRequestSchema, StockRequestInput } from "@/validation/ops";
+import { useBranches } from "@/hooks/useBranches";
+import { useCatalog } from "@/features/store/hooks/useCatalog";
+import { FormHeader } from "./components/FormHeader";
+import { BranchSelector } from "./components/BranchSelector";
+import { ProductSelector } from "./components/ProductSelector";
+import { QuantityAndTypeFields } from "./components/QuantityAndTypeFields";
+import { RequestSummary } from "./components/RequestSummary";
+import { RequestTypeInfo } from "./components/RequestTypeInfo";
+
 interface Props {
   onSubmitted: () => void;
 }
+
 const REQUEST_TYPES: StockRequestInput["requestType"][] = [
   "ADD_QUANTITY",
   "SET_QUANTITY",
 ];
 
 const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
+  const { branches, loading: branchesLoading } = useBranches();
+  const { products, loading: productsLoading } = useCatalog();
+  const [searchProduct, setSearchProduct] = useState("");
+
   const {
     register,
     handleSubmit,
-    trigger,
+    watch,
+    setValue,
     reset,
     formState: { isSubmitting, errors },
   } = useForm<StockRequestInput>({
@@ -33,10 +45,23 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
     },
   });
 
+  const selectedBranchId = watch("branchId");
+  const selectedProductId = watch("productId");
+  const requestType = watch("requestType");
+  const quantity = watch("quantity");
+
+  const filteredProducts = useMemo(() => {
+    if (!searchProduct) return products.slice(0, 50);
+    return products
+      .filter((p) => p.name.toLowerCase().includes(searchProduct.toLowerCase()))
+      .slice(0, 50);
+  }, [products, searchProduct]);
+
+  const selectedProduct = products.find((p) => p.id === selectedProductId);
+  const selectedBranch = branches.find((b) => b.id === selectedBranchId);
+
   const onSubmit = async (data: StockRequestInput) => {
-    toast.loading("Submitting stock request...", {
-      id: "stock-req",
-    });
+    toast.loading("Submitting stock request...", { id: "stock-req" });
     try {
       await stockRequestsService.create({
         branch: String(data.branchId),
@@ -44,7 +69,7 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
         quantity: data.quantity,
         type: data.requestType,
       });
-      toast.success("Stock request submitted.", {
+      toast.success("Stock request submitted successfully!", {
         id: "stock-req",
       });
       reset();
@@ -59,63 +84,52 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit as any)}
-      className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-sm space-y-8"
+      className="bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-[3rem] p-10 shadow-lg space-y-8"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <TextField
-          label="Branch ID"
-          registration={register("branchId")}
-          placeholder="ID of branch"
-        />
-        <TextField
-          label="Product ID"
-          registration={register("productId")}
-          placeholder="ID of product"
-        />
-      </div>
+      <FormHeader />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <TextField
-          label="Quantity"
-          registration={register("quantity")}
-          type="number"
-          placeholder="0"
-          inputClassName="text-lg"
-        />
-        <RadioGroupField
-          label="Request Type"
-          name="requestType"
-          options={REQUEST_TYPES.map((val) => ({ value: val, label: val }))}
-          registration={register("requestType")}
-          inline
-        />
-      </div>
+      <BranchSelector
+        branches={branches}
+        selectedBranchId={selectedBranchId}
+        onSelectBranch={(id) => setValue("branchId", id)}
+        loading={branchesLoading}
+        error={errors.branchId?.message}
+      />
 
-      <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl text-sm font-bold text-emerald-800 flex gap-3">
-        <AlertTriangle size={18} className="text-emerald-500 shrink-0" />
-        Use exact branch & product IDs. request_type must be ADD_QUANTITY or
-        SET_QUANTITY.
-      </div>
+      <ProductSelector
+        products={filteredProducts}
+        selectedProductId={selectedProductId}
+        onSelectProduct={(id) => setValue("productId", id)}
+        searchValue={searchProduct}
+        onSearchChange={setSearchProduct}
+        loading={productsLoading}
+        error={errors.productId?.message}
+      />
+
+      <QuantityAndTypeFields
+        register={register}
+        errors={errors}
+        requestTypes={REQUEST_TYPES}
+      />
+
+      <RequestSummary
+        selectedBranch={selectedBranch}
+        selectedProduct={selectedProduct}
+        requestType={requestType}
+        quantity={quantity}
+      />
+
+      <RequestTypeInfo />
 
       <Button
         fullWidth
         size="lg"
-        className="rounded-[1.5rem] h-14 text-lg "
+        className="rounded-[1.5rem] h-16 text-lg font-bold bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
         loading={isSubmitting}
-        type="button"
-        onClick={async () => {
-          const isValid = await trigger();
-          if (!isValid) {
-            const firstError = Object.values(errors)[0]?.message;
-            if (firstError) {
-              toast.error(firstError as string);
-            }
-            return;
-          }
-          await handleSubmit(onSubmit as any)();
-        }}
+        type="submit"
+        disabled={!selectedBranch || !selectedProduct}
       >
-        Submit Stock Request
+        {isSubmitting ? "Submitting..." : "Submit Stock Request"}
       </Button>
     </form>
   );

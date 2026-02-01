@@ -31,6 +31,7 @@
     "tests/pages/admin",
     "tests/pages/auth",
     "tests/pages/store",
+    "tests/pages/ops",
     "tests/render.ts",
     "tests/setup.ts",
     "tests/hooks/useAsyncResource.test.ts",

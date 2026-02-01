@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CartProvider } from "../../src/context/CartContext";
+import { CartProvider } from "../../src/context/CartProvider";
 import { useCart } from "../../src/context/cart-context";
 import { vi } from "vitest";
 
