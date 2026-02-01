@@ -1,4 +1,3 @@
-import React from "react";
 
 type AvatarBadgeProps = {
   name?: string | null;

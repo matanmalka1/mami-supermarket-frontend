@@ -1,5 +1,7 @@
 import React from "react";
 import Button from "@/components/ui/Button";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import type { AdminStockRequestStatus } from "@/domains/admin/types";
 import StockRequestRow from "./StockRequestRow";
 import { useStockRequestQueue } from "@/features/admin/hooks/useStockRequestQueue";
@@ -44,13 +46,9 @@ const StockRequestManager: React.FC = () => {
 
       <div className="space-y-4">
         {loading ? (
-          <div className="p-16 text-center text-gray-300 uppercase tracking-[0.3em]">
-            Loading requests...
-          </div>
+          <LoadingState label="Loading requests..." />
         ) : requests.length === 0 ? (
-          <div className="p-16 text-center text-gray-400 font-bold">
-            No pending requests.
-          </div>
+          <EmptyState title="No pending requests." />
         ) : (
           requests.map((req) => (
             <StockRequestRow
