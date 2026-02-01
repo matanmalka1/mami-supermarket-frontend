@@ -13,6 +13,18 @@ export const OrderStatus = {
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
 
+// Shared status labels
+export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+  [OrderStatus.CREATED]: "Created",
+  [OrderStatus.IN_PROGRESS]: "In Progress",
+  [OrderStatus.READY]: "Ready",
+  [OrderStatus.OUT_FOR_DELIVERY]: "Out for Delivery",
+  [OrderStatus.DELIVERED]: "Delivered",
+  [OrderStatus.CANCELED]: "Canceled",
+  [OrderStatus.DELAYED]: "Delayed",
+  [OrderStatus.MISSING]: "Missing",
+};
+
 export type OrderUrgency = "critical" | "dueSoon" | "onTrack" | "scheduled";
 
 export type OrderProductInfo = {

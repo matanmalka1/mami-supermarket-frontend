@@ -12,15 +12,14 @@ import LoadingState from "@/components/ui/LoadingState";
 import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
+import { calculateDeliveryFee } from "./checkout/pricing";
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
   const [orderCompleted, setOrderCompleted] = useState(false);
   const {
-    items,
-    total,
-    clearCart,
+    cartItems,
     isAuthenticated,
     method,
     setMethod,
@@ -35,13 +34,15 @@ const Checkout: React.FC = () => {
     confirmOrder,
   } = useCheckoutProcess();
 
+  const items = cartItems;
+  const total = preview?.cart_total ? Number(preview.cart_total) : 0;
+
   const idempotencyKey = useMemo(
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     [],
   );
 
-  // Store the payment token id from PaymentStep
-  // Called by PaymentStep after payment token is created
+
   const handleConfirm = async (tokenId: number) => {
     setError(null);
     const payload = await confirmOrder(tokenId, idempotencyKey);
@@ -86,17 +87,11 @@ const Checkout: React.FC = () => {
   }
 
   const subtotal = preview?.cart_total ? Number(preview.cart_total) : total;
-  const DELIVERY_THRESHOLD = 150;
-
-  const DELIVERY_FEE_UNDER_THRESHOLD = 30;
-  const fallbackDeliveryFee =
-    method === "DELIVERY" && subtotal < DELIVERY_THRESHOLD
-      ? DELIVERY_FEE_UNDER_THRESHOLD
-      : 0;
-  const deliveryFee =
-    preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
-      ? Number(preview.delivery_fee)
-      : fallbackDeliveryFee;
+  const deliveryFee = calculateDeliveryFee(
+    method,
+    subtotal,
+    preview?.delivery_fee,
+  );
   const finalTotal = subtotal + deliveryFee;
 
   return (

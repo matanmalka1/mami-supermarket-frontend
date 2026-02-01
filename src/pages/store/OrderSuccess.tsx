@@ -9,20 +9,11 @@ import { useAddresses } from "@/features/store/hooks/useAddresses";
 import { loadOrderSnapshot } from "@/utils/order";
 import { ordersService } from "@/domains/orders/service";
 import { useCart } from "@/context/cart-context";
+import { formatAddressLine } from "./order-success/formatters";
+import { getStatusMessage } from "./order-success/status-messages";
 
 type OrderSuccessState = {
   snapshot?: OrderSuccessSnapshot;
-};
-
-const formatAddressLine = (address?: Record<string, any>) => {
-  if (!address) return undefined;
-  const parts = [
-    address.address_line ?? address.addressLine,
-    address.city,
-    address.postal_code ?? address.postalCode,
-    address.country,
-  ].filter(Boolean);
-  return parts.join(", ");
 };
 
 const OrderSuccess: React.FC = () => {
@@ -38,8 +29,10 @@ const OrderSuccess: React.FC = () => {
   const { clearCart } = useCart();
 
   useEffect(() => {
-    clearCart();
-  }, []);
+    if (clearCart) {
+      clearCart();
+    }
+  }, [clearCart]);
 
   useEffect(() => {
     if (snapshot || !id) return;
@@ -82,29 +75,7 @@ const OrderSuccess: React.FC = () => {
   const addressLabel =
     preferredAddress ||
     "Delivery address will be confirmed once your courier is on route.";
-
-  const getStatusMessage = () => {
-    switch (orderStatus) {
-      case OrderStatus.CREATED:
-        return "Your items are now being routed to our optimized picking queue. We'll notify you when they are out for delivery.";
-      case OrderStatus.IN_PROGRESS:
-        return "Your order is being picked by our team. We'll notify you when it's ready for delivery.";
-      case OrderStatus.READY:
-        return "Your order is packed and ready! It will be out for delivery soon.";
-      case OrderStatus.OUT_FOR_DELIVERY:
-        return "Your order is on its way! Track your delivery in real-time.";
-      case OrderStatus.DELIVERED:
-        return "Your order has been delivered. Thank you for shopping with us!";
-      case OrderStatus.CANCELED:
-        return "This order has been canceled. If you have questions, please contact support.";
-      case OrderStatus.DELAYED:
-        return "Your order is experiencing a delay. We're working to get it to you as soon as possible.";
-      case OrderStatus.MISSING:
-        return "There's an issue with your order. Our team is investigating. We'll contact you shortly.";
-      default:
-        return "Your order is being processed.";
-    }
-  };
+  const statusMessage = getStatusMessage(orderStatus);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-12">
@@ -124,8 +95,7 @@ const OrderSuccess: React.FC = () => {
           </span>
         </p>
         <p className="text-gray-400 max-w-md mx-auto leading-relaxed">
-          Your items are now being routed to our optimized picking queue. We'll{" "}
-          {getStatusMessage()}
+          {statusMessage}
         </p>
       </div>
 

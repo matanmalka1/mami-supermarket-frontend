@@ -2,9 +2,8 @@ import React from "react";
 import { User, Mail } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { UseFormReturn } from "react-hook-form";
-import NameField from "@/components/ui/form/NameField";
-import EmailField from "@/components/ui/form/EmailField";
 import PhoneField from "@/components/ui/form/PhoneField";
+import NameEmailFields from "@/components/ui/form/NameEmailFields";
 
 type PersonalInfoFormProps = {
   form: UseFormReturn<any>;
@@ -26,24 +25,16 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
       <div className="flex items-center gap-3 text-emerald-600 uppercase text-xs tracking-widest border-b pb-6">
         <User size={16} /> Personal Information
       </div>
-      <div className="grid grid-cols-2 gap-6">
-        <NameField
-          label="First Name"
-          registration={register("firstName")}
-          placeholder="John"
-        />
-        <NameField
-          label="Last Name"
-          registration={register("lastName")}
-          placeholder="Doe"
-        />
-      </div>
-      <EmailField
-        label="Email"
-        registration={register("email")}
-        leftIcon={<Mail size={18} />}
+      <NameEmailFields
+        register={register}
+        emailLabel="Email"
+        emailLeftIcon={<Mail size={18} />}
       />
-      <PhoneField label="Phone" registration={register("phone")} prefixText="+972" />
+      <PhoneField
+        label="Phone"
+        registration={register("phone")}
+        prefixText="+972"
+      />
       <Button
         fullWidth
         size="lg"

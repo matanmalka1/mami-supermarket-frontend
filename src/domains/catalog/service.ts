@@ -1,5 +1,5 @@
 import { apiClient } from "@/services/api-client";
-import type { Category, Product } from "./types";
+import type { Category, Product, ProductSearchParams } from "./types";
 import type { Pagination } from "@/domains/pagination/types";
 import type { CategoryDTO, ProductDTO } from "./service-dto";
 import { mapCategory, mapProduct } from "./service-mappers";
@@ -58,42 +58,19 @@ export const catalogService = {
   /**
    * Search products (query, price, sort, pagination)
    */
-  async searchProducts(params: {
-    q?: string;
-    limit?: number;
-    offset?: number;
-    minPrice?: number;
-    maxPrice?: number;
-    sort?: string;
-    branchId?: number;
-  }): Promise<{ items: Product[]; pagination: Pagination }> {
-    const {
-      q,
-      limit = 50,
-      offset = 0,
-      minPrice,
-      maxPrice,
-      sort,
-      branchId,
-    } = params;
+  async searchProducts(
+    params: ProductSearchParams,
+  ): Promise<{ items: Product[]; pagination: Pagination }> {
+    const { limit = 50, offset = 0 } = params;
     const data = await apiClient.get<ProductDTO[], ProductDTO[]>(
       `${catalogPrefix}/products/search`,
-      {
-        params: { q, limit, offset, minPrice, maxPrice, sort, branchId },
-      },
+      { params },
     );
     return buildProductPagination(data, limit, offset);
   },
-  async getProducts(params?: {
-    categoryId?: number;
-    q?: string;
-    limit?: number;
-    offset?: number;
-    minPrice?: number;
-    maxPrice?: number;
-    sort?: string;
-    branchId?: number;
-  }): Promise<{ items: Product[]; pagination: Pagination }> {
+  async getProducts(
+    params?: ProductSearchParams & { categoryId?: number },
+  ): Promise<{ items: Product[]; pagination: Pagination }> {
     if (params?.categoryId) {
       const { categoryId, limit, offset, branchId } = params;
       return this.listCategoryProducts(categoryId, {

@@ -4,45 +4,13 @@ import Button from "@/components/ui/Button";
 import StatCard from "@/components/ui/StatCard";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
-import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
-
-const formatPercent = (value?: number) =>
-  typeof value === "number" ? `${value.toFixed(2)}%` : "—";
-
-const formatNumber = (value?: number) =>
-  typeof value === "number" ? value : "—";
+import { getSummaryCards } from "./staff-performance/config";
 
 const StaffPerformance: React.FC = () => {
   const { metrics, loading, error, refresh } = useOpsPerformance();
   const showFallback = !metrics && (loading || error);
-
-  const summaryCards = [
-    {
-      label: "Batch Efficiency",
-      value: metrics ? formatPercent(metrics.batchEfficiency) : "—",
-      sub: metrics
-        ? `${metrics.pickedItems}/${metrics.totalItems} items picked`
-        : undefined,
-    },
-    {
-      label: "Live Pickers",
-      value: metrics ? formatNumber(metrics.livePickers) : "—",
-      sub: metrics ? `Window: ${metrics.pickerWindowMinutes} min` : undefined,
-    },
-    {
-      label: "Active Orders",
-      value: metrics
-        ? `${metrics.activeOrders.toLocaleString()} / ${metrics.totalOrders.toLocaleString()}`
-        : "—",
-      sub: "Created vs. in-progress",
-    },
-    {
-      label: "Items Picked",
-      value: metrics ? metrics.pickedItems.toLocaleString() : "—",
-      sub: "Since start of day",
-    },
-  ];
+  const summaryCards = getSummaryCards(metrics);
 
   return (
     <div className="space-y-12 pb-20 animate-in fade-in duration-700">

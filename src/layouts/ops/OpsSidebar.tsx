@@ -1,51 +1,10 @@
 import type { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import type { LucideIcon } from "lucide-react";
-import {
-  LayoutDashboard,
-  Box,
-  ClipboardList,
-  Settings,
-  Store,
-  GripVertical,
-  Activity,
-  PackagePlus,
-  Tag,
-  CheckSquare,
-  CalendarClock,
-  Settings2,
-  BarChart3,
-} from "lucide-react";
+import { GripVertical, Settings, Store } from "lucide-react";
 import AvatarBadge from "@/components/ui/AvatarBadge";
 import type { UserRole } from "@/domains/users/types";
 import { normalizeRole, isOpsRole } from "@/utils/roles";
-
-type NavItem = { label: string; icon: LucideIcon; path: string };
-type NavGroup = { title: string; items: NavItem[]; roles?: UserRole[] };
-
-const navGroups: NavGroup[] = [
-  {
-    title: "Operations",
-    items: [
-      { label: "Dashboard", icon: LayoutDashboard, path: "/" },
-      { label: "Inventory", icon: Box, path: "/inventory" },
-      { label: "Stock Reports", icon: PackagePlus, path: "/stock-requests" },
-      { label: "Performance", icon: Activity, path: "/performance" },
-    ],
-  },
-  {
-    title: "Management",
-    roles: ["ADMIN"],
-    items: [
-      { label: "Catalog Manager", icon: Tag, path: "/admin/catalog" },
-      { label: "Approve Stock", icon: CheckSquare, path: "/admin/requests" },
-      { label: "Delivery Slots", icon: CalendarClock, path: "/admin/delivery" },
-      { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
-      { label: "Global Settings", icon: Settings2, path: "/admin/settings" },
-      { label: "Audit Logs", icon: ClipboardList, path: "/audit" },
-    ],
-  },
-];
+import { navGroups } from "./sidebar/navigation-config";
 
 interface OpsSidebarProps {
   userRole?: UserRole | null;

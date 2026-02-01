@@ -1,18 +1,7 @@
 import React from "react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import { OrderStatus } from "@/domains/orders/types";
-
-const STATUS_COPY: Record<OrderStatus, string> = {
-  [OrderStatus.CREATED]: "Created",
-  [OrderStatus.IN_PROGRESS]: "In Progress",
-  [OrderStatus.READY]: "Ready",
-  [OrderStatus.OUT_FOR_DELIVERY]: "Out for Delivery",
-  [OrderStatus.DELIVERED]: "Delivered",
-  [OrderStatus.DELAYED]: "Delayed",
-  [OrderStatus.CANCELED]: "Canceled",
-  [OrderStatus.MISSING]: "Missing",
-};
+import { OrderStatus, ORDER_STATUS_LABELS } from "@/domains/orders/types";
 
 interface Props {
   orderNumber?: string;
@@ -34,7 +23,7 @@ const PickingFinalizedNotice: React.FC<Props> = ({
       <h3 className="text-3xl text-gray-900">
         {orderNumber || "Order status confirmed"}
       </h3>
-      <Badge color="gray">{STATUS_COPY[status] || status}</Badge>
+      <Badge color="gray">{ORDER_STATUS_LABELS[status] || status}</Badge>
       <p className="text-sm text-gray-600">
         This order has already been finalized. Editing picks or re-running the
         workflow is locked to keep inventory consistent.

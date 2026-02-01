@@ -1,70 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ordersService } from "@/domains/orders/service";
-import { Order, OrderStatus } from "@/domains/orders/types";
+import type { Order } from "@/domains/orders/types";
+import { ORDER_STATUS_LABELS } from "@/domains/orders/types";
 import LoadingState from "@/components/ui/LoadingState";
 import ErrorState from "@/components/ui/ErrorState";
 import Button from "@/components/ui/Button";
 import { currencyILS } from "@/utils/format";
+import {
+  formatDate,
+  formatTime,
+  formatSlotLabel,
+} from "./order-history/formatters";
+import { STATUS_STYLES } from "./order-history/styles";
 
 const ORDER_HISTORY_LIMIT = 10;
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  [OrderStatus.CREATED]: "Created",
-  [OrderStatus.IN_PROGRESS]: "In Progress",
-  [OrderStatus.READY]: "Ready",
-  [OrderStatus.OUT_FOR_DELIVERY]: "Out for Delivery",
-  [OrderStatus.DELIVERED]: "Delivered",
-  [OrderStatus.CANCELED]: "Canceled",
-  [OrderStatus.DELAYED]: "Delayed",
-  [OrderStatus.MISSING]: "Missing",
-};
-
-const STATUS_STYLES: Record<OrderStatus, string> = {
-  [OrderStatus.CREATED]: "bg-emerald-50 text-emerald-700",
-  [OrderStatus.IN_PROGRESS]: "bg-amber-50 text-amber-700",
-  [OrderStatus.READY]: "bg-sky-50 text-sky-700",
-  [OrderStatus.OUT_FOR_DELIVERY]: "bg-blue-50 text-blue-700",
-  [OrderStatus.DELIVERED]: "bg-emerald-900 text-white",
-  [OrderStatus.CANCELED]: "bg-rose-50 text-rose-700",
-  [OrderStatus.DELAYED]: "bg-amber-100 text-amber-800",
-  [OrderStatus.MISSING]: "bg-slate-50 text-slate-700",
-};
-
-const parseDate = (value?: string) => {
-  if (!value) return null;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
-};
-
-const formatDate = (value?: string) => {
-  const date = parseDate(value);
-  return date
-    ? date.toLocaleDateString("he-IL", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      })
-    : "TBD";
-};
-
-const formatTime = (value?: string) => {
-  const date = parseDate(value);
-  return date
-    ? date.toLocaleTimeString("he-IL", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "--";
-};
-
-const formatSlotLabel = (slot?: Order["deliverySlot"]) => {
-  if (!slot) return "Delivery window pending";
-  const dateLabel = slot.date ? formatDate(slot.date) : "Delivery window";
-  return `${dateLabel} • ${formatTime(slot.startTime)} - ${formatTime(
-    slot.endTime,
-  )}`;
-};
 
 const OrderHistory: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -145,7 +95,7 @@ const OrderHistory: React.FC = () => {
                 <span
                   className={`text-xs font-bold px-4 py-1 rounded-full uppercase tracking-[0.3em] ${STATUS_STYLES[order.status]}`}
                 >
-                  {STATUS_LABELS[order.status]}
+                  {ORDER_STATUS_LABELS[order.status]}
                 </span>
               </div>
 
@@ -155,14 +105,21 @@ const OrderHistory: React.FC = () => {
                     Items
                   </p>
                   <p className="text-lg font-bold">
-                    {(Number(order.itemsCount) || order.items.length || 0).toLocaleString()} items
+                    {(
+                      Number(order.itemsCount) ||
+                      order.items.length ||
+                      0
+                    ).toLocaleString()}{" "}
+                    items
                   </p>
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.4em] text-gray-300">
                     Placed on
                   </p>
-                  <p className="text-lg font-bold">{formatDate(order.createdAt)}</p>
+                  <p className="text-lg font-bold">
+                    {formatDate(order.createdAt)}
+                  </p>
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.4em] text-gray-300">

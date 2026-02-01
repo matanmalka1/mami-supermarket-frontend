@@ -3,11 +3,10 @@ import { ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Button from "../../../components/ui/Button";
 import type { RegisterInput } from "@/validation/auth";
-import NameField from "@/components/ui/form/NameField";
-import EmailField from "@/components/ui/form/EmailField";
 import PhoneField from "@/components/ui/form/PhoneField";
 import PasswordField from "@/components/ui/form/PasswordField";
 import CheckboxField from "@/components/ui/form/CheckboxField";
+import NameEmailFields from "@/components/ui/form/NameEmailFields";
 
 interface RegistrationFormProps {
   form: UseFormReturn<RegisterInput>;
@@ -30,23 +29,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-lg">
-      <div className="grid grid-cols-2 gap-6">
-        <NameField
-          label="First Name"
-          registration={register("firstName")}
-          placeholder="John"
-        />
-        <NameField
-          label="Last Name"
-          registration={register("lastName")}
-          placeholder="Doe"
-        />
-      </div>
-
-      <EmailField
-        registration={register("email")}
-        placeholder="john@example.com"
-      />
+      <NameEmailFields register={register} />
 
       <PhoneField
         label="Israeli Phone Number"

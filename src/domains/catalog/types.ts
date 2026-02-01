@@ -1,5 +1,15 @@
 type MoneyILS = number;
 
+export interface ProductSearchParams {
+  q?: string;
+  limit?: number;
+  offset?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: string;
+  branchId?: number;
+}
+
 export interface Category {
   id: number;
   name: string;
