@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useAuth } from "@/hooks/useAuth";
 import { CartContext, CartItem } from "./cart-context";
 
 const STORAGE_KEY = "mami_cart";
@@ -16,9 +15,10 @@ const readCartFromStorage = (): CartItem[] => {
   }
 };
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  const storageKey = useMemo(() => STORAGE_KEY, [isAuthenticated]);
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const storageKey = useMemo(() => STORAGE_KEY, []);
   const prevKeyRef = useRef<string>(storageKey);
   const [items, setItems] = useState<CartItem[]>(() => readCartFromStorage());
   const [isOpen, setIsOpen] = useState(false);
@@ -87,7 +87,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQuantity, clearCart, total, isOpen, setIsOpen }}
+      value={{
+        items,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
+        total,
+        isOpen,
+        setIsOpen,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -18,12 +18,11 @@ export const authService = {
       email: cred.email,
       password: cred.password,
     };
-    console.debug("[authService.login] payload:", payload);
+   
     const res = await apiClient.post<AuthLoginRequest, AuthLoginResponse>(
       "/auth/login",
       payload,
     );
-    console.debug("[authService.login] response:", res);
     return res;
   },
   register: async (
@@ -35,12 +34,12 @@ export const authService = {
       full_name: data.full_name,
       ...(data.role ? { role: data.role } : {}),
     };
-    console.debug("[authService.register] payload:", payload);
+  
     const res = await apiClient.post<AuthRegisterRequest, AuthRegisterResponse>(
       "/auth/register",
       payload,
     );
-    console.debug("[authService.register] response:", res);
+    
     return res;
   },
   forgotPassword: (email: string) =>

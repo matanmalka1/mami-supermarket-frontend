@@ -9,7 +9,6 @@ const defaultForm: AdminSettings = {
 };
 
 export const useGlobalSettings = () => {
-  const [form, setForm] = useState<AdminSettings>(defaultForm);
   const [draft, setDraft] = useState<AdminSettings>(defaultForm);
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +22,6 @@ export const useGlobalSettings = () => {
           deliveryFee: Number(data.deliveryFee) || 30,
           slots: data.slots || "06:00-22:00",
         };
-        setForm(normalized);
         setDraft(normalized);
       }
     } catch {
@@ -40,7 +38,6 @@ export const useGlobalSettings = () => {
   const handleChange = useCallback((key: keyof AdminSettings, value: string) => {
     const nextValue = key === "slots" ? value : Math.max(0, Number(value) || 0);
     setDraft((prev) => ({ ...prev, [key]: nextValue }));
-    setForm((prev) => ({ ...prev, [key]: nextValue }));
   }, []);
 
   const saveSettings = useCallback(async (payload?: Partial<AdminSettings>) => {
