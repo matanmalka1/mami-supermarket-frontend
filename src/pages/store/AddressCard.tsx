@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin, Trash2 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import IconBox from "@/components/ui/IconBox";
 
 interface AddressCardProps {
   addr: any;
@@ -8,7 +9,11 @@ interface AddressCardProps {
   deleteAddress: (id: number) => void;
 }
 
-const AddressCard: React.FC<AddressCardProps> = ({ addr, setDefault, deleteAddress }) => (
+const AddressCard: React.FC<AddressCardProps> = ({
+  addr,
+  setDefault,
+  deleteAddress,
+}) => (
   <div
     className={`p-8 bg-white border-2 rounded-[2.5rem] shadow-sm space-y-6 relative overflow-hidden transition-all ${addr.is_default ? "border-emerald-500 ring-4 ring-emerald-50" : "border-gray-100 hover:border-gray-200"}`}
   >
@@ -18,15 +23,19 @@ const AddressCard: React.FC<AddressCardProps> = ({ addr, setDefault, deleteAddre
       </div>
     )}
     <div className="flex gap-5 items-start">
-      <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 border">
+      <IconBox
+        size="xl"
+        className="bg-gray-50 rounded-2xl text-gray-400 border"
+      >
         <MapPin size={28} />
-      </div>
+      </IconBox>
       <div>
         <h4 className="text-2xl  text-gray-900">
           {addr.address_line || "Address"}
         </h4>
         <p className="text-sm font-bold text-gray-500">
-          {addr.city}, {addr.country || "Israel"} {addr.postal_code ? `• ${addr.postal_code}` : ""}
+          {addr.city}, {addr.country || "Israel"}{" "}
+          {addr.postal_code ? `• ${addr.postal_code}` : ""}
         </p>
       </div>
     </div>
@@ -41,12 +50,13 @@ const AddressCard: React.FC<AddressCardProps> = ({ addr, setDefault, deleteAddre
           Set Default
         </Button>
       )}
-      <button
+      <IconBox
+        size="sm"
+        className="ml-auto rounded-xl bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-all cursor-pointer"
         onClick={() => deleteAddress(addr.id)}
-        className="ml-auto w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 text-red-400 hover:bg-red-500 hover:text-white transition-all"
       >
         <Trash2 size={18} />
-      </button>
+      </IconBox>
     </div>
   </div>
 );

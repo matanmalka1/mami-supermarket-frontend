@@ -1,5 +1,6 @@
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import IconBox from "@/components/ui/IconBox";
 import { MapPin, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -21,7 +22,10 @@ const farms = [
   },
 ];
 
-const StorefrontModal: React.FC<StorefrontModalProps> = ({ isOpen, onClose }) => {
+const StorefrontModal: React.FC<StorefrontModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const navigate = useNavigate();
   return (
     <Modal
@@ -37,9 +41,12 @@ const StorefrontModal: React.FC<StorefrontModalProps> = ({ isOpen, onClose }) =>
             className="p-6 bg-gray-50 rounded-3xl border border-gray-100 flex items-center justify-between group hover:bg-emerald-50 transition-all cursor-pointer"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
+              <IconBox
+                size="md"
+                className="bg-white rounded-2xl text-emerald-600 shadow-sm"
+              >
                 <MapPin size={20} />
-              </div>
+              </IconBox>
               <div>
                 <h4 className="font-bold text-gray-900">{farm.name}</h4>
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest">

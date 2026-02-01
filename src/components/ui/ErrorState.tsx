@@ -6,7 +6,10 @@ type ErrorStateProps = {
   onRetry?: () => void;
 };
 
-const ErrorState: React.FC<ErrorStateProps> = ({message = "Something went wrong", onRetry}) => (
+const ErrorState: React.FC<ErrorStateProps> = ({
+  message = "Something went wrong",
+  onRetry,
+}) => (
   <div className="p-12 text-center space-y-3 border border-red-100 bg-red-50 rounded-3xl">
     <ErrorMessage message={message} className="text-red-500 font-bold" />
     {onRetry && (
