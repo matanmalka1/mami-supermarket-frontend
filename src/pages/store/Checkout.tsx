@@ -30,6 +30,7 @@ const Checkout: React.FC = () => {
     setSlotId,
     preview,
     loading,
+    cartLoading,
     error,
     setError,
     confirmOrder,
@@ -56,12 +57,34 @@ const Checkout: React.FC = () => {
   };
 
   useEffect(() => {
-    if (items.length === 0 && !loading && !orderCompleted) {
+    // Only redirect if cart is loaded, empty, and user is authenticated
+    if (
+      !cartLoading &&
+      items.length === 0 &&
+      !orderCompleted &&
+      isAuthenticated
+    ) {
       navigate("/store");
     }
-  }, [items.length, loading, navigate, orderCompleted]);
+  }, [
+    cartLoading,
+    items.length,
+    navigate,
+    orderCompleted,
+    isAuthenticated,
+    items,
+  ]);
 
-  if (items.length === 0 && !loading && !orderCompleted) {
+  // Show loading while cart is being fetched
+  if (cartLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20">
+        <LoadingState label="Loading cart..." />
+      </div>
+    );
+  }
+
+  if (items.length === 0 && !orderCompleted) {
     return null;
   }
 

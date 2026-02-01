@@ -23,7 +23,7 @@ interface Props {
     replacement?: any,
   ) => void;
   onReportMissing: (id: string | number) => void;
-  onReportDamage: (id: string | number) => Promise<void> | void;
+  onReportDamage: (id: string | number, reason: string, notes?: string) => Promise<void>;
   onWeightConfirm: () => void;
   weighingItem: OrderItem | null;
   resetScale: () => void;

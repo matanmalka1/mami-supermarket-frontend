@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import DamageReportModal from "@/features/ops/components/DamageReportModal";
 import PickingItemDetail from "./PickingItemDetail";
 import type { Product } from "@/domains/catalog/types";
 
@@ -20,7 +21,7 @@ interface PickingItemRowProps {
   onToggle: () => void;
   onUpdateStatus: (itemId: string | number, status: PickingStatus) => void;
   onReportMissing: (itemId: string | number) => void;
-  onReportDamage: (itemId: string | number) => Promise<void> | void;
+  onReportDamage: (itemId: string | number, reason: string, notes?: string) => Promise<void>;
 }
 
 const PickingItemRow: React.FC<PickingItemRowProps> = ({
@@ -31,6 +32,7 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
   onReportMissing,
   onReportDamage,
 }) => {
+  const [isDamageModalOpen, setIsDamageModalOpen] = useState(false);
   const isPicked = item.pickedStatus === "PICKED";
   const isMissing = item.pickedStatus === "MISSING";
 
@@ -105,11 +107,18 @@ const PickingItemRow: React.FC<PickingItemRowProps> = ({
             <PickingItemDetail
               item={item}
               onToggle={onToggle}
-              onReportDamage={() => onReportDamage(item.id)}
+              onReportDamage={() => setIsDamageModalOpen(true)}
             />
           </td>
         </tr>
       )}
+
+      <DamageReportModal
+        isOpen={isDamageModalOpen}
+        onClose={() => setIsDamageModalOpen(false)}
+        onSubmit={(reason, notes) => onReportDamage(item.id, reason, notes)}
+        itemName={item.product?.name}
+      />
     </React.Fragment>
   );
 };

@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { usePicking } from "@/features/ops/hooks/usePicking";
 import { useWeightScale } from "@/hooks/useWeightScale";
 import { useParams, useNavigate } from "react-router";
+import { opsService } from "@/domains/ops/service";
 import ErrorState from "@/components/ui/ErrorState";
 import LoadingState from "@/components/ui/LoadingState";
 import PickingFinalizedNotice from "@/pages/ops/components/PickingFinalizedNotice";
@@ -59,12 +60,23 @@ const PickingInterface: React.FC = () => {
       // Error handled in hook
     }
   };
-  const handleReportDamage = async (itemId: string | number) => {
+  const handleReportDamage = async (
+    itemId: string | number,
+    reason: string,
+    notes?: string,
+  ) => {
+    if (!order) return;
     try {
-      await updateItemStatus(itemId, "MISSING", "Damage reported");
+      await opsService.reportDamage(
+        Number(order.id),
+        Number(itemId),
+        { reason, notes },
+      );
+      await updateItemStatus(itemId, "MISSING", reason);
       toast.success("Damage report submitted");
-    } catch {
-      toast.error("Failed to report damage");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to report damage");
+      throw err;
     }
   };
   const handleWeightConfirm = () => {

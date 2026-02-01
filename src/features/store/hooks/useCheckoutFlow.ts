@@ -37,7 +37,9 @@ const buildUniqueSlotOptions = (
 type Method = "DELIVERY" | "PICKUP";
 
 type BranchSlotsClient = {
-  listSlots: (params: { branchId: string | number }) => Promise<DeliverySlotResponse[]>;
+  listSlots: (params: {
+    branchId: string | number;
+  }) => Promise<DeliverySlotResponse[]>;
 };
 
 const branchSlotsService = branchService as BranchSlotsClient;
@@ -49,6 +51,7 @@ export const useCheckoutFlow = () => {
   const [serverCartId, setServerCartId] = useState<string | number | null>(
     null,
   );
+  const [cartIdLoading, setCartIdLoading] = useState(true);
   const [deliverySlots, setDeliverySlots] = useState<DeliverySlotOption[]>([]);
   const [slotId, setSlotId] = useState<number | null>(null);
   const [preview, setPreview] = useState<any>(null);
@@ -56,24 +59,37 @@ export const useCheckoutFlow = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       setServerCartId(null);
+      setCartIdLoading(false);
       return;
     }
 
     let active = true;
+    setCartIdLoading(true);
     const loadCart = async () => {
       try {
         const data = await cartService.get();
         if (active) {
           setServerCartId(data?.id ?? null);
         }
-      } catch {
+      } catch (error) {
         toast.error("Failed to sync cart with server");
+      } finally {
+        if (active) {
+          setCartIdLoading(false);
+        }
       }
     };
 
     loadCart();
+
+    const handleFocus = () => {
+      if (active) loadCart();
+    };
+    window.addEventListener("focus", handleFocus);
+
     return () => {
       active = false;
+      window.removeEventListener("focus", handleFocus);
     };
   }, [isAuthenticated]);
 
@@ -136,6 +152,7 @@ export const useCheckoutFlow = () => {
     method,
     setMethod,
     serverCartId,
+    cartIdLoading,
     deliverySlots,
     slotId,
     setSlotId,

@@ -13,6 +13,7 @@ export const useCheckoutProcess = () => {
     method,
     setMethod,
     serverCartId,
+    cartIdLoading,
     deliverySlots,
     slotId,
     setSlotId,
@@ -22,26 +23,34 @@ export const useCheckoutProcess = () => {
 
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Wait for cart ID to be loaded first
+    if (cartIdLoading) return;
+
     if (!isAuthenticated || !serverCartId) {
       setCartItems([]);
+      setCartLoading(false);
       return;
     }
 
     const loadCartItems = async () => {
+      setCartLoading(true);
       try {
         const cart = await cartService.get();
         setCartItems(cart.items || []);
       } catch (error) {
-        console.error("Failed to load cart items:", error);
+        console.error("[useCheckoutProcess] Failed to load cart items:", error);
         setCartItems([]);
+      } finally {
+        setCartLoading(false);
       }
     };
 
     loadCartItems();
-  }, [isAuthenticated, serverCartId]);
+  }, [isAuthenticated, serverCartId, cartIdLoading]);
 
   const confirmOrder = useCallback(
     async (tokenId: number, idempotencyKey: string) => {
@@ -145,6 +154,7 @@ export const useCheckoutProcess = () => {
     preview,
     selectedBranch,
     loading,
+    cartLoading,
     error,
     setError,
     confirmOrder,

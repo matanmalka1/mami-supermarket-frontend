@@ -1,6 +1,6 @@
 import { X, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/cart-context";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Button from "../ui/Button";
 import EmptyState from "../ui/EmptyState";
 import { currencyILS } from "../../utils/format";
@@ -10,10 +10,18 @@ const FREE_DELIVERY_THRESHOLD = 150;
 const CartDrawer: React.FC = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } =
     useCart();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
   const progress = Math.min(100, (total / FREE_DELIVERY_THRESHOLD) * 100);
+
+  const handleCheckoutClick = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      navigate("/store/checkout");
+    }, 100);
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end animate-in fade-in duration-300">
@@ -129,14 +137,13 @@ const CartDrawer: React.FC = () => {
               {currencyILS(total)}
             </span>
           </div>
-          <Link to="/store/checkout" onClick={() => setIsOpen(false)}>
-            <Button
-              className="w-full h-16 rounded-2xl text-lg  shadow-xl shadow-emerald-900/20"
-              disabled={items.length === 0}
-            >
-              Checkout Now <ArrowRight size={20} className="ml-2" />
-            </Button>
-          </Link>
+          <Button
+            className="w-full h-16 rounded-2xl text-lg  shadow-xl shadow-emerald-900/20"
+            disabled={items.length === 0}
+            onClick={handleCheckoutClick}
+          >
+            Checkout Now <ArrowRight size={20} className="ml-2" />
+          </Button>
           <p className="text-[10px] text-center font-bold text-gray-400 uppercase tracking-widest opacity-60">
             Taxes and fees calculated at checkout
           </p>

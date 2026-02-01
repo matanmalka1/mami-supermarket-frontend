@@ -8,7 +8,7 @@ interface PickingItemsTableProps {
   onToggle: (id: number) => void;
   onUpdateStatus: (id: string | number, status: string) => void;
   onReportMissing: (id: string | number) => void;
-  onReportDamage: (id: string | number) => Promise<void> | void;
+  onReportDamage: (id: string | number, reason: string, notes?: string) => Promise<void>;
 }
 
 const PickingItemsTable: React.FC<PickingItemsTableProps> = ({
