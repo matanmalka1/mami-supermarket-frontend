@@ -2,10 +2,10 @@ import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import CheckoutStepper, {
   CheckoutStep,
-} from "@/components/checkout/CheckoutStepper";
-import FulfillmentStep from "@/components/checkout/FulfillmentStep";
-import ScheduleStep from "@/components/checkout/ScheduleStep";
-import PaymentStep from "@/components/checkout/PaymentStep";
+} from "@/features/checkout/components/CheckoutStepper";
+import FulfillmentStep from "@/features/checkout/components/FulfillmentStep";
+import ScheduleStep from "@/features/checkout/components/ScheduleStep";
+import PaymentStep from "@/features/checkout/components/PaymentStep";
 import Button from "@/components/ui/Button";
 import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { checkoutService } from "@/domains/checkout/service";

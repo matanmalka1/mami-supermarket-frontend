@@ -26,23 +26,23 @@ vi.mock("react-router", async (importActual) => {
   };
 });
 
-vi.mock("@/components/checkout/CheckoutStepper", () => ({
+vi.mock("@/features/checkout/components/CheckoutStepper", () => ({
   default: () => <div>Stepper</div>,
 }));
 
-vi.mock("@/components/checkout/FulfillmentStep", () => ({
+vi.mock("@/features/checkout/components/FulfillmentStep", () => ({
   default: ({ onNext }: { onNext: (step: any) => void }) => (
     <button onClick={() => onNext("SCHEDULE")}>Next to Schedule</button>
   ),
 }));
 
-vi.mock("@/components/checkout/ScheduleStep", () => ({
+vi.mock("@/features/checkout/components/ScheduleStep", () => ({
   default: ({ onNext }: { onNext: (step: any) => void }) => (
     <button onClick={() => onNext("PAYMENT")}>Next to Payment</button>
   ),
 }));
 
-vi.mock("@/components/checkout/PaymentStep", () => ({
+vi.mock("@/features/checkout/components/PaymentStep", () => ({
   default: ({ onConfirm }: { onConfirm: () => void }) => (
     <button onClick={onConfirm}>Confirm Order</button>
   ),
