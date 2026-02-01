@@ -1,47 +1,56 @@
-import { useCallback, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { wishlistService } from "@/domains/wishlist/service";
 import type { WishlistItem } from "@/domains/wishlist/types";
 import { toast } from "react-hot-toast";
 
-export type { WishlistItem };
+interface WishlistContextType {
+  items: WishlistItem[];
+  isLoading: boolean;
+  toggleWishlist: (productId: number) => Promise<void>;
+  isWishlisted: (productId: number) => boolean;
+  updateWishlistItem: (
+    productId: number,
+    changes: Partial<Omit<WishlistItem, "id">>,
+  ) => void;
+  removeWishlistItem: (productId: number) => void;
+  refresh: () => Promise<void>;
+}
 
-export const useWishlist = () => {
+const WishlistContext = createContext<WishlistContextType | undefined>(
+  undefined,
+);
+
+export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load wishlist from backend on mount
-  useEffect(() => {
-    let mounted = true;
-
-    const loadWishlist = async () => {
-      try {
-        const response = await wishlistService.list();
-        if (mounted) {
-          const wishlistItems = response.items.map((item) => ({
-            id: item.productId,
-            note: undefined,
-            priority: undefined,
-          }));
-          setItems(wishlistItems);
-        }
-      } catch (error) {
-        // Silently fail - user might not be logged in
-        if (mounted) {
-          setItems([]);
-        }
-      } finally {
-        if (mounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    loadWishlist();
-
-    return () => {
-      mounted = false;
-    };
+  const loadWishlist = useCallback(async () => {
+    try {
+      const response = await wishlistService.list();
+      const wishlistItems = response.items.map((item) => ({
+        id: item.productId,
+        note: undefined,
+        priority: undefined,
+      }));
+      setItems(wishlistItems);
+    } catch (error) {
+      setItems([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadWishlist();
+  }, [loadWishlist]);
 
   const toggleWishlist = useCallback(
     async (productId: number) => {
@@ -94,12 +103,27 @@ export const useWishlist = () => {
     setItems((prev) => prev.filter((item) => item.id !== productId));
   }, []);
 
-  return {
-    items,
-    toggleWishlist,
-    isWishlisted,
-    updateWishlistItem,
-    removeWishlistItem,
-    isLoading,
-  };
+  return (
+    <WishlistContext.Provider
+      value={{
+        items,
+        isLoading,
+        toggleWishlist,
+        isWishlisted,
+        updateWishlistItem,
+        removeWishlistItem,
+        refresh: loadWishlist,
+      }}
+    >
+      {children}
+    </WishlistContext.Provider>
+  );
+};
+
+export const useWishlist = () => {
+  const context = useContext(WishlistContext);
+  if (!context) {
+    throw new Error("useWishlist must be used within a WishlistProvider");
+  }
+  return context;
 };

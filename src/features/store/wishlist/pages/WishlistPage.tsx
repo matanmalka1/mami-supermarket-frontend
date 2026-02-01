@@ -3,12 +3,12 @@ import EmptyState from "@/components/ui/EmptyState";
 import LoadingState from "@/components/ui/LoadingState";
 import WishlistHeader from "../components/WishlistHeader";
 import WishlistProductCard from "../components/WishlistProductCard";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/context/wishlist-context";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { catalogService } from "@/domains/catalog/service";
 import { Product } from "@/domains/catalog/types";
-import type { WishlistItem } from "@/hooks/useWishlist";
+import type { WishlistItem } from "@/domains/wishlist/types";
 
 const useWishlistProducts = () => {
   const { items } = useWishlist();

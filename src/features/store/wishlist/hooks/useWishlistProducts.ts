@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { catalogService } from "@/domains/catalog/service";
 import { Product } from "@/domains/catalog/types";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/context/wishlist-context";
 
-import type { WishlistItem } from "@/hooks/useWishlist";
+import type { WishlistItem } from "@/domains/wishlist/types";
 
 export const useWishlistProducts = () => {
   const { items, removeWishlistItem, isLoading: wishlistLoading } = useWishlist();

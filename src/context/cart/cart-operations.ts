@@ -62,7 +62,7 @@ export const addItemToCart = async (
     productCache.set(productId, product);
 
     await cartService.addItem(productId, 1);
-    toast.success(`${product.name} added to cart`);
+    toast.success(`${product.name} added to cart`, { duration: 2000 });
     return true;
   } catch (error: any) {
     console.error("[CartContext] Failed to add item:", error);

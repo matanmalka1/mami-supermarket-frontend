@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/context/wishlist-context";
 
 interface WishlistButtonProps {
   productId?: number;

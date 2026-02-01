@@ -1,6 +1,6 @@
 import ProductCard from "@/components/store/ProductCard";
 import type { Product } from "@/domains/catalog/types";
-import type { WishlistItem } from "@/hooks/useWishlist";
+import type { WishlistItem } from "@/domains/wishlist/types";
 
 interface WishlistProductCardProps {
   product: Product;

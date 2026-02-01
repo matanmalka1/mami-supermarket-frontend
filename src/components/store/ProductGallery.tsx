@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import ProductGalleryMainImage from "./ProductGalleryMainImage";
 import GalleryThumbnails from "./GalleryThumbnails";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/context/wishlist-context";
 
 interface ProductGalleryProps {
   images?: string[];

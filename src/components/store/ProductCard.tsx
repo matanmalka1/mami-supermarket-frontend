@@ -2,7 +2,7 @@ import { useCart } from "@/context/cart-context";
 import { ShoppingCart, Heart } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/context/wishlist-context";
 import ProductPricing from "./ProductPricing";
 
 export type CardProduct = {
