@@ -32,6 +32,8 @@
     "tests/pages/auth",
     "tests/pages/store",
     "tests/pages/ops",
+    "tests/hooks/useAllProducts.test.ts",
+    "tests/components/ops",
     "tests/render.ts",
     "tests/setup.ts",
     "tests/hooks/useAsyncResource.test.ts",
