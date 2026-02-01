@@ -18,7 +18,7 @@ const CatalogManagerHeader: React.FC<CatalogManagerHeaderProps> = ({
         Master Product Index • {totalCount} SKUs
       </p>
     </div>
-    <Button variant="emerald" icon={<Plus size={18} />} onClick={onNewProduct}>
+    <Button variant="brand" icon={<Plus size={18} />} onClick={onNewProduct}>
       New Product
     </Button>
   </div>

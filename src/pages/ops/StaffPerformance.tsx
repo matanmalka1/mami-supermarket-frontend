@@ -70,7 +70,7 @@ const StaffPerformance: React.FC = () => {
           title="Performance metrics unavailable"
           description={error}
           action={
-            <Button onClick={refresh} variant="emerald" disabled={loading}>
+            <Button onClick={refresh} variant="brand" disabled={loading}>
               Retry
             </Button>
           }
@@ -105,7 +105,7 @@ const StaffPerformance: React.FC = () => {
             </p>
           </div>
           <Button
-            variant="emerald"
+            variant="brand"
             onClick={refresh}
             disabled={loading}
             className="uppercase text-[10px] tracking-[0.3em]"

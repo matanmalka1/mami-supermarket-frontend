@@ -70,7 +70,7 @@ const PickingScaleModal: React.FC<PickingScaleModalProps> = ({
             Clear
           </Button>
           <Button
-            variant="emerald"
+            variant="brand"
             className="flex-1 rounded-2xl"
             disabled={isConfirmDisabled}
             onClick={onConfirm}

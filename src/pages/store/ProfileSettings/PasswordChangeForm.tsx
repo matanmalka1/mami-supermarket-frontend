@@ -95,7 +95,7 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
         <Button
           fullWidth
           size="lg"
-          variant="emerald"
+          variant="brand"
           type="submit"
           loading={passwordLoading}
         >

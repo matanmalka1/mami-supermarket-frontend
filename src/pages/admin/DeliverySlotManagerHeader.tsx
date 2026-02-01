@@ -17,7 +17,7 @@ const DeliverySlotManagerHeader: React.FC<DeliverySlotManagerHeaderProps> = ({
       </p>
     </div>
     <Button
-      variant="emerald"
+      variant="brand"
       icon={<Save size={18} />}
       className="rounded-2xl h-14 px-10 shadow-xl shadow-emerald-900/10"
       onClick={onSave}

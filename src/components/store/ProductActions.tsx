@@ -16,7 +16,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   <div className="flex gap-4">
     <Button
       onClick={onAddToCart}
-      variant="emerald"
+      variant="brand"
       className="flex-1 h-14 rounded-xl text-sm tracking-wide"
       icon={<ShoppingCart size={18} />}
       disabled={isOutOfStock}

@@ -95,7 +95,7 @@ const SearchFiltersDrawer: React.FC<SearchFiltersDrawerProps> = ({
             Clear All
           </Button>
           <Button
-            variant="emerald"
+            variant="brand"
             className="flex-[2] rounded-2xl "
             onClick={onApply}
           >

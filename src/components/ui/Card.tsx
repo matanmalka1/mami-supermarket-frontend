@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type CardVariant = 'default' | 'flat' | 'glass' | 'borderless' | 'emerald';
+export type CardVariant = 'default' | 'flat' | 'glass' | 'borderless' | 'brand';
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,7 +15,7 @@ const variantStyles: Record<CardVariant, string> = {
   flat: "bg-gray-50/50 border border-gray-100 shadow-none",
   glass: "bg-white/70 backdrop-blur-md border border-white/20 shadow-xl",
   borderless: "bg-white shadow-lg shadow-gray-200/50",
-  emerald: "bg-[#008A45] text-white border-none shadow-xl shadow-emerald-900/20"
+  brand: "bg-[#008A45] text-white border-none shadow-xl shadow-emerald-900/20"
 };
 
 const paddingStyles: Record<CardPadding, string> = {

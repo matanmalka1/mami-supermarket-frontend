@@ -35,7 +35,7 @@ const StockRequestManager: React.FC = () => {
             Reject Selected
           </Button>
           <Button
-            variant="emerald"
+            variant="brand"
             disabled={selectedIds.length === 0 || actionLoading}
             onClick={() => resolveSelected("APPROVED")}
           >

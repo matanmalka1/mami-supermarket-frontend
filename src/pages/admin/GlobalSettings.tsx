@@ -64,7 +64,7 @@ const GlobalSettings: React.FC = () => {
           </p>
         </div>
         <Button
-          variant="emerald"
+          variant="brand"
           icon={<Save size={18} />}
           className="rounded-2xl h-14 px-10 shadow-xl"
           onClick={handleSave}

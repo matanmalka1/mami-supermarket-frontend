@@ -51,7 +51,7 @@ const AddressBook: React.FC = () => {
           </p>
         </div>
         <Button
-          variant="emerald"
+          variant="brand"
           icon={<Plus size={18} />}
           className="rounded-2xl h-14 px-8"
           onClick={() => setIsModalOpen(true)}

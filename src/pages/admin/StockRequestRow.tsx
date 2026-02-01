@@ -82,7 +82,7 @@ const StockRequestRow: React.FC<Props> = ({
             <XCircle size={14} /> Reject
           </Button>
           <Button
-            variant="emerald"
+            variant="brand"
             size="sm"
             disabled={disabled}
             onClick={onApprove}
