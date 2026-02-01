@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { CheckCircle2, Package, Truck, Home } from "lucide-react";
+import Card from "@/components/ui/Card";
 import ProgressTimeline, {
   type TimelineStep,
 } from "@/components/ui/ProgressTimeline";
@@ -89,7 +90,7 @@ const OrderProgressTimeline: React.FC<OrderProgressTimelineProps> = ({
   );
 
   return (
-    <div className="bg-white border rounded-[3rem] p-8 md:p-12 shadow-xl">
+    <Card variant="glass" padding="lg">
       <div className="mb-6">
         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider text-center">
           Order Progress
@@ -101,7 +102,7 @@ const OrderProgressTimeline: React.FC<OrderProgressTimelineProps> = ({
         activeStepId={activeStepId}
         className="py-4"
       />
-    </div>
+    </Card>
   );
 };
 

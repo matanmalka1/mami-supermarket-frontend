@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams, Link } from "react-router";
 import { CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import OrderSummaryCard from "@/components/store/OrderSummaryCard";
 import OrderProgressTimeline from "@/components/store/OrderProgressTimeline";
 import { OrderSuccessSnapshot, OrderStatus } from "@/domains/orders/types";
@@ -109,11 +110,11 @@ const OrderSuccess: React.FC = () => {
           estimatedDelivery={estimatedDelivery}
         />
       ) : (
-        <div className="bg-white border rounded-[3rem] p-12 shadow-xl">
+        <Card variant="glass" padding="xl">
           <p className="text-sm text-gray-500">
-            We’re still preparing your summary
+            We're still preparing your summary
           </p>
-        </div>
+        </Card>
       )}
 
       <div className="flex gap-4 max-w-md mx-auto">

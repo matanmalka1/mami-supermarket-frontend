@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import Card from "@/components/ui/Card";
 import CheckoutStepper, {
   CheckoutStep,
 } from "@/features/checkout/components/CheckoutStepper";
@@ -41,7 +42,6 @@ const Checkout: React.FC = () => {
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     [],
   );
-
 
   const handleConfirm = async (tokenId: number) => {
     setError(null);
@@ -109,7 +109,7 @@ const Checkout: React.FC = () => {
         <LoadingState label="Loading pickup branch information..." />
       )}
 
-      <div className="bg-white border rounded-[3rem] p-12 shadow-xl space-y-10 min-h-[500px]">
+      <Card variant="glass" padding="xl" className="space-y-10 min-h-[500px]">
         {step === "FULFILLMENT" && (
           <FulfillmentStep
             method={method}
@@ -145,7 +145,7 @@ const Checkout: React.FC = () => {
             onCreatePaymentToken={checkoutService.createPaymentToken}
           />
         )}
-      </div>
+      </Card>
     </div>
   );
 };

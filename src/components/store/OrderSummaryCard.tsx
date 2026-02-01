@@ -1,4 +1,5 @@
 import React from "react";
+import Card from "@/components/ui/Card";
 import { OrderSuccessSnapshot } from "@/domains/orders/types";
 import { currencyILS } from "@/utils/format";
 
@@ -15,7 +16,7 @@ const OrderSummaryCard: React.FC<Props> = ({
   fulfillmentLabel,
   estimatedDelivery,
 }) => (
-  <div className="bg-white border rounded-[3rem] p-10 shadow-xl space-y-8">
+  <Card variant="glass" padding="lg" className="space-y-8">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
       <div>
         <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400">
@@ -82,7 +83,7 @@ const OrderSummaryCard: React.FC<Props> = ({
         <span>{currencyILS(snapshot.total)}</span>
       </div>
     </div>
-  </div>
+  </Card>
 );
 
 export default OrderSummaryCard;
