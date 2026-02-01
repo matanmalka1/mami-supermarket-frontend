@@ -8,6 +8,7 @@ import ScheduleStep from "@/features/checkout/components/ScheduleStep";
 import PaymentStep from "@/features/checkout/components/PaymentStep";
 import Button from "@/components/ui/Button";
 import ErrorState from "@/components/ui/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
 import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
 import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
@@ -109,9 +110,7 @@ const Checkout: React.FC = () => {
         </div>
       )}
       {method === "PICKUP" && !selectedBranch && (
-        <div className="bg-blue-50 border border-blue-100 rounded-3xl p-5 text-sm font-bold uppercase tracking-[0.3em] text-blue-600">
-          Loading pickup branch information...
-        </div>
+        <LoadingState label="Loading pickup branch information..." />
       )}
 
       <div className="bg-white border rounded-[3rem] p-12 shadow-xl space-y-10 min-h-[500px]">

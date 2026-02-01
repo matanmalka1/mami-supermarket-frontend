@@ -1,7 +1,10 @@
 import { type FC, type ChangeEvent } from "react";
-import { Search, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useCatalogAutocomplete } from "@/features/store/hooks/useCatalogAutocomplete";
 import type { Product } from "@/domains/catalog/types";
+import SearchInput from "@/components/ui/SearchInput";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 
 type MissingItemReplacementProps = {
   itemName?: string;
@@ -34,27 +37,19 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
         <p className="text-xs font-bold uppercase tracking-[0.4em] text-gray-400">
           Searching for an alternative {itemName ? `for ${itemName}` : ""}
         </p>
-        <div className="relative">
-          <input
-            type="search"
-            value={query}
-            onChange={handleInputChange}
-            placeholder="Search catalog..."
-            className="w-full border border-gray-100 rounded-2xl bg-white py-4 pl-12 pr-4 text-sm focus:border-[#006666] focus:ring-2 focus:ring-[#006666]/20 transition-all"
-            autoFocus
-          />
-          <Search
-            size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-        </div>
+        <SearchInput
+          type="search"
+          value={query}
+          onChange={handleInputChange}
+          placeholder="Search catalog..."
+          autoFocus
+          variant="ops"
+        />
       </div>
 
       <div className="max-h-72 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
         {loading ? (
-          <div className="py-12 text-center text-gray-300 animate-pulse uppercase tracking-widest">
-            Searching...
-          </div>
+          <LoadingState label="Searching..." />
         ) : hasSuggestions ? (
           suggestions.map((product) => (
             <button
@@ -83,13 +78,9 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
             </button>
           ))
         ) : hasQuery ? (
-          <div className="py-12 text-center text-gray-400 font-bold uppercase tracking-[0.3em]">
-            No alternatives found
-          </div>
+          <EmptyState title="No alternatives found" />
         ) : (
-          <div className="py-12 text-center text-gray-400 font-bold uppercase tracking-[0.3em]">
-            Type to search alternatives
-          </div>
+          <EmptyState title="Type to search alternatives" />
         )}
       </div>
     </div>

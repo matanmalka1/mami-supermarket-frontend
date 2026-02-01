@@ -3,8 +3,8 @@ import { toast } from "react-hot-toast";
 import { usePicking } from "@/features/ops/hooks/usePicking";
 import { useWeightScale } from "@/hooks/useWeightScale";
 import { useParams, useNavigate } from "react-router";
-import Button from "@/components/ui/Button";
-import ErrorMessage from "@/components/ui/ErrorMessage";
+import ErrorState from "@/components/ui/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
 import PickingFinalizedNotice from "@/pages/ops/components/PickingFinalizedNotice";
 import PickingWorkflowLayout from "@/pages/ops/components/PickingWorkflowLayout";
 const PickingInterface: React.FC = () => {
@@ -74,22 +74,12 @@ const PickingInterface: React.FC = () => {
   };
   if (loading) {
     return (
-      <div className="p-20 text-center animate-pulse text-gray-300  uppercase tracking-[0.3em]">
-        Loading picking data...
-      </div>
+      <LoadingState label="Loading picking data..." />
     );
   }
   if (error) {
     return (
-      <div className="p-20 text-center space-y-4">
-        <ErrorMessage
-          message={error}
-          className="uppercase tracking-[0.3em] text-red-600"
-        />
-        <Button variant="emerald" onClick={refresh}>
-          Retry
-        </Button>
-      </div>
+      <ErrorState message={error} onRetry={refresh} />
     );
   }
 
