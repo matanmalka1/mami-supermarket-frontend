@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router";
-import StoreLayout from "../components/layout/StoreLayout";
-import OpsLayout from "../components/layout/OpsLayout";
+import StoreLayout from "../layouts/StoreLayout";
+import OpsLayout from "../layouts/OpsLayout";
 import RequireAuth from "./guards/RequireAuth";
 import Dashboard from "../pages/ops/Dashboard";
 import PickingInterface from "../pages/ops/PickingInterface";
@@ -30,7 +30,7 @@ import GlobalSettings from "../pages/admin/GlobalSettings";
 import ManagerAnalytics from "../pages/admin/ManagerAnalytics";
 import ForbiddenPage from "../pages/errors/ForbiddenPage";
 import NotFoundPage from "../pages/errors/NotFoundPage";
-import { UserRole } from "../types/auth";
+import type { UserRole } from "@/domains/users/types";
 import RoleGuard from "./guards/RoleGuard";
 import { OPS_ROLES } from "../utils/roles";
 
@@ -38,9 +38,7 @@ interface RouterProps {
   isAuthenticated: boolean;
   userRole: UserRole | null;
   login: (payload: {
-    token: string;
-    role?: UserRole | null;
-    remember?: boolean;
+    token: string; role?: UserRole | null; remember?: boolean;
   }) => void;
   logout: () => void;
 }
@@ -51,68 +49,88 @@ export const AppRouter: React.FC<RouterProps> = ({
   login,
   logout,
 }) => {
+  const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) =>
+    isAuthenticated ? <Navigate to="/store" replace /> : children;
+  const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+    isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 
   return (
     <Routes>
-      <Route path="/login" element={!isAuthenticated ? (<Login onLogin={login} />) : (<Navigate to="/store" replace />)}
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login onLogin={login} />
+          </PublicRoute>
+        }
       />
-      <Route path="/register" element={!isAuthenticated ? (<Register onRegister={login} />) : (<Navigate to="/store" replace />)}
+      <Route path="/register" element={<PublicRoute><Register onRegister={login} /></PublicRoute>} />
+      <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+      <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+
+      <Route
+        element={
+          <ProtectedRoutes>
+            <RequireAuth>
+              <RoleGuard allowedRoles={OPS_ROLES} userRole={userRole}>
+                <OpsLayout userRole={userRole} />
+              </RoleGuard>
+            </RequireAuth>
+          </ProtectedRoutes>
+        }
+      >
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/picking/:id" element={<PickingInterface />} />
+        <Route path="/inventory" element={<Inventory />} />
+        <Route path="/audit" element={<AuditLogs />} />
+        <Route path="/performance" element={<StaffPerformance />} />
+        <Route path="/stock-requests" element={<StockRequests />} />
+        <Route path="/admin/analytics" element={<ManagerAnalytics />} />
+        <Route path="/admin/catalog" element={<CatalogManager />} />
+        <Route path="/admin/requests" element={<StockRequestManager />} />
+        <Route path="/admin/delivery" element={<DeliverySlotManager />} />
+        <Route path="/admin/settings" element={<GlobalSettings />} />
+      </Route>
+
+      <Route path="/403" element={<ProtectedRoutes><ForbiddenPage /></ProtectedRoutes>} />
+
+      <Route
+        element={
+          <ProtectedRoutes>
+            <RequireAuth>
+              <StoreLayout />
+            </RequireAuth>
+          </ProtectedRoutes>
+        }
+      >
+        <Route path="/store" element={<Storefront />} />
+        <Route path="/store/category/:id" element={<CategoryView />} />
+        <Route path="/store/search" element={<SearchResults />} />
+        <Route path="/store/product/:id" element={<ProductDetail />} />
+        <Route path="/store/checkout" element={<Checkout />} />
+        <Route path="/store/order-success/:id" element={<OrderSuccess />} />
+        <Route path="/store/wishlist" element={<Wishlist />} />
+        <Route
+          path="/store/account"
+          element={<AccountLayout onLogout={logout} />}
+        >
+          <Route index element={<Navigate to="orders" replace />} />
+          <Route path="orders" element={<OrderHistory />} />
+          <Route path="addresses" element={<AddressBook />} />
+          <Route path="settings" element={<ProfileSettings />} />
+        </Route>
+      </Route>
+
+      <Route
+        path="*"
+        element={
+          isAuthenticated ? (
+            <NotFoundPage />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
       />
-      <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/store" replace />}
-      />
-      <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <Navigate to="/store" replace />} />{isAuthenticated ? ( 
-        <>
-          {/* Internal Portal Branch */}
-          <Route
-            element={
-              <RequireAuth>
-                <RoleGuard allowedRoles={OPS_ROLES} userRole={userRole}>
-                  <OpsLayout userRole={userRole} />
-                </RoleGuard>
-              </RequireAuth>
-            }
-          >
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/picking/:id" element={<PickingInterface />} />
-            <Route path="/inventory" element={<Inventory />} />
-            <Route path="/audit" element={<AuditLogs />} />
-            <Route path="/performance" element={<StaffPerformance />} />
-            <Route path="/stock-requests" element={<StockRequests />} />
-            <Route path="/admin/analytics" element={<ManagerAnalytics />} />
-            <Route path="/admin/catalog" element={<CatalogManager />} />
-            <Route path="/admin/requests" element={<StockRequestManager />} />
-            <Route path="/admin/delivery" element={<DeliverySlotManager />} />
-            <Route path="/admin/settings" element={<GlobalSettings />} />
-          </Route>
-
-          <Route path="/403" element={<ForbiddenPage />} />
-
-          {/* Customer Store Branch */}
-          <Route element={<StoreLayout />}>
-            <Route path="/store" element={<Storefront />} />
-            <Route path="/store/category/:id" element={<CategoryView />} />
-            <Route path="/store/search" element={<SearchResults />} />
-            <Route path="/store/product/:id" element={<ProductDetail />} />
-            <Route path="/store/checkout" element={<Checkout />} />
-            <Route path="/store/order-success/:id" element={<OrderSuccess />} />
-            <Route path="/store/wishlist" element={<Wishlist />} />
-
-            <Route
-              path="/store/account"
-              element={<AccountLayout onLogout={logout} />}
-            >
-              <Route index element={<Navigate to="orders" replace />} />
-              <Route path="orders" element={<OrderHistory />} />
-              <Route path="addresses" element={<AddressBook />} />
-              <Route path="settings" element={<ProfileSettings />} />
-            </Route>
-          </Route>
-
-          <Route path="*" element={<NotFoundPage />} />
-        </>
-      ) : (
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      )}
     </Routes>
   );
 };

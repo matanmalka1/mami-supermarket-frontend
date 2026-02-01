@@ -1,4 +1,4 @@
-import { Product } from "@/types/domain";
+import { Product } from "@/domains/catalog/types";
 import { extractArrayPayload } from "@/utils/api-response";
 
 const toNumber = (value: number | string | undefined | null) => {

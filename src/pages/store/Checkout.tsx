@@ -1,32 +1,38 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { apiService } from "@/services/api";
-import { useCart } from "@/context/CartContext";
-import CheckoutStepper, {CheckoutStep} from "@/components/checkout/CheckoutStepper";
-import FulfillmentStep from "@/components/checkout/FulfillmentStep";
-import ScheduleStep from "@/components/checkout/ScheduleStep";
-import PaymentStep from "@/components/checkout/PaymentStep";
+import CheckoutStepper, {
+  CheckoutStep,
+} from "@/features/checkout/components/CheckoutStepper";
+import FulfillmentStep from "@/features/checkout/components/FulfillmentStep";
+import ScheduleStep from "@/features/checkout/components/ScheduleStep";
+import PaymentStep from "@/features/checkout/components/PaymentStep";
 import Button from "@/components/ui/Button";
-import { useCheckoutFlow } from "@/hooks/useCheckoutFlow";
-import { OrderSuccessSnapshot } from "@/types/order-success";
+import ErrorState from "@/components/ui/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import { useCheckoutProcess } from "@/features/store/hooks/useCheckoutProcess";
+import { checkoutService } from "@/domains/checkout/service";
 import { saveOrderSnapshot } from "@/utils/order";
 
 const Checkout: React.FC = () => {
-  const { items, total, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState<CheckoutStep>("FULFILLMENT");
-  const [loading, setLoading] = useState(false);
   const {
+    items,
+    total,
+    clearCart,
     isAuthenticated,
     method,
     setMethod,
-    serverCartId,
     selectedBranch,
     deliverySlots,
     slotId,
     setSlotId,
     preview,
-  } = useCheckoutFlow();
+    loading,
+    error,
+    setError,
+    confirmOrder,
+  } = useCheckoutProcess();
 
   const idempotencyKey = useMemo(
     () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -34,87 +40,16 @@ const Checkout: React.FC = () => {
   );
 
   // Store the payment token id from PaymentStep
-  const [paymentTokenId, setPaymentTokenId] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   // Called by PaymentStep after payment token is created
   const handleConfirm = async (tokenId: number) => {
-    setPaymentTokenId(tokenId);
     setError(null);
-    if (!isAuthenticated) {
-      setError("Sign in to complete the order");
-      return;
-    }
-    if (!serverCartId) {
-      setError("Cart is syncing, please wait");
-      return;
-    }
-    if (method === "PICKUP" && !selectedBranch) {
-      setError("Pickup branch is loading, please wait");
-      return;
-    }
-    setLoading(true);
-    try {
-      const data: any = await apiService.checkout.confirm(
-        {
-          cart_id: serverCartId,
-          payment_token_id: tokenId,
-          fulfillment_type: method,
-          branch_id: method === "PICKUP" ? selectedBranch?.id : undefined,
-          delivery_slot_id: slotId ?? undefined,
-        },
-        idempotencyKey,
-      );
-      const orderId = data?.order_id || data?.orderId || data?.id || "order";
-      const resolvedOrderId = String(orderId);
-      const subtotalBefore = preview?.cart_total
-        ? Number(preview.cart_total)
-        : total;
-      const deliveryFeeBefore =
-        preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
-          ? Number(preview.delivery_fee)
-          : 0;
-      const slotLabel = deliverySlots.find((slot) => slot.id === slotId)?.label;
-      const estimatedDelivery =
-        method === "DELIVERY"
-          ? slotLabel
-            ? `Delivery window ${slotLabel}`
-            : "Delivery window pending"
-          : selectedBranch
-            ? `Pickup ready at ${selectedBranch.name}`
-            : "Pickup time pending";
-      const orderSnapshot: OrderSuccessSnapshot = {
-        orderId: resolvedOrderId,
-        orderNumber:
-          String(data?.order_number || data?.orderNumber || resolvedOrderId),
-        fulfillmentType: method,
-        items: items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-          unit: item.unit,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        subtotal: subtotalBefore,
-        deliveryFee: deliveryFeeBefore,
-        total: subtotalBefore + deliveryFeeBefore,
-        estimatedDelivery,
-        deliverySlot: slotLabel,
-        pickupBranch: method === "PICKUP" ? selectedBranch?.name : undefined,
-        deliveryAddress:
-          method === "PICKUP" ? selectedBranch?.address : undefined,
-      };
-      saveOrderSnapshot(resolvedOrderId, orderSnapshot);
-      clearCart();
-      navigate(`/store/order-success/${resolvedOrderId}`, {
-        state: { snapshot: orderSnapshot },
-      });
-    } catch (err: any) {
-      setError(err.message || "Checkout failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    const payload = await confirmOrder(tokenId, idempotencyKey);
+    if (!payload) return;
+    saveOrderSnapshot(payload.orderId, payload.snapshot);
+    clearCart();
+    navigate(`/store/order-success/${payload.orderId}`, {
+      state: { snapshot: payload.snapshot },
+    });
   };
 
   // Avoid calling navigate during render: useEffect for redirect
@@ -131,21 +66,18 @@ const Checkout: React.FC = () => {
   // Inline error state UI for checkout errors
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-8">
-        <div className="bg-red-50 border border-red-200 rounded-3xl p-8 text-center space-y-4">
-          <p className="text-2xl font-black text-red-700 uppercase tracking-[0.2em]">
-            Checkout Error
-          </p>
-          <p className="text-red-600 font-bold">{error}</p>
-          <Button
-            variant="emerald"
-            onClick={() => {
-              setError(null);
-            }}
-          >
-            Retry
-          </Button>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-20 flex flex-col items-center space-y-6">
+        <ErrorState
+          message={
+            <div className="space-y-2 text-center">
+              <p className="text-xl uppercase tracking-[0.2em]">
+                Checkout Error
+              </p>
+              <span>{error}</span>
+            </div>
+          }
+          onRetry={() => setError(null)}
+        />
         <Button variant="outline" onClick={() => navigate("/store")}>
           Back to Store
         </Button>
@@ -154,10 +86,16 @@ const Checkout: React.FC = () => {
   }
 
   const subtotal = preview?.cart_total ? Number(preview.cart_total) : total;
+  const DELIVERY_THRESHOLD = 150;
+  const DELIVERY_FEE_UNDER_THRESHOLD = 30;
+  const fallbackDeliveryFee =
+    method === "DELIVERY" && subtotal < DELIVERY_THRESHOLD
+      ? DELIVERY_FEE_UNDER_THRESHOLD
+      : 0;
   const deliveryFee =
     preview?.delivery_fee !== undefined && preview?.delivery_fee !== null
       ? Number(preview.delivery_fee)
-      : 0;
+      : fallbackDeliveryFee;
   const finalTotal = subtotal + deliveryFee;
 
   return (
@@ -172,9 +110,7 @@ const Checkout: React.FC = () => {
         </div>
       )}
       {method === "PICKUP" && !selectedBranch && (
-        <div className="bg-blue-50 border border-blue-100 rounded-3xl p-5 text-sm font-bold uppercase tracking-[0.3em] text-blue-600">
-          Loading pickup branch information...
-        </div>
+        <LoadingState label="Loading pickup branch information..." />
       )}
 
       <div className="bg-white border rounded-[3rem] p-12 shadow-xl space-y-10 min-h-[500px]">
@@ -183,6 +119,7 @@ const Checkout: React.FC = () => {
             method={method}
             onSelect={setMethod}
             onNext={setStep}
+            error={!selectedBranch && method === "PICKUP" ? "Select a pickup branch" : null}
           />
         )}
 
@@ -205,7 +142,7 @@ const Checkout: React.FC = () => {
             loading={loading}
             onBack={() => setStep("SCHEDULE")}
             onConfirm={handleConfirm}
-            onCreatePaymentToken={apiService.checkout.createPaymentToken}
+            onCreatePaymentToken={checkoutService.createPaymentToken}
           />
         )}
       </div>

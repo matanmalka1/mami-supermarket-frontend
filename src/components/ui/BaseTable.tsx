@@ -32,7 +32,7 @@ const BaseTable = <T extends unknown>({
   className = "",
   containerClassName = "",
   bodyClassName = "divide-y text-sm font-bold",
-  loadingClassName = "p-20 text-center text-gray-300 uppercase tracking-[0.3em] font-black",
+  loadingClassName = "p-20 text-center text-gray-300 uppercase tracking-[0.3em]",
   emptyClassName = "p-12 text-center text-gray-400 font-bold uppercase tracking-[0.25em]",
   renderHeader,
 }: BaseTableProps<T>) => {
@@ -40,19 +40,25 @@ const BaseTable = <T extends unknown>({
 
   const defaultRowKey = (item: T, index: number) => index;
   return (
-    <div className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}>
+    <div
+      className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
+    >
       <table className={`w-full text-left border-collapse ${className}`}>
-        {renderHeader ?? (columns && (
-          <thead className="bg-gray-50/50 text-[10px] text-gray-400 uppercase font-black tracking-widest border-b">
-            <tr>
-              {columns.map((column, index) => (
-                <th key={index} className={`px-8 py-6 ${column.className ?? ""}`}>
-                  {column.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-        ))}
+        {renderHeader ??
+          (columns && (
+            <thead className="bg-gray-50/50 text-[10px] text-gray-400 uppercase tracking-widest border-b">
+              <tr>
+                {columns.map((column, index) => (
+                  <th
+                    key={index}
+                    className={`px-8 py-6 ${column.className ?? ""}`}
+                  >
+                    {column.header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          ))}
         <tbody className={bodyClassName}>
           {isLoading ? (
             <tr>

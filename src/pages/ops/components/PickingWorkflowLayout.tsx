@@ -1,14 +1,14 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import Badge from "@/components/ui/Badge";
-import PickingHeader from "@/components/ops/PickingHeader";
-import PickingFooter from "@/components/ops/PickingFooter";
-import MissingItemModal from "@/components/ops/MissingItemModal";
+import PickingHeader from "@/components/ops/picking/PickingHeader";
+import PickingFooter from "@/components/ops/picking/PickingFooter";
+import MissingItemModal from "@/components/ops/modals/MissingItemModal";
 import PickingGuidanceCard from "@/pages/ops/components/PickingGuidanceCard";
 import PickingItemsTable from "@/pages/ops/components/PickingItemsTable";
 import PickingScaleModal from "@/pages/ops/components/PickingScaleModal";
 import PickingProgressPanel from "@/pages/ops/components/PickingProgressPanel";
-import { Order, OrderItem } from "@/types/domain";
+import { Order, OrderItem } from "@/domains/orders/types";
 
 interface Props {
   order: Order;
@@ -16,7 +16,12 @@ interface Props {
   expandedId: number | null;
   missingItemId: number | null;
   onToggleRow: (id: number) => void;
-  onUpdateStatus: (id: number, status: string, reason?: string, replacement?: any) => void;
+  onUpdateStatus: (
+    id: number,
+    status: string,
+    reason?: string,
+    replacement?: any,
+  ) => void;
   onReportMissing: (id: number) => void;
   onReportDamage: (id: number) => Promise<void> | void;
   onWeightConfirm: () => void;
@@ -58,9 +63,13 @@ const PickingWorkflowLayout: React.FC<Props> = ({
       <div className="flex items-center justify-between">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-xs font-black text-gray-400 hover:text-gray-900 uppercase tracking-widest group"
+          className="flex items-center gap-2 text-xs text-gray-400 hover:text-gray-900 uppercase tracking-widest group"
         >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Deck
+          <ArrowLeft
+            size={16}
+            className="group-hover:-translate-x-1 transition-transform"
+          />{" "}
+          Back to Deck
         </button>
         <Badge color="blue">Standard Picking Sequence</Badge>
       </div>
@@ -78,7 +87,12 @@ const PickingWorkflowLayout: React.FC<Props> = ({
         onReportDamage={onReportDamage}
       />
 
-      <PickingFooter items={items} progress={progress} onComplete={onComplete} onSync={onSync} />
+      <PickingFooter
+        items={items}
+        progress={progress}
+        onComplete={onComplete}
+        onSync={onSync}
+      />
 
       <PickingScaleModal
         isOpen={!!weighingItem}

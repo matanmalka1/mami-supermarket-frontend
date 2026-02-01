@@ -1,12 +1,64 @@
-import React from "react";
 import { Link } from "react-router";
-import EmptyState from "@/components/shared/EmptyState";
-import LoadingState from "@/components/shared/LoadingState";
-import ProductCard from "@/components/store/ProductCard";
+import EmptyState from "@/components/ui/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
+import WishlistEmptyState from "../components/WishlistEmptyState";
+import WishlistUnavailableState from "../components/WishlistUnavailableState";
+import WishlistHeader from "../components/WishlistHeader";
+import WishlistProductCard from "../components/WishlistProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useWishlistProducts } from "@/features/store/wishlist/hooks/useWishlistProducts";
-
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { catalogService } from "@/domains/catalog/service";
+import { Product } from "@/domains/catalog/types";
 import type { WishlistItem } from "@/hooks/useWishlist";
+
+const useWishlistProducts = () => {
+  const { items } = useWishlist();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const ids = Array.from(new Set(items.map((item: WishlistItem) => item.id)));
+    if (!ids.length) {
+      setProducts([]);
+      setLoading(false);
+      return;
+    }
+
+    let active = true;
+    setLoading(true);
+
+    Promise.allSettled(ids.map((id) => catalogService.getProduct(id)))
+      .then((results) => {
+        if (!active) return;
+        const fulfilled = results
+          .filter(
+            (result): result is PromiseFulfilledResult<Product> =>
+              result.status === "fulfilled",
+          )
+          .map((result) => result.value);
+        setProducts(fulfilled);
+        if (results.some((result) => result.status === "rejected")) {
+          toast.error("Some wishlist items could not be loaded");
+        }
+      })
+      .catch(() => {
+        if (active) toast.error("Failed to load wishlist items");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [items]);
+
+  return {
+    products,
+    loading,
+  };
+};
 
 const WishlistPage: React.FC = () => {
   const { items, updateWishlistItem } = useWishlist();
@@ -22,41 +74,11 @@ const WishlistPage: React.FC = () => {
   }
 
   if (!hasItems) {
-    return (
-      <div className="max-w-3xl mx-auto py-20">
-        <EmptyState
-          title="Your wishlist is empty"
-          description="Tap the heart on any product to keep it here for later."
-          action={
-            <Link
-              to="/store"
-              className="text-xs font-black uppercase tracking-widest text-[#008A45]"
-            >
-              Continue shopping
-            </Link>
-          }
-        />
-      </div>
-    );
+    return <WishlistEmptyState />;
   }
 
   if (hasItems && products.length === 0) {
-    return (
-      <div className="max-w-4xl mx-auto py-20">
-        <EmptyState
-          title="Wishlist items unavailable"
-          description="One or more saved products cannot be found right now."
-          action={
-            <Link
-              to="/store"
-              className="text-xs font-black uppercase tracking-widest text-[#008A45]"
-            >
-              Browse the store
-            </Link>
-          }
-        />
-      </div>
-    );
+    return <WishlistUnavailableState />;
   }
 
   // Helper to get WishlistItem by product id
@@ -65,69 +87,16 @@ const WishlistPage: React.FC = () => {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
-      <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400 font-black">
-            Favorites
-          </p>
-          <h1 className="text-3xl font-black tracking-tighter">My Wishlist</h1>
-        </div>
-        <Link
-          to="/store"
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-gray-200 text-sm font-black uppercase tracking-[0.3em] text-gray-600 hover:border-[#008A45] hover:text-[#008A45] transition-all"
-        >
-          Continue shopping
-        </Link>
-      </div>
+      <WishlistHeader />
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {products.map((product) => {
-          const wishlistItem = getWishlistItem(product.id);
-          return (
-            <div key={product.id} className="relative">
-              <ProductCard
-                item={{
-                  id: product.id,
-                  name: product.name,
-                  category: product.category,
-                  price: product.price,
-                  image: product.imageUrl,
-                  oldPrice: product.oldPrice,
-                  unit: product.unit,
-                }}
-              />
-              <div className="mt-2 p-2 bg-gray-50 rounded shadow-sm">
-                <div className="flex items-center gap-2">
-                  <label className="text-xs font-semibold">Note:</label>
-                  <input
-                    type="text"
-                    className="border px-2 py-1 rounded text-xs"
-                    value={wishlistItem?.note || ""}
-                    onChange={(e) =>
-                      updateWishlistItem(product.id, { note: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <label className="text-xs font-semibold">Priority:</label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={5}
-                    className="border px-2 py-1 rounded text-xs w-16"
-                    value={wishlistItem?.priority ?? ""}
-                    onChange={(e) =>
-                      updateWishlistItem(product.id, {
-                        priority: e.target.value
-                          ? Number(e.target.value)
-                          : undefined,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {products.map((product) => (
+          <WishlistProductCard
+            key={product.id}
+            product={product}
+            wishlistItem={getWishlistItem(product.id)}
+            updateWishlistItem={updateWishlistItem}
+          />
+        ))}
       </div>
     </div>
   );

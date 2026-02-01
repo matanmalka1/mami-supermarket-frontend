@@ -1,4 +1,4 @@
-import { BranchResponse } from "@/types/branch";
+import { BranchResponse } from "@/domains/branch/types";
 import { createContext, useContext } from "react";
 
 export type BranchContextValue = {

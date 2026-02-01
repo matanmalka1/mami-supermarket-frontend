@@ -5,19 +5,24 @@ import { ShieldCheck } from "lucide-react";
 /* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
+import { useLogin } from "@/features/auth/hooks/useLogin";
 import { loginSchema, LoginInput } from "@/validation/auth";
-import { UserRole } from "@/types/auth";
+import type { UserRole } from "@/domains/users/types";
 import LoginHero from "./LoginHero";
 import LoginFormCard from "./LoginFormCard";
 
-type LoginPayload = { token: string; role?: UserRole | null; remember?: boolean };
+type LoginPayload = {
+  token: string;
+  role?: UserRole | null;
+  remember?: boolean;
+};
 
 const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
   onLogin,
 }) => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const { handleLogin } = useLogin();
 
   const {
     register,
@@ -33,48 +38,21 @@ const Login: React.FC<{ onLogin: (payload: LoginPayload) => void }> = ({
   });
 
   const onSubmit = async (data: LoginInput) => {
-    toast.loading("Authenticating secure session...", {
-      id: "auth",
-    });
-    try {
-      // Backend only accepts email/password; strip rememberMe before sending
-      const response: any = await apiService.auth.login({
-        email: data.email,
-        password: data.password,
+    const normalizedRole = await handleLogin(data, onLogin);
+    if (normalizedRole === "ADMIN") {
+      toast.success("Administrator access granted. Entering Ops Portal...", {
+        id: "auth",
+        icon: <ShieldCheck className="text-teal-600" />,
+        duration: 3000,
       });
-      console.debug("[Login] login response:", response);
-      const token =
-        response?.data?.access_token ||
-        response?.access_token ||
-        response?.accessToken ||
-        response?.data?.token ||
-        response?.token;
-      const roleFromResponse =
-        response?.data?.user?.role ||
-        response?.user?.role ||
-        response?.data?.role ||
-        response?.role ||
-        null;
-      if (!token) return toast.error("No token returned from backend", { id: "auth" });
-      onLogin({ token, role: roleFromResponse, remember: data.rememberMe });
-      if (roleFromResponse === "ADMIN") {
-        toast.success("Administrator access granted. Entering Ops Portal...", {
-          id: "auth",
-          icon: <ShieldCheck className="text-teal-600" />,
-          duration: 3000,
-        });
-        window.location.hash = "#/";
-        window.location.reload();
-      } else {
-        toast.success(`Welcome back! Discover fresh deals today.`, {
-          id: "auth",
-        });
-        navigate("/store");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Credential verification failed", {
+      // window.location.hash = "#/";
+      // window.location.reload();
+      // השורות למעלה הוסרו זמנית כדי לאפשר בדיקת לוגים בקונסול
+    } else if (normalizedRole) {
+      toast.success(`Welcome back! Discover fresh deals today.`, {
         id: "auth",
       });
+      navigate("/store");
     }
   };
 

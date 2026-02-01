@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@/components/ui/Grid";
-import StatCard from "@/components/ops/StatCard";
+import StatCard from "@/components/ui/StatCard";
 import { StatItem } from "./types";
 
 const RevenueStats: React.FC<{ stats: StatItem[] }> = ({ stats }) => (

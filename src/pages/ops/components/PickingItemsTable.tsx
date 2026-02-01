@@ -1,4 +1,4 @@
-import PickingItemRow from "@/components/ops/PickingItemRow";
+import PickingItemRow from "@/components/ops/picking/PickingItemRow";
 import BaseTable from "@/components/ui/BaseTable";
 
 interface PickingItemsTableProps {

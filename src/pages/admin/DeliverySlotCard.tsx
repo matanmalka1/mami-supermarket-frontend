@@ -30,7 +30,7 @@ const DeliverySlotCard: React.FC<Props> = ({ slot, branchName, onEdit }) => {
           {isInactive ? <Lock size={24} /> : <Clock size={24} />}
         </div>
         <div>
-          <h4 className="text-2xl font-black italic text-gray-900">
+          <h4 className="text-2xl  text-gray-900">
             {startLabel} &mdash; {endLabel}
           </h4>
           <div className="flex items-center gap-3 mt-1">
@@ -45,7 +45,7 @@ const DeliverySlotCard: React.FC<Props> = ({ slot, branchName, onEdit }) => {
       </div>
       <div className="flex items-center gap-6">
         <div className="space-y-1 text-right">
-          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">
+          <label className="text-[10px] text-gray-400 uppercase tracking-widest block">
             Day of Week
           </label>
           <div className="font-bold text-gray-700">{dayLabel}</div>
@@ -54,7 +54,7 @@ const DeliverySlotCard: React.FC<Props> = ({ slot, branchName, onEdit }) => {
           <button
             type="button"
             onClick={() => onEdit(slot)}
-            className="inline-flex px-3 py-1 text-[10px] font-black uppercase tracking-[0.3em] text-[#008A45] border border-[#008A45]/40 rounded-full hover:bg-[#008A45]/10 transition"
+            className="inline-flex px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-[#008A45] border border-[#008A45]/40 rounded-full hover:bg-[#008A45]/10 transition"
           >
             Edit
           </button>

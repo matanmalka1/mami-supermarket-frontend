@@ -1,45 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { ShieldCheck } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
 import ForgotPasswordDone from "./ForgotPasswordDone";
 import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
+import { usePasswordFormState } from "@/features/auth/hooks/usePasswordFormState";
+import { useResetPassword } from "@/features/auth/hooks/useResetPassword";
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  const {
+    email,
+    token,
+    newPassword,
+    confirmPassword,
+    setEmail,
+    setToken,
+    setNewPassword,
+    setConfirmPassword,
+  } = usePasswordFormState();
+  // loading, error, and done are provided by useResetPassword
   const navigate = useNavigate();
+  const { loading, done, error, handleReset } = useResetPassword();
 
   useEffect(() => {
     const qpToken = searchParams.get("token") || "";
     if (qpToken) setToken(qpToken);
-  }, [searchParams]);
+  }, [searchParams, setToken]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      await apiService.auth.resetPassword({
-        email,
-        token,
-        new_password: newPassword,
-      });
-      toast.success("Password updated", { icon: <ShieldCheck size={16} /> });
-      setDone(true);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to reset password");
-      setError(err.message || "Failed to reset password");
-    } finally {
-      setLoading(false);
-    }
+    handleReset(email, token, newPassword, confirmPassword);
   };
 
   return (
@@ -57,11 +49,13 @@ const ResetPassword: React.FC = () => {
             email={email}
             token={token}
             newPassword={newPassword}
+            confirmPassword={confirmPassword}
             loading={loading}
             error={error}
             onEmailChange={setEmail}
             onTokenChange={setToken}
             onNewPasswordChange={setNewPassword}
+            onConfirmPasswordChange={setConfirmPassword}
             onSubmit={handleSubmit}
           />
         )}

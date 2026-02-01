@@ -1,6 +1,6 @@
-import React from 'react';
-import { CheckCircle2, Clock, Loader2 } from 'lucide-react';
-import { OrderItem } from '@/types/domain';
+import React from "react";
+import { CheckCircle2, Clock, Loader2 } from "lucide-react";
+import { OrderItem } from "@/domains/orders/types";
 
 interface Props {
   items: OrderItem[];
@@ -8,7 +8,9 @@ interface Props {
 }
 
 const PickingProgressPanel: React.FC<Props> = ({ items, progress }) => {
-  const pickedCount = items.filter((item) => item.pickedStatus === 'PICKED').length;
+  const pickedCount = items.filter(
+    (item) => item.pickedStatus === "PICKED",
+  ).length;
   const pendingCount = Math.max(0, items.length - pickedCount);
   const estimateMinutes = Math.max(1, Math.ceil(pendingCount * 1.2));
   const progressValue = Math.min(100, Math.round(progress));
@@ -18,10 +20,10 @@ const PickingProgressPanel: React.FC<Props> = ({ items, progress }) => {
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/70 to-transparent pointer-events-none"></div>
       <div className="relative z-10 flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-gray-400">
             Batch Progress
           </p>
-          <h3 className="text-5xl font-black text-[#006666] tracking-tighter">
+          <h3 className="text-5xl text-[#006666] tracking-tighter">
             {pickedCount}
             <span className="text-2xl text-gray-300"> / {items.length}</span>
           </h3>
@@ -29,7 +31,7 @@ const PickingProgressPanel: React.FC<Props> = ({ items, progress }) => {
             Items picked
           </p>
         </div>
-        <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.3em] text-gray-500">
+        <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-gray-500">
           <span className="flex items-center gap-1">
             <CheckCircle2 size={16} className="text-emerald-500" />
             {progressValue}% complete
@@ -47,7 +49,7 @@ const PickingProgressPanel: React.FC<Props> = ({ items, progress }) => {
             style={{ width: `${progressValue}%` }}
           />
         </div>
-        <div className="grid grid-cols-3 gap-6 text-[10px] uppercase tracking-[0.3em] text-gray-500 font-black">
+        <div className="grid grid-cols-3 gap-6 text-[10px] uppercase tracking-[0.3em] text-gray-500">
           <div className="flex flex-col gap-1">
             <span className="text-gray-900 text-xs">To Collect</span>
             <span className="text-lg text-orange-500 flex items-center gap-2">
@@ -62,7 +64,9 @@ const PickingProgressPanel: React.FC<Props> = ({ items, progress }) => {
           <div className="flex flex-col gap-1">
             <span className="text-gray-900 text-xs">Status</span>
             <span className="text-lg text-emerald-600">
-              {progressValue === 100 ? 'Ready to finalize' : 'Picking in progress'}
+              {progressValue === 100
+                ? "Ready to finalize"
+                : "Picking in progress"}
             </span>
           </div>
         </div>

@@ -17,7 +17,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, actions, icon,
         </div>
       )}
       <div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight italic">{title}</h1>
+        <h1 className="text-3xl  text-gray-900 tracking-tight ">{title}</h1>
         {subtitle && <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.15em] mt-0.5">{subtitle}</p>}
       </div>
     </div>

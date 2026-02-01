@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { KeyRound, Mail } from "lucide-react";
 import Button from "@/components/ui/Button";
+import EmailField from "@/components/ui/form/EmailField";
+import TextField from "@/components/ui/form/TextField";
+import PasswordField from "@/components/ui/form/PasswordField";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type ResetFormProps = {
   email: string;
   token: string;
   newPassword: string;
+  confirmPassword: string;
   loading: boolean;
   error?: string | null;
   showError?: boolean;
@@ -13,13 +18,15 @@ type ResetFormProps = {
   onEmailChange: (value: string) => void;
   onTokenChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onConfirmPasswordChange: (value: string) => void;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const ResetForm: React.FC<ResetFormProps> = ({
   email,
   token,
   newPassword,
+  confirmPassword,
   loading,
   error,
   showError = true,
@@ -27,59 +34,58 @@ const ResetForm: React.FC<ResetFormProps> = ({
   onEmailChange,
   onTokenChange,
   onNewPasswordChange,
+  onConfirmPasswordChange,
   onSubmit,
-}) => (
-  <form onSubmit={onSubmit} className="space-y-6">
-    <div className="space-y-2">
-      <label className="text-sm font-bold text-gray-700">Email Address</label>
-      <div className="relative">
-        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => onEmailChange(e.target.value)}
-          className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 pl-12 pr-6 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
-          placeholder="name@example.com"
-        />
-      </div>
-    </div>
+}) => {
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    <div className="space-y-2">
-      <label className="text-sm font-bold text-gray-700">Reset Token</label>
-      <div className="relative">
-        <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-        <input
-          required
-          value={token}
-          onChange={(e) => onTokenChange(e.target.value)}
-          className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 pl-12 pr-6 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all font-mono text-sm"
-          placeholder="Paste token from email"
-        />
-      </div>
-    </div>
-
-    <div className="space-y-2">
-      <label className="text-sm font-bold text-gray-700">New Password</label>
-      <input
+  return (
+    <form onSubmit={onSubmit} className="space-y-6">
+      <EmailField
+        label="Email Address"
+        value={email}
+        onChange={(e) => onEmailChange((e.target as HTMLInputElement).value)}
+        leftIcon={<Mail size={20} />}
         required
-        type="password"
-        value={newPassword}
-        onChange={(e) => onNewPasswordChange(e.target.value)}
-        className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 px-4 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
-        placeholder="Enter a strong password"
-        minLength={8}
       />
-    </div>
 
-    {showError && error && (
-      <p className="text-sm font-bold text-red-500 text-center">{error}</p>
-    )}
+      <TextField
+        label="Reset Token"
+        required
+        value={token}
+        onChange={(e) => onTokenChange((e.target as HTMLInputElement).value)}
+        placeholder="Paste token from email"
+        leftIcon={<KeyRound size={20} />}
+        inputClassName="font-mono text-sm"
+      />
 
-    <Button fullWidth size="lg" loading={loading} type="submit">
-      {buttonLabel}
-    </Button>
-  </form>
-);
+      <PasswordField
+        label="New Password"
+        required
+        value={newPassword}
+        onChange={(e) => onNewPasswordChange((e.target as HTMLInputElement).value)}
+        show={showNewPassword}
+        onToggle={() => setShowNewPassword((prev) => !prev)}
+        helperText="At least 8 chars, one letter and one digit. Allowed: ! @ # $ % ^ & * ( ) _ + = -"
+      />
+
+      <PasswordField
+        label="Confirm Password"
+        required
+        value={confirmPassword}
+        onChange={(e) => onConfirmPasswordChange((e.target as HTMLInputElement).value)}
+        show={showConfirmPassword}
+        onToggle={() => setShowConfirmPassword((prev) => !prev)}
+      />
+
+      {showError && error && <ErrorMessage message={error} className="text-sm text-red-500" />}
+
+      <Button fullWidth size="lg" loading={loading} type="submit">
+        {buttonLabel}
+      </Button>
+    </form>
+  );
+};
 
 export default ResetForm;

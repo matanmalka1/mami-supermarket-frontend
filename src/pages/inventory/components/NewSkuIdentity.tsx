@@ -1,4 +1,5 @@
 import React from "react";
+import TextField from "@/components/ui/form/TextField";
 
 type Props = {
   productName: string;
@@ -12,17 +13,14 @@ const NewSkuIdentity: React.FC<Props> = ({
   skuPreview,
 }) => (
   <div className="space-y-2">
-    <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
-      Product Name
-    </label>
-    <input
+    <TextField
+      label="Product Name"
       required
       placeholder="e.g. Organic Avocados"
       value={productName}
-      onChange={(event) => setProductName(event.target.value)}
-      className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-bold"
+      onChange={(event) => setProductName((event.target as HTMLInputElement).value)}
     />
-    <p className="text-[10px] text-gray-500 uppercase tracking-[0.5em] font-black">
+    <p className="text-[10px] text-gray-500 uppercase tracking-[0.5em]">
       SKU Preview: {skuPreview}
     </p>
   </div>

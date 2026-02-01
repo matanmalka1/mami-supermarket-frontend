@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC, type ReactNode } from "react";
 import { apiService } from "@/services/api";
-import { BranchResponse } from "@/types/branch";
+import { BranchResponse } from "@/domains/branch/types";
 import { BranchContext, STORAGE_KEY } from "./branch-context-core";
 
 export const BranchProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -19,7 +19,7 @@ export const BranchProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setBranches(data || []);
         const storedId = localStorage.getItem(STORAGE_KEY);
         const resolved =
-          data?.find((branch) => branch.id === Number(storedId)) ?? data?.[0] ?? null;
+          data?.find((branch: BranchResponse) => branch.id === Number(storedId)) ?? data?.[0] ?? null;
         setSelectedBranch(resolved);
         setError(null);
       } catch (err: any) {

@@ -15,7 +15,11 @@ export type ProgressTimelineProps<T extends TimelineStep> = {
   connectorClassName?: string;
   className?: string;
   renderStepIcon?: (step: T, index: number, isDone: boolean) => React.ReactNode;
-  renderStepLabel?: (step: T, index: number, isDone: boolean) => React.ReactNode;
+  renderStepLabel?: (
+    step: T,
+    index: number,
+    isDone: boolean,
+  ) => React.ReactNode;
 };
 
 const ProgressTimeline = <T extends TimelineStep>({
@@ -65,7 +69,7 @@ const ProgressTimeline = <T extends TimelineStep>({
                   : defaultIcon}
               </div>
               <div
-                className={`text-[10px] font-black uppercase tracking-widest ${
+                className={`text-[10px] uppercase tracking-widest ${
                   isComplete ? "text-emerald-600" : "text-gray-300"
                 }`}
               >

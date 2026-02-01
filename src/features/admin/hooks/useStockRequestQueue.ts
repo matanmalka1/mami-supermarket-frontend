@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { apiService } from "@/services/api";
-import { StockRequestStatus } from "@/services/admin-service";
-import type { StockRequest } from "@/features/admin/types";
+import { adminService } from "@/domains/admin/service";
+import type {
+  AdminStockRequestStatus,
+  AdminStockRequest,
+} from "@/domains/admin/types";
 import { extractArrayPayload } from "@/utils/api-response";
 
-const ensureQuantity = (request: StockRequest) => {
+const ensureQuantity = (request: AdminStockRequest) => {
   const qty = request.quantity ?? 0;
   if (!qty || qty <= 0) {
     throw new Error("Request quantity missing; cannot approve.");
@@ -13,9 +15,12 @@ const ensureQuantity = (request: StockRequest) => {
   return qty;
 };
 
-const buildResolvePayload = (request: StockRequest, status: StockRequestStatus) => {
+const buildResolvePayload = (
+  request: AdminStockRequest,
+  status: AdminStockRequestStatus,
+) => {
   const payload: {
-    status: StockRequestStatus;
+    status: AdminStockRequestStatus;
     approvedQuantity?: number;
     rejectionReason?: string;
   } = { status };
@@ -27,26 +32,29 @@ const buildResolvePayload = (request: StockRequest, status: StockRequestStatus) 
   return payload;
 };
 
-const buildBulkItem = (request: StockRequest, status: StockRequestStatus) => {
+const buildBulkItem = (
+  request: AdminStockRequest,
+  status: AdminStockRequestStatus,
+) => {
   const item: {
-    request_id: number;
-    status: StockRequestStatus;
-    approved_quantity?: number;
-    rejection_reason?: string;
+    requestId: number;
+    status: AdminStockRequestStatus;
+    approvedQuantity?: number;
+    rejectionReason?: string;
   } = {
-    request_id: request.id,
+    requestId: request.id,
     status,
   };
   if (status === "APPROVED") {
-    item.approved_quantity = ensureQuantity(request);
+    item.approvedQuantity = ensureQuantity(request);
   } else {
-    item.rejection_reason = "Rejected by operations manager";
+    item.rejectionReason = "Rejected by operations manager";
   }
   return item;
 };
 
 export const useStockRequestQueue = () => {
-  const [requests, setRequests] = useState<StockRequest[]>([]);
+  const [requests, setRequests] = useState<AdminStockRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
@@ -54,8 +62,10 @@ export const useStockRequestQueue = () => {
   const fetchRequests = useCallback(async () => {
     setLoading(true);
     try {
-      const data: any = await apiService.admin.getStockRequests({ status: "PENDING" });
-      setRequests(extractArrayPayload<StockRequest>(data));
+      const data: any = await adminService.getStockRequests({
+        status: "PENDING",
+      });
+      setRequests(extractArrayPayload<AdminStockRequest>(data));
     } catch (err: any) {
       toast.error(err.message || "Failed to load request queue");
     } finally {
@@ -72,10 +82,16 @@ export const useStockRequestQueue = () => {
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
 
-  const resolveSingle = async (request: StockRequest, status: StockRequestStatus) => {
+  const resolveSingle = async (
+    request: AdminStockRequest,
+    status: AdminStockRequestStatus,
+  ) => {
     setActionLoading(true);
     try {
-      await apiService.admin.resolveStockRequest(request.id, buildResolvePayload(request, status));
+      await adminService.resolveStockRequest(
+        request.id,
+        buildResolvePayload(request, status),
+      );
       toast.success(`Request ${status.toLowerCase()}`);
       fetchRequests();
     } catch (err: any) {
@@ -85,17 +101,17 @@ export const useStockRequestQueue = () => {
     }
   };
 
-  const resolveSelected = async (status: StockRequestStatus) => {
+  const resolveSelected = async (status: AdminStockRequestStatus) => {
     if (selectedIds.length === 0) return;
     setActionLoading(true);
     try {
       const selectedRequests = selectedIds
         .map((id) => requests.find((req) => req.id === id))
-        .filter((req): req is StockRequest => Boolean(req));
+        .filter((req): req is AdminStockRequest => Boolean(req));
       if (selectedRequests.length === 0) {
         throw new Error("No matching requests found.");
       }
-      await apiService.admin.bulkResolveStockRequests(
+      await adminService.bulkResolveStockRequests(
         selectedRequests.map((req) => buildBulkItem(req, status)),
       );
       toast.success(`Bulk ${status.toLowerCase()} complete`);

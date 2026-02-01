@@ -1,4 +1,4 @@
-import { UserRole } from "@/types/auth";
+import type { UserRole } from "@/domains/users/types";
 
 export const VALID_ROLES: UserRole[] = [
   "ADMIN",

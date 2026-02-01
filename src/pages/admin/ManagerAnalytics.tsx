@@ -1,40 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import PageHeader from "@/components/ui/PageHeader";
-import LoadingState from "@/components/shared/LoadingState";
-import ErrorState from "@/components/shared/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import ErrorState from "@/components/ui/ErrorState";
 import { BarChart3 } from "lucide-react";
-import { apiService } from "@/services/api";
 import RevenueHero from "./components/RevenueHero";
 import RevenueStats from "./components/RevenueStats";
 import RevenueChartSection from "./components/RevenueChartSection";
-import { buildAnalyticsMetrics, RevenueData } from "./components/analytics-utils";
+import { buildAnalyticsMetrics } from "./components/analytics-utils";
+import { useManagerAnalytics } from "@/features/admin/hooks/useManagerAnalytics";
 
 const ManagerAnalytics: React.FC = () => {
-  const [revenue, setRevenue] = useState<RevenueData>({ labels: [], values: [] });
-  const [status, setStatus] = useState<"loading" | "idle" | "error">("loading");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const loadRevenue = useCallback(async () => {
-    setStatus("loading");
-    setErrorMessage("");
-    try {
-      const response = await apiService.admin.getRevenueAnalytics();
-      const payload = response?.data ?? response;
-      if (payload && Array.isArray(payload.labels) && Array.isArray(payload.values)) {
-        setRevenue({ labels: payload.labels, values: payload.values });
-      } else {
-        setRevenue({ labels: [], values: [] });
-      }
-      setStatus("idle");
-    } catch (err: any) {
-      setErrorMessage(err.message || "Failed to load analytics");
-      setStatus("error");
-    }
-  }, []);
-
-  useEffect(() => {
-    loadRevenue();
-  }, [loadRevenue]);
+  const { revenue, status, errorMessage, loadRevenue } = useManagerAnalytics();
 
   const header = (
     <PageHeader

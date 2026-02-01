@@ -1,4 +1,4 @@
-import { OrderSuccessSnapshot } from "@/types/order-success";
+import { OrderSuccessSnapshot } from "@/domains/orders/types";
 
 const STORAGE_PREFIX = "mami_order_success";
 
@@ -18,7 +18,7 @@ export const saveOrderSnapshot = (
   try {
     storage.setItem(storageKey(orderId), JSON.stringify(snapshot));
   } catch {
-    // best effort only
+    // Ignore storage errors (quota, serialization, etc.)
   }
 };
 

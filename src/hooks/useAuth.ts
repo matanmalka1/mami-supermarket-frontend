@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { UserRole } from "../types/auth";
+import type { UserRole } from "@/domains/users/types";
 import { normalizeRole } from "../utils/roles";
 
 type LoginPayload = { token: string; role?: string | null; remember?: boolean };
@@ -10,6 +10,8 @@ const readRoleFromToken = (token: string): UserRole | null => {
     return (
       normalizeRole(payload.role) ||
       normalizeRole(payload.user_role) ||
+      normalizeRole(payload.userType) ||
+      normalizeRole(payload.type) ||
       normalizeRole(
         payload["https://hasura.io/jwt/claims"]?.["x-hasura-default-role"],
       ) ||
@@ -29,20 +31,21 @@ export const useAuth = () => {
       ),
   );
 
-  const [userRole, setUserRole] = useState<UserRole | null>(
-    () => normalizeRole(localStorage.getItem("mami_role")) || null,
-  );
+  const [userRole, setUserRole] = useState<UserRole | null>(() => {
+    const token =
+      localStorage.getItem("mami_token") ||
+      sessionStorage.getItem("mami_token");
+    if (token) {
+      const role = readRoleFromToken(token);
+      return role;
+    }
+    return null;
+  });
 
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
       const resolvedRole = normalizeRole(role) || readRoleFromToken(token);
-      if (resolvedRole) {
-        localStorage.setItem("mami_role", resolvedRole);
-        setUserRole(resolvedRole);
-      } else {
-        localStorage.removeItem("mami_role");
-        setUserRole(null);
-      }
+      setUserRole(resolvedRole);
       sessionStorage.setItem("mami_token", token);
       if (remember) localStorage.setItem("mami_token", token);
       else localStorage.removeItem("mami_token");
@@ -53,7 +56,6 @@ export const useAuth = () => {
 
   const logout = useCallback(() => {
     localStorage.removeItem("mami_token");
-    localStorage.removeItem("mami_role");
     sessionStorage.removeItem("mami_token");
     sessionStorage.removeItem("mami_manual_store_visit");
     setIsAuthenticated(false);

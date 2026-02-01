@@ -28,7 +28,7 @@ const Breadcrumbs: React.FC = () => {
   if (pathnames.length === 0 || location.pathname === "/store") return null;
 
   return (
-    <nav className="flex items-center gap-2 text-[10px] font-black tracking-[0.2em] mb-8 overflow-x-auto no-scrollbar whitespace-nowrap">
+    <nav className="flex items-center gap-2 text-[10px] tracking-[0.2em] mb-8 overflow-x-auto no-scrollbar whitespace-nowrap">
       <Link
         to="/store"
         className="flex items-center gap-1.5 hover:text-[#008A45] transition-colors"
@@ -46,7 +46,7 @@ const Breadcrumbs: React.FC = () => {
           <React.Fragment key={to}>
             <ChevronRight size={10} className="shrink-0 text-gray-300" />
             {last ? (
-              <span className="text-[#008A45] italic truncate max-w-[150px]">
+              <span className="text-[#008A45] truncate max-w-[150px]">
                 {label}
               </span>
             ) : (

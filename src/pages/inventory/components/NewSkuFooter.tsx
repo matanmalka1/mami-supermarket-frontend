@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@/components/ui/Button";
 import { ShieldCheck } from "lucide-react";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type Props = {
   summaryLabel: string;
@@ -22,17 +23,16 @@ const NewSkuFooter: React.FC<Props> = ({
   <>
     <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] flex items-start gap-4">
       <ShieldCheck size={24} className="text-emerald-500 shrink-0" />
-      <p className="text-xs font-bold text-emerald-800/70 leading-relaxed italic">
-        {summaryLabel}: entering the name, price, and {initialStock} units seeds the{" "}
-        {branchLabel} ledger and publishes the catalog entry.
+      <p className="text-xs font-bold text-emerald-800/70 leading-relaxed ">
+        {summaryLabel}: entering the name, price, and {initialStock} units seeds
+        the {branchLabel} ledger and publishes the catalog entry.
       </p>
     </div>
 
-    {error && (
-      <p className="text-xs font-black uppercase tracking-[0.5em] text-red-500">
-        {error}
-      </p>
-    )}
+    <ErrorMessage
+      message={error}
+      className="text-xs uppercase tracking-[0.5em] text-red-500 text-left"
+    />
 
     <Button
       fullWidth

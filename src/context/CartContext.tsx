@@ -1,58 +1,109 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { toast } from 'react-hot-toast';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { CartContext, CartItem } from "./cart-context";
 
-export interface CartItem {
-  id: number | string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-  unit?: string;
-}
+const STORAGE_PREFIX = "mami_cart";
+const GUEST_STORAGE_KEY = `${STORAGE_PREFIX}_guest`;
 
-interface CartContextType {
-  items: CartItem[];
-  addItem: (item: any) => void;
-  removeItem: (id: number | string) => void;
-  updateQuantity: (id: number | string, qty: number) => void;
-  clearCart: () => void;
-  total: number;
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}
+const resolveCartKey = (): string => {
+  if (typeof window === "undefined") return GUEST_STORAGE_KEY;
+  const token =
+    sessionStorage.getItem("mami_token") ||
+    localStorage.getItem("mami_token") ||
+    "";
+  if (!token) return GUEST_STORAGE_KEY;
+  const userId = extractUserId(token);
+  const suffix = userId || token.slice(0, 8);
+  return `${STORAGE_PREFIX}_user_${encodeURIComponent(suffix)}`;
+};
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const extractUserId = (token: string): string | null => {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1] || ""));
+    return (
+      String(payload.sub || payload.user_id || payload.userId || payload.id || "")
+    ).trim() || null;
+  } catch {
+    return null;
+  }
+};
+
+const readCartFromStorage = (key: string): CartItem[] => {
+  if (typeof window === "undefined") return [];
+  const saved = localStorage.getItem(key);
+  if (!saved) return [];
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+};
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('mami_cart');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { isAuthenticated } = useAuth();
+  const storageKey = useMemo(resolveCartKey, [isAuthenticated]);
+  const prevKeyRef = useRef<string>(storageKey);
+  const [items, setItems] = useState<CartItem[]>(() => readCartFromStorage(storageKey));
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('mami_cart', JSON.stringify(items));
-  }, [items]);
+    if (prevKeyRef.current !== storageKey) {
+      setItems(readCartFromStorage(storageKey));
+      prevKeyRef.current = storageKey;
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(items));
+  }, [items, storageKey]);
 
   const addItem = (product: any) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.id === product.id);
-      if (existing) {
-        return prev.map(i => i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
+    let added = false;
+    setItems((prev) => {
+      const existing = prev.find((i) => i.id === product.id);
+      const availableQty =
+        typeof product.availableQuantity === "number"
+          ? Math.max(0, product.availableQuantity)
+          : undefined;
+      const currentQty = existing ? existing.quantity : 0;
+
+      if (availableQty !== undefined) {
+        if (availableQty <= 0) {
+          toast.error("This item is out of stock");
+          return prev;
+        }
+        if (currentQty >= availableQty) {
+          toast.error("You have reached the available stock for this item");
+          return prev;
+        }
       }
-      return [...prev, { ...product, quantity: 1 }];
+
+      const nextItems = existing
+        ? prev.map((i) =>
+            i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
+          )
+        : [...prev, { ...product, quantity: 1 }];
+      added = true;
+      return nextItems;
     });
-    toast.success(`${product.name} added to cart`);
-    setIsOpen(true);
+
+    if (added) {
+      toast.success(`${product.name} added to cart`);
+      setIsOpen(true);
+    }
   };
 
   const removeItem = (id: number | string) => {
-    setItems(prev => prev.filter(i => i.id !== id));
+    setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
   const updateQuantity = (id: number | string, qty: number) => {
     if (qty < 1) return removeItem(id);
-    setItems(prev => prev.map(i => i.id === id ? { ...i, quantity: qty } : i));
+    setItems((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, quantity: qty } : i)),
+    );
   };
 
   const clearCart = () => setItems([]);
@@ -60,14 +111,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, total, isOpen, setIsOpen }}>
+    <CartContext.Provider
+      value={{ items, addItem, removeItem, updateQuantity, clearCart, total, isOpen, setIsOpen }}
+    >
       {children}
     </CartContext.Provider>
   );
-};
-
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) throw new Error('useCart must be used within a CartProvider');
-  return context;
 };

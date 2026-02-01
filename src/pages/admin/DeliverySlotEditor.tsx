@@ -2,8 +2,10 @@ import React, { FormEvent, useMemo, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
-import { adminService } from "@/services/admin-service";
+import { adminService } from "@/domains/admin/service";
 import type { DeliverySlot } from "@/features/admin/deliverySlots/types";
+import TextField from "@/components/ui/form/TextField";
+import CheckboxField from "@/components/ui/form/CheckboxField";
 
 type Props = {
   slot: DeliverySlot | null;
@@ -12,7 +14,12 @@ type Props = {
   onSave: (slot: DeliverySlot) => void;
 };
 
-const DeliverySlotEditor: React.FC<Props> = ({ slot, isOpen, onClose, onSave }) => {
+const DeliverySlotEditor: React.FC<Props> = ({
+  slot,
+  isOpen,
+  onClose,
+  onSave,
+}) => {
   const [saving, setSaving] = useState(false);
   const initialStart = slot?.startTime || slot?.start_time || "";
   const initialEnd = slot?.endTime || slot?.end_time || "";
@@ -76,44 +83,32 @@ const DeliverySlotEditor: React.FC<Props> = ({ slot, isOpen, onClose, onSave }) 
     >
       <form onSubmit={handleSubmit} className="space-y-4 p-2">
         <div className="grid grid-cols-2 gap-4">
-          <label className="space-y-1 text-xs uppercase font-black tracking-[0.3em] text-gray-500">
-            Start time
-            <input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="w-full rounded-xl border border-gray-100 bg-gray-50 px-3 py-2 text-base font-bold outline-none"
-            />
-          </label>
-          <label className="space-y-1 text-xs uppercase font-black tracking-[0.3em] text-gray-500">
-            End time
-            <input
-              type="time"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              className="w-full rounded-xl border border-gray-100 bg-gray-50 px-3 py-2 text-base font-bold outline-none"
-            />
-          </label>
+          <TextField
+            label="Start time"
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime((e.target as HTMLInputElement).value)}
+          />
+          <TextField
+            label="End time"
+            type="time"
+            value={endTime}
+            onChange={(e) => setEndTime((e.target as HTMLInputElement).value)}
+          />
         </div>
-        <label className="space-y-1 text-xs uppercase font-black tracking-[0.3em] text-gray-500">
-          Day of week (0=Sun)
-          <input
-            type="number"
-            min={0}
-            max={6}
-            value={dayOfWeek}
-            onChange={(e) => setDayOfWeek(e.target.value)}
-            className="w-full rounded-xl border border-gray-100 bg-gray-50 px-3 py-2 text-base font-bold outline-none"
-          />
-        </label>
-        <label className="flex items-center gap-2 text-sm font-bold text-gray-600">
-          <input
-            type="checkbox"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-          />
-          Slot active
-        </label>
+        <TextField
+          label="Day of week (0=Sun)"
+          type="number"
+          min={0}
+          max={6}
+          value={dayOfWeek}
+          onChange={(e) => setDayOfWeek((e.target as HTMLInputElement).value)}
+        />
+        <CheckboxField
+          label="Slot active"
+          checked={isActive}
+          onCheckedChange={setIsActive}
+        />
         <Button type="submit" className="w-full" disabled={saving}>
           {saving ? "Saving..." : "Save slot"}
         </Button>

@@ -1,62 +1,50 @@
-
-import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
-import DashboardHero from "@/components/ops/DashboardHero";
-import LoadingState from "@/components/shared/LoadingState";
-import { toast } from "react-hot-toast";
+import React, { useCallback, useEffect, useMemo } from "react";
+import DashboardHero from "@/components/ops/dashboard/DashboardHero";
+import LoadingState from "@/components/ui/LoadingState";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import OrderTable from "@/features/ops/components/OrderTable";
-import { useOrders } from "@/hooks/useOrders";
-import { apiService } from "@/services/api";
-
-type PerformanceMetrics = {
-  batchEfficiency?: string | number;
-  livePickers?: string | number;
-  [key: string]: any;
-};
+import { type OpsOrderStatus } from "@/features/ops/components/OrderStatusSelect";
+import { toast } from "react-hot-toast";
+import { opsService } from "@/domains/ops/service";
+import { useOrders } from "@/features/ops/hooks/useOrders";
+import { useOpsPerformance } from "@/features/ops/hooks/useOpsPerformance";
+import { OrderStatus } from "@/domains/orders/types";
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
-  const pendingCount = orders.filter((o) => o.status === "PENDING").length;
-  const expressDue = orders.filter((o) => o.urgency === "CRITICAL").length;
-  const urgentOrders = useMemo(() => orders.filter((o) => o.urgency === "CRITICAL"), [orders]);
-  const [performance, setPerformance] = useState<PerformanceMetrics | null>(null);
-  const [perfLoading, setPerfLoading] = useState(true);
-  const [perfError, setPerfError] = useState<string | null>(null);
-
-  const startBatch = async () => {
-    if (selectedIds.length < 2) return toast.error("Select at least 2 orders for a batch");
-    toast.loading("Submitting batch for picking...", { id: "batch" });
-    try {
-      await apiService.ops.createBatch(selectedIds);
-      toast.success("Batch created", { id: "batch" });
-      navigate(`/picking/batch-${selectedIds.join("-")}`);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to create batch", { id: "batch" });
-    }
-  };
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchPerformance = async () => {
-      setPerfLoading(true);
-      setPerfError(null);
+  const pendingCount = orders.filter(
+    (o) => o.status === OrderStatus.CREATED,
+  ).length;
+  const expressDue = orders.filter((o) => o.urgency === "critical").length;
+  const urgentOrders = useMemo(
+    () => orders.filter((o) => o.urgency === "critical"),
+    [orders],
+  );
+  const {
+    metrics: performance,
+    loading: perfLoading,
+    error: perfError,
+    refresh: refreshPerf,
+  } = useOpsPerformance();
+  const handleStatusChange = useCallback(
+    async (orderId: number, status: OpsOrderStatus) => {
       try {
-        const data = await apiService.ops.getPerformance();
-        if (!isMounted) return;
-        setPerformance(data || null);
+        await opsService.updateOrderStatus(orderId, { status });
+        toast.success("Order status updated.", {
+          id: `order-status-${orderId}`,
+        });
+        refresh();
       } catch (err: any) {
-        if (!isMounted) return;
-        setPerfError(err.message || "Performance metrics unavailable");
-      } finally {
-        if (isMounted) setPerfLoading(false);
+        toast.error(err?.message || "Failed to update the order status.", {
+          id: `order-status-${orderId}`,
+        });
       }
-    };
-    fetchPerformance();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    },
+    [refresh],
+  );
+  useEffect(() => {
+    refreshPerf();
+  }, [refreshPerf]);
 
   useEffect(() => {
     const handleFocus = () => refresh();
@@ -78,9 +66,6 @@ const Dashboard: React.FC = () => {
         ordersCount={orders.length}
         pendingCount={pendingCount}
         expressDue={expressDue}
-        selectedCount={selectedIds.length}
-        onStartBatch={startBatch}
-        onViewBoard={() => navigate("/picking")}
         metricSubtitle={metricSubtitle}
         batchEfficiency={formatMetricValue(performance?.batchEfficiency)}
         livePickers={formatMetricValue(performance?.livePickers)}
@@ -89,9 +74,10 @@ const Dashboard: React.FC = () => {
       />
 
       {perfError && !perfLoading && (
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-red-600">
-          {perfError}
-        </p>
+        <ErrorMessage
+          message={perfError}
+          className="text-xs uppercase tracking-[0.2em] text-red-600"
+        />
       )}
 
       <div className="rounded-[2.5rem] border border-gray-100 bg-white shadow-2xl overflow-hidden">
@@ -100,12 +86,23 @@ const Dashboard: React.FC = () => {
             Order Status Workflow
           </p>
           <p className="mt-2 text-[13px] text-gray-700">
-            Admins can update any order’s status from the <span className="font-black">Process</span> column.
-            Progress orders through <span className="font-semibold">IN_PROGRESS → READY → OUT_FOR_DELIVERY → DELIVERED</span> (missing picks become <span className="font-semibold">MISSING</span>),
-            and the allowed transitions mirror the pick status rules—only orders where every item is <span className="font-semibold">PICKED</span> can move to READY.
+            Admins can update any order’s status from the{" "}
+            <span className="">Process</span> column. Progress orders through{" "}
+            <span className="font-semibold">
+              IN_PROGRESS → READY → OUT_FOR_DELIVERY → DELIVERED
+            </span>{" "}
+            (missing picks become <span className="font-semibold">MISSING</span>
+            ), and the allowed transitions mirror the pick status rules—only
+            orders where every item is{" "}
+            <span className="font-semibold">PICKED</span> can move to READY.
           </p>
         </div>
-        <OrderTable orders={orders} selectedIds={selectedIds} onToggleSelect={toggleSelect} />
+        <OrderTable
+          orders={orders}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </div>
   );

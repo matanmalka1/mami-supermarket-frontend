@@ -1,4 +1,4 @@
-export const extractArrayPayload = <T>(payload?: unknown): T[] => {
+export function extractArrayPayload<T>(payload?: unknown): T[] {
   if (!payload) {
     return [];
   }
@@ -15,4 +15,4 @@ export const extractArrayPayload = <T>(payload?: unknown): T[] => {
   }
 
   return [];
-};
+}

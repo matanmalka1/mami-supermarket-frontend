@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-/* Fix: Import from react-router instead of react-router-dom to resolve missing export error */
 import { useLocation, useParams, Link } from "react-router";
 import { CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import OrderSummaryCard from "@/components/store/OrderSummaryCard";
 import OrderProgressTimeline from "@/components/store/OrderProgressTimeline";
-import { OrderSuccessSnapshot } from "@/types/order-success";
-import { useAddresses } from "@/hooks/useAddresses";
+import { OrderSuccessSnapshot } from "@/domains/orders/types";
+import { useAddresses } from "@/features/store/hooks/useAddresses";
 import { loadOrderSnapshot } from "@/utils/order";
 
 type OrderSuccessState = {
@@ -26,7 +25,7 @@ const formatAddressLine = (address?: Record<string, any>) => {
 
 const OrderSuccess: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation<OrderSuccessState>();
+  const location = useLocation();
   const [snapshot, setSnapshot] = useState<OrderSuccessSnapshot | null>(
     location.state?.snapshot ?? null,
   );
@@ -51,7 +50,7 @@ const OrderSuccess: React.FC = () => {
   const estimatedDelivery =
     snapshot?.estimatedDelivery || "Delivery window will be confirmed shortly.";
   const fulfillmentLabel =
-    snapshot?.fulfillmentType === "PICKUP" ? "Pickup" : "Delivery";
+    snapshot?.fulfillmentType === "pickup" ? "Pickup" : "Delivery";
   const addressLabel =
     preferredAddress ||
     "Delivery address will be confirmed once your courier is en route.";
@@ -66,9 +65,7 @@ const OrderSuccess: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        <h1 className="text-6xl font-black italic tracking-tighter">
-          Ordered Successfully!
-        </h1>
+        <h1 className="text-6xl  tracking-tighter">Ordered Successfully!</h1>
         <p className="text-xl text-gray-500 font-bold">
           Order ID:{" "}
           <span className="text-[#008A45]">
@@ -76,8 +73,8 @@ const OrderSuccess: React.FC = () => {
           </span>
         </p>
         <p className="text-gray-400 max-w-md mx-auto leading-relaxed">
-          Your items are now being routed to our optimized picking queue.
-          We'll notify you when they are out for delivery.
+          Your items are now being routed to our optimized picking queue. We'll
+          notify you when they are out for delivery.
         </p>
       </div>
 
@@ -94,21 +91,19 @@ const OrderSuccess: React.FC = () => {
         <div className="bg-white border rounded-[3rem] p-12 shadow-xl">
           <p className="text-sm text-gray-500">
             We’re still preparing your summary. Check your order history if you
-            need a breakdown.
+            className="w-full h-16 rounded-2xl "
           </p>
         </div>
       )}
 
       <div className="flex gap-4 max-w-md mx-auto">
         <Link to="/store" className="flex-1">
-          <Button variant="outline" className="w-full h-16 rounded-2xl font-black italic">
+          <Button variant="outline" className="w-full h-16 rounded-2xl ">
             Keep Shopping
           </Button>
         </Link>
         <Link to="/" className="flex-1">
-          <Button className="w-full h-16 rounded-2xl font-black italic">
-            Track Order
-          </Button>
+          <Button className="w-full h-16 rounded-2xl ">Track Order</Button>
         </Link>
       </div>
     </div>
