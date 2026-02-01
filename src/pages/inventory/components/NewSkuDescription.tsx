@@ -1,4 +1,5 @@
 import React from "react";
+import TextAreaField from "@/components/ui/form/TextAreaField";
 
 type Props = {
   description: string;
@@ -10,14 +11,11 @@ const NewSkuDescription: React.FC<Props> = ({
   setDescription,
 }) => (
   <div className="space-y-2">
-    <label className="text-[10px] uppercase text-gray-400 tracking-widest">
-      Description (optional)
-    </label>
-    <textarea
+    <TextAreaField
+      label="Description (optional)"
       value={description}
-      onChange={(event) => setDescription(event.target.value)}
+      onChange={(event) => setDescription((event.target as HTMLTextAreaElement).value)}
       rows={3}
-      className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-medium text-sm"
     />
   </div>
 );

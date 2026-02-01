@@ -3,6 +3,8 @@ import { toast } from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import { InventoryRow } from "@/domains/inventory/types";
 import type { BranchResponse } from "@/domains/branch/types";
+import SelectField from "@/components/ui/form/SelectField";
+import TextField from "@/components/ui/form/TextField";
 
 type Props = {
   data: InventoryRow;
@@ -72,42 +74,26 @@ const InventoryRelocationPanel: React.FC<Props> = ({
           <p className="text-lg">{currentBranch}</p>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-[10px] uppercase tracking-widest text-gray-400">
-            Destination branch
-          </label>
-          <select
-            value={targetBranch}
-            onChange={(event) => setTargetBranch(event.target.value)}
-            disabled={branchesLoading}
-            className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-bold appearance-none"
-          >
-            <option value="">Select branch</option>
-            {options.map((branch) => (
-              <option key={branch.id} value={branch.id}>
-                {branch.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <SelectField
+          label="Destination branch"
+          value={targetBranch}
+          onChange={(event) => setTargetBranch((event.target as HTMLSelectElement).value)}
+          disabled={branchesLoading}
+          options={[{ value: "", label: "Select branch" }, ...options.map((branch) => ({ value: branch.id, label: branch.name }))]}
+        />
 
-        <div className="space-y-2">
-          <label className="text-[10px] uppercase tracking-widest text-gray-400">
-            Quantity to relocate
-          </label>
-          <input
-            type="number"
-            min={1}
-            max={data.availableQuantity ?? 0}
-            value={quantity}
-            onChange={(event) =>
-              setQuantity(
-                Math.max(1, Number.parseInt(event.target.value, 10) || 1),
-              )
-            }
-            className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-bold"
-          />
-        </div>
+        <TextField
+          label="Quantity to relocate"
+          type="number"
+          min={1}
+          max={data.availableQuantity ?? 0}
+          value={quantity}
+          onChange={(event) =>
+            setQuantity(
+              Math.max(1, Number.parseInt((event.target as HTMLInputElement).value, 10) || 1),
+            )
+          }
+        />
 
         <Button fullWidth size="lg" className="rounded-2xl h-16" type="submit">
           Confirm relocation

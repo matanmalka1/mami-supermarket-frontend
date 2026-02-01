@@ -2,6 +2,9 @@ import React from "react";
 import { User, Mail } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { UseFormReturn } from "react-hook-form";
+import NameField from "@/components/ui/form/NameField";
+import EmailField from "@/components/ui/form/EmailField";
+import PhoneField from "@/components/ui/form/PhoneField";
 
 type PersonalInfoFormProps = {
   form: UseFormReturn<any>;
@@ -24,49 +27,23 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
         <User size={16} /> Personal Information
       </div>
       <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-xs text-gray-400 uppercase tracking-widest">
-            First Name
-          </label>
-          <input
-            {...register("firstName")}
-            className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-xs text-gray-400 uppercase tracking-widest">
-            Last Name
-          </label>
-          <input
-            {...register("lastName")}
-            className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold"
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <label className="text-xs text-gray-400 uppercase tracking-widest">
-          Email
-        </label>
-        <div className="relative">
-          <Mail
-            className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300"
-            size={18}
-          />
-          <input
-            {...register("email")}
-            className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-14 pr-6 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold"
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <label className="text-xs text-gray-400 uppercase tracking-widest">
-          Phone
-        </label>
-        <input
-          {...register("phone")}
-          className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold"
+        <NameField
+          label="First Name"
+          registration={register("firstName")}
+          placeholder="John"
+        />
+        <NameField
+          label="Last Name"
+          registration={register("lastName")}
+          placeholder="Doe"
         />
       </div>
+      <EmailField
+        label="Email"
+        registration={register("email")}
+        leftIcon={<Mail size={18} />}
+      />
+      <PhoneField label="Phone" registration={register("phone")} prefixText="+972" />
       <Button
         fullWidth
         size="lg"

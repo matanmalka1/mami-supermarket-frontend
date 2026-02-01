@@ -6,6 +6,7 @@ import { useAddresses } from "@/features/store/hooks/useAddresses";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import AddressCard from "@/pages/store/AddressCard";
+import TextField from "@/components/ui/form/TextField";
 
 const AddressBook: React.FC = () => {
   const {
@@ -93,33 +94,12 @@ const AddressBook: React.FC = () => {
       >
         <form onSubmit={handleAdd} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
-            <input
-              name="city"
-              required
-              placeholder="City"
-              className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
-            />
-            <input
-              name="street"
-              required
-              placeholder="Street & House #"
-              className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
-            />
+            <TextField name="city" label="City" required />
+            <TextField name="street" label="Street & House #" required />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <input
-              name="postalCode"
-              required
-              placeholder="Postal Code"
-              className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
-            />
-            <input
-              name="country"
-              defaultValue="Israel"
-              required
-              placeholder="Country"
-              className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
-            />
+            <TextField name="postalCode" label="Postal Code" required />
+            <TextField name="country" label="Country" defaultValue="Israel" required />
           </div>
           <Button fullWidth size="lg" className="rounded-2xl" type="submit">
             Save Address

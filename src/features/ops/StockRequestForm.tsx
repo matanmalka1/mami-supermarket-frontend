@@ -6,6 +6,8 @@ import { toast } from "react-hot-toast";
 import Button from "../../components/ui/Button";
 import { stockRequestsService } from "@/domains/stock-requests/service";
 import { stockRequestSchema, StockRequestInput } from "../../validation/ops";
+import TextField from "@/components/ui/form/TextField";
+import RadioGroupField from "@/components/ui/form/RadioGroupField";
 interface Props {
   onSubmitted: () => void;
 }
@@ -59,64 +61,36 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
       className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-sm space-y-8"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Field
+        <TextField
           label="Branch ID"
+          registration={register("branchId")}
+          placeholder="ID of branch"
           error={errors.branchId?.message}
-          input={
-            <input
-              {...register("branchId")}
-              placeholder="ID of branch"
-              className={`w-full bg-gray-50 border ${errors.branchId ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold`}
-            />
-          }
         />
-        <Field
+        <TextField
           label="Product ID"
+          registration={register("productId")}
+          placeholder="ID of product"
           error={errors.productId?.message}
-          input={
-            <input
-              {...register("productId")}
-              placeholder="ID of product"
-              className={`w-full bg-gray-50 border ${errors.productId ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none font-bold`}
-            />
-          }
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Field
+        <TextField
           label="Quantity"
+          registration={register("quantity")}
+          type="number"
+          placeholder="0"
           error={errors.quantity?.message}
-          input={
-            <input
-              type="number"
-              {...register("quantity")}
-              placeholder="0"
-              className={`w-full bg-gray-50 border ${errors.quantity ? "border-red-500" : "border-gray-100"} rounded-2xl py-4 px-4 focus:ring-4 focus:ring-emerald-500/5 outline-none text-lg`}
-            />
-          }
+          inputClassName="text-lg"
         />
-        <Field
+        <RadioGroupField
           label="Request Type"
+          name="requestType"
+          options={REQUEST_TYPES.map((val) => ({ value: val, label: val }))}
+          registration={register("requestType")}
           error={errors.requestType?.message}
-          input={
-            <div className="grid grid-cols-2 gap-3">
-              {REQUEST_TYPES.map((val) => (
-                <label
-                  key={val}
-                  className="p-4 rounded-2xl border bg-gray-50 flex items-center gap-2 text-sm font-bold cursor-pointer transition-colors hover:border-emerald-200"
-                >
-                  <input
-                    type="radio"
-                    value={val}
-                    {...register("requestType")}
-                    className="accent-emerald-600"
-                  />
-                  <span>{val}</span>
-                </label>
-              ))}
-            </div>
-          }
+          inline
         />
       </div>
 
@@ -138,19 +112,5 @@ const StockRequestForm: React.FC<Props> = ({ onSubmitted }) => {
     </form>
   );
 };
-
-const Field: React.FC<{
-  label: string;
-  input: React.ReactNode;
-  error?: string;
-}> = ({ label, input, error }) => (
-  <div className="space-y-2">
-    <label className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
-      {label}
-    </label>
-    {input}
-    {error && <p className="text-xs text-red-500 font-bold">{error}</p>}
-  </div>
-);
 
 export default StockRequestForm;

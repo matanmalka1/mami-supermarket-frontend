@@ -8,6 +8,7 @@ import RegistrationForm from "@/features/auth/components/RegistrationForm";
 import { registerSchema, RegisterInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
 import { useRegister } from "@/features/auth/hooks/useRegister";
+import OtpInputGroup from "@/components/ui/form/OtpInputGroup";
 
 type RegisterPayload = {
   token: string;
@@ -113,18 +114,7 @@ const Register: React.FC<{
             />
           ) : (
             <form onSubmit={handleVerify} className="space-y-8 max-w-lg">
-              <div className="flex gap-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <input
-                    key={i}
-                    maxLength={1}
-                    className="w-16 h-20 bg-white border-2 border-gray-100 rounded-2xl text-center text-3xl text-[#008A45] outline-none focus:border-[#008A45] shadow-sm"
-                    onChange={(e) =>
-                      setOtp((prev) => (prev + e.target.value).slice(0, 4))
-                    }
-                  />
-                ))}
-              </div>
+              <OtpInputGroup value={otp} onChange={setOtp} />
               <button
                 className="w-full bg-[#16A34A] text-white h-20 rounded-[1.5rem] text-2xl shadow-xl active:scale-95"
                 disabled={loading}

@@ -1,6 +1,7 @@
 import React from "react";
 import type { Category } from "@/domains/catalog/types";
 import type { BranchResponse } from "@/domains/branch/types";
+import SelectField from "@/components/ui/form/SelectField";
 
 type Props = {
   categories: Category[];
@@ -24,48 +25,34 @@ const NewSkuSelects: React.FC<Props> = ({
   branchesLoading,
 }) => (
   <div className="grid grid-cols-2 gap-4">
-    <div className="space-y-2">
-      <label className="text-[10px] uppercase text-gray-400 tracking-widest">
-        Category
-      </label>
-      <select
-        value={selectedCategory}
-        onChange={(event) => onCategoryChange(event.target.value)}
-        disabled={categoriesLoading}
-        className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-bold appearance-none"
-      >
-        {categoriesLoading ? (
-          <option value="">Loading categories…</option>
-        ) : (
-          categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))
-        )}
-      </select>
-    </div>
-    <div className="space-y-2">
-      <label className="text-[10px] uppercase text-gray-400 tracking-widest">
-        Branch
-      </label>
-      <select
-        value={selectedBranch}
-        onChange={(event) => onBranchChange(event.target.value)}
-        disabled={branchesLoading}
-        className="w-full bg-gray-50 border border-gray-100 rounded-xl p-4 outline-none focus:border-[#006666] font-bold appearance-none"
-      >
-        {branchesLoading ? (
-          <option value="">Loading branches…</option>
-        ) : (
-          branches.map((branch) => (
-            <option key={branch.id} value={branch.id}>
-              {branch.name}
-            </option>
-          ))
-        )}
-      </select>
-    </div>
+    <SelectField
+      label="Category"
+      value={selectedCategory}
+      onChange={(event) => onCategoryChange((event.target as HTMLSelectElement).value)}
+      disabled={categoriesLoading}
+      options={
+        categoriesLoading
+          ? [{ value: "", label: "Loading categories…" }]
+          : categories.map((category) => ({
+              value: category.id,
+              label: category.name,
+            }))
+      }
+    />
+    <SelectField
+      label="Branch"
+      value={selectedBranch}
+      onChange={(event) => onBranchChange((event.target as HTMLSelectElement).value)}
+      disabled={branchesLoading}
+      options={
+        branchesLoading
+          ? [{ value: "", label: "Loading branches…" }]
+          : branches.map((branch) => ({
+              value: branch.id,
+              label: branch.name,
+            }))
+      }
+    />
   </div>
 );
 

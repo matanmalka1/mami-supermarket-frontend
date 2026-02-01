@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import TextField from "@/components/ui/form/TextField";
+import SelectField from "@/components/ui/form/SelectField";
+import TextAreaField from "@/components/ui/form/TextAreaField";
 
 type FormValues = {
   name: string;
@@ -59,45 +62,43 @@ export const CatalogProductForm: React.FC<Props> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={initialProduct ? "Edit Product" : "New Product Enrollment"}>
       <form onSubmit={handleSubmit} className="space-y-4 py-4">
-        <input
+        <TextField
           required
           placeholder="Product Name"
-          className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
+          label="Product Name"
           value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          onChange={(e) => setForm({ ...form, name: (e.target as HTMLInputElement).value })}
         />
-        <input
+        <TextField
           required
           placeholder="SKU"
-          className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
+          label="SKU"
           value={form.sku}
-          onChange={(e) => setForm({ ...form, sku: e.target.value })}
+          onChange={(e) => setForm({ ...form, sku: (e.target as HTMLInputElement).value })}
         />
-        <input
+        <TextField
           required
           type="number"
           placeholder="Price"
-          className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
+          label="Price"
           value={form.price}
-          onChange={(e) => setForm({ ...form, price: e.target.value })}
+          onChange={(e) => setForm({ ...form, price: (e.target as HTMLInputElement).value })}
         />
-        <select
-          className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold"
+        <SelectField
+          label="Category"
           value={form.categoryId}
-          onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-        >
-          <option value="">Select category</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <textarea
+          onChange={(e) => setForm({ ...form, categoryId: (e.target as HTMLSelectElement).value })}
+          options={[
+            { value: "", label: "Select category" },
+            ...categories.map((c) => ({ value: c.id, label: c.name })),
+          ]}
+        />
+        <TextAreaField
+          label="Description"
           placeholder="Description"
-          className="w-full bg-gray-50 border rounded-xl p-4 outline-none font-bold min-h-[96px]"
           value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          onChange={(e) => setForm({ ...form, description: (e.target as HTMLTextAreaElement).value })}
+          rows={3}
         />
         <Button fullWidth size="lg" className="rounded-2xl" type="submit" disabled={saving}>
           {saving ? "Saving..." : initialProduct ? "Save Changes" : "Enroll Product"}

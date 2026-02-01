@@ -6,6 +6,7 @@ import ResetForm from "./ResetForm";
 import AuthHeader from "./AuthHeader";
 import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword";
 import { usePasswordFormState } from "@/features/auth/hooks/usePasswordFormState";
+import EmailField from "@/components/ui/form/EmailField";
 
 type Stage = "REQUEST" | "RESET" | "DONE";
 
@@ -47,26 +48,14 @@ const ForgotPassword: React.FC = () => {
           <>
             {stage === "REQUEST" ? (
               <form onSubmit={onRequest} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-gray-700">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                      size={20}
-                    />
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 pl-12 pr-6 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all"
-                      placeholder="name@example.com"
-                      disabled={stage !== "REQUEST"}
-                    />
-                  </div>
-                </div>
+                <EmailField
+                  label="Email Address"
+                  registration={undefined}
+                  value={email}
+                  onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
+                  disabled={stage !== "REQUEST"}
+                  leftIcon={<Mail size={20} />}
+                />
 
                 <Button fullWidth size="lg" loading={loading} type="submit">
                   Send Reset Link

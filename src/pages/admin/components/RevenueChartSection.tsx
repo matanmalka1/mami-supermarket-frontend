@@ -52,7 +52,6 @@ const RevenueChartSection: React.FC<Props> = ({
       <Card variant="emerald" className="p-10 space-y-6">
         <DollarSign size={40} className="opacity-40" />
         <h3 className="text-3xl ">Momentum</h3>
-        <h3 className="text-3xl ">Momentum</h3>
         <p className="font-bold opacity-80 ">{momentumText}</p>
         <div className="h-3 bg-white/20 rounded-full overflow-hidden">
           <div
