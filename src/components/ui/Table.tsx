@@ -11,7 +11,7 @@ const Table: React.FC<TableProps> = ({
   ...props
 }) => (
   <div
-    className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
+    className={`bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
   >
     <table
       className={`w-full text-left border-collapse ${className}`}

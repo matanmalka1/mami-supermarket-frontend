@@ -1,11 +1,13 @@
 import React, { type FC } from "react";
 import ProductCard from "@/components/store/ProductCard";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
+import LoadingState from "@/components/ui/LoadingState";
 import type { Product } from "@/domains/catalog/types";
 
 type ProductGridProps = {
   products: Product[];
   loading: boolean;
+  loadingLabel?: string;
   skeletonCount?: number;
   gridClassName?: string;
   className?: string;
@@ -18,6 +20,7 @@ const DEFAULT_GRID_CLASSES =
 const ProductGrid: FC<ProductGridProps> = ({
   products,
   loading,
+  loadingLabel,
   skeletonCount = 6,
   gridClassName = DEFAULT_GRID_CLASSES,
   className = "",
@@ -27,6 +30,12 @@ const ProductGrid: FC<ProductGridProps> = ({
     renderItem ?? ((product: Product) => <ProductCard item={product} />);
 
   if (loading) {
+    // If loadingLabel is provided, use LoadingState component
+    if (loadingLabel !== undefined) {
+      return <LoadingState label={loadingLabel} />;
+    }
+
+    // Otherwise, render skeleton grid (default behavior)
     return (
       <div className={`${gridClassName} ${className}`}>
         {Array.from({ length: skeletonCount }).map((_, index) => (

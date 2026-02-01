@@ -26,9 +26,8 @@ const Section: React.FC<SectionProps> = ({
   const variants = {
     default: "space-y-12",
     contained:
-      "bg-gray-50/50 rounded-[3rem] p-12 border border-gray-100 space-y-10",
-    deals:
-      "bg-orange-50 rounded-[3rem] p-12 border border-orange-100 space-y-10",
+      "bg-gray-50/50 rounded-3xl p-12 border border-gray-100 space-y-10",
+    deals: "bg-orange-50 rounded-3xl p-12 border border-orange-100 space-y-10",
   };
 
   return (

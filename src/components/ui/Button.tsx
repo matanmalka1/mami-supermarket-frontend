@@ -49,7 +49,7 @@ const Button: React.FC<ButtonProps> = ({
     sm: "px-4 py-2 text-xs",
     md: "px-6 py-3 text-sm",
     lg: "px-8 py-4 text-lg rounded-2xl",
-    xl: "px-10 py-6 text-xl rounded-[2rem]",
+    xl: "px-10 py-6 text-xl rounded-2xl",
   };
 
   return (

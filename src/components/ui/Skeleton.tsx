@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 
 interface SkeletonProps {
   className?: string;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({ className = '' }) => (
+export const Skeleton: React.FC<SkeletonProps> = ({ className = "" }) => (
   <div className={`animate-pulse bg-gray-200 rounded-xl ${className}`} />
 );
 
 export const ProductCardSkeleton = () => (
   <div className="space-y-4">
-    <Skeleton className="aspect-square rounded-[2rem]" />
+    <Skeleton className="aspect-square rounded-2xl" />
     <div className="space-y-2">
       <Skeleton className="h-3 w-1/3" />
       <Skeleton className="h-6 w-3/4" />

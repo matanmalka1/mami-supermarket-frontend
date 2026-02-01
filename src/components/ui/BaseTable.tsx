@@ -40,7 +40,7 @@ const BaseTable = <T extends unknown>({
 
   return (
     <div
-      className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
+      className={`bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
     >
       <table
         role="table"

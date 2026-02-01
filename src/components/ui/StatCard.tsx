@@ -22,7 +22,7 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => (
   <div
     onClick={onClick}
-    className={`bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm transition-all ${
+    className={`bg-white p-8 rounded-3xl border border-gray-100 shadow-sm transition-all ${
       onClick
         ? "cursor-pointer hover:shadow-xl hover:-translate-y-1 active:scale-95"
         : ""
