@@ -20,12 +20,6 @@ export const catalogService = {
   }): Promise<{ items: Category[]; pagination: Pagination }> {
     return buildCategoryResponse(params);
   },
-  async getCategories(params?: {
-    limit?: number;
-    offset?: number;
-  }): Promise<{ items: Category[]; pagination: Pagination }> {
-    return buildCategoryResponse(params);
-  },
 
   /**
    * List products in a category (paginated, optional branch)
@@ -113,9 +107,6 @@ export const catalogService = {
     limit?: number;
   }): Promise<Product[]> {
     return buildFeaturedResponse(params);
-  },
-  async getFeatured(limit?: number): Promise<Product[]> {
-    return buildFeaturedResponse({ limit });
   },
 
   /**

@@ -5,8 +5,7 @@ import { catalogService } from "@/domains/catalog/service";
 import { checkoutService } from "@/domains/checkout/service";
 import { cartService } from "@/domains/cart/service";
 import { branchService } from "@/domains/branch/service";
-import { apiClient } from "./api-client";
-import { Order } from "@/domains/orders/types";
+import { ordersService } from "@/domains/orders/service";
 
 export const apiService = {
   auth: authService,
@@ -16,6 +15,7 @@ export const apiService = {
   checkout: checkoutService,
   cart: cartService,
   branches: branchService,
+  orders: ordersService,
   profile: {
     get: authService.getProfile,
     update: authService.updateProfile,
@@ -23,11 +23,5 @@ export const apiService = {
     addAddress: authService.addAddress,
     deleteAddress: authService.deleteAddress,
     setDefaultAddress: authService.setDefaultAddress,
-  },
-  orders: {
-    list: (params?: Record<string, unknown>) =>
-      apiClient.get<Order[], Order[]>("/orders", { params }),
-    get: (id: number) => apiClient.get<Order, Order>(`/orders/${id}`),
-    cancel: (id: number) => apiClient.post(`/orders/${id}/cancel`),
   },
 };
