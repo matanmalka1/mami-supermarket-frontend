@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import RegistrationBenefits from "@/components/auth/RegistrationBenefits";
+import RegistrationBenefits from "@/pages/auth/components/RegistrationBenefits";
 import RegistrationForm from "@/features/auth/components/RegistrationForm";
 import { registerSchema, RegisterInput } from "@/validation/auth";
 import type { UserRole } from "@/domains/users/types";
