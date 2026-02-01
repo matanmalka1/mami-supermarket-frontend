@@ -1,18 +1,21 @@
 // Added React import to resolve missing namespace errors
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import Modal from "../ui/Modal";
-import Button from "../ui/Button";
-import MissingItemReplacement from "@/components/ops/MissingItemReplacement";
+import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
+import MissingItemReplacement from "@/components/ops/modals/MissingItemReplacement";
+
+type ItemStatus = "MISSING" | "FOUND" | "REPLACED";
+type ReplacementProduct = { id: number; name: string };
 
 interface MissingItemModalProps {
   itemId: number | null;
   onClose: () => void;
   onUpdateStatus: (
     itemId: number,
-    status: string,
+    status: ItemStatus,
     reason: string,
-    replacement?: any,
+    replacement?: ReplacementProduct,
   ) => void;
   itemName?: string;
 }
@@ -57,7 +60,11 @@ const MissingItemModal: React.FC<MissingItemModalProps> = ({
     <MissingItemReplacement
       itemName={itemName}
       onSelect={(product) => {
-        onUpdateStatus(itemId!, "MISSING", selectedReason!, product);
+        if (!itemId || !selectedReason) return;
+        onUpdateStatus(itemId, "MISSING", selectedReason, {
+          id: product.id,
+          name: product.name,
+        });
       }}
       onBack={() => setModalStep("REASON")}
     />
@@ -89,9 +96,10 @@ const MissingItemModal: React.FC<MissingItemModalProps> = ({
           </Button>
           {modalStep === "REASON" && selectedReason && (
             <Button
-              onClick={() =>
-                onUpdateStatus(itemId!, "MISSING", selectedReason!)
-              }
+              onClick={() => {
+                if (!itemId || !selectedReason) return;
+                onUpdateStatus(itemId, "MISSING", selectedReason);
+              }}
               className="flex-1"
             >
               Skip Alt

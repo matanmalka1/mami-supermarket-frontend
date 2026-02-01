@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bell, Settings2, AlertTriangle, Info } from "lucide-react";
-import SearchInput from "../ui/SearchInput";
+import SearchInput from "@/components/ui/SearchInput";
 import { Link } from "react-router";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useOpsAlerts } from "@/features/ops/hooks/useOpsAlerts";

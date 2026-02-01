@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from "react";
-import DashboardHero from "@/components/ops/DashboardHero";
+import DashboardHero from "@/components/ops/dashboard/DashboardHero";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import OrderTable from "@/features/ops/components/OrderTable";

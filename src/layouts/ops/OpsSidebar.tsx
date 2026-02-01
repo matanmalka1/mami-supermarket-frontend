@@ -16,7 +16,7 @@ import {
   Settings2,
   BarChart3,
 } from "lucide-react";
-import AvatarBadge from "../ui/AvatarBadge";
+import AvatarBadge from "@/components/ui/AvatarBadge";
 import type { UserRole } from "@/domains/users/types";
 import { normalizeRole, isOpsRole } from "@/utils/roles";
 

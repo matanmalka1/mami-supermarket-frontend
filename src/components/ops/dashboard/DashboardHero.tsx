@@ -1,5 +1,5 @@
 import React from "react";
-import DashboardMetricCard from "@/components/ops/DashboardMetricCard";
+import DashboardMetricCard from "@/components/ops/dashboard/DashboardMetricCard";
 import { AlertTriangle } from "lucide-react";
 
 type DashboardHeroProps = {

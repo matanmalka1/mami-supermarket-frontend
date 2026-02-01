@@ -1,10 +1,9 @@
 
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
-// Fix: Correct import paths from common to ui
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
-import PickingItemDetail from './PickingItemDetail';
+import React from "react";
+import { ChevronDown } from "lucide-react";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
+import PickingItemDetail from "./PickingItemDetail";
 
 interface PickingItemRowProps {
   item: any;

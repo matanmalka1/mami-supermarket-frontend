@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router";
-import StoreLayout from "../components/layout/StoreLayout";
-import OpsLayout from "../components/layout/OpsLayout";
+import StoreLayout from "../layouts/StoreLayout";
+import OpsLayout from "../layouts/OpsLayout";
 import RequireAuth from "./guards/RequireAuth";
 import Dashboard from "../pages/ops/Dashboard";
 import PickingInterface from "../pages/ops/PickingInterface";

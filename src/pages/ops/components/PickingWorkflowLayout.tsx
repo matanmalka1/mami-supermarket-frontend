@@ -1,9 +1,9 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import Badge from "@/components/ui/Badge";
-import PickingHeader from "@/components/ops/PickingHeader";
-import PickingFooter from "@/components/ops/PickingFooter";
-import MissingItemModal from "@/components/ops/MissingItemModal";
+import PickingHeader from "@/components/ops/picking/PickingHeader";
+import PickingFooter from "@/components/ops/picking/PickingFooter";
+import MissingItemModal from "@/components/ops/modals/MissingItemModal";
 import PickingGuidanceCard from "@/pages/ops/components/PickingGuidanceCard";
 import PickingItemsTable from "@/pages/ops/components/PickingItemsTable";
 import PickingScaleModal from "@/pages/ops/components/PickingScaleModal";

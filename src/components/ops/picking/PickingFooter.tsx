@@ -1,9 +1,8 @@
 
-import React, { useState } from 'react';
-import { Clock, CheckCircle2, XCircle, RotateCcw, Timer } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-// Fix: Correct import path from common to ui
-import Button from '../ui/Button';
+import React, { useState } from "react";
+import { Clock, CheckCircle2, XCircle, RotateCcw, Timer } from "lucide-react";
+import { toast } from "react-hot-toast";
+import Button from "@/components/ui/Button";
 
 interface PickingFooterProps {
   items: any[];

@@ -1,7 +1,7 @@
 import { Bell, ShoppingCart, Lock } from "lucide-react";
-import NotifDropdown from "../store-header/NotifDropdown";
-import AccountDropdown from "../store-header/AccountDropdown";
-import AvatarBadge from "../../ui/AvatarBadge";
+import NotifDropdown from "./NotifDropdown";
+import AccountDropdown from "./AccountDropdown";
+import AvatarBadge from "@/components/ui/AvatarBadge";
 import type { OpsAlert } from "@/domains/notifications/types";
 
 type HeaderActionsProps = {

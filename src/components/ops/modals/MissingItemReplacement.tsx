@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, type ChangeEvent } from "react";
 import { Search, CheckCircle2 } from "lucide-react";
 import { useCatalogAutocomplete } from "@/features/store/hooks/useCatalogAutocomplete";
 import type { Product } from "@/domains/catalog/types";
@@ -15,11 +15,17 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
 }) => {
   const { query, setQuery, suggestions, loading, resetSuggestions } =
     useCatalogAutocomplete({ limit: 8 });
+  const hasQuery = query.trim().length > 0;
+  const hasSuggestions = suggestions.length > 0;
 
   const handleSelect = (product: Product) => {
     onSelect(product);
     resetSuggestions();
     setQuery("");
+  };
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
   };
 
   return (
@@ -32,7 +38,7 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
           <input
             type="search"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={handleInputChange}
             placeholder="Search catalog..."
             className="w-full border border-gray-100 rounded-2xl bg-white py-4 pl-12 pr-4 text-sm focus:border-[#006666] focus:ring-2 focus:ring-[#006666]/20 transition-all"
             autoFocus
@@ -49,7 +55,7 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
           <div className="py-12 text-center text-gray-300 animate-pulse uppercase tracking-widest">
             Searching...
           </div>
-        ) : suggestions.length > 0 ? (
+        ) : hasSuggestions ? (
           suggestions.map((product) => (
             <button
               key={product.id}
@@ -76,7 +82,7 @@ const MissingItemReplacement: FC<MissingItemReplacementProps> = ({
               />
             </button>
           ))
-        ) : query.trim() ? (
+        ) : hasQuery ? (
           <div className="py-12 text-center text-gray-400 font-bold uppercase tracking-[0.3em]">
             No alternatives found
           </div>

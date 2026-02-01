@@ -7,14 +7,14 @@ import {
   ShieldCheck,
   LayoutDashboard,
 } from "lucide-react";
-import SearchTypeahead from "./store-header/SearchTypeahead";
+import SearchTypeahead from "./header/SearchTypeahead";
 import { useCart } from "@/context/cart-context";
-import { useAuth } from "../../hooks/useAuth";
-import DeptMegaMenu from "./store-header/DeptMegaMenu";
+import { useAuth } from "@/hooks/useAuth";
+import DeptMegaMenu from "./header/DeptMegaMenu";
 import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
-import HeaderActions from "./store-header/HeaderActions";
-import BranchSelector from "./store-header/BranchSelector";
-import PageWrapper from "../shared/PageWrapper";
+import HeaderActions from "./header/HeaderActions";
+import BranchSelector from "./header/BranchSelector";
+import PageWrapper from "@/components/shared/PageWrapper";
 
 const StoreHeader: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router";
-import StoreHeader from "./StoreHeader";
-import PageWrapper from "../shared/PageWrapper";
-import Breadcrumbs from "../ui/Breadcrumbs";
+import StoreHeader from "./store/StoreHeader";
+import PageWrapper from "@/components/shared/PageWrapper";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useCatalogCategories } from "@/features/store/hooks/useCatalogCategories";
 import { BranchProvider } from "@/context/BranchContext";
-import StoreFooter from "./StoreFooter";
-import StoreInfoModal from "./StoreInfoModal";
+import StoreFooter from "./store/StoreFooter";
+import StoreInfoModal from "./store/StoreInfoModal";
 
 const StoreLayout: React.FC = () => {
   const [infoModal, setInfoModal] = useState<{

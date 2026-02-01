@@ -1,22 +1,20 @@
-import type { FC, ReactNode } from "react";
 import { Outlet } from "react-router";
-import OpsSidebar from "@/components/layout/OpsSidebar";
-import OpsHeader from "@/components/layout/OpsHeader";
+import OpsSidebar from "./ops/OpsSidebar";
+import OpsHeader from "./ops/OpsHeader";
 import type { UserRole } from "@/domains/users/types";
 
 interface OpsLayoutProps {
   userRole?: UserRole | null;
-  children?: ReactNode;
 }
 
-const OpsLayout: FC<OpsLayoutProps> = ({ userRole, children }) => {
+const OpsLayout: React.FC<OpsLayoutProps> = ({ userRole }) => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex bg-gray-50/50">
       <OpsSidebar userRole={userRole} />
-      <div className="ml-64 flex min-h-screen flex-col">
+      <div className="flex-1 ml-64 min-w-0">
         <OpsHeader />
-        <main className="flex-1 overflow-y-auto px-6 pb-10 pt-6">
-          {children ?? <Outlet />}
+        <main className="p-8 max-w-[1600px] mx-auto">
+          <Outlet />
         </main>
       </div>
     </div>
