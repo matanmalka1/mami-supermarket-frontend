@@ -49,6 +49,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
             const branchName = inv.branch?.name || "Central Hub";
             const isLowStock = available <= 25;
             const statusLabel = isLowStock ? "LOW_STOCK" : "OPTIMAL";
+            const statusVariant = isLowStock ? "orange" : "emerald";
             return (
               <InventoryTableRow
                 key={inv.id}
@@ -57,6 +58,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({
                 reserved={reserved}
                 branchName={branchName}
                 statusLabel={statusLabel}
+                statusVariant={statusVariant}
                 isLowStock={isLowStock}
                 activeMenuId={activeMenuId}
                 onMenuToggle={onMenuToggle}

@@ -59,9 +59,10 @@ const TR: React.FC<
 const TH: React.FC<React.ThHTMLAttributes<HTMLTableCellElement>> = ({
   children,
   className = "",
+  scope = "col",
   ...props
 }) => (
-  <th className={`px-8 py-6 ${className}`} {...props}>
+  <th className={`px-8 py-6 ${className}`} scope={scope} {...props}>
     {children}
   </th>
 );

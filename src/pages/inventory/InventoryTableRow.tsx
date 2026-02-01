@@ -1,5 +1,6 @@
 import React from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
+import { BadgeVariant } from "@/components/ui/Badge";
 import InventoryTableMenu from "./InventoryTableMenu";
 
 interface InventoryTableRowProps {
@@ -8,6 +9,7 @@ interface InventoryTableRowProps {
   reserved: number;
   branchName: string;
   statusLabel: string;
+  statusVariant: BadgeVariant;
   isLowStock: boolean;
   activeMenuId: number | null;
   onMenuToggle: (id: number | null) => void;
@@ -22,6 +24,7 @@ const InventoryTableRow: React.FC<InventoryTableRowProps> = ({
   reserved,
   branchName,
   statusLabel,
+  statusVariant,
   isLowStock,
   activeMenuId,
   onMenuToggle,
@@ -57,7 +60,7 @@ const InventoryTableRow: React.FC<InventoryTableRowProps> = ({
     </td>
     <td>
       <div className="flex flex-col gap-2">
-        <StatusBadge status={statusLabel} />
+        <StatusBadge status={statusLabel} variant={statusVariant} />
         <p className="text-sm text-gray-600">{branchName}</p>
       </div>
     </td>

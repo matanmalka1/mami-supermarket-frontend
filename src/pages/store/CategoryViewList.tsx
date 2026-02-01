@@ -1,6 +1,6 @@
 import React from "react";
 import ProductListItem from "@/components/store/ProductListItem";
-import ProductListItemSkeleton from "@/components/store/ProductListItemSkeleton";
+import { ProductCardSkeleton } from "@/components/ui/Skeleton";
 import CategoryPagination from "./CategoryPagination";
 import { Product } from "@/domains/catalog/types";
 import type { CardProduct } from "@/components/store/ProductCard";
@@ -26,7 +26,7 @@ const CategoryViewList: React.FC<CategoryViewListProps> = ({
     {loading ? (
       <div className="space-y-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <ProductListItemSkeleton key={`list-skeleton-${index}`} />
+          <ProductCardSkeleton key={`list-skeleton-${index}`} />
         ))}
       </div>
     ) : (

@@ -1,6 +1,7 @@
 import React from "react";
 import DashboardMetricCard from "@/components/ops/dashboard/DashboardMetricCard";
 import { AlertTriangle } from "lucide-react";
+import Card from "@/components/ui/Card";
 
 type DashboardHeroProps = {
   ordersCount: number;
@@ -23,7 +24,7 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
   perfLoading,
   urgentCount,
 }) => (
-  <div className="rounded-[3rem] bg-white border border-gray-100 p-8 shadow-2xl space-y-6">
+  <Card padding="md" className="rounded-[3rem] shadow-2xl space-y-6">
     <div className="space-y-2">
       <h1 className="text-4xl  tracking-tight">Orders Management</h1>
       <p className="text-xs uppercase tracking-[0.4em] text-gray-400 flex gap-2 items-center">
@@ -74,7 +75,7 @@ const DashboardHero: React.FC<DashboardHeroProps> = ({
         accent="slate"
       />
     </div>
-  </div>
+  </Card>
 );
 
 export default DashboardHero;

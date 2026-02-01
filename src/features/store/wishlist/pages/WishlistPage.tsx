@@ -1,8 +1,6 @@
 import { Link } from "react-router";
 import EmptyState from "@/components/ui/EmptyState";
 import LoadingState from "@/components/ui/LoadingState";
-import WishlistEmptyState from "../components/WishlistEmptyState";
-import WishlistUnavailableState from "../components/WishlistUnavailableState";
 import WishlistHeader from "../components/WishlistHeader";
 import WishlistProductCard from "../components/WishlistProductCard";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -74,11 +72,41 @@ const WishlistPage: React.FC = () => {
   }
 
   if (!hasItems) {
-    return <WishlistEmptyState />;
+    return (
+      <div className="max-w-3xl mx-auto py-20">
+        <EmptyState
+          title="Your wishlist is empty"
+          description="Tap the heart on any product to keep it here for later."
+          action={
+            <Link
+              to="/store"
+              className="text-xs uppercase tracking-widest text-[#008A45]"
+            >
+              Continue shopping
+            </Link>
+          }
+        />
+      </div>
+    );
   }
 
   if (hasItems && products.length === 0) {
-    return <WishlistUnavailableState />;
+    return (
+      <div className="max-w-4xl mx-auto py-20">
+        <EmptyState
+          title="Wishlist items unavailable"
+          description="One or more saved products cannot be found right now."
+          action={
+            <Link
+              to="/store"
+              className="text-xs uppercase tracking-widest text-[#008A45]"
+            >
+              Browse the store
+            </Link>
+          }
+        />
+      </div>
+    );
   }
 
   // Helper to get WishlistItem by product id

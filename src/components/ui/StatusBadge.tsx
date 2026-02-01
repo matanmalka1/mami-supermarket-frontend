@@ -1,52 +1,30 @@
-import React from 'react';
-import Badge, { BadgeVariant } from './Badge';
-
-type SystemStatus = 
-  | 'PENDING' | 'LOADING' | 'IN_PROGRESS' | 'PICKING' | 'RECEIVED' 
-  | 'ON_ROUTE' | 'EN_ROUTE' | 'DELIVERED' | 'COMPLETED' | 'SUCCESS' 
-  | 'CRITICAL' | 'URGENT' | 'DELAYED' | 'CANCELLED' | 'MISSING'
-  | 'LOW_STOCK' | 'OPTIMAL' | 'STEADY' | 'LOCKED' | 'OPEN';
+import React from "react";
+import Badge, { BadgeVariant } from "./Badge";
 
 interface StatusBadgeProps {
-  status: string | SystemStatus;
+  status: string;
+  variant?: BadgeVariant;
   className?: string;
 }
 
-const statusMap: Record<string, BadgeVariant> = {
-  // Warning / Pending
-  PENDING: 'orange',
-  LOADING: 'orange',
-  URGENT: 'orange',
-  LOW_STOCK: 'orange',
-  // Success / Positive
-  COMPLETED: 'emerald',
-  DELIVERED: 'emerald',
-  PICKED: 'emerald',
-  SUCCESS: 'emerald',
-  STEADY: 'emerald',
-  OPTIMAL: 'emerald',
-  OPEN: 'emerald',
-  // Active / Informational
-  IN_PROGRESS: 'blue',
-  PICKING: 'blue',
-  ON_ROUTE: 'blue',
-  EN_ROUTE: 'blue',
-  RECEIVED: 'teal',
-  // Danger / Error
-  CRITICAL: 'red',
-  DELAYED: 'red',
-  CANCELLED: 'red',
-  MISSING: 'red',
-  LOCKED: 'red',
-};
-
-const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = '' }) => {
-  const normalizedStatus = status.toUpperCase();
-  const variant = statusMap[normalizedStatus] || 'gray';
-
+/**
+ * StatusBadge is a UI primitive for displaying status text.
+ *
+ * @param status - The status text to display (will be formatted by replacing underscores with spaces)
+ * @param variant - Optional badge color variant. If not provided, defaults to 'gray'
+ * @param className - Optional additional CSS classes
+ *
+ * Note: This component does not interpret status values. The caller is responsible
+ * for mapping domain-specific statuses to appropriate color variants.
+ */
+const StatusBadge: React.FC<StatusBadgeProps> = ({
+  status,
+  variant = "gray",
+  className = "",
+}) => {
   return (
     <Badge variant={variant} className={className}>
-      {status.replace(/_/g, ' ')}
+      {status.replace(/_/g, " ")}
     </Badge>
   );
 };

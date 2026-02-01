@@ -1,7 +1,7 @@
 import { User, Clock, Printer } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import { Skeleton } from "@/components/ui/Skeleton";
+import LoadingState from "@/components/ui/LoadingState";
 import { Order } from "@/domains/orders/types";
 import { formatOrderLabel } from "@/utils/orderLabel";
 
@@ -16,26 +16,7 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
   };
 
   if (!order) {
-    return (
-      <div className="bg-white rounded-[2.5rem] border border-gray-100 p-8 flex flex-col gap-10 shadow-sm relative overflow-hidden group print:hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#006666] opacity-[0.02] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-1000"></div>
-        <div className="relative z-10 flex flex-col gap-6">
-          <Skeleton className="h-14 w-56 rounded-md" />
-          <div className="flex flex-wrap gap-4">
-            <Skeleton className="h-6 w-32 rounded-full" />
-            <Skeleton className="h-6 w-32 rounded-full" />
-            <Skeleton className="h-6 w-20 rounded-full" />
-          </div>
-        </div>
-        <Button
-          variant="outline"
-          className="h-14 px-8 rounded-2xl border-gray-200 opacity-60"
-          loading
-        >
-          <Printer size={18} /> Loading order...
-        </Button>
-      </div>
-    );
+    return <LoadingState label="Loading order details..." />;
   }
 
   const customerName = order.customer?.fullName ?? "";
@@ -65,8 +46,8 @@ const PickingHeader: React.FC<PickingHeaderProps> = ({ order, itemsCount }) => {
           </div>
         </div>
       </div>
-      <Button 
-        variant="outline" 
+      <Button
+        variant="outline"
         className="h-14 px-8 rounded-2xl border-gray-200"
         onClick={handlePrint}
       >

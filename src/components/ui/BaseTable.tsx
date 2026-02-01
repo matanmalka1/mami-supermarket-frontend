@@ -25,7 +25,7 @@ const BaseTable = <T extends unknown>({
   data,
   columns,
   renderRow,
-  rowKey,
+  rowKey = (item: T, index: number) => index,
   isLoading,
   loadingLabel,
   emptyLabel,
@@ -38,7 +38,6 @@ const BaseTable = <T extends unknown>({
 }: BaseTableProps<T>) => {
   const columnCount = Math.max(columns?.length ?? 0, 1);
 
-  const defaultRowKey = (item: T, index: number) => index;
   return (
     <div
       className={`bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden ${containerClassName}`}
@@ -78,7 +77,7 @@ const BaseTable = <T extends unknown>({
             </tr>
           ) : (
             data.map((item, index) => (
-              <React.Fragment key={(rowKey ?? defaultRowKey)(item, index)}>
+              <React.Fragment key={rowKey(item, index)}>
                 {renderRow(item, index)}
               </React.Fragment>
             ))
