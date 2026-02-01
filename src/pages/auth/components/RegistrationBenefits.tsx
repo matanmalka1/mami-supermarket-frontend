@@ -1,6 +1,6 @@
 import React from "react";
 import { Truck, Heart, Zap } from "lucide-react";
-import AvatarBadge from "../ui/AvatarBadge";
+import AvatarBadge from "@/components/ui/AvatarBadge";
 
 const SHELL_CLASS =
   "bg-white p-12 rounded-[4rem] shadow-[0_30px_100px_rgba(0,0,0,0.06)] space-y-16 border border-gray-50 hidden lg:block sticky top-24";
