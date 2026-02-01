@@ -83,10 +83,9 @@ describe("GlobalSettings", () => {
 
     await waitFor(() => expect(mockSaveSettings).toHaveBeenCalled());
     expect(mockSaveSettings).toHaveBeenCalledTimes(1);
-    expect(mockSaveSettings).toHaveBeenCalledWith({
-      deliveryMin: 180,
-      deliveryFee: 25,
-      slots: "08:00-22:00",
-    });
+    expect(mockSaveSettings).toHaveBeenCalledWith();
+    expect(mockHandleChange).toHaveBeenCalledWith("deliveryMin", "180");
+    expect(mockHandleChange).toHaveBeenCalledWith("deliveryFee", "25");
+    expect(mockHandleChange).toHaveBeenCalledWith("slots", "08:00-22:00");
   });
 });

@@ -81,7 +81,7 @@ export const useCartActions = ({
       setItems((prev) => prev.filter((item) => item.id !== numericId));
 
       // Sync with backend
-      const success = await removeItemFromCart(id, previousItems);
+      const success = await removeItemFromCart(id);
 
       if (!success) {
         // Revert on failure

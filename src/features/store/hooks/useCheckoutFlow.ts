@@ -71,7 +71,7 @@ export const useCheckoutFlow = () => {
         if (active) {
           setServerCartId(data?.id ?? null);
         }
-      } catch (error) {
+      } catch {
         toast.error("Failed to sync cart with server");
       } finally {
         if (active) {

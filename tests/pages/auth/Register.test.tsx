@@ -29,7 +29,7 @@ describe("Register", () => {
     mockVerifyRegisterOtp.mockResolvedValue({ message: "OTP verified" });
     const onRegister = vi.fn();
 
-    renderWithRouter(<Register />);
+    renderWithRouter(<Register onRegister={onRegister} />);
 
     await userEvent.type(screen.getByPlaceholderText("John"), "Jane");
     await userEvent.type(screen.getByPlaceholderText("Doe"), "Smith");
@@ -38,7 +38,7 @@ describe("Register", () => {
       "jane@example.com",
     );
     await userEvent.type(
-      screen.getByPlaceholderText("05X-XXXXXXX"),
+      screen.getByLabelText(/Israeli Phone Number/i),
       "0501234567",
     );
     await userEvent.type(

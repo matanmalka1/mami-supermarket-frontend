@@ -48,7 +48,6 @@ export const normalizeProductId = (id: number | string): number => {
 export const validateQuantityAvailability = (
   currentQty: number,
   availableQty: number | undefined,
-  productName: string,
 ): { valid: boolean; error?: string } => {
   if (availableQty !== undefined) {
     if (availableQty <= 0) {

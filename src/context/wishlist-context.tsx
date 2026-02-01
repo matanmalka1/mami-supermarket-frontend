@@ -41,7 +41,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
         priority: undefined,
       }));
       setItems(wishlistItems);
-    } catch (error) {
+    } catch {
       setItems([]);
     } finally {
       setIsLoading(false);
@@ -69,7 +69,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
         } else {
           await wishlistService.add(productId);
         }
-      } catch (error) {
+      } catch (err) {
         // Revert on failure
         setItems((prev) =>
           isCurrentlyWishlisted
@@ -77,7 +77,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
             : prev.filter((item) => item.id !== productId),
         );
         toast.error("Failed to update wishlist");
-        throw error;
+        
       }
     },
     [items],

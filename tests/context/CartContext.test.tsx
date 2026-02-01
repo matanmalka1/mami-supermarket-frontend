@@ -4,6 +4,36 @@ import { CartProvider } from "../../src/context/CartProvider";
 import { useCart } from "../../src/context/cart-context";
 import { vi } from "vitest";
 
+vi.mock("@/hooks/useAuth", () => ({
+  useAuth: () => ({
+    isAuthenticated: true,
+    userRole: "CUSTOMER",
+    userName: "Test",
+    login: vi.fn(),
+    logout: vi.fn(),
+  }),
+}));
+
+vi.mock("@/domains/cart/service", () => ({
+  cartService: {
+    addItem: vi.fn().mockResolvedValue({}),
+    removeItem: vi.fn().mockResolvedValue({}),
+    updateItem: vi.fn().mockResolvedValue({}),
+    get: vi.fn().mockResolvedValue({ items: [] }),
+    clear: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock("../../src/context/cart/cart-operations", async (importActual) => {
+  const actual = await importActual<any>();
+  return {
+    ...actual,
+    addItemToCart: vi.fn().mockResolvedValue(true),
+    removeItemFromCart: vi.fn().mockResolvedValue(true),
+    updateItemQuantity: vi.fn().mockResolvedValue(true),
+  };
+});
+
 const { mockToast } = vi.hoisted(() => ({
   mockToast: { success: vi.fn(), error: vi.fn() },
 }));

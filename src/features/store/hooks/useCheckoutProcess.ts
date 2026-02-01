@@ -139,6 +139,7 @@ export const useCheckoutProcess = () => {
       slotId,
       preview,
       deliverySlots,
+      cartItems,
     ],
   );
 

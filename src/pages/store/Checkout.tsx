@@ -38,7 +38,7 @@ const Checkout: React.FC = () => {
     confirmOrder,
   } = useCheckoutProcess();
 
-  const items = cartItems;
+  const items = cartItems ?? [];
   const total = preview?.cart_total ? Number(preview.cart_total) : 0;
 
   const idempotencyKey = useMemo(

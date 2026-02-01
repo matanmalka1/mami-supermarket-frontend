@@ -6,7 +6,7 @@ import { useDeliveryBranch } from "@/features/store/hooks/useDeliveryBranch";
 import type { Product } from "@/domains/catalog/types";
 
 export const useCatalog = (categoryId?: number, query?: string) => {
-  const { deliveryBranchId, isLoaded } = useDeliveryBranch();
+  const { deliveryBranchId } = useDeliveryBranch();
 
   const fetchCatalog = useCallback(async () => {
     const payload = categoryId

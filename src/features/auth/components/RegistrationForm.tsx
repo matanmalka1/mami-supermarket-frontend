@@ -24,7 +24,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const {
     register,
     formState: { errors, isSubmitting },
-    setValue,
   } = form;
 
   return (

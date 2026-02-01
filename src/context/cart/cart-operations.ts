@@ -20,9 +20,14 @@ export const mapBackendItems = (
 
     return {
       id: productId,
-      name: item.productName || cachedProduct?.name || `Product ${item.productId}`,
+      name:
+        item.productName || cachedProduct?.name || `Product ${item.productId}`,
       price: item.unitPrice,
-      image: item.productImage || cachedProduct?.imageUrl || cachedProduct?.image || "",
+      image:
+        item.productImage ||
+        cachedProduct?.imageUrl ||
+        cachedProduct?.image ||
+        "",
       quantity: item.quantity,
       unit: cachedProduct?.unit,
       availableQuantity: cachedProduct?.availableQuantity,
@@ -46,11 +51,7 @@ export const addItemToCart = async (
   const existing = currentItems.find((i) => i.id === product.id);
   const currentQty = existing ? existing.quantity : 0;
 
-  const validation = validateQuantityAvailability(
-    currentQty,
-    availableQty,
-    product.name,
-  );
+  const validation = validateQuantityAvailability(currentQty, availableQty);
 
   if (!validation.valid) {
     toast.error(validation.error!);
@@ -83,12 +84,8 @@ export const addItemToCart = async (
  */
 export const removeItemFromCart = async (
   id: number | string,
-  items: CartItem[],
 ): Promise<boolean> => {
   const numericId = normalizeProductId(id);
-  const item = items.find((i) => i.id === numericId);
-
-  if (!item) return false;
 
   const backendItem = await findBackendItemByProductId(numericId);
   if (!backendItem) {

@@ -14,9 +14,9 @@ import { OrderStatus } from "@/domains/orders/types";
 const Dashboard: React.FC = () => {
   const { orders, loading, selectedIds, toggleSelect, refresh } = useOrders();
   const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [urgencyFilter, setUrgencyFilter] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const statusFilter: string = "all";
+  const urgencyFilter: string = "all";
+  const searchQuery: string = "";
   const itemsPerPage = 20;
 
   const filteredOrders = useMemo(() => {
@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
     });
   }, [orders, statusFilter, urgencyFilter, searchQuery]);
 
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  // const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedOrders = filteredOrders.slice(startIndex, endIndex);

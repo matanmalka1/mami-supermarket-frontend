@@ -14,7 +14,7 @@ import StockReportPanel from "@/pages/inventory/components/StockReportPanel";
 import { InventoryRow } from "@/domains/inventory/types";
 
 const Inventory: React.FC = () => {
-  const { inventory, loading, updateStock, refresh } = useInventory();
+  const { inventory, loading, refresh } = useInventory();
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
   const [analyticsFocus, setAnalyticsFocus] = useState<InventoryRow | null>(

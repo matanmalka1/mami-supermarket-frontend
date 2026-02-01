@@ -22,11 +22,11 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
   onLogout,
 }) => {
   const isAdmin = userRole === "ADMIN";
-  const badgeColor = isAdmin ? "text-teal-600" : "text-emerald-600";
-  const badgeDot = isAdmin ? "bg-teal-500" : "bg-emerald-500";
+  // const badgeColor = isAdmin ? "text-teal-600" : "text-emerald-600";
+  // const badgeDot = isAdmin ? "bg-teal-500" : "bg-emerald-500";
   const headerBackground = isAdmin ? "bg-teal-50/30" : "bg-gray-50/50";
   const displayName = userName || (isAdmin ? "Administrator" : "Customer");
-  const sessionLabel = isAdmin ? "Active Admin Session" : "Active Session";
+  // const sessionLabel = isAdmin ? "Active Admin Session" : "Active Session";
 
   return (
     <div className="absolute top-full right-0 mt-4 w-64 bg-white border border-gray-100 rounded-3xl shadow-2xl p-2 animate-in slide-in-from-top-2 overflow-hidden">
