@@ -110,7 +110,7 @@ export const useCartActions = ({
       );
 
       // Sync with backend
-      const success = await updateItemQuantity(id, qty, previousItems);
+      const success = await updateItemQuantity(id, qty);
 
       if (!success) {
         // Revert on failure
