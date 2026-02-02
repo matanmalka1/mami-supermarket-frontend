@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { sleep } from "@/utils/async";
+import { authService } from "@/domains/auth/service";
 import { useProfileSettings } from "@/features/auth/hooks/useProfileSettings";
 import { useUserProfile } from "@/features/auth/hooks/useUserProfile";
+import { useApiError } from "@/hooks/useApiError";
 import PersonalInfoForm from "./ProfileSettings/PersonalInfoForm";
 import NotificationSettings from "./ProfileSettings/NotificationSettings";
 import PasswordChangeForm from "./ProfileSettings/PasswordChangeForm";
@@ -15,7 +16,8 @@ type PasswordFormShape = {
 };
 
 const ProfileSettings: React.FC = () => {
-  const { user } = useUserProfile();
+  const { user, loading } = useUserProfile();
+  const handleError = useApiError();
   const defaultValues = useMemo(
     () => ({
       firstName: user?.firstName ?? "",
@@ -25,24 +27,21 @@ const ProfileSettings: React.FC = () => {
     }),
     [user],
   );
+  const form = useForm({
+    defaultValues,
+    values: loading
+      ? defaultValues
+      : {
+          firstName: user?.firstName ?? "",
+          lastName: user?.lastName ?? "",
+          email: user?.email ?? "",
+          phone: user?.phone ?? "",
+        },
+  });
+
   const {
     formState: { isSubmitting },
-    reset,
-  } = useForm({
-    defaultValues,
-  });
-  const form = useForm({ defaultValues });
-
-  useEffect(() => {
-    if (user) {
-      reset({
-        firstName: user.firstName ?? "",
-        lastName: user.lastName ?? "",
-        email: user.email ?? "",
-        phone: user.phone ?? "",
-      });
-    }
-  }, [user, reset]);
+  } = form;
 
   const [notificationSettings, setNotificationSettings] = useState({
     orderUpdates: true,
@@ -65,9 +64,18 @@ const ProfileSettings: React.FC = () => {
     });
   };
 
-  const onSubmit = async () => {
-    await sleep(1000);
-    toast.success("Profile updated successfully!");
+  const onSubmit = async (data: any) => {
+    try {
+      await authService.updateProfile({
+        fullName: `${data.firstName} ${data.lastName}`.trim(),
+        phone: data.phone || undefined,
+      });
+      toast.success("Profile updated successfully!", {
+        style: { borderRadius: "1rem", fontWeight: "bold" },
+      });
+    } catch (err: any) {
+      handleError(err, "Unable to update profile");
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -96,9 +104,7 @@ const ProfileSettings: React.FC = () => {
         confirmPassword: "",
       });
     } catch (err: any) {
-      const message = typeof err === "string" ? err : err?.message;
-      const errorMessage = message || "Unable to update password";
-      toast.error(errorMessage);
+      handleError(err, "Unable to update password");
     }
   };
 

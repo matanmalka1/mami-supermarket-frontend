@@ -1,5 +1,6 @@
 import { apiClient } from "@/services/api-client";
 import type { User } from "@/domains/users/types";
+import { transformDtoToUser, transformUserToRequest } from "@/utils/user-transformer";
 import {
   AuthRegisterRequest,
   AuthRegisterResponse,
@@ -65,9 +66,14 @@ export const authService = {
       "/auth/register/verify-otp",
       data,
     ),
-  getProfile: () => apiClient.get<any, User>("/me"),
-  updateProfile: (data: Partial<User>) =>
-    apiClient.patch<any, User>("/me", data),
+  getProfile: () => {
+    return apiClient.get<any, User>("/me").then(transformDtoToUser);
+  },
+  updateProfile: (data: Partial<User>) => {
+    return apiClient
+      .patch<any, any>("/me", transformUserToRequest(data))
+      .then(transformDtoToUser);
+  },
   getAddresses: () => apiClient.get<any[], any[]>("/me/addresses"),
   addAddress: (data: any): Promise<any> =>
     apiClient.post("/me/addresses", data),

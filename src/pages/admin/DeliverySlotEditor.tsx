@@ -3,6 +3,7 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import { adminService } from "@/domains/admin/service";
+import { useApiError } from "@/hooks/useApiError";
 import type { DeliverySlot } from "@/features/admin/deliverySlots/types";
 import TextField from "@/components/ui/form/TextField";
 import CheckboxField from "@/components/ui/form/CheckboxField";
@@ -20,6 +21,7 @@ const DeliverySlotEditor: React.FC<Props> = ({
   onClose,
   onSave,
 }) => {
+  const handleError = useApiError();
   const [saving, setSaving] = useState(false);
   const initialStart = slot?.startTime || slot?.start_time || "";
   const initialEnd = slot?.endTime || slot?.end_time || "";
@@ -68,7 +70,7 @@ const DeliverySlotEditor: React.FC<Props> = ({
       onSave(updated);
       onClose();
     } catch (err: any) {
-      toast.error(err.message || "Failed to save");
+      handleError(err, "Failed to save");
     } finally {
       setSaving(false);
     }

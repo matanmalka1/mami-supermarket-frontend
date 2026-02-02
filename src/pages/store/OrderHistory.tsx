@@ -7,6 +7,7 @@ import LoadingState from "@/components/ui/LoadingState";
 import ErrorState from "@/components/ui/ErrorState";
 import Button from "@/components/ui/Button";
 import { currencyILS } from "@/utils/format";
+import { useApiError } from "@/hooks/useApiError";
 import {
   formatDate,
   formatTime,
@@ -21,6 +22,7 @@ const OrderHistory: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const _handleError = useApiError();
 
   const loadOrders = async () => {
     setLoading(true);
@@ -30,11 +32,11 @@ const OrderHistory: React.FC = () => {
       setOrders(data);
     } catch (err) {
       console.error("Failed to load order history", err);
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Unable to load your orders at the moment.",
-      );
+          : "Unable to load your orders at the moment.";
+      setError(message);
     } finally {
       setLoading(false);
     }

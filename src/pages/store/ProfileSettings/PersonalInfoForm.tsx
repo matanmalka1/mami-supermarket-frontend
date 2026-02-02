@@ -8,7 +8,7 @@ import NameEmailFields from "@/components/ui/form/NameEmailFields";
 type PersonalInfoFormProps = {
   form: UseFormReturn<any>;
   isSubmitting: boolean;
-  onSubmit: () => Promise<void>;
+  onSubmit: (data: any) => Promise<void>;
 };
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({

@@ -3,12 +3,14 @@ import { Plus, Search, Trash2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "react-hot-toast";
+import { useApiError } from "@/hooks/useApiError";
 import { useCatalogManager } from "@/features/admin/hooks/useCatalogManager";
 import CatalogProductTable from "./CatalogProductTable";
 import { CatalogProductForm } from "./CatalogProductForm";
 import CatalogCategoryFilters from "./CatalogCategoryFilters";
 import CatalogManagerHeader from "./CatalogManagerHeader";
 const CatalogManager: React.FC = () => {
+  const handleError = useApiError();
   const {
     products,
     totalCount,
@@ -75,7 +77,7 @@ const CatalogManager: React.FC = () => {
       setEditingProduct(null);
       refresh();
     } catch (err: any) {
-      toast.error(err?.response?.data?.msg || err.message || "Save failed");
+      handleError(err, "Save failed");
     }
   };
 

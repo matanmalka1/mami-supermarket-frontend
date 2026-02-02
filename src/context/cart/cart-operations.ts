@@ -109,7 +109,6 @@ export const removeItemFromCart = async (
 export const updateItemQuantity = async (
   id: number | string,
   qty: number,
-  items: CartItem[],
 ): Promise<boolean> => {
   if (qty < 1) return false;
 

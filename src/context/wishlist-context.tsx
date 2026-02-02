@@ -41,7 +41,8 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
         priority: undefined,
       }));
       setItems(wishlistItems);
-    } catch {
+    } catch (_err) {
+      console.error("Failed to load wishlist:", _err);
       setItems([]);
     } finally {
       setIsLoading(false);
@@ -69,7 +70,8 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
         } else {
           await wishlistService.add(productId);
         }
-      } catch (err) {
+      } catch (_err) {
+        console.error("Failed to update wishlist:", _err);
         // Revert on failure
         setItems((prev) =>
           isCurrentlyWishlisted
@@ -77,7 +79,6 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
             : prev.filter((item) => item.id !== productId),
         );
         toast.error("Failed to update wishlist");
-        
       }
     },
     [items],
@@ -120,6 +121,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
   if (!context) {
