@@ -65,7 +65,20 @@ apiClient.interceptors.response.use(
       "data" in response.data
         ? response.data.data
         : response.data;
-    return toCamel(result);
+    
+    const camelCased = toCamel(result);
+    
+    // Debug logging for auth responses
+    if ((import.meta as any).env?.DEV && response.config.url?.includes('/auth/')) {
+      console.debug("[apiClient] Auth response:", {
+        url: response.config.url,
+        originalData: response.data,
+        extracted: result,
+        camelCased: camelCased
+      });
+    }
+    
+    return camelCased;
   },
   async (error) => {
     if ((import.meta as any).env?.DEV) {

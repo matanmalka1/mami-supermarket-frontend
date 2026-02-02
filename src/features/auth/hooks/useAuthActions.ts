@@ -12,13 +12,22 @@ type AuthPayload = {
   role: string | null;
 };
 
-const resolveToken = (response: any) =>
-  response?.data?.access_token ||
-  response?.access_token ||
-  response?.accessToken ||
-  response?.data?.token ||
-  response?.token ||
-  null;
+const resolveToken = (response: any) => {
+  const token =
+    response?.accessToken ||
+    response?.access_token ||
+    response?.data?.accessToken ||
+    response?.data?.access_token ||
+    response?.token ||
+    response?.data?.token ||
+    null;
+
+  if (!token && (import.meta as any).env?.DEV) {
+    console.warn("[Auth] No token found in response:", response);
+  }
+
+  return token;
+};
 
 const resolveRole = (response: any) =>
   response?.data?.user?.role ||
@@ -46,10 +55,14 @@ export const useAuthActions = () => {
     [],
   );
 
-  const sendRegisterOtp = useCallback((email: string) => authService.sendRegisterOtp(email), []);
+  const sendRegisterOtp = useCallback(
+    (email: string) => authService.sendRegisterOtp(email),
+    [],
+  );
 
   const verifyRegisterOtp = useCallback(
-    (payload: AuthRegisterVerifyOtpRequest) => authService.verifyRegisterOtp(payload),
+    (payload: AuthRegisterVerifyOtpRequest) =>
+      authService.verifyRegisterOtp(payload),
     [],
   );
 
