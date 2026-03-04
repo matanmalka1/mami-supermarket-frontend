@@ -8,6 +8,7 @@ import React, {
 import { wishlistService } from "@/domains/wishlist/service";
 import type { WishlistItem } from "@/domains/wishlist/types";
 import { toast } from "react-hot-toast";
+import { getAuthToken } from "@/services/api-client/auth";
 
 interface WishlistContextType {
   items: WishlistItem[];
@@ -33,6 +34,10 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const loadWishlist = useCallback(async () => {
+    if (!getAuthToken()) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const response = await wishlistService.list();
       const wishlistItems = response.items.map((item) => ({
