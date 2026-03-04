@@ -46,4 +46,25 @@ export const getAuthToken = (): string | null => {
 export const clearAuthTokens = (): void => {
   localStorage.removeItem("mami_token");
   sessionStorage.removeItem("mami_token");
+  localStorage.removeItem("mami_refresh_token");
+  sessionStorage.removeItem("mami_refresh_token");
 };
+
+/**
+ * Persist refresh token in the same storage that holds the access token.
+ */
+export const setRefreshToken = (token: string, remember: boolean): void => {
+  if (remember) {
+    localStorage.setItem("mami_refresh_token", token);
+  } else {
+    sessionStorage.setItem("mami_refresh_token", token);
+  }
+};
+
+/**
+ * Get the stored refresh token (checks sessionStorage first, then localStorage).
+ */
+export const getRefreshToken = (): string | null =>
+  sessionStorage.getItem("mami_refresh_token") ||
+  localStorage.getItem("mami_refresh_token") ||
+  null;

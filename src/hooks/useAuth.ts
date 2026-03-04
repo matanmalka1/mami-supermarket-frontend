@@ -3,7 +3,9 @@ import type { UserRole } from "@/domains/users/types";
 import { normalizeRole } from "../utils/roles";
 import { usersService } from "@/domains/users/service";
 
-type LoginPayload = { token: string; role?: string | null; remember?: boolean };
+import { setRefreshToken } from "@/services/api-client/auth";
+
+type LoginPayload = { token: string; refreshToken?: string | null; role?: string | null; remember?: boolean };
 
 const readRoleFromToken = (token: string): UserRole | null => {
   try {
@@ -64,13 +66,14 @@ export const useAuth = () => {
   }, [isAuthenticated]);
 
   const login = useCallback(
-    ({ token, role, remember = false }: LoginPayload) => {
+    ({ token, refreshToken, role, remember = false }: LoginPayload) => {
       const resolvedRole =
         normalizeRole(role) || readRoleFromToken(token) || null;
       setUserRole(resolvedRole);
       sessionStorage.setItem("mami_token", token);
       if (remember) localStorage.setItem("mami_token", token);
       else localStorage.removeItem("mami_token");
+      if (refreshToken) setRefreshToken(refreshToken, remember);
       setIsAuthenticated(true);
     },
     [],

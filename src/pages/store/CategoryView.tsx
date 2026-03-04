@@ -34,10 +34,9 @@ function CategoryView() {
     currentPage * pageSize,
   );
 
-  // Convert product to card format if needed
   const toCardProduct = (product: Product): CardProduct => ({
     ...product,
-    // Add/transform fields as needed for ProductCard
+    image: product.imageUrl,
   });
 
   return (

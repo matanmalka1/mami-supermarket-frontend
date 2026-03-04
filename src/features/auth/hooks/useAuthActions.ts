@@ -9,6 +9,7 @@ import type {
 
 type AuthPayload = {
   token: string;
+  refreshToken: string | null;
   role: string | null;
 };
 
@@ -36,8 +37,16 @@ const resolveRole = (response: any) =>
   response?.role ||
   null;
 
+const resolveRefreshToken = (response: any): string | null =>
+  response?.refreshToken ||
+  response?.refresh_token ||
+  response?.data?.refreshToken ||
+  response?.data?.refresh_token ||
+  null;
+
 const normalizeAuthResponse = (response: any): AuthPayload => ({
   token: resolveToken(response) || "",
+  refreshToken: resolveRefreshToken(response),
   role: resolveRole(response),
 });
 

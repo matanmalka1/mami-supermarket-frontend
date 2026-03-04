@@ -1,3 +1,4 @@
+import React from "react";
 import { useCart } from "@/context/cart-context";
 import { ShoppingCart, Heart } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -12,6 +13,7 @@ export type CardProduct = {
   price: number;
   tag?: string;
   image?: string;
+  imageUrl?: string;
   oldPrice?: number;
   unit?: string;
   description?: string;
@@ -33,6 +35,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
       .map((p) => p[0]?.toUpperCase())
       .join("") || "?";
 
+  const [imgError, setImgError] = React.useState(false);
+  const imgSrc = !imgError ? (item.image || item.imageUrl) : undefined;
   const isLiked = isWishlisted(item.id);
   const availableQuantity =
     typeof item.availableQuantity === "number"
@@ -57,9 +61,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
       className="group cursor-pointer block"
     >
       <div className="relative rounded-2xl overflow-hidden aspect-square mb-4 bg-gray-100">
-        {item.image ? (
+        {imgSrc ? (
           <img
-            src={item.image}
+            src={imgSrc}
+            onError={() => setImgError(true)}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             alt={item.name}
           />

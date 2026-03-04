@@ -1,3 +1,4 @@
+import React from "react";
 import { ShoppingCart, Heart } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router";
@@ -21,6 +22,8 @@ const getInitials = (text?: string) =>
 const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
   const { addItem } = useCart();
   const { toggleWishlist, isWishlisted } = useWishlist();
+  const [imgError, setImgError] = React.useState(false);
+  const imgSrc = !imgError ? (item.image || item.imageUrl) : undefined;
 
   const isLiked = isWishlisted(item.id);
   const availableQuantity = typeof item.availableQuantity === "number"
@@ -52,9 +55,10 @@ const ProductListItem: React.FC<ProductListItemProps> = ({ item }) => {
     >
       <div className="flex flex-col items-stretch gap-5 p-6 md:flex-row md:items-center md:gap-6">
         <div className="relative h-64 w-full overflow-hidden rounded-2xl bg-gray-100 md:h-32 md:w-32">
-          {item.image ? (
+          {imgSrc ? (
             <img
-              src={item.image}
+              src={imgSrc}
+              onError={() => setImgError(true)}
               alt={item.name}
               className="h-full w-full object-cover"
             />

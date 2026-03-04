@@ -56,23 +56,23 @@ The frontend is a **client-only application** that communicates exclusively with
 
 ## Tech Stack
 
-| Component            | Technology                                    |
-| -------------------- | --------------------------------------------- |
-| **Framework**        | React 19.0                                    |
-| **Build Tool**       | Vite 6.0                                      |
-| **Language**         | TypeScript 5.6+                               |
-| **Styling**          | Tailwind CSS 4.0 (alpha)                      |
-| **Routing**          | React Router DOM 7.1                          |
-| **State Management** | Zustand 5.0 (lightweight) + React Context API |
-| **Forms**            | React Hook Form 7.54                          |
-| **Validation**       | Zod 3.24                                      |
-| **HTTP Client**      | Axios 1.7                                     |
-| **UI Components**    | Radix UI primitives + custom components       |
-| **Icons**            | Lucide React                                  |
-| **Notifications**    | React Hot Toast                               |
-| **Date Handling**    | date-fns 4.1                                  |
-| **Testing**          | Vitest 2.1 + React Testing Library            |
-| **Linting**          | ESLint 9 with TypeScript support              |
+| Component            | Technology                              |
+| -------------------- | --------------------------------------- |
+| **Framework**        | React 19.0                              |
+| **Build Tool**       | Vite 6.0                                |
+| **Language**         | TypeScript 5.6+                         |
+| **Styling**          | Tailwind CSS 4.0 (alpha)                |
+| **Routing**          | React Router DOM 7.1                    |
+| **State Management** | React Context API                       |
+| **Forms**            | React Hook Form 7.54                    |
+| **Validation**       | Zod 3.24                                |
+| **HTTP Client**      | Axios 1.7                               |
+| **UI Components**    | Radix UI primitives + custom components |
+| **Icons**            | Lucide React                            |
+| **Notifications**    | React Hot Toast                         |
+| **Date Handling**    | date-fns 4.1                            |
+| **Testing**          | Vitest 2.1 + React Testing Library      |
+| **Linting**          | ESLint 9 with TypeScript support        |
 
 ## Application Architecture
 
@@ -337,19 +337,13 @@ Users with operational roles (Employee+) are automatically redirected to the ope
 
 The application uses a **hybrid state management approach**:
 
-1. **Zustand** (lightweight global state):
-   - Used selectively for truly global state
-   - Type-safe with TypeScript
-   - Minimal boilerplate
-   - Examples: User preferences, UI state
-
-2. **React Context API** (component tree state):
+1. **React Context API** (component tree state):
    - Cart state (`CartProvider`)
    - Wishlist state (`WishlistProvider`)
    - Authentication state (`useAuth`)
    - Scoped to specific feature areas
 
-3. **Local Component State** (`useState`):
+2. **Local Component State** (`useState`):
    - UI interactions (modals, dropdowns, form inputs)
    - Temporary state that doesn't need sharing
    - Performance optimization (no unnecessary re-renders)
@@ -465,18 +459,11 @@ try {
 
 The application uses Vite's environment variable system. Create a `.env` file in the project root:
 
-| Variable             | Required | Default                 | Description                                                  |
-| -------------------- | -------- | ----------------------- | ------------------------------------------------------------ |
-| `VITE_API_BASE_URL`  | No       | `/api`                  | Base URL for API requests (proxied in dev, full URL in prod) |
-| `VITE_DEV_API_PROXY` | No       | `http://localhost:5000` | Backend API URL for Vite dev server proxy                    |
+| Variable             | Required | Default                 | Description                                             |
+| -------------------- | -------- | ----------------------- | ------------------------------------------------------- |
+| `VITE_DEV_API_PROXY` | No       | `http://localhost:5000` | Overrides the Vite dev server proxy target for `/api/*` |
 
 ### Purpose of Each Variable
-
-**`VITE_API_BASE_URL`**:
-
-- Used by the API client to construct request URLs
-- In development: `/api` (proxied by Vite to avoid CORS)
-- In production: Full API URL (e.g., `https://api.mami-supermarket.com`)
 
 **`VITE_DEV_API_PROXY`**:
 
@@ -490,15 +477,10 @@ The application uses Vite's environment variable system. Create a `.env` file in
 Development (`.env.local`):
 
 ```
-VITE_API_BASE_URL=/api
 VITE_DEV_API_PROXY=http://localhost:5000
 ```
 
-Production (set via hosting platform):
-
-```
-VITE_API_BASE_URL=https://api.mami-supermarket.com
-```
+No frontend env vars are required for production — the API URL is injected by the Render build pipeline via `VITE_API_URL`.
 
 **Accessing Environment Variables**:
 
@@ -725,9 +707,8 @@ The frontend is designed to be deployed as a **static site** that communicates w
 
 **Deployment Targets**:
 
-- **Static Hosting**: Netlify, Vercel, AWS S3 + CloudFront, GitHub Pages
-- **Container**: Docker image served by Nginx
-- **CDN**: Global distribution for optimal performance
+- **Render** (current): Static site configured via `render.yaml` — build: `npm ci && npm run build`, publish: `dist/`
+- **Any static host**: Netlify, Vercel, AWS S3 + CloudFront (serve `dist/` with SPA routing)
 
 **Build Artifacts**:
 

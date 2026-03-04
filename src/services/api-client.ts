@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 import { apiErrorSchema } from "@/validation/apiError";
 import { toCamel, toSnake } from "./api-client/transformers";
-import { getBaseUrl, getAuthToken, clearAuthTokens } from "./api-client/auth";
+import { getBaseUrl, getAuthToken, clearAuthTokens, getRefreshToken } from "./api-client/auth";
 
 // AppError is a runtime class, not migrated to types domain. Exported for reuse where needed.
 export class AppError extends Error {
@@ -88,7 +88,28 @@ apiClient.interceptors.response.use(
         data: error.response?.data,
       });
     }
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !error.config?._isRetry) {
+      const refreshToken = getRefreshToken();
+      if (refreshToken) {
+        try {
+          const refreshResp = await axios.post(
+            `${BASE_URL}/auth/refresh`,
+            {},
+            { headers: { Authorization: `Bearer ${refreshToken}` } },
+          );
+          const newToken: string =
+            refreshResp.data?.data?.access_token ?? refreshResp.data?.access_token;
+          if (newToken) {
+            const inLocal = !!localStorage.getItem("mami_refresh_token");
+            (inLocal ? localStorage : sessionStorage).setItem("mami_token", newToken);
+            const retryConfig = { ...error.config, _isRetry: true };
+            retryConfig.headers = { ...retryConfig.headers, Authorization: `Bearer ${newToken}` };
+            return apiClient(retryConfig);
+          }
+        } catch {
+          // refresh failed — fall through to logout
+        }
+      }
       clearAuthTokens();
       window.location.href = "/login";
     }

@@ -12,13 +12,14 @@ export const useLogin = () => {
       data: LoginInput,
       onLogin: (payload: {
         token: string;
+        refreshToken?: string | null;
         role?: UserRole | null;
         remember?: boolean;
       }) => void,
     ) => {
       toast.loading("Authenticating secure session...", { id: "auth" });
       try {
-        const { token, role } = await loginUser({
+        const { token, refreshToken, role } = await loginUser({
           email: data.email,
           password: data.password,
         });
@@ -36,7 +37,7 @@ export const useLogin = () => {
           role && validRoles.includes(role as UserRole)
             ? (role as UserRole)
             : null;
-        onLogin({ token, role: normalizedRole, remember: data.rememberMe });
+        onLogin({ token, refreshToken, role: normalizedRole, remember: data.rememberMe });
         return normalizedRole;
       } catch (err: any) {
         toast.error(err.message || "Credential verification failed", {
