@@ -754,11 +754,7 @@ server {
 
 **Production Configuration**:
 
-1. **API URL**: Set `VITE_API_BASE_URL` to production backend URL
-
-   ```
-   VITE_API_BASE_URL=https://api.mami-supermarket.com
-   ```
+1. **API URL**: Set `VITE_API_URL` to the production backend URL (injected automatically when deploying via `render.yaml`)
 
 2. **CORS**: Backend must allow frontend origin in `CORS_ALLOWED_ORIGINS`
 
@@ -776,7 +772,7 @@ server {
 
 **Deployment Checklist**:
 
-- [ ] `VITE_API_BASE_URL` set to production backend
+- [ ] `VITE_API_URL` set to production backend
 - [ ] Backend CORS configured for frontend domain
 - [ ] HTTPS certificates installed and validated
 - [ ] Environment variables set in hosting platform
