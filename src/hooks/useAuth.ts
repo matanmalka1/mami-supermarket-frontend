@@ -37,7 +37,7 @@ export const useAuth = () => {
       localStorage.getItem("mami_token") ||
       sessionStorage.getItem("mami_token");
     if (token) {
-      const role = readRoleFromToken(token) || "ADMIN";
+      const role = readRoleFromToken(token);
       return role as UserRole;
     }
     return null;
@@ -66,7 +66,7 @@ export const useAuth = () => {
   const login = useCallback(
     ({ token, role, remember = false }: LoginPayload) => {
       const resolvedRole =
-        normalizeRole(role) || readRoleFromToken(token) || "ADMIN";
+        normalizeRole(role) || readRoleFromToken(token) || null;
       setUserRole(resolvedRole);
       sessionStorage.setItem("mami_token", token);
       if (remember) localStorage.setItem("mami_token", token);

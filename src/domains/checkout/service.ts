@@ -1,4 +1,5 @@
 import { apiClient } from "@/services/api-client";
+import type { CardDetails } from "@/features/checkout/components/PaymentStep";
 import type { CheckoutCartItem, CheckoutOrderSummary } from "./types";
 
 type CheckoutPreviewPayload = {
@@ -30,7 +31,17 @@ export const checkoutService = {
       },
     ),
 
-  createPaymentToken: async (): Promise<{ paymentTokenId: number }> => {
-    return { paymentTokenId: 1 };
+  createPaymentToken: async (
+    cardDetails: CardDetails,
+  ): Promise<{ paymentTokenId: number }> => {
+    const response = await apiClient.post<
+      { cardNumber: string; cardHolderName: string; expiry: string },
+      { paymentTokenId: number }
+    >("/me/payment-tokens", {
+      cardNumber: cardDetails.cardNumber,
+      cardHolderName: cardDetails.cardHolderName,
+      expiry: cardDetails.expiry,
+    });
+    return response;
   },
 };

@@ -90,7 +90,7 @@ apiClient.interceptors.response.use(
     }
     if (error.response?.status === 401) {
       clearAuthTokens();
-      window.location.hash = "#/login";
+      window.location.href = "/login";
     }
     let apiError = error.response?.data?.error || {
       code: "INTERNAL_ERROR",

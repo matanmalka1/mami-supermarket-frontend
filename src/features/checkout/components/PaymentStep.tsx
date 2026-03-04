@@ -118,13 +118,13 @@ export const PaymentStep: React.FC<Props> = ({
       setError("Card has expired or invalid expiry date");
       return;
     }
+    if (!onCreatePaymentToken) {
+      setError("Payment is not configured");
+      return;
+    }
     try {
-      let paymentTokenId = 1;
-      if (onCreatePaymentToken) {
-        const result = await onCreatePaymentToken(cardDetails);
-        paymentTokenId = result.paymentTokenId;
-      }
-      onConfirm(paymentTokenId);
+      const result = await onCreatePaymentToken(cardDetails);
+      onConfirm(result.paymentTokenId);
     } catch (e: any) {
       setError(e?.message || "Failed to create payment token");
     }
